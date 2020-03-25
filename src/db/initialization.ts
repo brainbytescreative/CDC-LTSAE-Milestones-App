@@ -27,7 +27,7 @@ export const ConcernAnswers = `
     CREATE TABLE IF NOT EXISTS ConcernAnswers
     (
         id            INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-        concernId     INTEGER REFERENCES Concerns (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        concernId     INTEGER REFERENCES concern (_id) ON DELETE CASCADE ON UPDATE CASCADE,
         concernAnswer BOOLEAN,
         noteId        INTEGER REFERENCES Notes (id) ON DELETE SET NULL ON UPDATE CASCADE,
         childId       INTEGER REFERENCES Children (id) ON DELETE CASCADE ON UPDATE CASCADE

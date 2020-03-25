@@ -8,19 +8,17 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SafeAreaView} from 'react-native';
-import Database from './src/db';
-
-declare var global: {HermesInternal: null | {}};
 
 const App = () => {
-  useEffect(() => {
-    Database.connect().then(async () => {
-      const children = await Database.getAllChildren();
-      console.log(children);
-    });
-  });
+  // useEffect(() => {
+  //   Database.connect().then(async () => {
+  //     // const children = await Database.getAllChildren();
+  //     // console.log(children);
+  //     await Database.checkVersion();
+  //   });
+  // });
 
   return (
     <>
