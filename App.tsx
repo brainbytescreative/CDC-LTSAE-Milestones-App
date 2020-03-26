@@ -9,21 +9,31 @@
  */
 
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import Navigator from './src/components/Navigator';
+import {I18nextProvider} from 'react-i18next';
+import i18next from './src/resources/l18n';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'tomato',
+    accent: 'yellow',
+  },
+};
 
 const App = () => {
-  // useEffect(() => {
-  //   Database.connect().then(async () => {
-  //     // const children = await Database.getAllChildren();
-  //     // console.log(children);
-  //     await Database.checkVersion();
-  //   });
-  // });
-
   return (
-    <>
-      <SafeAreaView />
-    </>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <I18nextProvider i18n={i18next}>
+          <Navigator />
+        </I18nextProvider>
+      </NavigationContainer>
+    </PaperProvider>
   );
 };
 
