@@ -38,7 +38,8 @@
   "fields": {
     "territoryPlaceholder": "State or Territory field *",
     "guardianPlaceholder": "Guardian / Healthcare Provider",
-    "childNamePlaceholder": "Child Name *"
+    "childNamePlaceholder": "Child Name *",
+    "dateOfBirthPlaceholder": "Birthday *"
   },
   "states": {
     "AL": "Alabama (AL)",
