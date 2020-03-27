@@ -25,7 +25,8 @@
     "appLanguage": "App language",
     "next": "Next",
     "done": "Done",
-    "required": "* required field"
+    "required": "* required field",
+    "dateFormat": "MM/dd/yyyy"
   },
   "addChild": {
     "title": "Add child",

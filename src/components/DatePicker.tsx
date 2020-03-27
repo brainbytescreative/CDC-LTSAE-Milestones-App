@@ -3,6 +3,7 @@ import {Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {format} from 'date-fns';
+import {useTranslation} from 'react-i18next';
 
 interface PageProps {
   onChange?: (date?: Date) => void;
@@ -27,6 +28,8 @@ const DatePicker: React.FC<PageProps> = ({onChange, label}) => {
     hideDatePicker();
   };
 
+  const {t} = useTranslation();
+
   return (
     <>
       <TouchableWithoutFeedback onPress={showDatePicker}>
@@ -35,7 +38,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label}) => {
           autoCorrect={false}
           // onChange={formik.handleChange('dateOfBirth') as any}
           label={label}
-          value={date && format(date, 'MM/dd/yyyy')}
+          value={date && format(date, t('common:dateFormat'))}
           mode={'outlined'}
           onFocus={() => {
             Keyboard.dismiss();
