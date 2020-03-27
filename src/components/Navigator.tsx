@@ -6,6 +6,7 @@ import OnboardingParentProfileScreen from '../screens/Onboarding/OnboardingParen
 import OnboardingHowToUseScreen from '../screens/Onboarding/OnboardingHowToUseScreen';
 import {useTranslation} from 'react-i18next';
 import Dashboard from '../screens/Dashboard';
+import AddChildScreen from '../screens/AddChildScreen';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,13 @@ const Navigator: React.FC<{}> = () => {
         }}
       />
       <Stack.Screen
+        name={routeKeys.AddChild}
+        component={AddChildScreen}
+        options={{
+          title: t('addChild:title'),
+          headerLeft: () => null,
+        }}
+      /><Stack.Screen
         name={routeKeys.Dashboard}
         component={Dashboard}
         options={{

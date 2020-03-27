@@ -3,6 +3,7 @@ export const routeKeys = Object.freeze({
   OnboardingHowToUse: 'OnboardingHowToUse',
   OnboardingParentProfile: 'OnboardingParentProfile',
   Dashboard: 'Dashboard',
+  AddChild: 'AddChild',
 });
 
 export const states = [

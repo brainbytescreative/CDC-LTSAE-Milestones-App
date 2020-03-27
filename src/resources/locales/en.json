@@ -19,12 +19,26 @@
   },
   "guardianTypes": {
     "guardian": "Guardian",
-    "healthcareProvider":"Healthcare Provider"
+    "healthcareProvider": "Healthcare Provider"
   },
   "common": {
     "appLanguage": "App language",
     "next": "Next",
-    "done": "Done"
+    "done": "Done",
+    "required": "* required field"
+  },
+  "addChild": {
+    "title": "Add child",
+    "addAnotherChild": "+ Add another child",
+    "boy": "Boy",
+    "girl": "Girl",
+    "addPhoto": "Add photo (not required)",
+    "note": "If your child is premature: Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  },
+  "fields": {
+    "territoryPlaceholder": "State or Territory field *",
+    "guardianPlaceholder": "Guardian / Healthcare Provider",
+    "childNamePlaceholder": "Child Name *"
   },
   "states": {
     "AL": "Alabama (AL)",

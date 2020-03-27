@@ -1,11 +1,11 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import Layout from '../../components/Layout';
 import {useTranslation} from 'react-i18next';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {routeKeys, states} from '../../resources/constants';
-import {Button} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import LanguageSelector from '../../components/LanguageSelector';
 
@@ -41,6 +41,10 @@ const guardianTypes = ['guardian', 'healthcareProvider'];
 const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingParentProfile');
   const navigation = useNavigation();
+
+  const [teritory, setTerritory] = useState(null);
+  const [guardian, setGuardian] = useState(null);
+
   return (
     <Layout style={{justifyContent: 'space-between'}}>
       <View>
@@ -51,12 +55,13 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
           <RNPickerSelect
             style={pickerSelectStyles}
             placeholder={{
-              label: 'Guardian / Healthcare Provider',
+              label: t('fields:guardianPlaceholder'),
               value: null,
               color: '#9EA0A4',
             }}
+            value={guardian}
             Icon={() => <Icon name="chevron-down" size={40} />}
-            onValueChange={(value) => console.log(value)}
+            onValueChange={(value) => setGuardian(value)}
             items={guardianTypes.map((value) => ({
               label: t(`guardianTypes:${value}`),
               value,
@@ -66,13 +71,14 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
         <View style={{margin: 10}}>
           <RNPickerSelect
             placeholder={{
-              label: 'State or Territory field *',
+              label: t('fields:territoryPlaceholder'),
               value: null,
               color: '#9EA0A4',
             }}
             style={pickerSelectStyles}
+            value={teritory}
             Icon={() => <Icon name="chevron-down" size={40} />}
-            onValueChange={(value) => console.warn(value)}
+            onValueChange={(value) => setTerritory(value)}
             items={states.map((value) => ({
               label: t(`states:${value}`),
               value,
@@ -80,14 +86,15 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
           />
         </View>
         <LanguageSelector />
-        <Text style={{textAlign: 'center'}}>* required field</Text>
+        <Text style={{textAlign: 'center'}}>{t('common:required')}</Text>
       </View>
       <View style={{alignItems: 'center'}}>
         <Button
+          // disabled={teritory === null}
           mode={'contained'}
           style={{marginVertical: 50, width: 100}}
           onPress={() => {
-            navigation.navigate(routeKeys.Dashboard);
+            navigation.navigate(routeKeys.OnboardingHowToUse);
           }}>
           {t('common:next').toUpperCase()}
         </Button>

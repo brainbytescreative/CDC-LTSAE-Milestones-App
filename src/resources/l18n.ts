@@ -9,7 +9,7 @@ import {useCallback} from 'react';
 import {useMutation, useQuery, queryCache} from 'react-query';
 
 const languageCode = 'Language';
-declare type LangCode = 'en' | 'es';
+declare type LangCode = 'en' | 'es' | undefined;
 
 export const getLanguageCode = () => {
   return AsyncStorage.getItem(languageCode) as Promise<LangCode>;
@@ -30,7 +30,7 @@ export function useChangeLanguage() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries([languageCode]);
+        return queryCache.refetchQueries([languageCode]);
       },
     },
   );
@@ -44,16 +44,6 @@ export function useChangeLanguage() {
   );
 }
 
-const deviceLanguage = Platform.select({
-  // ios: () => {
-  //   return (
-  //     NativeModules.SettingsManager.settings.AppleLocale ||
-  //     NativeModules.SettingsManager.settings.AppleLanguages[0]
-  //   );
-  // },
-  // android: () => NativeModules.I18nManager.localeIdentifier,
-  default: () => 'en',
-})();
 
 const languageDetector = {
   init: Function.prototype,
@@ -61,7 +51,7 @@ const languageDetector = {
   async: true,
   detect: (callback: (language: string) => void) => {
     return getLanguageCode().then((language) => {
-      callback(language || deviceLanguage);
+      callback(language || 'en');
     });
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function

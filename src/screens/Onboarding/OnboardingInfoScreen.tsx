@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import Layout from '../../components/Layout';
-import {Button, Modal, Portal} from 'react-native-paper';
+import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {routeKeys} from '../../resources/constants';

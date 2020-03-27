@@ -6,5 +6,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
     'react-native/no-inline-styles': 'off',
+    'react/jsx-no-literals': 2,
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

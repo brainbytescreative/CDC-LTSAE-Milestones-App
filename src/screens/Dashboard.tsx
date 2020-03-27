@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text} from 'react-native-paper';
 
 const Dashboard: React.FC<{}> = () => {
   return <Text>Dashboard</Text>;
