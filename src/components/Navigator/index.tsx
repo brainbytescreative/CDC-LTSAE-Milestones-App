@@ -1,18 +1,27 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import OnboardingInfoScreen from '../screens/Onboarding/OnboardingInfoScreen';
-import {routeKeys} from '../resources/constants';
-import OnboardingParentProfileScreen from '../screens/Onboarding/OnboardingParentProfileScreen';
-import OnboardingHowToUseScreen from '../screens/Onboarding/OnboardingHowToUseScreen';
+import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
+import {routeKeys} from '../../resources/constants';
+import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
+import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import {useTranslation} from 'react-i18next';
-import Dashboard from '../screens/Dashboard';
-import AddChildScreen from '../screens/AddChildScreen';
+import AddChildScreen from '../../screens/AddChildScreen';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import DashboardStack from './DashboardStack';
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const RootDrawer: React.FC<{}> = () => {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name={routeKeys.Dashboard} component={DashboardStack} />
+    </Drawer.Navigator>
+  );
+};
 
 const Navigator: React.FC<{}> = () => {
   const {t} = useTranslation();
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -45,13 +54,13 @@ const Navigator: React.FC<{}> = () => {
           title: t('addChild:title'),
           headerLeft: () => null,
         }}
-      /><Stack.Screen
+      />
+      <Stack.Screen
         name={routeKeys.Dashboard}
-        component={Dashboard}
         options={{
-          title: t('dashboard:title'),
-          headerLeft: () => null,
+          header: () => null,
         }}
+        component={RootDrawer}
       />
     </Stack.Navigator>
   );
