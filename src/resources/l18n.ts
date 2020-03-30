@@ -20,7 +20,10 @@ export const setLanguageCode = (language: string) => {
 };
 
 export function useGetLanguageCode() {
-  return useQuery<LangCode, any>(languageCode, getLanguageCode);
+  const {data} = useQuery<LangCode, any>(languageCode, getLanguageCode);
+  return {
+    data: data || 'en',
+  };
 }
 
 export function useChangeLanguage() {
@@ -43,7 +46,6 @@ export function useChangeLanguage() {
     [mutate],
   );
 }
-
 
 const languageDetector = {
   init: Function.prototype,
