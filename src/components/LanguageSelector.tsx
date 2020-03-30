@@ -6,7 +6,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import SegmentedControlIOS from '@react-native-community/segmented-control';
 import {useTranslation} from 'react-i18next';
 import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
 
@@ -35,7 +34,7 @@ const LanguageSelector: React.FC<{style?: StyleProp<ViewStyle>}> = ({
           <View
             style={{borderWidth: 1, flexDirection: 'row', borderRadius: 10}}>
             <TouchableWithoutFeedback
-              onPress={(event) => {
+              onPress={() => {
                 changeLanguage('en');
               }}>
               <Text
@@ -55,7 +54,7 @@ const LanguageSelector: React.FC<{style?: StyleProp<ViewStyle>}> = ({
               </Text>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback
-              onPress={(event) => {
+              onPress={() => {
                 changeLanguage('es');
               }}>
               <Text
@@ -71,15 +70,6 @@ const LanguageSelector: React.FC<{style?: StyleProp<ViewStyle>}> = ({
               </Text>
             </TouchableWithoutFeedback>
           </View>
-          // <SegmentedControlIOS
-          //   values={['English', 'Español']}
-          //   style={{minWidth: 200}}
-          //   selectedIndex={languages.indexOf(lngCode)}
-          //   onChange={(event) => {
-          //     // this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
-          //     changeLanguage(languages[event.nativeEvent.selectedSegmentIndex]);
-          //   }}
-          // />
         )}
       </View>
     </View>
