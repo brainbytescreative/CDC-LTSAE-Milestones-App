@@ -15,7 +15,18 @@
     "howToUseApp": "How to use the app"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "whenToActEarly": "When to Act Early",
+    "addApt": "+ Add apt",
+    "checkUp": "Check up",
+    "appointments": "Appointments",
+    "milestoneSummary": "Milestone Summary",
+    "tipsAndActivities": "Tips and Activities",
+    "childAge": "is {{value}} {{unit}} old!",
+    "milestoneCheckList": "Milestone check list",
+    "milestonesAnswered": "{{progress}} Milestones answered",
+    "actionItemsTitle": "9 Month Milestone\nAction Items",
+    "yellowTip": "If your child is between these\nages, you will receive the checklist\nfor the younger age."
   },
   "guardianTypes": {
     "guardian": "Guardian",

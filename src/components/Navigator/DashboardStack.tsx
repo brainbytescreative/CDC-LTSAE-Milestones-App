@@ -9,6 +9,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerActions} from '@react-navigation/native';
+import {BurgerIcon} from '../../resources/svg';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,7 @@ const DashboardStack: FC<{}> = (props) => {
       <Stack.Screen
         name={routeKeys.Dashboard}
         component={Dashboard}
-        options={(stackProps) => ({
+        options={() => ({
           title: t('dashboard:title'),
           headerTransparent: true,
           headerTitle: () => {
@@ -32,7 +33,14 @@ const DashboardStack: FC<{}> = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text>Child name</Text>
+                <Text
+                  style={{
+                    fontFamily: 'montserrat',
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                  }}>
+                  Child name
+                </Text>
                 <EvilIcons name={'chevron-down'} size={30} />
               </TouchableOpacity>
             );
@@ -42,22 +50,29 @@ const DashboardStack: FC<{}> = (props) => {
               onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer());
               }}
-              style={{paddingHorizontal: 10}}>
-              <IonIcons name={'md-menu'} size={30} />
+              style={{paddingHorizontal: 32}}>
+              <BurgerIcon />
             </TouchableOpacity>
           ),
           headerRight: () => (
             <TouchableOpacity
               style={{
                 backgroundColor: '#fff',
-                width: 25,
-                height: 25,
-                borderRadius: 25,
+                width: 23,
+                height: 23,
+                borderRadius: 23,
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginHorizontal: 45,
+                marginHorizontal: 32,
               }}>
-              <Text>{'4'}</Text>
+              <Text
+                style={{
+                  fontFamily: 'montserrat',
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                }}>
+                4
+              </Text>
             </TouchableOpacity>
           ),
         })}

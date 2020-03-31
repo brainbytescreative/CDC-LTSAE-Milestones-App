@@ -64,3 +64,10 @@ export const states = [
   'WI',
   'WY',
 ];
+
+export const colors = Object.freeze({
+  lightGreen: '#BCFDAC',
+  purple: '#CEB9EF',
+  iceCold: '#94F5EB',
+  aquamarine: '#64FCD4',
+});
