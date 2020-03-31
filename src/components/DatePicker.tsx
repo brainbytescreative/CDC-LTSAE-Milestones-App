@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
-import {Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {format} from 'date-fns';
@@ -23,29 +27,26 @@ const DatePicker: React.FC<PageProps> = ({onChange, label}) => {
   };
 
   const handleConfirm = (dateVal: Date) => {
+    hideDatePicker();
     setDate(dateVal);
     onChange && onChange(dateVal);
-    hideDatePicker();
   };
 
   const {t} = useTranslation();
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={showDatePicker}>
+      <TouchableOpacity onPress={showDatePicker}>
         <TextInput
+          editable={false}
           style={{marginTop: 10}}
           autoCorrect={false}
           // onChange={formik.handleChange('dateOfBirth') as any}
           label={label}
-          value={date && format(date, t('common:dateFormat'))}
+          value={(date && format(date, t('common:dateFormat'))) || ''}
           mode={'outlined'}
-          onFocus={() => {
-            Keyboard.dismiss();
-            setModalVisible(true);
-          }}
         />
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       <DateTimePickerModal
         isVisible={modalVisible}
         mode="date"

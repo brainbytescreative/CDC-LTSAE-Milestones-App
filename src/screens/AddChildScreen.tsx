@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, Keyboard, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
 import {routeKeys} from '../resources/constants';
 import {Button, RadioButton, Text, TextInput} from 'react-native-paper';

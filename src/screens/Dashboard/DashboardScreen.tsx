@@ -50,7 +50,7 @@ const DATA: DataItem[] = [
   },
 ];
 
-const Dashboard: React.FC<{}> = () => {
+const DashboardScreen: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
@@ -286,4 +286,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dashboard;
+export default DashboardScreen;

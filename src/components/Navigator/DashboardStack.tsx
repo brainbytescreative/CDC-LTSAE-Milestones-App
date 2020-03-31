@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
 import {routeKeys} from '../../resources/constants';
-import Dashboard from '../../screens/Dashboard/Dashboard';
+import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import {TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -18,7 +18,7 @@ const DashboardStack: FC<{}> = (props) => {
     <Stack.Navigator>
       <Stack.Screen
         name={routeKeys.Dashboard}
-        component={Dashboard}
+        component={DashboardScreen}
         options={() => ({
           title: t('dashboard:title'),
           headerTransparent: true,
