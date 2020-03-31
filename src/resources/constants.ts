@@ -70,4 +70,6 @@ export const colors = Object.freeze({
   purple: '#CEB9EF',
   iceCold: '#94F5EB',
   aquamarine: '#64FCD4',
+  lightGray: '#E3E3E3',
+  aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
 });

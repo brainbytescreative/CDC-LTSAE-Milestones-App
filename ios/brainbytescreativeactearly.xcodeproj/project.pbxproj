@@ -24,6 +24,8 @@
 		341F81AB243204E200D78314 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 341F81942432048200D78314 /* EvilIcons.ttf */; };
 		3445689424332BA60017B5E8 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3445689324332B380017B5E8 /* Montserrat-Bold.ttf */; };
 		3445689624332BEC0017B5E8 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3445689524332BEC0017B5E8 /* Montserrat-Regular.ttf */; };
+		3445689924337CCF0017B5E8 /* Avenir-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3445689724337CCF0017B5E8 /* Avenir-Heavy.ttf */; };
+		3445689A24337CCF0017B5E8 /* Avenir-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3445689824337CCF0017B5E8 /* Avenir-Light.ttf */; };
 		692395F916B9902148D6590B /* libPods-brainbytescreativeactearly-brainbytescreativeactearlyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666757983EE9747885EA1625 /* libPods-brainbytescreativeactearly-brainbytescreativeactearlyTests.a */; };
 		97E5FCA54F26693B09237240 /* libPods-brainbytescreativeactearly-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E1943ACDEF91CABDF24F56 /* libPods-brainbytescreativeactearly-tvOS.a */; };
 		EE7B57864BB5F16F2A54FF4E /* libPods-brainbytescreativeactearly-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692120C70F992B9A2F3B32EC /* libPods-brainbytescreativeactearly-tvOSTests.a */; };
@@ -79,6 +81,8 @@
 		341F81962432048200D78314 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		3445689324332B380017B5E8 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		3445689524332BEC0017B5E8 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		3445689724337CCF0017B5E8 /* Avenir-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Heavy.ttf"; sourceTree = "<group>"; };
+		3445689824337CCF0017B5E8 /* Avenir-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Light.ttf"; sourceTree = "<group>"; };
 		4DAC9463E8C77B70B8EF048F /* Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOSTests/Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5ECF4A77C52DB02953E1AB83 /* Pods-brainbytescreativeactearly-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOS.release.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOS/Pods-brainbytescreativeactearly-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		666757983EE9747885EA1625 /* libPods-brainbytescreativeactearly-brainbytescreativeactearlyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-brainbytescreativeactearly-brainbytescreativeactearlyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +182,8 @@
 		341F81862432048200D78314 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				3445689724337CCF0017B5E8 /* Avenir-Heavy.ttf */,
+				3445689824337CCF0017B5E8 /* Avenir-Light.ttf */,
 				3445689524332BEC0017B5E8 /* Montserrat-Regular.ttf */,
 				3445689324332B380017B5E8 /* Montserrat-Bold.ttf */,
 				341F81872432048200D78314 /* Fontisto.ttf */,
@@ -399,8 +405,10 @@
 				341F81AB243204E200D78314 /* EvilIcons.ttf in Resources */,
 				3445689424332BA60017B5E8 /* Montserrat-Bold.ttf in Resources */,
 				341F81A72432049B00D78314 /* Entypo.ttf in Resources */,
+				3445689A24337CCF0017B5E8 /* Avenir-Light.ttf in Resources */,
 				341F81A82432049B00D78314 /* MaterialCommunityIcons.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				3445689924337CCF0017B5E8 /* Avenir-Heavy.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

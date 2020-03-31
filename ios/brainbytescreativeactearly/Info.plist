@@ -41,6 +41,8 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Avenir-Light.ttf</string>
+		<string>Avenir-Heavy.ttf</string>
 		<string>Montserrat-Regular.ttf</string>
 		<string>Montserrat-Bold.ttf</string>
 		<string>EvilIcons.ttf</string>

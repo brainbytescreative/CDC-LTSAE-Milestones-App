@@ -16,6 +16,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "carouselAge": "{{value}} {{unit}}",
     "whenToActEarly": "When to Act Early",
     "addApt": "+ Add apt",
     "checkUp": "Check up",

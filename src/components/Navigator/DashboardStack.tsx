@@ -1,14 +1,12 @@
 import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
 import {routeKeys} from '../../resources/constants';
-import Dashboard from '../../screens/Dashboard';
+import Dashboard from '../../screens/Dashboard/Dashboard';
 import {TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import IonIcons from 'react-native-vector-icons/Ionicons';
 import {createStackNavigator} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
-import {DrawerActions} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BurgerIcon} from '../../resources/svg';
 
 const Stack = createStackNavigator();

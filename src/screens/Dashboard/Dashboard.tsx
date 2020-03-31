@@ -1,52 +1,43 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
-import {Colors, ProgressBar} from 'react-native-paper';
+import React from 'react';
+import {ProgressBar} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {colors} from '../resources/constants';
+import {ScrollView} from 'react-native-gesture-handler';
+import {colors} from '../../resources/constants';
 import {
   ActEarlySign,
-  ChevronLeft,
-  ChevronRight,
   MilestoneSummarySign,
   NabBarBackground,
   PurpleArc,
   TipsAndActivitiesSign,
-} from '../resources/svg';
+} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
-import content from '*.svg';
 import {useSafeArea} from 'react-native-safe-area-context';
-import Text from '../components/Text';
-
-interface DataItem {
-  month: number;
-  progress?: number;
-  current?: boolean;
-}
+import Text from '../../components/Text';
+import MonthCarousel, {DataItem} from './MonthCarousel';
 
 const DATA: DataItem[] = [
   {
     month: 1,
+    progress: 100,
   },
   {
     month: 2,
+    progress: 100,
   },
   {
     month: 4,
+    progress: 100,
   },
   {
     month: 6,
+    progress: 80,
   },
   {
     month: 9,
-    current: true,
+    progress: 50,
   },
   {
     month: 12,
@@ -59,38 +50,14 @@ const DATA: DataItem[] = [
   },
 ];
 
-const Item: React.FC<DataItem> = ({month, current}) => (
-  <TouchableOpacity>
-    <View style={{padding: 5, height: 100, justifyContent: 'center'}}>
-      <AnimatedCircularProgress
-        rotation={0}
-        size={current ? 68 : 45}
-        width={2}
-        fill={80}
-        tintColor={colors.iceCold}
-        backgroundColor="transparent">
-        {() => <Text style={{fontSize: 10}}>{month} mo</Text>}
-      </AnimatedCircularProgress>
-    </View>
-  </TouchableOpacity>
-);
-
 const Dashboard: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
 
-  const age = 9;
+  const childAge = 9;
   const childName = 'Mina Jaquelina';
-  const flatListRef = useRef<any>(null);
-
-  useLayoutEffect(() => {
-    if (flatListRef.current) {
-      // flatListRef.current.scrollToIndex({
-      //   index: 4,
-      // });
-    }
-  }, []);
+  const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);
 
   return (
     <>
@@ -117,29 +84,14 @@ const Dashboard: React.FC<{}> = () => {
           <View style={{alignItems: 'center'}}>
             <Text style={styles.childNameText}>{childName}</Text>
             <Text style={styles.childAgeText}>
-              {t('childAge', {unit: 'month', value: age})}
+              {t('childAge', {unit: 'month', value: childAge})}
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginVertical: 20,
-              marginHorizontal: 32,
-            }}>
-            <ChevronLeft />
-            <FlatList
-              ref={flatListRef}
-              style={{
-                marginHorizontal: 13,
-              }}
-              data={DATA}
-              horizontal
-              renderItem={({item}) => <Item {...item} />}
-              keyExtractor={(item) => `${item.month}`}
-            />
-            <ChevronRight />
-          </View>
+          <MonthCarousel
+            data={DATA}
+            childAge={childAge}
+            currentAgeIndex={currentAgeIndex}
+          />
           <View style={styles.yellowTipContainer}>
             <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
           </View>
@@ -282,7 +234,7 @@ const styles = StyleSheet.create({
   yellowTipContainer: {
     paddingHorizontal: 25,
     paddingVertical: 10,
-    marginBottom: 30,
+    marginBottom: 50,
     marginHorizontal: 32,
     alignItems: 'center',
     backgroundColor: 'yellow',
