@@ -29,6 +29,11 @@
     "actionItemsTitle": "9 Month Milestone\nAction Items",
     "yellowTip": "If your child is between these\nages, you will receive the checklist\nfor the younger age."
   },
+  "childSelector": {
+    "edit": "Edit",
+    "addChild": "+ Add child",
+    "delete": "Delete"
+  },
   "guardianTypes": {
     "guardian": "Guardian",
     "healthcareProvider": "Healthcare Provider"

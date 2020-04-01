@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {Button, Portal} from 'react-native-paper';
+import {Portal} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../../components/Text';
-import {subMonths, formatDistanceStrict} from 'date-fns';
+import {formatDistanceStrict, subMonths} from 'date-fns';
 import {routeKeys} from '../../resources/constants';
+import {useTranslation} from 'react-i18next';
+import i18next from 'i18next';
+import {dateFnsLocales} from '../../resources/dateFnsLocales';
 
 const data = [
   {
@@ -33,44 +36,49 @@ interface ItemProps extends Child {
   onDelete: (id: string) => void;
 }
 
-const Item: React.FC<ItemProps> = ({id, name, birthDay, onDelete, onEdit}) => (
-  <TouchableOpacity
-    onPress={() => {
-      onEdit(id);
-    }}
-    style={{flexDirection: 'row', paddingTop: 20}}>
-    <View style={{flex: 1, alignItems: 'center'}}>
-      <View
-        style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
-      />
-    </View>
-    <View style={{flex: 1}}>
-      <Text style={styles.chilNameText}>{name}</Text>
-      <Text style={styles.chilNameText}>
-        {formatDistanceStrict(new Date(), birthDay, {
-          roundingMethod: 'floor',
-        })}
-      </Text>
-      <View style={{flexDirection: 'row', marginTop: 10}}>
-        <TouchableOpacity
-          onPress={() => {
-            onEdit(id);
-          }}>
-          <Text>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            onDelete(id);
-          }}
-          style={{marginLeft: 10}}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
+const Item: React.FC<ItemProps> = ({id, name, birthDay, onDelete, onEdit}) => {
+  const {t} = useTranslation('childSelector');
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        onEdit(id);
+      }}
+      style={{flexDirection: 'row', paddingTop: 20}}>
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <View
+          style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
+        />
       </View>
-    </View>
-  </TouchableOpacity>
-);
+      <View style={{flex: 1}}>
+        <Text style={styles.chilNameText}>{name}</Text>
+        <Text style={styles.chilNameText}>
+          {formatDistanceStrict(new Date(), birthDay, {
+            roundingMethod: 'floor',
+            locale: dateFnsLocales[i18next.language],
+          })}
+        </Text>
+        <View style={{flexDirection: 'row', marginTop: 10}}>
+          <TouchableOpacity
+            onPress={() => {
+              onEdit(id);
+            }}>
+            <Text>{t('edit')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              onDelete(id);
+            }}
+            style={{marginLeft: 10}}>
+            <Text>{t('delete')}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
+  const {t} = useTranslation('childSelector');
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -80,7 +88,7 @@ const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
       }}>
       <View style={{flex: 1}} />
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text>+ Add child</Text>
+        <Text>{t('addChild')}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -88,7 +96,7 @@ const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
 
 const ChildSelectorModal: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
-  const [childSelectorVisible, setChildSelectorVisible] = useState(true);
+  const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 
   const navigation = useNavigation();
 
