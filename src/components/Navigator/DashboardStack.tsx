@@ -8,6 +8,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BurgerIcon} from '../../resources/svg';
+import AddChildScreen from '../../screens/AddChildScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,29 +21,8 @@ const DashboardStack: FC<{}> = (props) => {
         name={routeKeys.Dashboard}
         component={DashboardScreen}
         options={() => ({
-          title: t('dashboard:title'),
+          chilNameText: t('dashboard:chilNameText'),
           headerTransparent: true,
-          headerTitle: () => {
-            return (
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'montserrat',
-                    fontSize: 22,
-                    fontWeight: 'bold',
-                  }}>
-                  Child name
-                </Text>
-                <EvilIcons name={'chevron-down'} size={30} />
-              </TouchableOpacity>
-            );
-          },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
@@ -74,6 +54,13 @@ const DashboardStack: FC<{}> = (props) => {
             </TouchableOpacity>
           ),
         })}
+      />
+      <Stack.Screen
+        name={routeKeys.AddChild}
+        component={AddChildScreen}
+        options={{
+          title: t('addChild:chilNameText'),
+        }}
       />
     </Stack.Navigator>
   );

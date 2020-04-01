@@ -73,7 +73,7 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
         index: currentAgeIndex,
         viewPosition: 0.5,
       });
-    }, 100);
+    }, 500);
   }, [currentAgeIndex]);
 
   return (

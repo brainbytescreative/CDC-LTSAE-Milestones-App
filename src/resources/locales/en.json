@@ -1,21 +1,21 @@
 {
   "onboardingInfo": {
-    "title": "ONBOARDING - Info screen",
+    "chilNameText": "ONBOARDING - Info screen",
     "welcome": "Welcome to the app",
     "getStartedBtn": "Get started",
     "welcome1p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu condimentum quam. In interdum, ligula nec elementum lacinia, felis mi sagittis ipsum, sit amet tincidunt neque odio eu libero. Pellentesque quis turpis ut libero malesuada sollicitudin. Duis massa augue, efficitur nec varius vel, auctor non lorem.",
     "welcome2p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu condimentum quam. In interdum, ligula nec elementum lacinia, felis mi sagittis ipsum, sit amet tincidunt neque odio eu libero. Pellentesque quis turpis ut libero malesuada sollicitudin. Duis massa augue, efficitur nec varius vel, auctor non lorem."
   },
   "onboardingParentProfile": {
-    "title": "ONBOARDING - Parent profile",
+    "chilNameText": "ONBOARDING - Parent profile",
     "parentProfile": "Parent/Caregiver profile"
   },
   "onboardingHowToUse": {
-    "title": "ONBOARDING - How to use",
+    "chilNameText": "ONBOARDING - How to use",
     "howToUseApp": "How to use the app"
   },
   "dashboard": {
-    "title": "Dashboard",
+    "chilNameText": "Dashboard",
     "carouselAge": "{{value}} {{unit}}",
     "whenToActEarly": "When to Act Early",
     "addApt": "+ Add apt",
@@ -41,7 +41,7 @@
     "dateFormat": "MM/dd/yyyy"
   },
   "addChild": {
-    "title": "Add child",
+    "chilNameText": "Add child",
     "addAnotherChild": "+ Add another child",
     "boy": "Boy",
     "girl": "Girl",

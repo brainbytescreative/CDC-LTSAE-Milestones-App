@@ -1,9 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {format} from 'date-fns';

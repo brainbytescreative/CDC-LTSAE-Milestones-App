@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React from 'react';
+import React, {useState} from 'react';
 import {ProgressBar} from 'react-native-paper';
-import {useHeaderHeight} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
+import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {colors} from '../../resources/constants';
@@ -17,6 +17,7 @@ import {useTranslation} from 'react-i18next';
 import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
+import ChildSelectorModal from './ChildSelectorModal';
 
 const DATA: DataItem[] = [
   {
@@ -50,7 +51,11 @@ const DATA: DataItem[] = [
   },
 ];
 
-const DashboardScreen: React.FC<{}> = () => {
+interface Props {
+  navigation: StackNavigationProp<any>;
+}
+
+const DashboardScreen: React.FC<Props> = ({navigation}) => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
@@ -61,6 +66,7 @@ const DashboardScreen: React.FC<{}> = () => {
 
   return (
     <>
+      <ChildSelectorModal />
       <ScrollView style={{paddingTop: headerHeight, backgroundColor: '#fff'}}>
         <View
           style={{
