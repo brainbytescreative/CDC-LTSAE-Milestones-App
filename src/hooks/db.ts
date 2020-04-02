@@ -74,6 +74,13 @@ export function useGetCurrentChild() {
   });
 }
 
+export function useSetSelectedChild() {
+  return useMutation<void, {id: string}>(async ({id}) => {
+    await AsyncStorage.setItem('selectedChild', `${id}`);
+    await queryCache.refetchQueries(['selectedChild']);
+  });
+}
+
 export function useGetChildren() {
   return useQuery<ChildResult[], any>('children', async () => {
     const result = await sqLiteClient.dB?.executeSql('select * from children');

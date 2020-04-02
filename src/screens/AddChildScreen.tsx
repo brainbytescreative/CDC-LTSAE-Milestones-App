@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Keyboard, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import {Image, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
 import {routeKeys} from '../resources/constants';
 import {Button, RadioButton, Text, TextInput} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild} from '../hooks/db';
 import {addEditChildSchema} from '../resources/validationSchemas';
+import {DashboardStackParamList} from '../components/Navigator/DashboardStack';
 
 const options = {
   quality: 1.0,
@@ -20,11 +21,16 @@ const options = {
   },
 };
 
+type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
+
 const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation();
   const {t} = useTranslation('addChild');
 
   const [addChild, {status}] = useAddChild();
+  const route = useRoute<AddChildRouteProp>();
+
+  let childId = route?.params?.childId;
 
   const formik = useFormik({
     initialValues: {

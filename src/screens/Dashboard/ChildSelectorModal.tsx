@@ -16,7 +16,12 @@ import {routeKeys} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import i18next from 'i18next';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
-import {ChildResult, useGetChildren, useGetCurrentChild} from '../../hooks/db';
+import {
+  ChildResult,
+  useGetChildren,
+  useGetCurrentChild,
+  useSetSelectedChild,
+} from '../../hooks/db';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: string) => void;
@@ -100,9 +105,10 @@ const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
 const ChildSelectorModal: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
-  const {data: seltedChild} = useGetCurrentChild();
+  const {data: selectedChild} = useGetCurrentChild();
   const {data: children} = useGetChildren();
   const navigation = useNavigation();
+  const [selectChild] = useSetSelectedChild();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -122,7 +128,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
                 fontSize: 22,
                 fontWeight: 'bold',
               }}>
-              {seltedChild?.name}
+              {selectedChild?.name}
             </Text>
             <EvilIcons
               name={childSelectorVisible ? 'chevron-up' : 'chevron-down'}
@@ -132,7 +138,12 @@ const ChildSelectorModal: React.FC<{}> = () => {
         );
       },
     });
-  }, [navigation, setChildSelectorVisible, childSelectorVisible]);
+  }, [
+    navigation,
+    setChildSelectorVisible,
+    childSelectorVisible,
+    selectedChild,
+  ]);
 
   const onEdit = (id?: string) => {
     setChildSelectorVisible(false);
@@ -142,6 +153,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
   };
 
   const onSelect = (id?: string) => {
+    id && selectChild({id});
     setChildSelectorVisible(false);
   };
 

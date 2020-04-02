@@ -4,13 +4,16 @@ import {routeKeys} from '../../resources/constants';
 import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import {TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BurgerIcon} from '../../resources/svg';
 import AddChildScreen from '../../screens/AddChildScreen';
 
 const Stack = createStackNavigator();
+
+export type DashboardStackParamList = {
+  AddChild: {childId: string | number} | undefined;
+};
 
 const DashboardStack: FC<{}> = (props) => {
   const {t} = useTranslation();
