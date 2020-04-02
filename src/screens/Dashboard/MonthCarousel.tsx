@@ -65,6 +65,10 @@ const Item: React.FC<DataItem & {childAge: number}> = ({
 
 const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
   const flatListRef = useRef<any>(null);
+
+  currentAgeIndex =
+    currentAgeIndex === -1 || !currentAgeIndex ? 0 : currentAgeIndex;
+
   const [currentItemIndex, setCurrentItemIndex] = useState(currentAgeIndex);
 
   useLayoutEffect(() => {

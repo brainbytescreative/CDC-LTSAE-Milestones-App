@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, {useState} from 'react';
+import React from 'react';
 import {ProgressBar} from 'react-native-paper';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
-import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {colors} from '../../resources/constants';
@@ -18,6 +18,10 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from './ChildSelectorModal';
+import {useGetCurrentChild} from '../../hooks/db';
+import {differenceInMonths, formatDistance} from 'date-fns';
+import {dateFnsLocales} from '../../resources/dateFnsLocales';
+import i18next from 'i18next';
 
 const DATA: DataItem[] = [
   {
@@ -55,13 +59,23 @@ interface Props {
   navigation: StackNavigationProp<any>;
 }
 
-const DashboardScreen: React.FC<Props> = ({navigation}) => {
+const DashboardScreen: React.FC<Props> = () => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
 
-  const childAge = 9;
-  const childName = 'Mina Jaquelina';
+  const {data: child} = useGetCurrentChild();
+
+  const childAge =
+    child?.birthday && differenceInMonths(child?.birthday, new Date());
+
+  const childAgeText =
+    child?.birthday &&
+    formatDistance(child?.birthday, new Date(), {
+      locale: dateFnsLocales[i18next.language],
+    });
+
+  const childName = child?.name;
   const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);
 
   return (
@@ -90,12 +104,12 @@ const DashboardScreen: React.FC<Props> = ({navigation}) => {
           <View style={{alignItems: 'center'}}>
             <Text style={styles.childNameText}>{childName}</Text>
             <Text style={styles.childAgeText}>
-              {t('childAge', {unit: 'month', value: childAge})}
+              {t('childAge', {value: childAgeText})}
             </Text>
           </View>
           <MonthCarousel
             data={DATA}
-            childAge={childAge}
+            childAge={childAge || 1}
             currentAgeIndex={currentAgeIndex}
           />
           <View style={styles.yellowTipContainer}>

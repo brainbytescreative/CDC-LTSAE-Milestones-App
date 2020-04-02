@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Keyboard, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
 import {routeKeys} from '../resources/constants';
@@ -8,6 +8,8 @@ import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
+import {useAddChild} from '../hooks/db';
+import {addEditChildSchema} from '../resources/validationSchemas';
 
 const options = {
   quality: 1.0,
@@ -21,18 +23,29 @@ const options = {
 const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation();
   const {t} = useTranslation('addChild');
-  const [image, setImage] = useState<string | undefined>();
+
+  const [addChild, {status}] = useAddChild();
 
   const formik = useFormik({
     initialValues: {
       name: '',
-      gender: null,
-      dateOfBirth: null,
+      gender: undefined,
+      birthday: undefined,
+      photo: undefined,
     },
+    validationSchema: addEditChildSchema,
+    validateOnChange: true,
+    validateOnMount: true,
     onSubmit: (values) => {
       console.warn(values);
+      addChild({
+        ...values,
+        birthday: values.birthday || new Date(),
+        gender: values.gender || 0,
+      }).then(() => navigation.navigate(routeKeys.Dashboard));
     },
   });
+
   return (
     <Layout>
       <View style={{padding: 20}}>
@@ -42,8 +55,9 @@ const AddChildScreen: React.FC<{}> = () => {
             onPress={() => {
               ImagePicker.showImagePicker(options, (response) => {
                 if (response.uri) {
-                  setImage(response.uri);
+                  formik.setFieldValue('photo', response.uri);
                 }
+                // console.log(response.uri);
               });
             }}
             style={{
@@ -55,11 +69,11 @@ const AddChildScreen: React.FC<{}> = () => {
               justifyContent: 'center',
               overflow: 'hidden',
             }}>
-            {image ? (
+            {formik.values.photo ? (
               <Image
                 style={{height: '100%', width: '100%'}}
                 source={{
-                  uri: image,
+                  uri: formik.values.photo,
                 }}
               />
             ) : (
@@ -69,14 +83,15 @@ const AddChildScreen: React.FC<{}> = () => {
         </View>
         <TextInput
           autoCorrect={false}
-          onChange={formik.handleChange('name') as any}
+          value={formik.values.name}
+          onChangeText={formik.handleChange('name') as any}
           label={t('fields:childNamePlaceholder')}
           mode={'outlined'}
         />
 
         <DatePicker
           label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => formik.setFieldValue('dateOfBirth', date)}
+          onChange={(date) => formik.setFieldValue('birthday', date)}
         />
 
         <View
@@ -106,6 +121,7 @@ const AddChildScreen: React.FC<{}> = () => {
         </View>
 
         <Button
+          disabled={status === 'loading' || !formik.isValid}
           mode={'contained'}
           onPress={() => {
             navigation.navigate(routeKeys.Dashboard);
@@ -114,10 +130,10 @@ const AddChildScreen: React.FC<{}> = () => {
         </Button>
         <Button
           mode={'contained'}
+          disabled={status === 'loading' || !formik.isValid}
           style={{marginVertical: 50, width: 100}}
           onPress={() => {
-            // formik.handleSubmit();
-            navigation.navigate(routeKeys.Dashboard);
+            formik.handleSubmit();
           }}>
           {t('common:done').toUpperCase()}
         </Button>

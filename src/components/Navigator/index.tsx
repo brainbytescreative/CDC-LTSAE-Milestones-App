@@ -28,14 +28,14 @@ const Navigator: React.FC<{}> = () => {
       {/*  name={routeKeys.OnboardingInfo}*/}
       {/*  component={OnboardingInfoScreen}*/}
       {/*  options={{*/}
-      {/*    title: t('onboardingInfo:chilNameText'),*/}
+      {/*    title: t('onboardingInfo:title'),*/}
       {/*  }}*/}
       {/*/>*/}
       {/*<Stack.Screen*/}
       {/*  name={routeKeys.OnboardingParentProfile}*/}
       {/*  component={OnboardingParentProfileScreen}*/}
       {/*  options={{*/}
-      {/*    title: t('onboardingParentProfile:chilNameText'),*/}
+      {/*    title: t('onboardingParentProfile:title'),*/}
       {/*    headerLeft: () => null,*/}
       {/*  }}*/}
       {/*/>*/}
@@ -43,7 +43,7 @@ const Navigator: React.FC<{}> = () => {
       {/*  name={routeKeys.OnboardingHowToUse}*/}
       {/*  component={OnboardingHowToUseScreen}*/}
       {/*  options={{*/}
-      {/*    title: t('onboardingHowToUse:chilNameText'),*/}
+      {/*    title: t('onboardingHowToUse:title'),*/}
       {/*    headerLeft: () => null,*/}
       {/*  }}*/}
       {/*/>*/}
@@ -51,7 +51,7 @@ const Navigator: React.FC<{}> = () => {
       {/*  name={routeKeys.AddChild}*/}
       {/*  component={AddChildScreen}*/}
       {/*  options={{*/}
-      {/*    title: t('addChild:chilNameText'),*/}
+      {/*    title: t('addChild:title'),*/}
       {/*    headerLeft: () => null,*/}
       {/*  }}*/}
       {/*/>*/}

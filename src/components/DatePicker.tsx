@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {format} from 'date-fns';
 import {useTranslation} from 'react-i18next';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface PageProps {
   onChange?: (date?: Date) => void;

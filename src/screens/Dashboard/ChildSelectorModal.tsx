@@ -1,58 +1,61 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {Portal} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useNavigation} from '@react-navigation/native';
 import Text from '../../components/Text';
-import {formatDistanceStrict, subMonths} from 'date-fns';
+import {formatDistanceStrict} from 'date-fns';
 import {routeKeys} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import i18next from 'i18next';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
+import {ChildResult, useGetChildren, useGetCurrentChild} from '../../hooks/db';
 
-const data = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    name: 'Child #1',
-    birthDay: subMonths(new Date(), 1),
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    name: 'Child #2',
-    birthDay: subMonths(new Date(), 6),
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f64',
-    name: 'Child #3',
-    birthDay: subMonths(new Date(), 18),
-  },
-];
-
-type Child = typeof data[0];
-
-interface ItemProps extends Child {
+interface ItemProps extends ChildResult {
+  onSelect: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-const Item: React.FC<ItemProps> = ({id, name, birthDay, onDelete, onEdit}) => {
+const Item: React.FC<ItemProps> = ({
+  id,
+  name,
+  birthday,
+  photo,
+  onDelete,
+  onEdit,
+  onSelect,
+}) => {
   const {t} = useTranslation('childSelector');
   return (
     <TouchableOpacity
       onPress={() => {
-        onEdit(id);
+        onSelect(id);
       }}
       style={{flexDirection: 'row', paddingTop: 20}}>
       <View style={{flex: 1, alignItems: 'center'}}>
-        <View
-          style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
-        />
+        {photo ? (
+          <Image
+            source={{uri: photo}}
+            style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
+          />
+        ) : (
+          <View
+            style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
+          />
+        )}
       </View>
       <View style={{flex: 1}}>
         <Text style={styles.chilNameText}>{name}</Text>
         <Text style={styles.chilNameText}>
-          {formatDistanceStrict(new Date(), birthDay, {
+          {formatDistanceStrict(new Date(), birthday, {
             roundingMethod: 'floor',
             locale: dateFnsLocales[i18next.language],
           })}
@@ -97,7 +100,8 @@ const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
 const ChildSelectorModal: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
-
+  const {data: seltedChild} = useGetCurrentChild();
+  const {data: children} = useGetChildren();
   const navigation = useNavigation();
 
   React.useLayoutEffect(() => {
@@ -118,7 +122,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
                 fontSize: 22,
                 fontWeight: 'bold',
               }}>
-              Child name
+              {seltedChild?.name}
             </Text>
             <EvilIcons
               name={childSelectorVisible ? 'chevron-up' : 'chevron-down'}
@@ -137,6 +141,10 @@ const ChildSelectorModal: React.FC<{}> = () => {
     });
   };
 
+  const onSelect = (id?: string) => {
+    setChildSelectorVisible(false);
+  };
+
   return (
     <Portal>
       <View
@@ -147,10 +155,11 @@ const ChildSelectorModal: React.FC<{}> = () => {
           display: childSelectorVisible ? 'flex' : 'none',
         }}>
         <FlatList
-          data={data}
+          data={children}
           renderItem={({item}) => (
             <Item
               {...item}
+              onSelect={onSelect}
               onEdit={onEdit}
               onDelete={(id) => {
                 console.warn('delete', id);

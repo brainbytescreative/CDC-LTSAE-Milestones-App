@@ -21,7 +21,7 @@ const DashboardStack: FC<{}> = (props) => {
         name={routeKeys.Dashboard}
         component={DashboardScreen}
         options={() => ({
-          chilNameText: t('dashboard:chilNameText'),
+          title: t('dashboard:title'),
           headerTransparent: true,
           headerLeft: () => (
             <TouchableOpacity
@@ -59,7 +59,7 @@ const DashboardStack: FC<{}> = (props) => {
         name={routeKeys.AddChild}
         component={AddChildScreen}
         options={{
-          title: t('addChild:chilNameText'),
+          title: t('addChild:title'),
         }}
       />
     </Stack.Navigator>
