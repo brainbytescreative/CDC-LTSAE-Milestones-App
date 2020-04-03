@@ -42,6 +42,7 @@
     "appLanguage": "App language",
     "next": "Next",
     "done": "Done",
+    "skip": "Skip",
     "required": "* required field",
     "dateFormat": "MM/dd/yyyy"
   },

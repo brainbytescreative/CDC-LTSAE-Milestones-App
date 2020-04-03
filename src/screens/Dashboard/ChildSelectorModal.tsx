@@ -18,6 +18,7 @@ import i18next from 'i18next';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import {
   ChildResult,
+  useDeleteChild,
   useGetChildren,
   useGetCurrentChild,
   useSetSelectedChild,
@@ -125,6 +126,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
   const {data: children} = useGetChildren();
   const navigation = useNavigation();
   const [selectChild] = useSetSelectedChild();
+  const [deleteChild] = useDeleteChild();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -190,7 +192,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
               onSelect={onSelect}
               onEdit={onEdit}
               onDelete={(id) => {
-                console.warn('delete', id);
+                deleteChild({id});
               }}
             />
           )}

@@ -20,7 +20,7 @@ import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from './ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenDbHooks';
-import {differenceInMonths, formatDistance} from 'date-fns';
+import {differenceInMonths, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
 
@@ -67,13 +67,13 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const {data: child} = useGetCurrentChild();
 
-  const childAge =
-    child?.birthday && differenceInMonths(child?.birthday, new Date());
+  const childAge = child?.birthday && differenceInMonths(new Date(), child?.birthday);
 
   const childAgeText =
     child?.birthday &&
-    formatDistance(child?.birthday, new Date(), {
+    formatDistanceStrict(child?.birthday, new Date(), {
       locale: dateFnsLocales[i18next.language],
+      roundingMethod: 'floor',
     });
 
   const childName = child?.name;
@@ -102,10 +102,7 @@ const DashboardScreen: React.FC<Props> = () => {
           <View style={{alignItems: 'center', marginTop: 16, marginBottom: 25}}>
             <View style={styles.image}>
               {child?.photo ? (
-                <Image
-                  style={{width: '100%', height: '100%', borderRadius: 500}}
-                  source={{uri: child?.photo}}
-                />
+                <Image style={{width: '100%', height: '100%', borderRadius: 500}} source={{uri: child?.photo}} />
               ) : (
                 <BabyPlaceholder width={'90%'} height={'90%'} />
               )}
@@ -113,15 +110,9 @@ const DashboardScreen: React.FC<Props> = () => {
           </View>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.childNameText}>{childName}</Text>
-            <Text style={styles.childAgeText}>
-              {t('childAge', {value: childAgeText})}
-            </Text>
+            <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
           </View>
-          <MonthCarousel
-            data={DATA}
-            childAge={childAge || 1}
-            currentAgeIndex={currentAgeIndex}
-          />
+          <MonthCarousel data={DATA} childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
           <View style={styles.yellowTipContainer}>
             <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
           </View>
@@ -132,8 +123,7 @@ const DashboardScreen: React.FC<Props> = () => {
               backgroundColor: colors.purple,
               marginTop: -1,
             }}>
-            <View
-              style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
+            <View style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
               <View style={styles.milestoneCheckListContainer}>
                 <Text
                   style={{
@@ -160,29 +150,20 @@ const DashboardScreen: React.FC<Props> = () => {
               style={{
                 marginVertical: 20,
               }}>
-              <Text style={styles.actionItemsTitle}>
-                {t('actionItemsTitle')}
-              </Text>
+              <Text style={styles.actionItemsTitle}>{t('actionItemsTitle')}</Text>
 
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.actionItem}>
                   <ActEarlySign />
-                  <Text style={styles.actionItemText}>
-                    {t('whenToActEarly')}
-                  </Text>
+                  <Text style={styles.actionItemText}>{t('whenToActEarly')}</Text>
                 </View>
                 <View style={[styles.actionItem, {marginHorizontal: 10}]}>
                   <MilestoneSummarySign />
-                  <Text style={styles.actionItemText}>
-                    {t('milestoneSummary')}
-                  </Text>
+                  <Text style={styles.actionItemText}>{t('milestoneSummary')}</Text>
                 </View>
                 <View style={styles.actionItem}>
                   <TipsAndActivitiesSign />
-                  <Text style={styles.actionItemText}>
-                    {t('tipsAndActivities')}
-                  </Text>
+                  <Text style={styles.actionItemText}>{t('tipsAndActivities')}</Text>
                 </View>
               </View>
             </View>
@@ -196,11 +177,7 @@ const DashboardScreen: React.FC<Props> = () => {
               </Text>
               <Text style={{fontSize: 12}}>{t('addApt')}</Text>
             </View>
-            <View
-              style={[
-                styles.appointmentsContainer,
-                {marginBottom: 40 + bottom},
-              ]}>
+            <View style={[styles.appointmentsContainer, {marginBottom: 40 + bottom}]}>
               <Text style={{fontSize: 18}}>{t('checkUp')}</Text>
               <Text style={{fontSize: 18}}>1/2/20 3:30pm</Text>
             </View>

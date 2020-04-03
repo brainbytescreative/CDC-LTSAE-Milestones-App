@@ -1,21 +1,16 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
-import {routeKeys} from '../resources/constants';
 import {Button, RadioButton, Text, TextInput} from 'react-native-paper';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute, useBackButton} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
-import {
-  useAddChild,
-  useGetChild,
-  useUpdateChild,
-} from '../hooks/childrenDbHooks';
+import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenDbHooks';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import {DashboardStackParamList} from '../components/Navigator/DashboardStack';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 
 const options = {
   quality: 1.0,
@@ -27,30 +22,29 @@ const options = {
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
-type ProfileScreenNavigationProp = StackNavigationProp<
-  DashboardStackParamList,
-  'AddChild'
->;
+type ProfileScreenNavigationProp = StackNavigationProp<DashboardStackParamList, 'AddChild'>;
 
-const AddChildScreen: React.FC<{}> = () => {
+const AddChildScreen: React.FC<{onboarding?: boolean}> = ({onboarding}) => {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const {t} = useTranslation('addChild');
 
   const [addChild, {status: addStatus}] = useAddChild();
   const route = useRoute<AddChildRouteProp>();
-  const [childId, setChildId] = useState(route?.params?.childId);
+  const childId = route?.params?.childId;
   const prefix = childId ? 'edit-' : '';
   const {data: child} = useGetChild({id: childId});
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
 
+  const initialValues = {
+    name: '',
+    gender: undefined,
+    birthday: undefined,
+    photo: undefined,
+  };
+
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      gender: undefined,
-      birthday: undefined,
-      photo: undefined,
-    },
+    initialValues: initialValues,
     validationSchema: addEditChildSchema,
     validateOnChange: true,
     validateOnMount: true,
@@ -62,29 +56,20 @@ const AddChildScreen: React.FC<{}> = () => {
       };
 
       if (childId) {
-        updateChild({...childInput, id: `${childId}`});
+        return updateChild({...childInput, id: `${childId}`});
       } else {
-        addChild(childInput);
+        return addChild(childInput);
       }
     },
   });
 
   const isLoading = updateStatus === 'loading' || addStatus === 'loading';
 
-  console.log('formik.values', formik.values);
-
-  useEffect(() => {
-    if (updateStatus === 'success' && childId) {
-      setChildId(undefined);
-      formik.resetForm();
-    }
-  }, [updateStatus, formik, childId]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title,
     });
-  }, [title, navigation]);
+  }, [title, navigation, route.params]);
 
   useEffect(() => {
     if (child) {
@@ -96,9 +81,7 @@ const AddChildScreen: React.FC<{}> = () => {
   return (
     <Layout>
       <View style={{padding: 20}}>
-        <Text style={{fontWeight: 'bold', fontSize: 20}}>
-          {t(`${prefix}title`)}
-        </Text>
+        <Text style={{fontWeight: 'bold', fontSize: 20}}>{t(`${prefix}title`)}</Text>
         <View style={{alignItems: 'center', marginVertical: 30}}>
           <TouchableOpacity
             onPress={() => {
@@ -175,19 +158,32 @@ const AddChildScreen: React.FC<{}> = () => {
           mode={'contained'}
           onPress={() => {
             formik.handleSubmit();
+            navigation.replace('AddChild', {childId: undefined, anotherChild: onboarding});
           }}>
           {t('addAnotherChild').toUpperCase()}
         </Button>
-        <Button
-          mode={'contained'}
-          disabled={isLoading || !formik.isValid}
-          style={{marginVertical: 50, width: 100}}
-          onPress={() => {
-            formik.handleSubmit();
-            navigation.navigate('Dashboard');
-          }}>
-          {t('common:done').toUpperCase()}
-        </Button>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Button
+            mode={'contained'}
+            disabled={isLoading || !formik.isValid}
+            style={{marginVertical: 50, width: 100}}
+            onPress={() => {
+              formik.handleSubmit();
+              navigation.navigate('Dashboard');
+            }}>
+            {t('common:done').toUpperCase()}
+          </Button>
+          {route.params?.anotherChild && (
+            <Button
+              mode={'contained'}
+              style={{marginVertical: 50, width: 100}}
+              onPress={() => {
+                navigation.navigate('Dashboard');
+              }}>
+              {t('common:skip').toUpperCase()}
+            </Button>
+          )}
+        </View>
         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
       </View>
     </Layout>

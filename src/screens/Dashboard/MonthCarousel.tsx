@@ -17,11 +17,7 @@ interface Props {
   childAge: number;
 }
 
-const Item: React.FC<DataItem & {childAge: number}> = ({
-  month,
-  childAge,
-  progress,
-}) => {
+const Item: React.FC<DataItem & {childAge: number}> = ({month, childAge, progress}) => {
   const {t} = useTranslation('dashboard');
   return (
     <TouchableOpacity>
@@ -32,16 +28,11 @@ const Item: React.FC<DataItem & {childAge: number}> = ({
           width={2}
           fill={progress}
           tintColor={colors.iceCold}
-          backgroundColor={
-            month >= childAge ? colors.lightGray : 'transparent'
-          }>
+          backgroundColor={month >= childAge ? colors.lightGray : 'transparent'}>
           {() => (
             <View
               style={{
-                backgroundColor:
-                  month < childAge
-                    ? colors.aquamarineTransparent
-                    : 'transparent',
+                backgroundColor: month < childAge ? colors.aquamarineTransparent : 'transparent',
                 width: '100%',
                 height: '100%',
                 alignItems: 'center',
@@ -50,8 +41,7 @@ const Item: React.FC<DataItem & {childAge: number}> = ({
               <Text
                 style={{
                   fontSize: 12,
-                  fontFamily:
-                    month === childAge ? 'Avenir-Heavy' : 'Avenir-light',
+                  fontFamily: month === childAge ? 'Avenir-Heavy' : 'Avenir-light',
                 }}>
                 {t('carouselAge', {value: month, unit: 'mo'})}
               </Text>
@@ -65,9 +55,7 @@ const Item: React.FC<DataItem & {childAge: number}> = ({
 
 const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
   const flatListRef = useRef<any>(null);
-
-  currentAgeIndex =
-    currentAgeIndex === -1 || !currentAgeIndex ? 0 : currentAgeIndex;
+  currentAgeIndex = currentAgeIndex === -1 || !currentAgeIndex ? 0 : currentAgeIndex;
 
   const [currentItemIndex, setCurrentItemIndex] = useState(currentAgeIndex);
 

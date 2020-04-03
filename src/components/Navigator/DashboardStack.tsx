@@ -12,7 +12,7 @@ import AddChildScreen from '../../screens/AddChildScreen';
 const Stack = createStackNavigator();
 
 export type DashboardStackParamList = {
-  AddChild: {childId: string | number} | undefined;
+  AddChild: {childId: string | number | undefined; anotherChild: boolean | undefined} | undefined;
   Dashboard: undefined;
 };
 
