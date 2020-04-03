@@ -13,6 +13,7 @@ const Stack = createStackNavigator();
 
 export type DashboardStackParamList = {
   AddChild: {childId: string | number} | undefined;
+  Dashboard: undefined;
 };
 
 const DashboardStack: FC<{}> = (props) => {

@@ -2,12 +2,13 @@
 import React from 'react';
 import {ProgressBar} from 'react-native-paper';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import {colors} from '../../resources/constants';
 import {
   ActEarlySign,
+  BabyPlaceholder,
   MilestoneSummarySign,
   NabBarBackground,
   PurpleArc,
@@ -18,7 +19,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from './ChildSelectorModal';
-import {useGetCurrentChild} from '../../hooks/db';
+import {useGetCurrentChild} from '../../hooks/childrenDbHooks';
 import {differenceInMonths, formatDistance} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
@@ -99,7 +100,16 @@ const DashboardScreen: React.FC<Props> = () => {
         </View>
         <View>
           <View style={{alignItems: 'center', marginTop: 16, marginBottom: 25}}>
-            <View style={styles.image} />
+            <View style={styles.image}>
+              {child?.photo ? (
+                <Image
+                  style={{width: '100%', height: '100%', borderRadius: 500}}
+                  source={{uri: child?.photo}}
+                />
+              ) : (
+                <BabyPlaceholder width={'90%'} height={'90%'} />
+              )}
+            </View>
           </View>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.childNameText}>{childName}</Text>
@@ -276,6 +286,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   image: {
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fff',
     width: 190,
     height: 190,

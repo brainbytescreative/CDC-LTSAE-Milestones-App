@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
 import {routeKeys} from '../resources/constants';
@@ -8,9 +8,14 @@ import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
-import {useAddChild} from '../hooks/db';
+import {
+  useAddChild,
+  useGetChild,
+  useUpdateChild,
+} from '../hooks/childrenDbHooks';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import {DashboardStackParamList} from '../components/Navigator/DashboardStack';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const options = {
   quality: 1.0,
@@ -22,15 +27,22 @@ const options = {
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
+type ProfileScreenNavigationProp = StackNavigationProp<
+  DashboardStackParamList,
+  'AddChild'
+>;
 
 const AddChildScreen: React.FC<{}> = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
   const {t} = useTranslation('addChild');
 
-  const [addChild, {status}] = useAddChild();
+  const [addChild, {status: addStatus}] = useAddChild();
   const route = useRoute<AddChildRouteProp>();
-
-  let childId = route?.params?.childId;
+  const [childId, setChildId] = useState(route?.params?.childId);
+  const prefix = childId ? 'edit-' : '';
+  const {data: child} = useGetChild({id: childId});
+  const [updateChild, {status: updateStatus}] = useUpdateChild();
+  const title = t(`${prefix}title`);
 
   const formik = useFormik({
     initialValues: {
@@ -43,19 +55,50 @@ const AddChildScreen: React.FC<{}> = () => {
     validateOnChange: true,
     validateOnMount: true,
     onSubmit: (values) => {
-      console.warn(values);
-      addChild({
+      const childInput = {
         ...values,
         birthday: values.birthday || new Date(),
         gender: values.gender || 0,
-      }).then(() => navigation.navigate(routeKeys.Dashboard));
+      };
+
+      if (childId) {
+        updateChild({...childInput, id: `${childId}`});
+      } else {
+        addChild(childInput);
+      }
     },
   });
+
+  const isLoading = updateStatus === 'loading' || addStatus === 'loading';
+
+  console.log('formik.values', formik.values);
+
+  useEffect(() => {
+    if (updateStatus === 'success' && childId) {
+      setChildId(undefined);
+      formik.resetForm();
+    }
+  }, [updateStatus, formik, childId]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title,
+    });
+  }, [title, navigation]);
+
+  useEffect(() => {
+    if (child) {
+      formik.setValues(child as any);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [child]);
 
   return (
     <Layout>
       <View style={{padding: 20}}>
-        <Text style={{fontWeight: 'bold', fontSize: 20}}>{t('title')}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 20}}>
+          {t(`${prefix}title`)}
+        </Text>
         <View style={{alignItems: 'center', marginVertical: 30}}>
           <TouchableOpacity
             onPress={() => {
@@ -96,6 +139,7 @@ const AddChildScreen: React.FC<{}> = () => {
         />
 
         <DatePicker
+          value={formik.values.birthday}
           label={t('fields:dateOfBirthPlaceholder')}
           onChange={(date) => formik.setFieldValue('birthday', date)}
         />
@@ -127,19 +171,20 @@ const AddChildScreen: React.FC<{}> = () => {
         </View>
 
         <Button
-          disabled={status === 'loading' || !formik.isValid}
+          disabled={isLoading || !formik.isValid}
           mode={'contained'}
           onPress={() => {
-            navigation.navigate(routeKeys.Dashboard);
+            formik.handleSubmit();
           }}>
           {t('addAnotherChild').toUpperCase()}
         </Button>
         <Button
           mode={'contained'}
-          disabled={status === 'loading' || !formik.isValid}
+          disabled={isLoading || !formik.isValid}
           style={{marginVertical: 50, width: 100}}
           onPress={() => {
             formik.handleSubmit();
+            navigation.navigate('Dashboard');
           }}>
           {t('common:done').toUpperCase()}
         </Button>

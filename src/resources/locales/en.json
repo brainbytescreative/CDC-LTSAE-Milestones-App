@@ -47,6 +47,7 @@
   },
   "addChild": {
     "title": "Add child",
+    "edit-title": "Edit child",
     "addAnotherChild": "+ Add another child",
     "boy": "Boy",
     "girl": "Girl",

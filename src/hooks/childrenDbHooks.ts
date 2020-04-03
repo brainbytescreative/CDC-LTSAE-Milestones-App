@@ -2,9 +2,13 @@ import {queryCache, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import AsyncStorage from '@react-native-community/async-storage';
+import _ from 'lodash';
 
-export interface ChildDbRecord {
+interface Record {
   id: string;
+}
+
+export interface ChildDbRecord extends Record {
   name: string;
   birthday: string;
   gender: number;
@@ -19,16 +23,25 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 }
 
 type TableNames = 'children';
+type QueryType = 'insert' | 'updateById';
 
 function objectToQuery(
   object: any,
   tableName: TableNames,
-  queryType: 'insert' = 'insert',
+  queryType: QueryType = 'insert',
 ): [string, any[]] {
-  const values = Object.values(object);
-  const variables = Object.keys(object);
+  const values = Object.values(_.omit(object, ['id']));
+  const variables = Object.keys(_.omit(object, ['id']));
 
   switch (queryType) {
+    case 'updateById':
+      return [
+        `
+          UPDATE ${tableName} set ${variables
+          .map((value) => `${value} = ?`)
+          .join(', ')} where id = ?`,
+        [...values, object.id],
+      ];
     case 'insert':
       return [
         `
@@ -79,6 +92,52 @@ export function useSetSelectedChild() {
     await AsyncStorage.setItem('selectedChild', `${id}`);
     await queryCache.refetchQueries(['selectedChild']);
   });
+}
+
+export function useUpdateChild() {
+  return useMutation<void, ChildResult>(
+    async (variables) => {
+      const [query, values] = objectToQuery(
+        {
+          ...variables,
+          birthday: formatISO(variables.birthday, {
+            representation: 'date',
+          }),
+        },
+        'children',
+        'updateById',
+      );
+      await sqLiteClient.dB?.executeSql(query, values);
+    },
+    {
+      onSuccess: (redult, variables) => {
+        queryCache.refetchQueries('selectedChild');
+        queryCache.refetchQueries('children');
+        queryCache.refetchQueries(['children', {id: variables.id}]);
+      },
+    },
+  );
+}
+
+export function useGetChild(options: {id: number | string | undefined}) {
+  return useQuery<ChildResult | undefined, typeof options>(
+    ['children', options],
+    async (key, variables) => {
+      if (!variables.id) {
+        return;
+      }
+
+      const result = await sqLiteClient.dB?.executeSql(
+        'select * from children where id = ?',
+        [variables.id],
+      );
+      const record: ChildDbRecord = result && result[0].rows.item(0);
+      return {
+        ...record,
+        birthday: parseISO(record.birthday),
+      };
+    },
+  );
 }
 
 export function useGetChildren() {

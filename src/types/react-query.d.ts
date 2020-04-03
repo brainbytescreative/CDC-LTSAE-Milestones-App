@@ -38,6 +38,7 @@ declare module 'react-query' {
     | null;
 
   export type QueryFunction<TResult, TVariables extends object> = (
+    key: string,
     variables: TVariables,
   ) => Promise<TResult>;
 
@@ -94,16 +95,16 @@ declare module 'react-query' {
 
   export function useMutation<TResults, TVariables extends object>(
     mutationFn: MutationFunction<TResults, TVariables>,
-    mutationOptions?: MutationOptions,
+    mutationOptions?: MutationOptions<TResults, TVariables>,
   ): [MutateFunction<TResults, TVariables>, MutationResult<TResults>];
 
   export type MutationFunction<TResults, TVariables extends object> = (
     variables: TVariables,
   ) => Promise<TResults>;
 
-  export interface MutationOptions {
+  export interface MutationOptions<TResults, TVariables> {
     onMutate?: () => void;
-    onSuccess?: () => void;
+    onSuccess?: (result: TResults, variables: TVariables) => void;
     onError?: () => void;
     onSettled?: () => void;
     throwOnError?: () => void;

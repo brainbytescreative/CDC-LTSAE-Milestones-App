@@ -21,7 +21,8 @@ import {
   useGetChildren,
   useGetCurrentChild,
   useSetSelectedChild,
-} from '../../hooks/db';
+} from '../../hooks/childrenDbHooks';
+import {BabyPlaceholder} from '../../resources/svg';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: string) => void;
@@ -49,12 +50,27 @@ const Item: React.FC<ItemProps> = ({
         {photo ? (
           <Image
             source={{uri: photo}}
-            style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
+            style={{
+              width: 100,
+              height: 100,
+              borderWidth: 0.3,
+              borderColor: 'gray',
+              borderRadius: 100,
+            }}
           />
         ) : (
           <View
-            style={{width: 100, height: 100, borderWidth: 1, borderRadius: 100}}
-          />
+            style={{
+              width: 100,
+              height: 100,
+              borderWidth: 0.3,
+              borderColor: 'gray',
+              borderRadius: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <BabyPlaceholder width={'90%'} height={'90%'} />
+          </View>
         )}
       </View>
       <View style={{flex: 1}}>
@@ -179,7 +195,13 @@ const ChildSelectorModal: React.FC<{}> = () => {
             />
           )}
           keyExtractor={(item) => item.id}
-          ListFooterComponent={<Footer onPress={onEdit} />}
+          ListFooterComponent={
+            <Footer
+              onPress={() => {
+                onEdit();
+              }}
+            />
+          }
         />
       </View>
     </Portal>
