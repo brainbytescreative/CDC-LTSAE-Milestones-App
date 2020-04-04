@@ -126,7 +126,7 @@ export function useDeleteChild() {
 }
 
 export function useGetChild(options: {id: number | string | undefined}) {
-  return useQuery<ChildResult | undefined, typeof options>(['children', options], async (key, variables) => {
+  return useQuery<ChildResult | undefined, [string, typeof options]>(['children', options], async (key, variables) => {
     if (!variables.id) {
       return;
     }

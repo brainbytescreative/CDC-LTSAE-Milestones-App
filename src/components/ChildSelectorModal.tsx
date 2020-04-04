@@ -10,20 +10,20 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {Portal} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useNavigation} from '@react-navigation/native';
-import Text from '../../components/Text';
+import Text from './Text';
 import {formatDistanceStrict} from 'date-fns';
-import {routeKeys} from '../../resources/constants';
+import {routeKeys} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import i18next from 'i18next';
-import {dateFnsLocales} from '../../resources/dateFnsLocales';
+import {dateFnsLocales} from '../resources/dateFnsLocales';
 import {
   ChildResult,
   useDeleteChild,
   useGetChildren,
   useGetCurrentChild,
   useSetSelectedChild,
-} from '../../hooks/childrenDbHooks';
-import {BabyPlaceholder} from '../../resources/svg';
+} from '../hooks/childrenDbHooks';
+import {BabyPlaceholder} from '../resources/svg';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: string) => void;
