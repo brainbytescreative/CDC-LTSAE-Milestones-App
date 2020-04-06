@@ -63,7 +63,11 @@ export const states = [
   'WV',
   'WI',
   'WY',
-];
+] as const;
+
+export type StateCode = typeof states[number];
+
+export type Guardian = 'guardian' | 'healthcareProvider';
 
 export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
 

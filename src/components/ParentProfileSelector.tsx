@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, StyleSheet, View, TextInput as TextInputNative} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import {Keyboard, StyleSheet, TextInput as TextInputNative, View} from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import {states} from '../resources/constants';
+import {Guardian, StateCode} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {TextInput} from 'react-native-paper';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import GuardianDialog from './GuardianDialog';
+import TerritorySelector from '../TerritorySelector';
 
-interface ParentProfileSelectorValues {
-  territory: string | null;
-  guardian: string | null;
+export interface ParentProfileSelectorValues {
+  territory: StateCode | undefined;
+  guardian: Guardian | undefined;
 }
 
 interface Props {
@@ -18,64 +18,62 @@ interface Props {
 
 const ParentProfileSelector: React.FC<Props> = ({onChange}) => {
   const {t} = useTranslation();
-  const [territory, setTerritory] = useState<string | null>(null);
-  const [guardian, setGuardian] = useState<string | null>(null);
+  const [territory, setTerritory] = useState<StateCode | undefined>();
+  const [guardian, setGuardian] = useState<Guardian | undefined>();
+
+  const guardianTranslated = guardian ? t(`guardianTypes:${guardian}`) : '';
 
   useEffect(() => {
-    onChange && onChange({territory, guardian});
-  }, [territory, guardian, onChange]);
+    if (!!territory || !!guardian) {
+      onChange && onChange({territory, guardian});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [territory, guardian]);
 
   return (
     <>
+      <GuardianDialog value={guardian} onChange={(value) => setGuardian(value)}>
+        {(showDialog) => (
+          <View style={{margin: 10}}>
+            <TextInput
+              mode={'outlined'}
+              onFocus={() => {
+                Keyboard.dismiss();
+                showDialog();
+              }}
+              label={t('fields:guardianPlaceholder')}
+              value={guardianTranslated}
+              render={(props) => (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInputNative {...props} />
+                  <Icon name="chevron-down" size={40} />
+                </View>
+              )}
+            />
+          </View>
+        )}
+      </GuardianDialog>
+
       <View style={{margin: 10}}>
-        {/*<RNPickerSelect*/}
-        {/*  style={pickerSelectStyles}*/}
-        {/*  placeholder={{*/}
-        {/*    label: t('fields:guardianPlaceholder'),*/}
-        {/*    value: null,*/}
-        {/*    color: '#9EA0A4',*/}
-        {/*  }}*/}
-        {/*  value={guardian}*/}
-        {/*  Icon={() => <Icon name="chevron-down" size={40} />}*/}
-        {/*  onValueChange={(value) => setGuardian(value)}*/}
-        {/*  items={guardianTypes.map((value) => ({*/}
-        {/*    label: t(`guardianTypes:${value}`),*/}
-        {/*    value,*/}
-        {/*  }))}*/}
-        {/*/>*/}
-        <TouchableWithoutFeedback onPress={() => {}}>
-          <TextInput
-            mode={'outlined'}
-            onFocus={() => {
-              Keyboard.dismiss();
-            }}
-            label={t('fields:guardianPlaceholder')}
-            value={territory || ''}
-            render={(props) => (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TextInputNative {...props} />
-                <Icon name="chevron-down" size={40} />
-              </View>
-            )}
-          />
-        </TouchableWithoutFeedback>
-      </View>
-      <View style={{margin: 10}}>
-        <RNPickerSelect
-          placeholder={{
-            label: t('fields:territoryPlaceholder'),
-            value: null,
-            color: '#9EA0A4',
-          }}
-          style={pickerSelectStyles}
-          value={territory}
-          Icon={() => <Icon name="chevron-down" size={40} />}
-          onValueChange={(value) => setTerritory(value)}
-          items={states.map((value) => ({
-            label: t(`states:${value}`),
-            value,
-          }))}
-        />
+        <TerritorySelector onChange={(code) => setTerritory(code)}>
+          {(showModal) => (
+            <TextInput
+              mode={'outlined'}
+              onFocus={() => {
+                Keyboard.dismiss();
+                showModal();
+              }}
+              label={t('fields:territoryPlaceholder')}
+              value={territory ? t(`states:${territory}`) : ''}
+              render={(props) => (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInputNative {...props} />
+                  <Icon name="chevron-down" size={40} />
+                </View>
+              )}
+            />
+          )}
+        </TerritorySelector>
       </View>
     </>
   );
