@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Keyboard, StyleSheet, TextInput as TextInputNative, View} from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {Guardian, StateCode} from '../resources/constants';
@@ -13,7 +13,7 @@ export interface ParentProfileSelectorValues {
 }
 
 interface Props {
-  onChange?: (values: ParentProfileSelectorValues) => void;
+  onChange: (values: ParentProfileSelectorValues) => void;
 }
 
 const ParentProfileSelector: React.FC<Props> = ({onChange}) => {
@@ -23,12 +23,13 @@ const ParentProfileSelector: React.FC<Props> = ({onChange}) => {
 
   const guardianTranslated = guardian ? t(`guardianTypes:${guardian}`) : '';
 
+  const change = useCallback(onChange, []);
+
   useEffect(() => {
     if (!!territory || !!guardian) {
-      onChange && onChange({territory, guardian});
+      change({territory, guardian});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [territory, guardian]);
+  }, [territory, guardian, change]);
 
   return (
     <>
@@ -78,6 +79,5 @@ const ParentProfileSelector: React.FC<Props> = ({onChange}) => {
     </>
   );
 };
-
 
 export default ParentProfileSelector;
