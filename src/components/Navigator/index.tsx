@@ -48,13 +48,13 @@ const Navigator: React.FC<{}> = () => {
         <Stack.Navigator>
           {!isOnboarded && (
             <>
-              {/*<Stack.Screen*/}
-              {/*  name={'OnboardingInfo'}*/}
-              {/*  component={OnboardingInfoScreen}*/}
-              {/*  options={{*/}
-              {/*    title: t('onboardingInfo:title'),*/}
-              {/*  }}*/}
-              {/*/>*/}
+              <Stack.Screen
+                name={'OnboardingInfo'}
+                component={OnboardingInfoScreen}
+                options={{
+                  title: t('onboardingInfo:title'),
+                }}
+              />
               <Stack.Screen
                 name={'OnboardingParentProfile'}
                 component={OnboardingParentProfileScreen}
