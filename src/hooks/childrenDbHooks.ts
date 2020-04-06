@@ -24,6 +24,7 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 
 type TableNames = 'children';
 type QueryType = 'insert' | 'updateById';
+type Key = 'children' | 'selectedChild';
 
 function objectToQuery(object: any, tableName: TableNames, queryType: QueryType = 'insert'): [string, any[]] {
   const values = Object.values(_.omit(object, ['id']));
@@ -50,7 +51,7 @@ function objectToQuery(object: any, tableName: TableNames, queryType: QueryType 
 }
 
 export function useGetCurrentChild() {
-  return useQuery<ChildResult, any>('selectedChild', async () => {
+  return useQuery<ChildResult, Key>('selectedChild', async () => {
     let selectedChild: string | null = await Storage.getItem('selectedChild');
 
     if (!selectedChild) {
@@ -126,7 +127,7 @@ export function useDeleteChild() {
 }
 
 export function useGetChild(options: {id: number | string | undefined}) {
-  return useQuery<ChildResult | undefined, [string, typeof options]>(['children', options], async (key, variables) => {
+  return useQuery<ChildResult | undefined, [Key, typeof options]>(['children', options], async (key, variables) => {
     if (!variables.id) {
       return;
     }
@@ -141,7 +142,7 @@ export function useGetChild(options: {id: number | string | undefined}) {
 }
 
 export function useGetChildren() {
-  return useQuery<ChildResult[], any>('children', async () => {
+  return useQuery<ChildResult[], Key>('children', async () => {
     const result = await sqLiteClient.dB?.executeSql('select * from children');
     const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
     return records.map((value) => ({

@@ -1,18 +1,11 @@
 import React, {useState} from 'react';
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useHeaderHeight} from '@react-navigation/stack';
+import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
 import {Portal} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import Text from './Text';
 import {formatDistanceStrict} from 'date-fns';
-import {routeKeys} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import i18next from 'i18next';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
@@ -24,6 +17,8 @@ import {
   useSetSelectedChild,
 } from '../hooks/childrenDbHooks';
 import {BabyPlaceholder} from '../resources/svg';
+import {DashboardDrawerParamsList, DashboardStackParamList} from './Navigator/types';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: string) => void;
@@ -31,15 +26,7 @@ interface ItemProps extends ChildResult {
   onDelete: (id: string) => void;
 }
 
-const Item: React.FC<ItemProps> = ({
-  id,
-  name,
-  birthday,
-  photo,
-  onDelete,
-  onEdit,
-  onSelect,
-}) => {
+const Item: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
   const {t} = useTranslation('childSelector');
   return (
     <TouchableOpacity
@@ -119,12 +106,18 @@ const Footer: React.FC<{onPress: () => void}> = ({onPress}) => {
   );
 };
 
+type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
+type DashboardScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
+  StackNavigationProp<DashboardStackParamList>
+>;
+
 const ChildSelectorModal: React.FC<{}> = () => {
   const headerHeight = useHeaderHeight();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
   const {data: selectedChild} = useGetCurrentChild();
   const {data: children} = useGetChildren();
-  const navigation = useNavigation();
+  const navigation = useNavigation<DashboardScreenNavigationProp>();
   const [selectChild] = useSetSelectedChild();
   const [deleteChild] = useDeleteChild();
 
@@ -148,24 +141,16 @@ const ChildSelectorModal: React.FC<{}> = () => {
               }}>
               {selectedChild?.name}
             </Text>
-            <EvilIcons
-              name={childSelectorVisible ? 'chevron-up' : 'chevron-down'}
-              size={30}
-            />
+            <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         );
       },
     });
-  }, [
-    navigation,
-    setChildSelectorVisible,
-    childSelectorVisible,
-    selectedChild,
-  ]);
+  }, [navigation, setChildSelectorVisible, childSelectorVisible, selectedChild]);
 
   const onEdit = (id?: string) => {
     setChildSelectorVisible(false);
-    navigation.navigate(routeKeys.AddChild, {
+    navigation.navigate('AddChild', {
       childId: id,
     });
   };

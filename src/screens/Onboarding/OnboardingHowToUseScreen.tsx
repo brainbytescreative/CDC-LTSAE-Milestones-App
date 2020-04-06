@@ -6,6 +6,8 @@ import {Button, Text} from 'react-native-paper';
 import {routeKeys} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
 import ViewPager from '@react-native-community/viewpager';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {DashboardStackParamList, RootStackParamList} from '../../components/Navigator/types';
 
 const styles = StyleSheet.create({
   viewPager: {
@@ -15,9 +17,11 @@ const styles = StyleSheet.create({
   },
 });
 
+type AddChildScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AddChild'>;
+
 const OnboardingHowToUseScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingHowToUse');
-  const navigation = useNavigation();
+  const navigation = useNavigation<AddChildScreenNavigationProp>();
   return (
     <Layout style={{justifyContent: 'space-between'}}>
       <Text
@@ -42,7 +46,7 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
           mode={'contained'}
           style={{marginVertical: 50, width: 100}}
           onPress={() => {
-            navigation.navigate(routeKeys.AddChild);
+            navigation.navigate('AddChild', {onboarding: true});
           }}>
           {t('common:next').toUpperCase()}
         </Button>

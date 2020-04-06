@@ -8,11 +8,7 @@ interface Props {
 }
 
 const Text: React.FC<Props> = ({children, style}) => {
-  return (
-    <PaperText style={[style, {fontFamily: 'montserrat'}]}>
-      {children}
-    </PaperText>
-  );
+  return <PaperText style={[style, {fontFamily: 'montserrat'}]}>{children}</PaperText>;
 };
 
 export default Text;

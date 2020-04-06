@@ -1,66 +1,30 @@
 import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
-import {routeKeys} from '../../resources/constants';
 import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
-import {TouchableOpacity} from 'react-native';
-import {Text} from 'react-native-paper';
 import {createStackNavigator} from '@react-navigation/stack';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
-import {BurgerIcon} from '../../resources/svg';
 import AddChildScreen from '../../screens/AddChildScreen';
+import {DashboardStackParamList} from './types';
+import BurgerButton from '../BurgerButton';
+import NotificationsBadge from '../NotificationsBadge';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<DashboardStackParamList>();
 
-export type DashboardStackParamList = {
-  AddChild: {childId: string | number | undefined; anotherChild: boolean | undefined} | undefined;
-  Dashboard: undefined;
-};
-
-const DashboardStack: FC<{}> = (props) => {
+const DashboardStack: FC<{}> = () => {
   const {t} = useTranslation();
-  const navigation = useNavigation();
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={routeKeys.Dashboard}
+        name={'Dashboard'}
         component={DashboardScreen}
         options={() => ({
           title: t('dashboard:title'),
           headerTransparent: true,
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.dispatch(DrawerActions.toggleDrawer());
-              }}
-              style={{paddingHorizontal: 32}}>
-              <BurgerIcon />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#fff',
-                width: 23,
-                height: 23,
-                borderRadius: 23,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginHorizontal: 32,
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'montserrat',
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                }}>
-                4
-              </Text>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <BurgerButton />,
+          headerRight: () => <NotificationsBadge />,
         })}
       />
       <Stack.Screen
-        name={routeKeys.AddChild}
+        name={'AddChild'}
         component={AddChildScreen}
         options={{
           title: t('addChild:title'),

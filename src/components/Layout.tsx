@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {SafeAreaView, StyleProp, StyleSheet, ViewStyle, Keyboard, TouchableWithoutFeedback} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,10 +8,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Layout: React.FC<{style?: StyleProp<ViewStyle>}> = ({
-  children,
-  style = {},
-}) => {
+const Layout: React.FC<{style?: StyleProp<ViewStyle>}> = ({children, style = {}}) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {

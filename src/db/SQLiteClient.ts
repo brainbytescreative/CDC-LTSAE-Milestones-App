@@ -76,9 +76,7 @@ export default class SQLiteClient {
       if (err instanceof DowngradeError) {
         throw err;
       }
-      throw new Error(
-        `SQLiteClient: failed to connect to database: ${this.name}`,
-      );
+      throw new Error(`SQLiteClient: failed to connect to database: ${this.name}`);
     }
   }
 }

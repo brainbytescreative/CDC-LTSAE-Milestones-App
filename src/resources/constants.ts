@@ -65,6 +65,8 @@ export const states = [
   'WY',
 ];
 
+export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
+
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
   purple: '#CEB9EF',

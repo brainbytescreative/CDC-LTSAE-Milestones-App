@@ -1,16 +1,18 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import Layout from '../components/Layout';
 import {Button, RadioButton, Text, TextInput} from 'react-native-paper';
-import {RouteProp, useNavigation, useRoute, useBackButton} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenDbHooks';
 import {addEditChildSchema} from '../resources/validationSchemas';
-import {DashboardStackParamList} from '../components/Navigator/DashboardStack';
-import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
+
+import {StackNavigationProp} from '@react-navigation/stack';
+import {DashboardStackParamList} from '../components/Navigator/types';
+import {useSetOnboarding} from '../hooks/onboardingHooks';
 
 const options = {
   quality: 1.0,
@@ -22,10 +24,10 @@ const options = {
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
-type ProfileScreenNavigationProp = StackNavigationProp<DashboardStackParamList, 'AddChild'>;
+type AddChildScreenNavigationProp = StackNavigationProp<DashboardStackParamList, 'AddChild'>;
 
-const AddChildScreen: React.FC<{onboarding?: boolean}> = ({onboarding}) => {
-  const navigation = useNavigation<ProfileScreenNavigationProp>();
+const AddChildScreen: React.FC<{}> = () => {
+  const navigation = useNavigation<AddChildScreenNavigationProp>();
   const {t} = useTranslation('addChild');
 
   const [addChild, {status: addStatus}] = useAddChild();
@@ -35,6 +37,7 @@ const AddChildScreen: React.FC<{onboarding?: boolean}> = ({onboarding}) => {
   const {data: child} = useGetChild({id: childId});
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
+  const [setOnboarding] = useSetOnboarding();
 
   const initialValues = {
     name: '',
@@ -158,7 +161,11 @@ const AddChildScreen: React.FC<{onboarding?: boolean}> = ({onboarding}) => {
           mode={'contained'}
           onPress={() => {
             formik.handleSubmit();
-            navigation.replace('AddChild', {childId: undefined, anotherChild: onboarding});
+            navigation.replace('AddChild', {
+              childId: undefined,
+              anotherChild: !!route.params?.onboarding,
+              onboarding: !!route.params?.onboarding,
+            });
           }}>
           {t('addAnotherChild').toUpperCase()}
         </Button>
@@ -169,7 +176,11 @@ const AddChildScreen: React.FC<{onboarding?: boolean}> = ({onboarding}) => {
             style={{marginVertical: 50, width: 100}}
             onPress={() => {
               formik.handleSubmit();
-              navigation.navigate('Dashboard');
+              if (route.params?.onboarding) {
+                setOnboarding(true);
+              } else {
+                navigation.navigate('Dashboard');
+              }
             }}>
             {t('common:done').toUpperCase()}
           </Button>

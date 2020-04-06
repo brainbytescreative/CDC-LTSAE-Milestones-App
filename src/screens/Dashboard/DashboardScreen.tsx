@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from 'react';
 import {ProgressBar} from 'react-native-paper';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
@@ -23,6 +22,9 @@ import {useGetCurrentChild} from '../../hooks/childrenDbHooks';
 import {differenceInMonths, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
+import {RouteProp, CompositeNavigationProp} from '@react-navigation/native';
+import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
 const DATA: DataItem[] = [
   {
@@ -59,6 +61,12 @@ const DATA: DataItem[] = [
 interface Props {
   navigation: StackNavigationProp<any>;
 }
+
+type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
+type DashboardScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
+  StackNavigationProp<DashboardStackParamList>
+>;
 
 const DashboardScreen: React.FC<Props> = () => {
   const headerHeight = useHeaderHeight();

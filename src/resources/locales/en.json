@@ -16,6 +16,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "drawerLabel": "$t(dashboard:title)",
     "carouselAge": "{{value}} {{unit}}",
     "whenToActEarly": "When to Act Early",
     "addApt": "+ Add apt",
@@ -28,6 +29,12 @@
     "milestonesAnswered": "{{progress}} Milestones answered",
     "actionItemsTitle": "9 Month Milestone\nAction Items",
     "yellowTip": "If your child is between these\nages, you will receive the checklist\nfor the younger age."
+  },
+  "settings": {
+    "title": "Settings",
+    "drawerLabel": "$t(settings:title)",
+    "notificationSettings": "Notification settings",
+    "accountSettings": "Account settings"
   },
   "childSelector": {
     "edit": "Edit",
@@ -59,7 +66,11 @@
     "territoryPlaceholder": "State or Territory field *",
     "guardianPlaceholder": "Guardian / Healthcare Provider",
     "childNamePlaceholder": "Child Name *",
-    "dateOfBirthPlaceholder": "Birthday *"
+    "dateOfBirthPlaceholder": "Birthday *",
+    "milestoneNotifications": "Milestone notifications",
+    "appointmentNotifications": "Appointment notifications",
+    "recommendationNotifications": "Recommendation notifications",
+    "tipsAndActivitiesNotification": "TipsAndActivities notification"
   },
   "states": {
     "AL": "Alabama (AL)",

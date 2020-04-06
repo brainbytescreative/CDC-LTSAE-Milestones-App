@@ -20,10 +20,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
           justifyContent: 'center',
           marginVertical: 50,
         }}>
-        <Text
-          style={{borderWidth: 1, paddingVertical: 10, paddingHorizontal: 20}}>
-          LOGO
-        </Text>
+        <Text style={{borderWidth: 1, paddingVertical: 10, paddingHorizontal: 20}}>LOGO</Text>
         <Text
           style={{
             marginLeft: 20,
@@ -42,15 +39,9 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
           alignItems: 'center',
         }}>
         <View>
-          <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>
-            {t('welcome').toUpperCase()}
-          </Text>
-          <Text style={{margin: 20, textAlign: 'center'}}>
-            {t('welcome1p')}
-          </Text>
-          <Text style={{margin: 20, textAlign: 'center'}}>
-            {t('welcome2p')}
-          </Text>
+          <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>{t('welcome').toUpperCase()}</Text>
+          <Text style={{margin: 20, textAlign: 'center'}}>{t('welcome1p')}</Text>
+          <Text style={{margin: 20, textAlign: 'center'}}>{t('welcome2p')}</Text>
         </View>
         <Button
           mode={'contained'}
@@ -69,8 +60,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
             alignItems: 'center',
           }}
           visible={visible}>
-          <View
-            style={{backgroundColor: '#fff', flex: 0, alignItems: 'center'}}>
+          <View style={{backgroundColor: '#fff', flex: 0, alignItems: 'center'}}>
             <LanguageSelector />
             <Button
               mode={'contained'}
