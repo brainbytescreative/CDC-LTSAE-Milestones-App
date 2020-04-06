@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {Modal, Text, View} from 'react-native';
+import {Modal, View} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {StateCode, states} from './resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useSafeArea} from 'react-native-safe-area-context';
+import Text from './components/Text';
 
 interface Props {
   children: (showModal: () => void) => any;
@@ -18,10 +19,11 @@ const Item: React.FC<{stateCode: StateCode; value?: StateCode | undefined; onPre
   const {t} = useTranslation();
   return (
     <TouchableOpacity
+      style={{paddingVertical: 5, paddingHorizontal: 20}}
       onPress={() => {
         onPress(stateCode);
       }}>
-      <Text>{t(`states:${stateCode}`)}</Text>
+      <Text style={{fontSize: 20}}>{t(`states:${stateCode}`)}</Text>
     </TouchableOpacity>
   );
 };
