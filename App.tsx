@@ -18,6 +18,8 @@ import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 
+console.disableYellowBox = true;
+
 const theme = {
   ...DefaultTheme,
   colors: {
@@ -52,9 +54,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <I18nextProvider i18n={i18next}>
-          {!loading && <Navigator />}
-        </I18nextProvider>
+        <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
       </NavigationContainer>
     </PaperProvider>
   );

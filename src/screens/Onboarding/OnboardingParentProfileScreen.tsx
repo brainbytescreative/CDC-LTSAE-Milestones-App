@@ -8,17 +8,24 @@ import {useNavigation} from '@react-navigation/native';
 import LanguageSelector from '../../components/LanguageSelector';
 import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
 import Text from '../../components/Text';
+import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 
 const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingParentProfile');
   const navigation = useNavigation();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();
+  const [saveProfile] = useSetParentProfile();
 
   return (
     <Layout style={{justifyContent: 'space-between'}}>
       <View>
         <Text style={{fontWeight: 'bold', margin: 10, fontSize: 20}}>{t('parentProfile').toUpperCase()}</Text>
-        <ParentProfileSelector onChange={(values) => setProfile(values)} />
+        <ParentProfileSelector
+          onChange={(values) => {
+            setProfile(values);
+            saveProfile(values);
+          }}
+        />
         <LanguageSelector />
         <Text style={{textAlign: 'center'}}>{t('common:required')}</Text>
       </View>

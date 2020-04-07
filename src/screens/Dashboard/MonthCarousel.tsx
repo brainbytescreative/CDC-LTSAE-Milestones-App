@@ -61,10 +61,14 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
 
   useLayoutEffect(() => {
     setTimeout(() => {
-      flatListRef.current.scrollToIndex({
-        index: currentAgeIndex,
-        viewPosition: 0.5,
-      });
+      try {
+        flatListRef.current.scrollToIndex({
+          index: currentAgeIndex,
+          viewPosition: 0.5,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }, 500);
   }, [currentAgeIndex]);
 

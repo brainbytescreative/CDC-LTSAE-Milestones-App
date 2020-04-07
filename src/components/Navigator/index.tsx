@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 const RootDrawer: React.FC<{}> = () => {
   const {t} = useTranslation();
   return (
-    <Drawer.Navigator initialRouteName={'SettingsStack'}>
+    <Drawer.Navigator initialRouteName={'DashboardStack'}>
       <Drawer.Screen
         name={'DashboardStack'}
         options={{
@@ -40,7 +40,7 @@ const Navigator: React.FC<{}> = () => {
   const {t} = useTranslation();
   const {data, isFetching} = useGetOnboarding();
 
-  const isOnboarded = false;
+  const isOnboarded = true;
 
   return (
     <>

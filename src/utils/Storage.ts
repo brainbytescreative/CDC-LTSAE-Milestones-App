@@ -1,6 +1,6 @@
 import {AsyncStorage} from 'react-native';
 
-type Key = 'selectedChild' | 'notificationSettings' | 'onboarding';
+type Key = 'selectedChild' | 'notificationSettings' | 'onboarding' | 'parentProfile';
 
 export default class Storage {
   static clear(callback?: (error?: Error) => void): Promise<void> {

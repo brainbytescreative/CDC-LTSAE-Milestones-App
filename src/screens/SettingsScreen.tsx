@@ -1,6 +1,6 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Layout from '../components/Layout';
-import ParentProfileSelector from '../components/ParentProfileSelector';
+import ParentProfileSelector, {ParentProfileSelectorValues} from '../components/ParentProfileSelector';
 import Text from '../components/Text';
 import {useTranslation} from 'react-i18next';
 import {Switch} from 'react-native-paper';
@@ -14,6 +14,7 @@ import {
   useSetNotificationSettings,
 } from '../hooks/settingsHooks';
 import {FormikProps} from 'formik/dist/types';
+import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
 
 const NotificationSetting: React.FC<{name: SettingName}> = ({name}) => {
   const {t} = useTranslation('fields');
@@ -38,6 +39,8 @@ const SettingsScreen: React.FC<{}> = () => {
   const formikRef = useRef<FormikProps<NotificationSettings> | undefined>();
   const {data: settings, error} = useGetNotificationSettings();
   const [setSettings] = useSetNotificationSettings();
+  const {data: profile} = useGetParentProfile();
+  const [setProfile] = useSetParentProfile();
 
   useEffect(() => {
     if (settings) {
@@ -74,7 +77,7 @@ const SettingsScreen: React.FC<{}> = () => {
         }}
       </Formik>
       <Text style={{margin: 10, fontSize: 20}}>{t('accountSettings').toUpperCase()}</Text>
-      <ParentProfileSelector />
+      <ParentProfileSelector value={profile} onChange={(values) => setProfile(values)} />
       <LanguageSelector />
     </Layout>
   );

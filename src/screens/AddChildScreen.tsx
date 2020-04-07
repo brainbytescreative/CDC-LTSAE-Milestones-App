@@ -177,6 +177,7 @@ const AddChildScreen: React.FC<{}> = () => {
             onPress={() => {
               formik.handleSubmit();
               if (route.params?.onboarding) {
+                navigation.navigate('Dashboard');
                 setOnboarding(true);
               } else {
                 navigation.navigate('Dashboard');
