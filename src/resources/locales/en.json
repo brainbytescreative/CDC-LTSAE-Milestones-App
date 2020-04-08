@@ -41,6 +41,11 @@
     "addChild": "+ Add child",
     "delete": "Delete"
   },
+  "tipsAndActivities": {
+    "title": "Tips & Activities",
+    "subtitle": "You can help your baby learn and grow lore ipsum dolor sit amet...",
+    "drawerLabel": "$t(tipsAndActivities:title)"
+  },
   "guardianTypes": {
     "guardian": "Guardian",
     "healthcareProvider": "Healthcare Provider"
@@ -71,6 +76,12 @@
     "appointmentNotifications": "Appointment notifications",
     "recommendationNotifications": "Recommendation notifications",
     "tipsAndActivitiesNotification": "TipsAndActivities notification"
+  },
+  "skillTypes": {
+    "social": "Social",
+    "language": "Language",
+    "cognitive": "Cognitive",
+    "movement": "Movement"
   },
   "states": {
     "AL": "Alabama (AL)",

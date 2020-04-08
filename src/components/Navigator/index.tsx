@@ -10,6 +10,7 @@ import DashboardStack from './DashboardStack';
 import {DashboardDrawerParamsList, RootStackParamList} from './types';
 import SettingsStack from './SettingsStack';
 import {useGetOnboarding} from '../../hooks/onboardingHooks';
+import TipsAndActivitiesStack from './TipsAndActivitiesStack';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
@@ -17,7 +18,7 @@ const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 const RootDrawer: React.FC<{}> = () => {
   const {t} = useTranslation();
   return (
-    <Drawer.Navigator initialRouteName={'DashboardStack'}>
+    <Drawer.Navigator initialRouteName={'TipsAndActivitiesStack'}>
       <Drawer.Screen
         name={'DashboardStack'}
         options={{
@@ -31,6 +32,13 @@ const RootDrawer: React.FC<{}> = () => {
           drawerLabel: t('settings:drawerLabel'),
         }}
         component={SettingsStack}
+      />
+      <Drawer.Screen
+        name={'TipsAndActivitiesStack'}
+        options={{
+          drawerLabel: t('tipsAndActivities:drawerLabel'),
+        }}
+        component={TipsAndActivitiesStack}
       />
     </Drawer.Navigator>
   );

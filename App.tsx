@@ -18,7 +18,7 @@ import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 
-console.disableYellowBox = true;
+// console.disableYellowBox = true;
 
 const theme = {
   ...DefaultTheme,

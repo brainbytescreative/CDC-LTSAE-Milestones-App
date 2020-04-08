@@ -1,3 +1,5 @@
+// import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
+
 export const routeKeys = Object.freeze({
   OnboardingInfo: 'OnboardingInfo',
   OnboardingHowToUse: 'OnboardingHowToUse',
@@ -71,6 +73,9 @@ export type Guardian = 'guardian' | 'healthcareProvider';
 
 export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
 
+export const skillTypes = ['cognitive', 'social', 'language', 'movement'];
+export type SkillType = typeof skillTypes[number];
+
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
   purple: '#CEB9EF',
@@ -79,3 +84,6 @@ export const colors = Object.freeze({
   lightGray: '#E3E3E3',
   aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
 });
+
+export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];
+export type LanguageType = 'en' | 'es';
