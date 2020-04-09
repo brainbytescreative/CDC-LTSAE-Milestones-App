@@ -174,8 +174,14 @@ const DashboardScreen: React.FC<Props> = () => {
                   <Text style={styles.actionItemText}>{t('milestoneSummary')}</Text>
                 </View>
                 <View style={styles.actionItem}>
-                  <TipsAndActivitiesSign />
-                  <Text style={styles.actionItemText}>{t('tipsAndActivities')}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('TipsAndActivitiesStack');
+                    }}
+                    style={{alignItems: 'center'}}>
+                    <TipsAndActivitiesSign />
+                    <Text style={styles.actionItemText}>{t('tipsAndActivities')}</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

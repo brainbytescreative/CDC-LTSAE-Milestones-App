@@ -53,9 +53,7 @@ function Item({title}: any) {
   );
 }
 
-const tips = tipsAndActivities
-  .filter((value) => value.age === '2-hint')
-  .map((value) => value[i18next.language as LanguageType]);
+
 
 const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {t} = useTranslation('tipsAndActivities');
@@ -70,6 +68,10 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       setSkillType(skillTypes[0]);
     }
   };
+
+  const tips = tipsAndActivities
+    .filter((value) => value.age === '2-hint')
+    .map((value) => value[i18next.language as LanguageType]);
 
   return (
     <Layout style={{backgroundColor: 'white'}}>
