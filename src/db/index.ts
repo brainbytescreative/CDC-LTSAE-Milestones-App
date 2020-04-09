@@ -38,7 +38,7 @@ const DB_MIGRATIONS = [
                     on update cascade on delete cascade,
             date   DATETIME,
             notes      TEXT,
-            apptType   TEXT,
+            apptType   TEXT not null,
             doctorName TEXT,
             questions  TEXT
         );

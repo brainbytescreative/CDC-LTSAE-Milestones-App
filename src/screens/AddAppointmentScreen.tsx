@@ -13,6 +13,7 @@ import {format, parse} from 'date-fns';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import _ from 'lodash';
+import {addAppointmentSchema} from '../resources/validationSchemas';
 
 interface FormValues {
   apptType: string;
@@ -35,6 +36,9 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   const {data: appointment} = useGetAppointmentById(apptId);
 
   const formik = useFormik<FormValues>({
+    validationSchema: addAppointmentSchema,
+    validateOnMount: true,
+    validateOnChange: true,
     onSubmit: (values) => {
       const date = values.date && format(values.date, 'yyyy-MM-dd');
       const time = values.time && format(values.time, 'HH:mm:ss');
@@ -81,9 +85,8 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   }, [appointment]);
 
   const {t} = useTranslation('addAppointment');
-
   const titlePrefix = apptId ? 'edit-' : '';
-
+  const disabled = addStatus === 'loading' || updateStatus === 'loading' || !formik.isValid;
   return (
     <Layout>
       <View style={{padding: 20}}>
@@ -93,20 +96,20 @@ const AddAppointmentScreen: React.FC<{}> = () => {
           autoCorrect={false}
           value={formik.values.apptType}
           onChangeText={formik.handleChange('apptType') as any}
-          label={t('fields:apptTypePlaceholder')}
+          label={`${t('fields:apptTypePlaceholder')} *`}
           mode={'outlined'}
         />
         <DatePicker
           style={{marginTop: 10}}
           value={formik.values.date}
-          label={t('fields:datePlaceholder')}
+          label={`${t('fields:datePlaceholder')} *`}
           onChange={(date) => formik.setFieldValue('date', date)}
         />
         <DatePicker
           mode={'time'}
           style={{marginTop: 10}}
           value={formik.values.time}
-          label={t('fields:timePlaceholder')}
+          label={`${t('fields:timePlaceholder')} *`}
           onChange={(date) => formik.setFieldValue('time', date)}
         />
         <TextInput
@@ -139,11 +142,7 @@ const AddAppointmentScreen: React.FC<{}> = () => {
         />
       </View>
       <View style={{alignItems: 'center', marginVertical: 30}}>
-        <Button
-          onPress={formik.handleSubmit}
-          disabled={addStatus === 'loading' || updateStatus === 'loading'}
-          style={{width: 200}}
-          mode={'contained'}>
+        <Button onPress={formik.handleSubmit} disabled={disabled} style={{width: 200}} mode={'contained'}>
           {t('common:done')}
         </Button>
       </View>

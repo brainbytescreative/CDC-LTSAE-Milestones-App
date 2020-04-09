@@ -203,7 +203,7 @@ const DashboardScreen: React.FC<Props> = () => {
             {appointments?.map((appt) => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('AddAppointment', {
+                  navigation.navigate('Appointment', {
                     appointmentId: appt.id,
                   });
                 }}

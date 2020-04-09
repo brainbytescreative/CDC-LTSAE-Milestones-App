@@ -7,6 +7,7 @@ import {DashboardStackParamList} from './types';
 import BurgerButton from '../BurgerButton';
 import NotificationsBadge from '../NotificationsBadge';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
+import AppointmentScreen from '../../screens/AppointmentScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
@@ -36,6 +37,15 @@ const DashboardStack: FC<{}> = () => {
         component={AddAppointmentScreen}
         options={{
           title: t('addAppointment:title'),
+          headerBackTitle: ' ',
+          headerRight: () => <NotificationsBadge />,
+        }}
+      />
+      <Stack.Screen
+        name={'Appointment'}
+        component={AppointmentScreen}
+        options={{
+          title: t('appointment:title'),
           headerBackTitle: ' ',
           headerRight: () => <NotificationsBadge />,
         }}

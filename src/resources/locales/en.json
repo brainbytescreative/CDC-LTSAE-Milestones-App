@@ -53,6 +53,8 @@
     "appLanguage": "App language",
     "next": "Next",
     "done": "Done",
+    "edit": "Edit",
+    "delete": "Delete",
     "skip": "Skip",
     "required": "* required field",
     "dateFormat": "MM/dd/yyyy",
@@ -71,6 +73,9 @@
   "addAppointment": {
     "title": "Add appointment",
     "edit-title": "Edit appointment"
+  },
+  "appointment": {
+    "title": "Appointment"
   },
   "fields": {
     "territoryPlaceholder": "State or Territory field *",

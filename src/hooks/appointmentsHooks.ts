@@ -44,23 +44,30 @@ export function useUpdateAppointment() {
 }
 
 export function useAddAppointment() {
-  return useMutation<number, NewAppointment>(async (variables) => {
-    const [query, values] = objectToQuery(
-      {
-        ...variables,
-        date: formatISO(variables.date),
-      },
-      'appointments',
-    );
-    const res = await sqLiteClient.dB?.executeSql(query, values);
-    const [{insertId}] = res || [{}];
-    const rowsAffected = res && res[0].rowsAffected;
-    if (!rowsAffected || rowsAffected === 0 || !insertId) {
-      throw new Error('Add appointment failed');
-    }
+  return useMutation<number, NewAppointment>(
+    async (variables) => {
+      const [query, values] = objectToQuery(
+        {
+          ...variables,
+          date: formatISO(variables.date),
+        },
+        'appointments',
+      );
+      const res = await sqLiteClient.dB?.executeSql(query, values);
+      const [{insertId}] = res || [{}];
+      const rowsAffected = res && res[0].rowsAffected;
+      if (!rowsAffected || rowsAffected === 0 || !insertId) {
+        throw new Error('Add appointment failed');
+      }
 
-    return insertId;
-  });
+      return insertId;
+    },
+    {
+      onSuccess: (data, variables) => {
+        queryCache.refetchQueries(['appointment', {childId: variables.childId}]);
+      },
+    },
+  );
 }
 
 export function useGetAppointmentById(id: string | number | undefined) {

@@ -6,3 +6,12 @@ export const addEditChildSchema = yup.object({
   birthday: yup.date().required(),
   photo: yup.string().nullable(),
 });
+
+export const addAppointmentSchema = yup.object({
+  apptType: yup.string().required(),
+  date: yup.date().required(),
+  time: yup.date().required(),
+  doctorName: yup.string().nullable(true),
+  notes: yup.string().nullable(true),
+  questions: yup.string().nullable(true),
+});
