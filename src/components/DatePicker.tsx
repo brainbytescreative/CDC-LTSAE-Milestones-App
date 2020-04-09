@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from 'react';
 
 import {TextInput} from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {format} from 'date-fns';
-import {useTranslation} from 'react-i18next';
+import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleProp, ViewStyle} from 'react-native';
+import {formatDate} from '../utils/helpers';
 
 interface PageProps {
   onChange?: (date?: Date) => void;
   label?: string;
   value?: Date;
+  mode?: DateTimePickerProps['mode'];
+  style?: StyleProp<ViewStyle>;
 }
 
-const DatePicker: React.FC<PageProps> = ({onChange, label, value}) => {
+const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
 
@@ -32,25 +34,22 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value}) => {
     onChange && onChange(dateVal);
   };
 
-  const {t} = useTranslation();
-
   return (
     <>
-      <TouchableOpacity onPress={showDatePicker}>
+      <TouchableOpacity style={[style]} onPress={showDatePicker}>
         <TextInput
           editable={false}
-          style={{marginTop: 10}}
           autoCorrect={false}
           // onChange={formik.handleChange('dateOfBirth') as any}
           label={label}
-          value={(date && format(date, t('common:dateFormat'))) || ''}
+          value={formatDate(date, mode)}
           mode={'outlined'}
         />
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={modalVisible}
         date={date}
-        mode="date"
+        mode={mode}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />

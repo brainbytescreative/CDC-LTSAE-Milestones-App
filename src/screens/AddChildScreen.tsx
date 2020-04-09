@@ -92,7 +92,7 @@ const AddChildScreen: React.FC<{}> = () => {
                 if (response.uri) {
                   formik.setFieldValue('photo', response.uri);
                 }
-                // console.log(response.uri);
+                console.log(response.uri);
               });
             }}
             style={{

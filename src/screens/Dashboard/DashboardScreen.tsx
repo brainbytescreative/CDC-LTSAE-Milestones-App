@@ -3,7 +3,7 @@ import {ProgressBar} from 'react-native-paper';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
 import {Image, StyleSheet, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {colors} from '../../resources/constants';
 import {
   ActEarlySign,
@@ -22,9 +22,11 @@ import {useGetCurrentChild} from '../../hooks/childrenDbHooks';
 import {differenceInMonths, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
-import {RouteProp, CompositeNavigationProp} from '@react-navigation/native';
+import {RouteProp, CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
+import {formatDate} from '../../utils/helpers';
 
 const DATA: DataItem[] = [
   {
@@ -72,8 +74,10 @@ const DashboardScreen: React.FC<Props> = () => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
+  const navigation = useNavigation<DashboardScreenNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
+  const {data: appointments} = useGetChildAppointments(child?.id);
 
   const childAge = child?.birthday && differenceInMonths(new Date(), child?.birthday);
 
@@ -175,7 +179,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 </View>
               </View>
             </View>
-            <View style={styles.appointmentsHeaderContainer}>
+            <View style={[styles.appointmentsHeaderContainer, {marginBottom: bottom}]}>
               <Text
                 style={{
                   fontSize: 22,
@@ -183,12 +187,25 @@ const DashboardScreen: React.FC<Props> = () => {
                 }}>
                 {t('appointments')}
               </Text>
-              <Text style={{fontSize: 12}}>{t('addApt')}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AddAppointment');
+                }}>
+                <Text style={{fontSize: 12}}>{t('addApt')}</Text>
+              </TouchableOpacity>
             </View>
-            <View style={[styles.appointmentsContainer, {marginBottom: 40 + bottom}]}>
-              <Text style={{fontSize: 18}}>{t('checkUp')}</Text>
-              <Text style={{fontSize: 18}}>1/2/20 3:30pm</Text>
-            </View>
+            {appointments?.map((appt) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AddAppointment', {
+                    appointmentId: appt.id,
+                  });
+                }}
+                style={[styles.appointmentsContainer, {marginBottom: 20}]}>
+                <Text style={{fontSize: 18}}>{appt.apptType}</Text>
+                <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
         <View style={{height: headerHeight}} />

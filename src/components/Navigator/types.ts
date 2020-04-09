@@ -1,3 +1,7 @@
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 export type AddChildScreenParams =
   | {childId?: string | number; anotherChild?: boolean; onboarding?: boolean}
   | undefined;
@@ -5,6 +9,7 @@ export type AddChildScreenParams =
 export type DashboardStackParamList = {
   AddChild: AddChildScreenParams;
   Dashboard: undefined;
+  AddAppointment: {appointmentId: number | string | undefined} | undefined;
 };
 
 export type SettingsStackParamList = {
@@ -27,3 +32,8 @@ export type DashboardDrawerParamsList = {
   SettingsStack: undefined;
   TipsAndActivitiesStack: undefined;
 };
+
+export type DashboardDrawerNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
+  StackNavigationProp<DashboardStackParamList>
+>;

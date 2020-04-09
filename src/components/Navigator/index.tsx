@@ -18,7 +18,7 @@ const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 const RootDrawer: React.FC<{}> = () => {
   const {t} = useTranslation();
   return (
-    <Drawer.Navigator initialRouteName={'TipsAndActivitiesStack'}>
+    <Drawer.Navigator initialRouteName={'DashboardStack'}>
       <Drawer.Screen
         name={'DashboardStack'}
         options={{

@@ -20,7 +20,6 @@
     "carouselAge": "{{value}} {{unit}}",
     "whenToActEarly": "When to Act Early",
     "addApt": "+ Add apt",
-    "checkUp": "Check up",
     "appointments": "Appointments",
     "milestoneSummary": "Milestone Summary",
     "tipsAndActivities": "Tips and Activities",
@@ -56,7 +55,9 @@
     "done": "Done",
     "skip": "Skip",
     "required": "* required field",
-    "dateFormat": "MM/dd/yyyy"
+    "dateFormat": "MM/dd/yyyy",
+    "timeFormat": "h:mm a",
+    "dateTimeFormat": "MM/dd/yyyy h:mm a"
   },
   "addChild": {
     "title": "Add child",
@@ -67,6 +68,10 @@
     "addPhoto": "Add photo (not required)",
     "note": "If your child is premature: Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   },
+  "addAppointment": {
+    "title": "Add appointment",
+    "edit-title": "Edit appointment"
+  },
   "fields": {
     "territoryPlaceholder": "State or Territory field *",
     "guardianPlaceholder": "Guardian / Healthcare Provider",
@@ -75,7 +80,13 @@
     "milestoneNotifications": "Milestone notifications",
     "appointmentNotifications": "Appointment notifications",
     "recommendationNotifications": "Recommendation notifications",
-    "tipsAndActivitiesNotification": "TipsAndActivities notification"
+    "tipsAndActivitiesNotification": "TipsAndActivities notification",
+    "apptTypePlaceholder": "Appointment type / description",
+    "datePlaceholder": "Date",
+    "timePlaceholder": "Time",
+    "doctorPlaceholder": "Doctor",
+    "notesConcernsPlaceholder": "Notes / Concerns",
+    "questionsPlaceholder": "Questions to ask doctor"
   },
   "skillTypes": {
     "social": "Social",

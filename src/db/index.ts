@@ -10,20 +10,37 @@ const DB_DEBUG = true;
 const DB_MIGRATIONS = [
   async (dB: SQLiteDatabase): Promise<void> => {
     // USE dB TO CREATE TABLES
-    dB.executeSql(`
+    await dB.executeSql(`
         create table children
         (
-            id          INTEGER  not null
+            id          INTEGER not null
                 primary key autoincrement
                 unique,
-            name        TEXT     not null,
-            birthday    DATE not null,
-            gender      INTEGER  not null,
+            name        TEXT    not null,
+            birthday    DATE    not null,
+            gender      INTEGER not null,
             doctorName  TEXT,
             parentName  TEXT,
             parentEmail TEXT,
             doctorEmail TEXT,
             photo       TEXT
+        );
+    `);
+
+    await dB.executeSql(`
+        create table appointments
+        (
+            id         INTEGER not null
+                primary key autoincrement
+                unique,
+            childId    INTEGER
+                references children (id)
+                    on update cascade on delete cascade,
+            date   DATETIME,
+            notes      TEXT,
+            apptType   TEXT,
+            doctorName TEXT,
+            questions  TEXT
         );
     `);
   },
