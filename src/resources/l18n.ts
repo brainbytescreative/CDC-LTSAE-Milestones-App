@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Platform} from 'react-native';
 import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import translationES from './locales/es.json';
 import translationEN from './locales/en.json';
+import milestonesEN from './milestones/en.json';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useCallback} from 'react';
-import {useMutation, useQuery, queryCache} from 'react-query';
+import {queryCache, useMutation, useQuery} from 'react-query';
 
 const languageCode = 'Language';
-declare type LangCode = 'en' | 'es' | undefined;
+type LangCode = 'en' | 'es' | undefined;
 
 export const getLanguageCode = () => {
   return AsyncStorage.getItem(languageCode) as Promise<LangCode>;
@@ -73,7 +73,10 @@ i18next
       useSuspense: false,
     },
     resources: {
-      en: translationEN,
+      en: {
+        ...translationEN,
+        milestones: milestonesEN,
+      },
       es: translationES,
     },
   });
