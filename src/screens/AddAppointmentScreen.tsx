@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Button, TextInput} from 'react-native-paper';
@@ -61,7 +61,11 @@ const AddAppointmentScreen: React.FC<{}> = () => {
           });
 
       action.then(() => {
-        navigation.navigate('Dashboard');
+        if (apptId) {
+          navigation.goBack();
+        } else {
+          navigation.navigate('Dashboard');
+        }
       });
     },
     initialValues: {
@@ -74,15 +78,16 @@ const AddAppointmentScreen: React.FC<{}> = () => {
     },
   });
 
+  const setValues = useCallback(formik.setValues, []);
+
   useEffect(() => {
     if (appointment) {
-      formik.setValues({
+      setValues({
         ...appointment,
         time: appointment.date,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appointment]);
+  }, [appointment, setValues]);
 
   const {t} = useTranslation('addAppointment');
   const titlePrefix = apptId ? 'edit-' : '';

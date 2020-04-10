@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import Text from '../components/Text';
 import {useTranslation} from 'react-i18next';
 import Layout from '../components/Layout';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute, useFocusEffect} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import {Button} from 'react-native-paper';
-import {View} from 'react-native';
-import {useGetAppointmentById} from '../hooks/appointmentsHooks';
+import {StyleSheet, View} from 'react-native';
+import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
@@ -16,31 +16,57 @@ const AppointmentScreen: React.FC<{}> = () => {
   const {t} = useTranslation();
   const route = useRoute<AppointmentScreenRouteProp>();
   const navigation = useNavigation<DashboardDrawerNavigationProp>();
-  const {data: appointment} = useGetAppointmentById(route.params.appointmentId);
+  const {data: appointment, status: loadStatus} = useGetAppointmentById(route.params.appointmentId);
+  const [deleteAppointment, {status: deleteStatus}] = useDeleteAppointment();
+
+  const loading = loadStatus === 'loading' || deleteStatus === 'loading';
   return (
-    <Layout>
+    <Layout style={{justifyContent: 'space-between', alignItems: 'center'}}>
       <ChildSelectorModal />
-      <Text style={{textAlign: 'center', fontSize: 20, marginTop: 20}}>{t('appointment:title')}</Text>
-      <Text>
-        {t('fields:apptTypePlaceholder')}
-        {'\n'} {appointment?.apptType}
-      </Text>
-      <Text>
-        {t('fields:datePlaceholder')}
-        {': '}
-        {formatDate(appointment?.date, 'date')}
-      </Text>
-      <Text>
-        {t('fields:timePlaceholder')}
-        {': '}
-        {formatDate(appointment?.date, 'time')}
-      </Text>
-      <Text>
-        {t('fields:doctorPlaceholder')}
-        {': '}
-        {appointment?.doctorName}
-      </Text>
-      <View style={{alignItems: 'center', marginVertical: 30}}>
+      <View style={{alignItems: 'center'}}>
+        <Text style={{textAlign: 'center', fontSize: 20, marginVertical: 20, fontWeight: 'bold'}}>
+          {t('appointment:title')}
+        </Text>
+        <Text style={styles.item}>
+          <Text style={[styles.label]}>
+            {t('fields:apptTypePlaceholder')}
+            {':'}
+          </Text>
+          {'\n'} {appointment?.apptType}
+        </Text>
+        <Text style={styles.item}>
+          <Text style={[styles.label]}>
+            {t('fields:datePlaceholder')}
+            {': '}
+          </Text>
+          {formatDate(appointment?.date, 'date')}
+        </Text>
+        <Text style={styles.item}>
+          <Text style={[styles.label]}>
+            {t('fields:timePlaceholder')}
+            {': '}
+          </Text>
+          {formatDate(appointment?.date, 'time')}
+        </Text>
+        <Text style={styles.item}>
+          <Text style={[styles.label]}>
+            {t('fields:doctorPlaceholder')}
+            {': '}
+          </Text>
+          {appointment?.doctorName}
+        </Text>
+      </View>
+      <Button
+        onPress={() => {
+          navigation.navigate('AddAppointment', {
+            appointmentId: route.params?.appointmentId,
+          });
+        }}
+        style={{width: 200}}
+        mode={'contained'}>
+        {t('common:edit')}
+      </Button>
+      <View>
         <Button
           onPress={() => {
             navigation.navigate('AddAppointment', {
@@ -61,29 +87,31 @@ const AppointmentScreen: React.FC<{}> = () => {
           mode={'outlined'}>
           Email child's summary
         </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddAppointment', {
-              appointmentId: route.params?.appointmentId,
-            });
-          }}
-          style={{width: 200}}
-          mode={'contained'}>
-          {t('common:edit')}
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddAppointment', {
-              appointmentId: route.params?.appointmentId,
-            });
-          }}
-          style={{width: 200}}
-          mode={'text'}>
-          {t('common:delete')}
-        </Button>
       </View>
+
+      <Button
+        disabled={loading}
+        onPress={() => {
+          appointment?.id && deleteAppointment(appointment?.id);
+          navigation.navigate('Dashboard');
+        }}
+        style={{width: 200}}
+        mode={'text'}>
+        {t('common:delete')}
+      </Button>
     </Layout>
   );
 };
+
+const styles = StyleSheet.create({
+  label: {
+    fontWeight: 'bold',
+  },
+  item: {
+    textAlign: 'center',
+    marginBottom: 10,
+    fontSize: 15,
+  },
+});
 
 export default AppointmentScreen;

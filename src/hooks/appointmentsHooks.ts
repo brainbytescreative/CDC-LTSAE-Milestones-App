@@ -36,8 +36,8 @@ export function useUpdateAppointment() {
       return rowsAffected;
     },
     {
-      onSuccess: (data, variables) => {
-        queryCache.refetchQueries(['appointment', {childId: variables.childId}]);
+      onSuccess: () => {
+        queryCache.refetchQueries('appointment');
       },
     },
   );
@@ -65,6 +65,26 @@ export function useAddAppointment() {
     {
       onSuccess: (data, variables) => {
         queryCache.refetchQueries(['appointment', {childId: variables.childId}]);
+      },
+    },
+  );
+}
+
+export function useDeleteAppointment() {
+  return useMutation<void, string | number>(
+    async (id) => {
+      const result = await sqLiteClient.dB?.executeSql('delete FROM appointments where id = ?', [id]);
+
+      const rowsAffected = result && result[0].rowsAffected;
+
+      if (!rowsAffected) {
+        throw new Error('Deletion failed');
+      }
+    },
+    {
+      throwOnError: false,
+      onSuccess: () => {
+        queryCache.refetchQueries('appointment');
       },
     },
   );
