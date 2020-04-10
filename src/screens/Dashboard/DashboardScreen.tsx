@@ -135,7 +135,11 @@ const DashboardScreen: React.FC<Props> = () => {
               backgroundColor: colors.purple,
               marginTop: -1,
             }}>
-            <View style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MilestoneChecklist');
+              }}
+              style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
               <View style={styles.milestoneCheckListContainer}>
                 <Text
                   style={{
@@ -157,7 +161,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 color={colors.lightGreen}
               />
               <Text> {t('milestonesAnswered', {progress: '10/20'})}</Text>
-            </View>
+            </TouchableOpacity>
             <View
               style={{
                 marginVertical: 20,

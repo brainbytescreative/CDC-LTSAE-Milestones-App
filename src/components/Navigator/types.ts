@@ -11,6 +11,7 @@ export type DashboardStackParamList = {
   Dashboard: undefined;
   AddAppointment: {appointmentId: number | string | undefined} | undefined;
   Appointment: {appointmentId: number | string};
+  MilestoneChecklist: undefined;
 };
 
 export type SettingsStackParamList = {
