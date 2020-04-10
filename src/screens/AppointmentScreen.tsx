@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import Text from '../components/Text';
 import {useTranslation} from 'react-i18next';
 import Layout from '../components/Layout';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {RouteProp, useNavigation, useRoute, useFocusEffect} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import {Button} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
@@ -27,13 +27,13 @@ const AppointmentScreen: React.FC<{}> = () => {
         <Text style={{textAlign: 'center', fontSize: 20, marginVertical: 20, fontWeight: 'bold'}}>
           {t('appointment:title')}
         </Text>
-        <Text style={styles.item}>
+        <View style={styles.item}>
           <Text style={[styles.label]}>
             {t('fields:apptTypePlaceholder')}
             {':'}
           </Text>
-          {'\n'} {appointment?.apptType}
-        </Text>
+          <Text>{appointment?.apptType}</Text>
+        </View>
         <Text style={styles.item}>
           <Text style={[styles.label]}>
             {t('fields:datePlaceholder')}
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   item: {
-    textAlign: 'center',
     marginBottom: 10,
     fontSize: 15,
+    alignItems: 'center',
   },
 });
 
