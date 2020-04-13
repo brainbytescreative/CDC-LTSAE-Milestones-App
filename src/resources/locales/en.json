@@ -59,7 +59,9 @@
     "required": "* required field",
     "dateFormat": "MM/dd/yyyy",
     "timeFormat": "h:mm a",
-    "dateTimeFormat": "MM/dd/yyyy h:mm a"
+    "dateTimeFormat": "MM/dd/yyyy h:mm a",
+    "hisHersTag0": "his",
+    "hisHersTag1": "her"
   },
   "addChild": {
     "title": "Add child",
@@ -98,6 +100,14 @@
     "language": "Language",
     "cognitive": "Cognitive",
     "movement": "Movement"
+  },
+  "milestoneChecklist": {
+    "section-social": "$t(skillTypes:social)",
+    "section-language": "$t(skillTypes:language)",
+    "section-cognitive": "$t(skillTypes:cognitive)",
+    "section-movement": "$t(skillTypes:movement)",
+    "section-actEarly": "When to\nact early",
+    "answered": "answered"
   },
   "states": {
     "AL": "Alabama (AL)",

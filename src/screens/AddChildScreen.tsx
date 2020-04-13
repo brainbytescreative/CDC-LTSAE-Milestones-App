@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
-import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenDbHooks';
+import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
 import {addEditChildSchema} from '../resources/validationSchemas';
 
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -180,7 +180,8 @@ const AddChildScreen: React.FC<{}> = () => {
                 navigation.navigate('Dashboard');
                 setOnboarding(true);
               } else {
-                navigation.navigate('Dashboard');
+                // navigation.navigate('Dashboard');
+                navigation.goBack();
               }
             }}>
             {t('common:done').toUpperCase()}

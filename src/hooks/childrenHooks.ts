@@ -1,8 +1,10 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
-import {formatISO, parseISO} from 'date-fns';
+import {differenceInDays, differenceInHours, differenceInMonths, formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
+import {childAges, tooYongAgeDays} from '../resources/constants';
+import _ from 'lodash';
 
 interface Record {
   id: string;
@@ -23,6 +25,38 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 }
 
 type Key = 'children' | 'selectedChild';
+
+export function useGetMilestone() {
+  const {data: child, ...rest} = useGetCurrentChild();
+
+  let data;
+  let isTooYung = false;
+  let betweenCheckList = false;
+  if (child?.birthday) {
+    const ageMonth = differenceInMonths(new Date(), child?.birthday);
+    const minAge = _.min(childAges) || 0;
+    const maxAge = _.max(childAges) || Infinity;
+
+    if (ageMonth <= minAge) {
+      data = minAge;
+      const ageDays = differenceInDays(new Date(), child?.birthday);
+      isTooYung = ageDays < tooYongAgeDays;
+    } else if (ageMonth >= maxAge) {
+      data = maxAge;
+    } else {
+      const milestones = childAges.filter((value) => value < ageMonth);
+      data = milestones[milestones.length - 1];
+    }
+    console.log(data, ageMonth, child.birthday, minAge, maxAge, isTooYung);
+  }
+
+  return {
+    data,
+    isTooYung,
+    betweenCheckList,
+    ...rest,
+  };
+}
 
 export function useGetCurrentChild() {
   return useQuery<ChildResult, Key>(

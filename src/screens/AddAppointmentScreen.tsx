@@ -8,7 +8,7 @@ import Layout from '../components/Layout';
 import Text from '../components/Text';
 import DatePicker from '../components/DatePicker';
 import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
-import {useGetCurrentChild} from '../hooks/childrenDbHooks';
+import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {format, parse} from 'date-fns';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';

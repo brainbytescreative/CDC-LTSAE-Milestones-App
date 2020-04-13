@@ -15,7 +15,7 @@ import {
   useGetChildren,
   useGetCurrentChild,
   useSetSelectedChild,
-} from '../hooks/childrenDbHooks';
+} from '../hooks/childrenHooks';
 import {BabyPlaceholder} from '../resources/svg';
 import {DashboardDrawerParamsList, DashboardStackParamList} from './Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';

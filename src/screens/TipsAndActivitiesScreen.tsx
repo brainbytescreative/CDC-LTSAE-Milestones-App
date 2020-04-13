@@ -53,8 +53,6 @@ function Item({title}: any) {
   );
 }
 
-
-
 const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {t} = useTranslation('tipsAndActivities');
 

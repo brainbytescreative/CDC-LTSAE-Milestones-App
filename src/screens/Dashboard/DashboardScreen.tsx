@@ -18,7 +18,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {useGetCurrentChild} from '../../hooks/childrenDbHooks';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {differenceInMonths, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';

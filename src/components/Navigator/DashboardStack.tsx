@@ -8,7 +8,7 @@ import BurgerButton from '../BurgerButton';
 import NotificationsBadge from '../NotificationsBadge';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
-import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen';
+import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 

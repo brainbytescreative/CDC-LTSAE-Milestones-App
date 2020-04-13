@@ -87,6 +87,7 @@ export const colors = Object.freeze({
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];
+export const tooYongAgeDays = 42;
 export type LanguageType = 'en' | 'es';
 
 export const images = {
