@@ -18,7 +18,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {useGetCurrentChild, useGetMilestone} from '../../hooks/childrenHooks';
 import {differenceInMonths, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
@@ -29,10 +29,6 @@ import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatDate} from '../../utils/helpers';
 
 const DATA: DataItem[] = [
-  {
-    month: 1,
-    progress: 100,
-  },
   {
     month: 2,
     progress: 100,
@@ -58,6 +54,15 @@ const DATA: DataItem[] = [
   {
     month: 24,
   },
+  {
+    month: 36,
+  },
+  {
+    month: 48,
+  },
+  {
+    month: 60,
+  },
 ];
 
 interface Props {
@@ -78,8 +83,7 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
-
-  const childAge = child?.birthday && differenceInMonths(new Date(), child?.birthday);
+  const {milestoneAge: childAge} = useGetMilestone();
 
   const childAgeText =
     child?.birthday &&
@@ -107,7 +111,7 @@ const DashboardScreen: React.FC<Props> = () => {
             position: 'absolute',
             width: '100%',
           }}>
-          <View style={{backgroundColor: '#94F5EB', height: 40}} />
+          <View style={{backgroundColor: colors.iceCold, height: 40}} />
           <NabBarBackground width={'100%'} />
         </View>
         <View>
@@ -279,7 +283,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     marginHorizontal: 32,
     alignItems: 'center',
-    backgroundColor: 'yellow',
+    backgroundColor: colors.yellow,
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {

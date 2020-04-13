@@ -17,7 +17,6 @@
   "dashboard": {
     "title": "Dashboard",
     "drawerLabel": "$t(dashboard:title)",
-    "carouselAge": "{{value}} {{unit}}",
     "whenToActEarly": "When to Act Early",
     "addApt": "+ Add apt",
     "appointments": "Appointments",
@@ -61,7 +60,14 @@
     "timeFormat": "h:mm a",
     "dateTimeFormat": "MM/dd/yyyy h:mm a",
     "hisHersTag0": "his",
-    "hisHersTag1": "her"
+    "hisHersTag1": "her",
+    "year": "{{count}} year",
+    "year_plural": "{{count}} years",
+    "yearShort": "{{count}} yr",
+    "yearShort_plural": "{{count}} yrs",
+    "month": "{{count}} month",
+    "monthShort": "{{count}} mo",
+    "month_plural": "{{count}} months"
   },
   "addChild": {
     "title": "Add child",

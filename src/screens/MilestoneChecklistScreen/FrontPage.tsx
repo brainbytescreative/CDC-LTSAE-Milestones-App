@@ -2,18 +2,16 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import Text from '../../components/Text';
-import {useGetCurrentChild, useGetMilestone} from '../../hooks/childrenHooks';
 
 interface Props {
   onGetStarted: () => void;
+  milestoneAgeFormatted: string | undefined;
 }
 
-const FrontPage: React.FC<Props> = ({onGetStarted}) => {
-  const milestone = useGetMilestone();
-
+const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
   return (
     <>
-      <Text style={[styles.header, {marginTop: 20}]}>4 month</Text>
+      <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
       <Text style={[styles.header]}>Milestone checklist</Text>
       <Text style={[styles.header, {fontWeight: 'normal'}]}>Front page</Text>
       <Text style={[styles.text]}>

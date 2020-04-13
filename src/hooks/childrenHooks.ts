@@ -5,6 +5,7 @@ import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
 import {childAges, tooYongAgeDays} from '../resources/constants';
 import _ from 'lodash';
+import {useTranslation} from 'react-i18next';
 
 interface Record {
   id: string;
@@ -28,31 +29,39 @@ type Key = 'children' | 'selectedChild';
 
 export function useGetMilestone() {
   const {data: child, ...rest} = useGetCurrentChild();
+  const {t} = useTranslation('common');
 
-  let data;
-  let isTooYung = false;
-  let betweenCheckList = false;
+  let milestoneAge;
+  let isTooYong = false;
+  const betweenCheckList = false;
   if (child?.birthday) {
     const ageMonth = differenceInMonths(new Date(), child?.birthday);
     const minAge = _.min(childAges) || 0;
     const maxAge = _.max(childAges) || Infinity;
 
     if (ageMonth <= minAge) {
-      data = minAge;
+      milestoneAge = minAge;
       const ageDays = differenceInDays(new Date(), child?.birthday);
-      isTooYung = ageDays < tooYongAgeDays;
+      isTooYong = ageDays < tooYongAgeDays;
     } else if (ageMonth >= maxAge) {
-      data = maxAge;
+      milestoneAge = maxAge;
     } else {
       const milestones = childAges.filter((value) => value < ageMonth);
-      data = milestones[milestones.length - 1];
+      milestoneAge = milestones[milestones.length - 1];
     }
-    console.log(data, ageMonth, child.birthday, minAge, maxAge, isTooYung);
+  }
+
+  let milestoneAgeFormatted;
+
+  if (milestoneAge) {
+    milestoneAgeFormatted =
+      milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
   }
 
   return {
-    data,
-    isTooYung,
+    milestoneAge,
+    milestoneAgeFormatted,
+    isTooYong,
     betweenCheckList,
     ...rest,
   };

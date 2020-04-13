@@ -19,12 +19,17 @@ interface Props {
 
 const Item: React.FC<DataItem & {childAge: number}> = ({month, childAge, progress}) => {
   const {t} = useTranslation('dashboard');
+  const isCurrent = childAge === month;
+  const suffix = isCurrent ? '' : 'Short';
+  const unit =
+    month % 12 === 0 ? t(`common:year${suffix}`, {count: month / 12}) : t(`common:month${suffix}`, {count: month});
+
   return (
     <TouchableOpacity>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>
         <AnimatedCircularProgress
           rotation={0}
-          size={childAge === month ? 68 : 44}
+          size={isCurrent ? 68 : 44}
           width={2}
           fill={progress}
           tintColor={colors.iceCold}
@@ -43,7 +48,7 @@ const Item: React.FC<DataItem & {childAge: number}> = ({month, childAge, progres
                   fontSize: 12,
                   fontFamily: month === childAge ? 'Avenir-Heavy' : 'Avenir-light',
                 }}>
-                {t('carouselAge', {value: month, unit: 'mo'})}
+                {unit}
               </Text>
             </View>
           )}

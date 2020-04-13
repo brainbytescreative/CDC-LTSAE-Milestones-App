@@ -12,17 +12,21 @@ import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
 import FrontPage from './FrontPage';
 import ActEarlyPage from './ActEarlyPage';
+import OverviewPage from './OverviewPage';
+import {useGetMilestone} from '../../hooks/childrenHooks';
 
 const MilestoneChecklistScreen: React.FC<{}> = () => {
   const [section, setSection] = useState<Section | undefined>();
+  const [gotStarted, setGotStarted] = useState(false);
+  const {milestoneAgeFormatted, milestoneAge} = useGetMilestone();
 
   const sections = useMemo<Section[]>(() => {
     return [...skillTypes, 'actEarly'];
   }, []);
 
   const questions = useMemo<SkillSection[] | undefined>(() => {
-    return _.chain(milestoneChecklist).find({id: 2}).get(`milestones.${section}`).value();
-  }, [section]);
+    return milestoneAge && _.chain(milestoneChecklist).find({id: milestoneAge}).get(`milestones.${section}`).value();
+  }, [section, milestoneAge]);
 
   const onPressNextSection = () => {
     const currentSection = section?.length && sections.indexOf(section);
@@ -44,9 +48,19 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      {!section && (
+      {!section && !gotStarted && (
         <FrontPage
+          milestoneAgeFormatted={milestoneAgeFormatted}
           onGetStarted={() => {
+            setGotStarted(true);
+          }}
+        />
+      )}
+      {!section && gotStarted && (
+        <OverviewPage
+          milestoneAge={milestoneAge}
+          milestoneAgeFormatted={milestoneAgeFormatted}
+          onNext={() => {
             setSection(sections[0]);
           }}
         />

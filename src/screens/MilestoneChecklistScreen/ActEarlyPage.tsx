@@ -68,7 +68,7 @@ const ActEarlyPage: React.FC<{}> = () => {
               flexDirection: 'row',
               position: 'absolute',
               width: '100%',
-              bottom: -20,
+              bottom: -25,
             }}>
             <TouchableOpacity
               style={{
