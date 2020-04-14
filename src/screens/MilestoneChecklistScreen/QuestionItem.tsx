@@ -6,8 +6,18 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import YouTube from 'react-native-youtube';
 import ViewPager from '@react-native-community/viewpager';
 import Text from '../../components/Text';
+import {Answer, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 
-const QuestionItem: React.FC<SkillSection> = ({id, value, photos, videos}) => {
+const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
+  const {data} = useGetQuestion({
+    childId: childId,
+    questionId: id,
+  });
+
+  const [answerQuestion] = useSetQuestionAnswer();
+
+  const answer = data?.answer;
+
   const {t} = useTranslation('milestones');
   const photo = photos?.map((item, index) => {
     const name = (item.name && t(item.name)) || '';
@@ -42,6 +52,10 @@ const QuestionItem: React.FC<SkillSection> = ({id, value, photos, videos}) => {
     );
   });
 
+  const doAnswer = (answerValue: Answer) => () => {
+    id && childId && answerQuestion({questionId: id, childId, answer: answerValue});
+  };
+
   return (
     <View style={{paddingHorizontal: 20, paddingBottom: 20, flex: 1}}>
       {photos && photos.length > 0 && (
@@ -51,14 +65,24 @@ const QuestionItem: React.FC<SkillSection> = ({id, value, photos, videos}) => {
       )}
       {video}
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <TouchableOpacity style={styles.answerButton}>
-          <Text>YES</Text>
+        <TouchableOpacity
+          onPress={doAnswer(Answer.YES)}
+          style={[styles.answerButton, answer === Answer.YES ? styles.selected : undefined]}>
+          <Text style={[answer === Answer.YES ? styles.selectedText : undefined]}>YES</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.answerButton, {width: 50, borderRadius: 100}]}>
-          <Text style={{fontSize: 9}}>UNSURE</Text>
+        <TouchableOpacity
+          onPress={doAnswer(Answer.UNSURE)}
+          style={[
+            styles.answerButton,
+            {width: 50, borderRadius: 100},
+            answer === Answer.UNSURE ? styles.selected : undefined,
+          ]}>
+          <Text style={[{fontSize: 9}, answer === Answer.UNSURE ? styles.selectedText : undefined]}>UNSURE</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.answerButton}>
-          <Text>NOT YET</Text>
+        <TouchableOpacity
+          onPress={doAnswer(Answer.NOT_YET)}
+          style={[styles.answerButton, answer === Answer.NOT_YET ? styles.selected : undefined]}>
+          <Text style={[answer === Answer.NOT_YET ? styles.selectedText : undefined]}>NOT YET</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -72,6 +96,12 @@ const styles = StyleSheet.create({
     width: 70,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  selected: {
+    backgroundColor: 'gray',
+  },
+  selectedText: {
+    color: 'white',
   },
 });
 

@@ -43,6 +43,19 @@ const DB_MIGRATIONS = [
             questions  TEXT
         );
     `);
+
+    await dB.executeSql(`
+        create table milestones_answers
+        (
+            childId    INTEGER not null
+                references children (id)
+                    on update cascade on delete cascade,
+            questionId INTEGER not null,
+            answer     INTEGER not null,
+            note     TEXT,
+            PRIMARY KEY (childId, questionId)
+        );
+    `);
   },
 ];
 

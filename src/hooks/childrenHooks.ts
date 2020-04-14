@@ -1,14 +1,11 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
-import {differenceInDays, differenceInHours, differenceInMonths, formatISO, parseISO} from 'date-fns';
+import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
-import {childAges, tooYongAgeDays} from '../resources/constants';
-import _ from 'lodash';
-import {useTranslation} from 'react-i18next';
 
 interface Record {
-  id: string;
+  id: number;
 }
 
 export interface ChildDbRecord extends Record {
@@ -26,46 +23,6 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 }
 
 type Key = 'children' | 'selectedChild';
-
-export function useGetMilestone() {
-  const {data: child, ...rest} = useGetCurrentChild();
-  const {t} = useTranslation('common');
-
-  let milestoneAge;
-  let isTooYong = false;
-  const betweenCheckList = false;
-  if (child?.birthday) {
-    const ageMonth = differenceInMonths(new Date(), child?.birthday);
-    const minAge = _.min(childAges) || 0;
-    const maxAge = _.max(childAges) || Infinity;
-
-    if (ageMonth <= minAge) {
-      milestoneAge = minAge;
-      const ageDays = differenceInDays(new Date(), child?.birthday);
-      isTooYong = ageDays < tooYongAgeDays;
-    } else if (ageMonth >= maxAge) {
-      milestoneAge = maxAge;
-    } else {
-      const milestones = childAges.filter((value) => value < ageMonth);
-      milestoneAge = milestones[milestones.length - 1];
-    }
-  }
-
-  let milestoneAgeFormatted;
-
-  if (milestoneAge) {
-    milestoneAgeFormatted =
-      milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
-  }
-
-  return {
-    milestoneAge,
-    milestoneAgeFormatted,
-    isTooYong,
-    betweenCheckList,
-    ...rest,
-  };
-}
 
 export function useGetCurrentChild() {
   return useQuery<ChildResult, Key>(

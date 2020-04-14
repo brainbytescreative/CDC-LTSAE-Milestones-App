@@ -1,11 +1,9 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import Text from '../../components/Text';
-import _ from 'lodash';
-import milestoneChecklist, {Milestones, SkillSection} from '../../resources/milestoneChecklist';
-import {skillTypes} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {Button} from 'react-native-paper';
+import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 
 interface Props {
   onNext: () => void;
@@ -15,15 +13,19 @@ interface Props {
 
 const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge}) => {
   const {t} = useTranslation('milestones');
-  const questions = (milestoneAge &&
-    _.chain(
-      skillTypes.map((section) =>
-        _.chain(milestoneChecklist).find({id: milestoneAge}).get(`milestones.${section}`).value(),
-      ),
-    )
-      .flatten()
-      .map((item) => ({...item, value: t(item.value)}))
-      .value()) as SkillSection[] | undefined;
+  // const questions = (milestoneAge &&
+  //   _.chain(
+  //     skillTypes.map((section) =>
+  //       _.chain(milestoneChecklist).find({id: milestoneAge}).get(`milestones.${section}`).value(),
+  //     ),
+  //   )
+  //     .flatten()
+  //     .map((item) => ({...item, value: t(item.value)}))
+  //     .value()) as SkillSection[] | undefined;
+
+  const {data, error} = useGetChecklistQuestions();
+
+  const questions = data?.questions || [];
 
   return (
     <>
@@ -35,7 +37,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
             <Text style={[styles.text]}>Here a quick look at all of the milestones most children reach</Text>
           </>
         )}
-        data={questions || []}
+        data={questions}
         keyExtractor={(item) => `overview-${item.id}`}
         renderItem={({item}) => (
           <Text style={[styles.text]}>

@@ -1,32 +1,32 @@
 import React, {useMemo, useState} from 'react';
-import Text from '../../components/Text';
 import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {skillTypes} from '../../resources/constants';
 import {Button} from 'react-native-paper';
-import _ from 'lodash';
-import milestoneChecklist, {SkillSection} from '../../resources/milestoneChecklist';
+import {SkillSection} from '../../resources/milestoneChecklist';
 import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
 import FrontPage from './FrontPage';
 import ActEarlyPage from './ActEarlyPage';
 import OverviewPage from './OverviewPage';
-import {useGetMilestone} from '../../hooks/childrenHooks';
+import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
 
 const MilestoneChecklistScreen: React.FC<{}> = () => {
   const [section, setSection] = useState<Section | undefined>();
   const [gotStarted, setGotStarted] = useState(false);
-  const {milestoneAgeFormatted, milestoneAge} = useGetMilestone();
+  const {milestoneAgeFormatted, milestoneAge, child} = useGetMilestone();
 
   const sections = useMemo<Section[]>(() => {
     return [...skillTypes, 'actEarly'];
   }, []);
 
+  const {data} = useGetChecklistQuestions();
+
   const questions = useMemo<SkillSection[] | undefined>(() => {
-    return milestoneAge && _.chain(milestoneChecklist).find({id: milestoneAge}).get(`milestones.${section}`).value();
-  }, [section, milestoneAge]);
+    return data?.questions?.filter((item) => item.section === section);
+  }, [section, data]);
 
   const onPressNextSection = () => {
     const currentSection = section?.length && sections.indexOf(section);
@@ -69,7 +69,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
         <FlatList
           data={questions}
           extraData={section}
-          renderItem={({item}) => <QuestionItem {...item} />}
+          renderItem={({item}) => <QuestionItem {...item} childId={child?.id} />}
           keyExtractor={(item, index) => `${item}-${index}`}
           ListFooterComponent={() => (
             <View style={{alignItems: 'center', marginVertical: 30}}>

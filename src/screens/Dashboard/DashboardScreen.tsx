@@ -18,15 +18,16 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {useGetCurrentChild, useGetMilestone} from '../../hooks/childrenHooks';
-import {differenceInMonths, formatDistanceStrict} from 'date-fns';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
-import {RouteProp, CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatDate} from '../../utils/helpers';
+import {useGetMilestone} from '../../hooks/checklistHooks';
 
 const DATA: DataItem[] = [
   {
