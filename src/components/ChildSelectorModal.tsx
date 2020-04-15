@@ -19,11 +19,12 @@ import {
 import {BabyPlaceholder} from '../resources/svg';
 import {DashboardDrawerParamsList, DashboardStackParamList} from './Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import NotificationsBadge from './NotificationsBadge';
 
 interface ItemProps extends ChildResult {
-  onSelect: (id: string) => void;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onSelect: (id: number) => void;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const Item: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
@@ -148,50 +149,53 @@ const ChildSelectorModal: React.FC<{}> = () => {
     });
   }, [navigation, setChildSelectorVisible, childSelectorVisible, selectedChild]);
 
-  const onEdit = (id?: string) => {
+  const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
     navigation.navigate('AddChild', {
       childId: id,
     });
   };
 
-  const onSelect = (id?: string) => {
+  const onSelect = (id?: number) => {
     id && selectChild({id});
     setChildSelectorVisible(false);
   };
 
   return (
-    <Portal>
-      <View
-        style={{
-          marginTop: headerHeight,
-          backgroundColor: 'white',
-          flex: 1,
-          display: childSelectorVisible ? 'flex' : 'none',
-        }}>
-        <FlatList
-          data={children}
-          renderItem={({item}) => (
-            <Item
-              {...item}
-              onSelect={onSelect}
-              onEdit={onEdit}
-              onDelete={(id) => {
-                deleteChild({id});
-              }}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          ListFooterComponent={
-            <Footer
-              onPress={() => {
-                onEdit();
-              }}
-            />
-          }
-        />
-      </View>
-    </Portal>
+    <>
+      <NotificationsBadge />
+      <Portal>
+        <View
+          style={{
+            marginTop: headerHeight,
+            backgroundColor: 'white',
+            flex: 1,
+            display: childSelectorVisible ? 'flex' : 'none',
+          }}>
+          <FlatList
+            data={children}
+            renderItem={({item}) => (
+              <Item
+                {...item}
+                onSelect={onSelect}
+                onEdit={onEdit}
+                onDelete={(id) => {
+                  deleteChild({id});
+                }}
+              />
+            )}
+            keyExtractor={(item) => `${item.id}`}
+            ListFooterComponent={
+              <Footer
+                onPress={() => {
+                  onEdit();
+                }}
+              />
+            }
+          />
+        </View>
+      </Portal>
+    </>
   );
 };
 

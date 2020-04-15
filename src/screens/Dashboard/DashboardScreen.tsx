@@ -99,6 +99,7 @@ const DashboardScreen: React.FC<Props> = () => {
   return (
     <>
       <ChildSelectorModal />
+
       <ScrollView style={{paddingTop: headerHeight, backgroundColor: '#fff'}}>
         <View
           style={{

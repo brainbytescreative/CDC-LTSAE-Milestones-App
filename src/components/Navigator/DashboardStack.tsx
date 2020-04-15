@@ -5,7 +5,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import AddChildScreen from '../../screens/AddChildScreen';
 import {DashboardStackParamList} from './types';
 import BurgerButton from '../BurgerButton';
-import NotificationsBadge from '../NotificationsBadge';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
@@ -23,7 +22,6 @@ const DashboardStack: FC<{}> = () => {
           title: t('dashboard:title'),
           headerTransparent: true,
           headerLeft: () => <BurgerButton />,
-          headerRight: () => <NotificationsBadge />,
         })}
       />
       <Stack.Screen
@@ -39,7 +37,6 @@ const DashboardStack: FC<{}> = () => {
         options={{
           title: t('addAppointment:title'),
           headerBackTitle: ' ',
-          headerRight: () => <NotificationsBadge />,
         }}
       />
       <Stack.Screen
@@ -48,7 +45,6 @@ const DashboardStack: FC<{}> = () => {
         options={{
           title: t('appointment:title'),
           headerBackTitle: ' ',
-          headerRight: () => <NotificationsBadge />,
         }}
       />
       <Stack.Screen
@@ -57,7 +53,6 @@ const DashboardStack: FC<{}> = () => {
         options={{
           title: t('milestoneChecklistScreen:title'),
           headerBackTitle: ' ',
-          headerRight: () => <NotificationsBadge />,
         }}
       />
     </Stack.Navigator>

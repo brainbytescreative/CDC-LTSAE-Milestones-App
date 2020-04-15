@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import {SettingsStackParamList} from './types';
 import SettingsScreen from '../../screens/SettingsScreen';
 import BurgerButton from '../BurgerButton';
-import NotificationsBadge from '../NotificationsBadge';
 
 const Stack = createStackNavigator<SettingsStackParamList>();
 
@@ -18,7 +17,6 @@ const SettingsStack: React.FC<{}> = () => {
         options={() => ({
           title: t('settings:title'),
           headerLeft: () => <BurgerButton />,
-          headerRight: () => <NotificationsBadge />,
         })}
       />
     </Stack.Navigator>

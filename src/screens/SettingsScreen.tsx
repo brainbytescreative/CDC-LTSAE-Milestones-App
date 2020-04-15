@@ -15,6 +15,7 @@ import {
 } from '../hooks/settingsHooks';
 import {FormikProps} from 'formik/dist/types';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
+import NotificationsBadge from '../components/NotificationsBadge';
 
 const NotificationSetting: React.FC<{name: SettingName}> = ({name}) => {
   const {t} = useTranslation('fields');
@@ -23,6 +24,7 @@ const NotificationSetting: React.FC<{name: SettingName}> = ({name}) => {
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10}}>
+      <NotificationsBadge />
       <Text>{t(name)}</Text>
       <Switch
         value={field.value}

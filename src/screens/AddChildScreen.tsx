@@ -59,7 +59,7 @@ const AddChildScreen: React.FC<{}> = () => {
       };
 
       if (childId) {
-        return updateChild({...childInput, id: `${childId}`});
+        return updateChild({...childInput, id: childId});
       } else {
         return addChild(childInput);
       }

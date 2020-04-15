@@ -62,7 +62,7 @@ export function useGetCurrentChild() {
 }
 
 export function useSetSelectedChild() {
-  return useMutation<void, {id: string}>(async ({id}) => {
+  return useMutation<void, {id: number}>(async ({id}) => {
     await Storage.setItem('selectedChild', `${id}`);
     await queryCache.refetchQueries(['selectedChild']);
   });
@@ -94,7 +94,7 @@ export function useUpdateChild() {
 }
 
 export function useDeleteChild() {
-  return useMutation<void, {id: string}>(
+  return useMutation<void, {id: number}>(
     async (variables) => {
       const selectedChild = await Storage.getItem('selectedChild');
       if (selectedChild === `${variables.id}`) {

@@ -2,9 +2,7 @@ import {CompositeNavigationProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-export type AddChildScreenParams =
-  | {childId?: string | number; anotherChild?: boolean; onboarding?: boolean}
-  | undefined;
+export type AddChildScreenParams = {childId?: number; anotherChild?: boolean; onboarding?: boolean} | undefined;
 
 export type DashboardStackParamList = {
   AddChild: AddChildScreenParams;
