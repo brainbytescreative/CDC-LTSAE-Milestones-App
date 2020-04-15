@@ -4,8 +4,38 @@ import _ from 'lodash';
 import {childAges, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import milestoneChecklist, {MilestoneChecklist, Milestones, SkillSection} from '../resources/milestoneChecklist';
+import milestoneChecklist, {
+  Concern,
+  MilestoneChecklist,
+  Milestones,
+  SkillSection,
+} from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
+import {useMemo} from 'react';
+
+type ChecklistData = SkillSection & {section: keyof Milestones};
+
+export enum Answer {
+  YES,
+  UNSURE,
+  NOT_YET,
+}
+
+interface MilestoneAnswer {
+  childId: number;
+  questionId: number;
+  answer: Answer;
+  note?: string | undefined;
+}
+
+type QuestionAnswerKey = Partial<Pick<MilestoneAnswer, 'childId' | 'questionId'>>;
+
+interface ConcernAnswer {
+  concernId: number;
+  childId: number;
+  answer: boolean;
+  note?: string | undefined | null;
+}
 
 export function useGetMilestone() {
   const {data: child, ...rest} = useGetCurrentChild();
@@ -47,23 +77,6 @@ export function useGetMilestone() {
     ...rest,
   };
 }
-
-type ChecklistData = SkillSection & {section: keyof Milestones};
-
-export enum Answer {
-  YES,
-  UNSURE,
-  NOT_YET,
-}
-
-interface MilestoneAnswer {
-  childId: number;
-  questionId: number;
-  answer: Answer;
-  note?: string | undefined;
-}
-
-type QuestionsWithAnswers = ChecklistData & Omit<Partial<MilestoneAnswer>, 'id'>;
 
 export function useGetChecklistQuestions() {
   const {child, milestoneAge} = useGetMilestone();
@@ -119,29 +132,18 @@ export function useGetQuestion(data: QuestionAnswerKey) {
   });
 }
 
-type QuestionAnswerKey = Partial<Pick<MilestoneAnswer, 'childId' | 'questionId'>>;
-
 export function useSetQuestionAnswer() {
   return useMutation<void, MilestoneAnswer>(
     async (variables) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
         INSERT INTO milestones_answers (childId, questionId, answer, note)
-        VALUES (?, ?, ?, ?)
-        on conflict(childId, questionId) do update set answer= ?,
-                                                       note=?
-        where childId = ?
-          and questionId = ?;`,
-        [
-          variables.childId,
-          variables.questionId,
-          variables.answer,
-          variables.note,
-          variables.answer,
-          variables.note,
-          variables.childId,
-          variables.questionId,
-        ],
+        VALUES (?1, ?2, ?3, ?4)
+        on conflict(childId, questionId) do update set answer= ?3,
+                                                       note=?4
+        where childId = ?1
+          and questionId = ?2;`,
+        [variables.childId, variables.questionId, variables.answer, variables.note],
       );
 
       if (!result || result[0].rowsAffected === 0) {
@@ -154,6 +156,106 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (data, {childId, questionId}) => {
         queryCache.refetchQueries(['question', {childId, questionId}]);
+      },
+    },
+  );
+}
+
+export function useGetConcerns() {
+  const {milestoneAge, child, milestoneAgeFormatted} = useGetMilestone();
+  const {t} = useTranslation('milestones');
+  const hisHersTag = _.isNumber(child?.gender) && t(`common:hisHersTag${child?.gender}`);
+
+  const {data: concerns} = useQuery(['concerns', {childId: child?.id}], async (key, variables) => {
+    if (!variables.childId) {
+      return;
+    }
+    const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where childId=?', [
+      variables.childId,
+    ]);
+
+    const answers: ConcernAnswer[] | undefined = result && result[0].rows.raw();
+
+    answers?.forEach((value) => {
+      queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
+    });
+
+    const concernsData =
+      child &&
+      (_.chain(milestoneChecklist)
+        .find({id: milestoneAge})
+        .get('concerns')
+        .map((item) => {
+          return {
+            ...item,
+            value: item.value && t(item.value, {hisHersTag}),
+          };
+        })
+        .value() as Concern[]);
+
+    const answeredIds = answers?.map((value) => value.concernId);
+
+    concernsData
+      ?.filter((value) => value.id && !answeredIds?.includes(value.id))
+      ?.forEach((value) => {
+        queryCache.setQueryData(['concern', {childId: variables.childId, concernId: value.id}], {
+          childId: variables.childId,
+          concernId: value.id,
+          answered: false,
+        });
+      });
+
+    return concernsData;
+  });
+
+  return {
+    concerns,
+    child,
+    milestoneAgeFormatted,
+  };
+}
+
+type ConcernPredicate = Partial<Pick<ConcernAnswer, 'childId' | 'concernId'>>;
+
+export function useGetConcern(predicate: ConcernPredicate) {
+  return useQuery<ConcernAnswer, [string, typeof predicate]>(
+    ['concern', predicate],
+    async (key, variables) => {
+      const result = await sqLiteClient.dB?.executeSql(
+        'select * from concern_answers where concernId=? and childId=?',
+        [variables.concernId, variables.childId],
+      );
+      console.log('useGetConcern', variables);
+      return result && result[0].rows.item(0);
+    },
+    {
+      staleTime: Infinity,
+    },
+  );
+}
+
+export function useSetConcern() {
+  return useMutation<void, ConcernAnswer>(
+    async (variables) => {
+      const result = await sqLiteClient.dB?.executeSql(
+        `
+                INSERT INTO concern_answers (concernId, answer, note, childId)
+                VALUES (?1, ?2, ?3, ?4)
+                on conflict(childId, concernId) do update set answer= ?2,
+                                                              note=?3
+                where childId = ?4
+                  and concernId = ?1;`,
+        [variables.concernId, variables.answer || false, variables.note, variables.childId],
+      );
+
+      if (!result || result[0].rowsAffected === 0) {
+        throw new Error('Update failed');
+      }
+    },
+    {
+      onSuccess: (data, {childId, concernId}) => {
+        const predicate = {childId, concernId};
+        queryCache.refetchQueries(['concern', predicate], {force: true});
       },
     },
   );

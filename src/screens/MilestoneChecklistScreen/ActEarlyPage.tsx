@@ -1,40 +1,54 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Text from '../../components/Text';
 import {Button} from 'react-native-paper';
-import milestoneChecklist, {Concern} from '../../resources/milestoneChecklist';
-import _ from 'lodash';
-import {useTranslation} from 'react-i18next';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {Concern} from '../../resources/milestoneChecklist';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import {useGetConcern, useGetConcerns, useSetConcern} from '../../hooks/checklistHooks';
+
+const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
+  const [setConcern] = useSetConcern();
+  const {data: concern} = useGetConcern({concernId: id, childId});
+  return (
+    <View
+      style={{
+        borderWidth: 1,
+        marginHorizontal: 32,
+        marginBottom: 40,
+        paddingTop: 20,
+        paddingBottom: 30,
+      }}>
+      <View
+        style={{
+          paddingHorizontal: 28,
+        }}>
+        <Text>{value}</Text>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId});
+          }}
+          style={[styles.checkMarkContainer, concern?.answer && {backgroundColor: 'grey'}]}>
+          <IonIcons style={[concern?.answer && {color: 'white'}]} name={'ios-checkmark'} size={40} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.addNoteContainer}>
+          <Text>Add note</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const ActEarlyPage: React.FC<{}> = () => {
-  const {t} = useTranslation('milestones');
-  const {data: child} = useGetCurrentChild();
-  const hisHersTag = _.isNumber(child?.gender) && t(`common:hisHersTag${child?.gender}`);
-  const checklistAge = 2;
-
-  const concerns = useMemo<Concern[] | undefined>(() => {
-    return (
-      child &&
-      _.chain(milestoneChecklist)
-        .find({id: checklistAge})
-        .get('concerns')
-        .map((item) => {
-          return {
-            ...item,
-            value: item.value && t(item.value, {hisHersTag}),
-          };
-        })
-        .value()
-    );
-  }, [t, child, hisHersTag]);
+  const {milestoneAgeFormatted, concerns, child} = useGetConcerns();
 
   return (
     <FlatList
       ListHeaderComponent={
         <View style={{alignItems: 'center'}}>
-          <Text style={[styles.header, {marginTop: 20}]}>4 month</Text>
+          <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
           <Text style={[styles.header]}>Milestone checklist</Text>
           <Text style={[styles.header, {fontWeight: 'normal'}]}>Complete</Text>
           <Text style={[styles.header, {marginTop: 20}]}>When to act early</Text>
@@ -47,52 +61,7 @@ const ActEarlyPage: React.FC<{}> = () => {
         </View>
       }
       data={concerns || []}
-      renderItem={({item}) => (
-        <View
-          style={{
-            borderWidth: 1,
-            marginHorizontal: 32,
-            marginBottom: 40,
-            paddingTop: 20,
-            paddingBottom: 30,
-          }}>
-          <View
-            style={{
-              paddingHorizontal: 28,
-            }}>
-            <Text>{item.value}</Text>
-          </View>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              position: 'absolute',
-              width: '100%',
-              bottom: -25,
-            }}>
-            <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                paddingHorizontal: 12,
-                backgroundColor: 'white',
-                marginLeft: 30,
-              }}>
-              <IonIcons name={'ios-checkmark'} size={40} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                paddingHorizontal: 12,
-                justifyContent: 'center',
-                marginRight: 20,
-                backgroundColor: 'white',
-              }}>
-              <Text>Add note</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+      renderItem={({item}) => <Item {...item} childId={child?.id} />}
       keyExtractor={(item) => `concern-${item.id}`}
       ListFooterComponent={() => (
         <View style={{alignItems: 'center'}}>
@@ -123,6 +92,27 @@ const styles = StyleSheet.create({
     width: 70,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  addNoteContainer: {
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    marginRight: 20,
+    backgroundColor: 'white',
+  },
+  checkMarkSelected: {},
+  checkMarkContainer: {
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    backgroundColor: 'white',
+    marginLeft: 30,
+  },
+  buttonsContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    position: 'absolute',
+    width: '100%',
+    bottom: -25,
   },
 });
 
