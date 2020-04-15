@@ -139,12 +139,12 @@ export function useGetChildren() {
 }
 
 export function useAddChild() {
-  return useMutation<void, Omit<ChildResult, 'id'>>(
+  return useMutation<void, {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean}>(
     async (variables) => {
       const [query, values] = objectToQuery(
         {
-          ...variables,
-          birthday: formatISO(variables.birthday, {
+          ...variables.data,
+          birthday: formatISO(variables.data.birthday, {
             representation: 'date',
           }),
         },
@@ -152,8 +152,10 @@ export function useAddChild() {
       );
       const res = await sqLiteClient.dB?.executeSql(query, values);
 
-      const [{insertId}] = res || [{}];
-      insertId && Storage.setItem('selectedChild', `${insertId}`);
+      if (!variables.isAnotherChild) {
+        const [{insertId}] = res || [{}];
+        insertId && Storage.setItem('selectedChild', `${insertId}`);
+      }
 
       const rowsAffected = res && res[0].rowsAffected;
       if (!rowsAffected || rowsAffected === 0) {

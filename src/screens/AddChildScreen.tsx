@@ -44,6 +44,7 @@ const AddChildScreen: React.FC<{}> = () => {
     gender: undefined,
     birthday: undefined,
     photo: undefined,
+    ...route.params?.child,
   };
 
   const formik = useFormik({
@@ -61,7 +62,7 @@ const AddChildScreen: React.FC<{}> = () => {
       if (childId) {
         return updateChild({...childInput, id: childId});
       } else {
-        return addChild(childInput);
+        return addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild});
       }
     },
   });
@@ -163,8 +164,14 @@ const AddChildScreen: React.FC<{}> = () => {
             formik.handleSubmit();
             navigation.replace('AddChild', {
               childId: undefined,
-              anotherChild: !!route.params?.onboarding,
+              anotherChild: true,
               onboarding: !!route.params?.onboarding,
+              child: {
+                name: formik.values.name,
+                photo: formik.values.photo,
+                gender: formik.values.gender || 0,
+                birthday: formik.values.birthday || new Date(),
+              },
             });
           }}>
           {t('addAnotherChild').toUpperCase()}
@@ -186,7 +193,7 @@ const AddChildScreen: React.FC<{}> = () => {
             }}>
             {t('common:done').toUpperCase()}
           </Button>
-          {route.params?.anotherChild && (
+          {route.params?.anotherChild && route.params?.onboarding && (
             <Button
               mode={'contained'}
               style={{marginVertical: 50, width: 100}}
