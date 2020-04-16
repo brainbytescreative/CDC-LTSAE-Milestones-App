@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {differenceInDays, differenceInMonths} from 'date-fns';
 import _ from 'lodash';
-import {childAges, skillTypes, tooYongAgeDays} from '../resources/constants';
+import {childAges, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
@@ -78,6 +78,15 @@ export function useGetMilestone() {
   };
 }
 
+async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnswer[] | undefined> {
+  const result = await sqLiteClient.dB?.executeSql(
+    `select * from milestones_answers where childId=? and questionId in (${ids.join(',')})`,
+    [childId],
+  );
+
+  return result && result[0].rows.raw();
+}
+
 export function useGetChecklistQuestions() {
   const {child, milestoneAge} = useGetMilestone();
   const {t} = useTranslation('milestones');
@@ -88,7 +97,7 @@ export function useGetChecklistQuestions() {
     }
 
     const checklist = _.find(milestoneChecklist, {id: milestoneAge}) as MilestoneChecklist | undefined;
-    const questionsData =
+    const questionsData: ChecklistData[] | undefined =
       milestoneAge &&
       (_.chain(skillTypes)
         .map(
@@ -99,22 +108,78 @@ export function useGetChecklistQuestions() {
         .map((item: SkillSection) => ({...item, value: item.value && t(item.value)}))
         .value() as any);
 
-    const ids = questionsData?.map((i: any) => i.id).join(',');
-    const result = await sqLiteClient.dB?.executeSql(
-      `select * from milestones_answers where childId=? and questionId in (${ids})`,
-      [variables.childId],
-    );
+    const ids = questionsData && questionsData.map((i) => i.id || 0);
+    const data = (child?.id && ids && (await getAnswers(ids, child?.id))) || [];
 
-    const data = result && (result[0].rows.raw() as MilestoneAnswer[]);
-
-    data?.forEach((value) => {
+    data.forEach((value) => {
       queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
     });
 
+    const answersIds = data.map((value) => value.questionId || 0);
+
+    const grouped = _.groupBy(questionsData, 'section');
+    const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
+      prev.set(
+        section,
+        grouped[section]
+          .filter((item) => item.section === section)
+          .sort((a) => {
+            if (a.id && !answersIds.includes(a.id)) {
+              return -1;
+            }
+            return 1;
+          }),
+      );
+
+      return prev;
+    }, new Map());
+
+    const total = questionsData?.length || 0;
+    const done = data?.length || 0;
     return {
-      questions: questionsData as ChecklistData,
+      questions: questionsData as ChecklistData[],
+      totalProgress: `${done}/${total}`,
+      totalProgressValue: done / total,
+      answers: data,
+      questionsIds: ids,
+      child,
+      questionsGrouped,
     };
   });
+}
+
+export function useGetCheckListAnswers(ids?: number[], childId?: number) {
+  return useQuery(['answers', {ids, childId}], async (key, variables) => {
+    const answers =
+      (variables.childId && variables.ids && (await getAnswers(variables.ids, variables.childId))) || undefined;
+    return {answers};
+  });
+}
+
+export function useGetSectionsProgress() {
+  const {data: checkListData} = useGetChecklistQuestions();
+  const questions = checkListData?.questions;
+  const childId = checkListData?.child?.id;
+  const {data: answersData} = useGetCheckListAnswers(
+    questions?.map((value) => value.id || 0),
+    childId,
+  );
+
+  const answers = answersData?.answers;
+
+  const result: Map<SkillType, string> | undefined = useMemo(() => {
+    if (questions?.length) {
+      return skillTypes.reduce((previousValue, section) => {
+        const sectionsQuestions = questions.filter((value) => value.section === section);
+        const questionsIds = sectionsQuestions.map((value) => value.id);
+        const answeredInSection = answers?.filter((value) => questionsIds.includes(value.questionId)) || [];
+        previousValue.set(section, `${answeredInSection.length}/${sectionsQuestions.length}`);
+        return previousValue;
+      }, new Map<SkillType, string>());
+    }
+  }, [answers, questions]);
+
+  return result;
 }
 
 export function useGetQuestion(data: QuestionAnswerKey) {
@@ -156,6 +221,7 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (data, {childId, questionId}) => {
         queryCache.refetchQueries(['question', {childId, questionId}]);
+        queryCache.refetchQueries('answers', {force: true});
       },
     },
   );

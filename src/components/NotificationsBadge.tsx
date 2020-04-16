@@ -17,8 +17,7 @@ const NotificationsBadge: React.FC<{}> = () => {
 
   React.useLayoutEffect(() => {
     const onPress = () => {
-      // setIsVisible(!visible);
-      navigation.navigate('MyModal');
+      setIsVisible(!visible);
     };
     navigation.setOptions({
       headerRight: () => {

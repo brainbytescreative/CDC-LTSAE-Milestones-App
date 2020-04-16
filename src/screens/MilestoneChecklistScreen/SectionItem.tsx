@@ -10,9 +10,10 @@ interface ItemProps {
   section: Section;
   setSection: React.Dispatch<React.SetStateAction<Section | undefined>>;
   selectedSection: Section | undefined;
+  progress: string | undefined;
 }
 
-const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection}) => {
+const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection, progress}) => {
   const {t} = useTranslation('milestoneChecklist');
   const textColor = selectedSection === section ? 'white' : 'black';
   return (
@@ -58,7 +59,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection}
             fontSize: 10,
             color: textColor,
           }}>
-          3/0
+          {progress}
         </Text>
         <Text
           style={{

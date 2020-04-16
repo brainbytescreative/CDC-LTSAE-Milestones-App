@@ -22,12 +22,13 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
-import {CompositeNavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useNavigation, useFocusEffect} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatDate} from '../../utils/helpers';
-import {useGetMilestone} from '../../hooks/checklistHooks';
+import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
+import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 
 const DATA: DataItem[] = [
   {
@@ -71,7 +72,7 @@ interface Props {
 }
 
 type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
-type DashboardScreenNavigationProp = CompositeNavigationProp<
+export type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
   StackNavigationProp<DashboardStackParamList>
 >;
@@ -85,6 +86,7 @@ const DashboardScreen: React.FC<Props> = () => {
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
   const {milestoneAge: childAge} = useGetMilestone();
+  const {refetch} = useGetChecklistQuestions();
 
   const childAgeText =
     child?.birthday &&
@@ -95,6 +97,12 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const childName = child?.name;
   const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch({force: true});
+    }, [refetch]),
+  );
 
   return (
     <>
@@ -141,33 +149,7 @@ const DashboardScreen: React.FC<Props> = () => {
               backgroundColor: colors.purple,
               marginTop: -1,
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('MilestoneChecklist');
-              }}
-              style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
-              <View style={styles.milestoneCheckListContainer}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    fontFamily: 'montserrat',
-                  }}>
-                  {t('milestoneCheckList')}
-                </Text>
-                <EvilIcons name={'chevron-right'} size={30} />
-              </View>
-              <ProgressBar
-                style={{
-                  height: 10,
-                  borderRadius: 5,
-                  marginVertical: 10,
-                }}
-                progress={0.5}
-                color={colors.lightGreen}
-              />
-              <Text> {t('milestonesAnswered', {progress: '10/20'})}</Text>
-            </TouchableOpacity>
+            <MilestoneChecklistWidget />
             <View
               style={{
                 marginVertical: 20,
@@ -212,6 +194,7 @@ const DashboardScreen: React.FC<Props> = () => {
             </View>
             {appointments?.map((appt) => (
               <TouchableOpacity
+                key={`appointment-${appt.id}`}
                 onPress={() => {
                   navigation.navigate('Appointment', {
                     appointmentId: appt.id,
@@ -263,11 +246,7 @@ const styles = StyleSheet.create({
     fontFamily: 'montserrat',
     marginTop: 6,
   },
-  milestoneCheckListContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
+
   childNameText: {
     fontSize: 22,
     fontWeight: 'bold',
