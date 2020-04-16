@@ -30,7 +30,7 @@
   },
   "settings": {
     "title": "Settings",
-    "drawerLabel": "$t(settings:title)",
+    "drawerLabel": "Notification + Account settings",
     "notificationSettings": "Notification settings",
     "accountSettings": "Account settings"
   },
@@ -84,6 +84,11 @@
   },
   "appointment": {
     "title": "Appointment"
+  },
+  "info": {
+    "title": "Info",
+    "drawerLabel": "Privacy policy + App Info",
+    "privacyPolicy": "Privacy policy"
   },
   "fields": {
     "territoryPlaceholder": "State or Territory field *",

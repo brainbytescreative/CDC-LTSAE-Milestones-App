@@ -26,6 +26,9 @@ export type SettingsStackParamList = {
 export type TipsAndActivitiesParamList = {
   TipsAndActivities: undefined;
 };
+export type InfoParamList = {
+  Info: undefined;
+};
 
 export type RootStackParamList = {
   AddChild: AddChildScreenParams;
@@ -39,6 +42,7 @@ export type DashboardDrawerParamsList = {
   DashboardStack: undefined;
   SettingsStack: undefined;
   TipsAndActivitiesStack: undefined;
+  InfoStack: undefined;
 };
 
 export type DashboardDrawerNavigationProp = CompositeNavigationProp<

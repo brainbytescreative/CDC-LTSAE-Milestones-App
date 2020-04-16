@@ -18,7 +18,6 @@ const TipsAndActivitiesStack: React.FC<{}> = () => {
         options={() => ({
           title: t('tipsAndActivities:title'),
           headerLeft: () => <BurgerButton />,
-          headerRight: () => <NotificationsBadge />,
         })}
       />
     </Stack.Navigator>

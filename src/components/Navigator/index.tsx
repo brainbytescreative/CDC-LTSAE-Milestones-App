@@ -5,44 +5,11 @@ import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingPa
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import {useTranslation} from 'react-i18next';
 import AddChildScreen from '../../screens/AddChildScreen';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import DashboardStack from './DashboardStack';
-import {DashboardDrawerParamsList, RootStackParamList} from './types';
-import SettingsStack from './SettingsStack';
+import {RootStackParamList} from './types';
 import {useGetOnboarding} from '../../hooks/onboardingHooks';
-import TipsAndActivitiesStack from './TipsAndActivitiesStack';
+import RootDrawer from './RootDrawer';
 
 const Stack = createStackNavigator<RootStackParamList>();
-const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
-
-const RootDrawer: React.FC<{}> = () => {
-  const {t} = useTranslation();
-  return (
-    <Drawer.Navigator initialRouteName={'DashboardStack'}>
-      <Drawer.Screen
-        name={'DashboardStack'}
-        options={{
-          drawerLabel: t('dashboard:drawerLabel'),
-        }}
-        component={DashboardStack}
-      />
-      <Drawer.Screen
-        name={'SettingsStack'}
-        options={{
-          drawerLabel: t('settings:drawerLabel'),
-        }}
-        component={SettingsStack}
-      />
-      <Drawer.Screen
-        name={'TipsAndActivitiesStack'}
-        options={{
-          drawerLabel: t('tipsAndActivities:drawerLabel'),
-        }}
-        component={TipsAndActivitiesStack}
-      />
-    </Drawer.Navigator>
-  );
-};
 
 const Navigator: React.FC<{}> = () => {
   const {t} = useTranslation();
