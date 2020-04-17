@@ -13,6 +13,8 @@ import {addEditChildSchema} from '../resources/validationSchemas';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList} from '../components/Navigator/types';
 import {useSetOnboarding} from '../hooks/onboardingHooks';
+import {missingConcerns} from '../resources/constants';
+import {useSetConcern} from '../hooks/checklistHooks';
 
 const options = {
   quality: 1.0,
@@ -30,7 +32,14 @@ const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
   const {t} = useTranslation('addChild');
 
-  const [addChild, {status: addStatus}] = useAddChild();
+  const [setConcern] = useSetConcern();
+
+  const [addChild, {status: addStatus}] = useAddChild({
+    onSuccess: (data) => {
+      data && Promise.all(missingConcerns.map((concernId) => setConcern({concernId, childId: data, answer: true})));
+    },
+  });
+
   const route = useRoute<AddChildRouteProp>();
   const childId = route?.params?.childId;
   const prefix = childId ? 'edit-' : '';

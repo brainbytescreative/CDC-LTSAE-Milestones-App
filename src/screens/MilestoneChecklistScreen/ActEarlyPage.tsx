@@ -4,10 +4,11 @@ import Text from '../../components/Text';
 import {Button} from 'react-native-paper';
 import {Concern} from '../../resources/milestoneChecklist';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import {useGetConcern, useGetConcerns, useSetConcern} from '../../hooks/checklistHooks';
+import {useGetConcern, useGetConcerns, useGetMilestone, useSetConcern} from '../../hooks/checklistHooks';
 import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 import {missingConcerns} from '../../resources/constants';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
   const [setConcern] = useSetConcern();
@@ -52,7 +53,9 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
 };
 
 const ActEarlyPage: React.FC<{}> = () => {
-  const {milestoneAgeFormatted, concerns, child} = useGetConcerns();
+  const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  const {data: concerns} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
 
   return (
@@ -72,7 +75,7 @@ const ActEarlyPage: React.FC<{}> = () => {
         </View>
       }
       data={concerns?.concerns || []}
-      renderItem={({item}) => <Item {...item} childId={child?.id} />}
+      renderItem={({item}) => <Item {...item} childId={childId} />}
       keyExtractor={(item) => `concern-${item.id}`}
       ListFooterComponent={() => (
         <View style={{alignItems: 'center'}}>

@@ -37,7 +37,7 @@ export function useUpdateAppointment() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('appointment');
+        queryCache.refetchQueries('appointment', {force: true});
       },
     },
   );

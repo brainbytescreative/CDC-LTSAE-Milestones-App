@@ -51,10 +51,10 @@ export function objectToQuery(object: any, tableName: TableNames, queryType: Que
   }
 }
 
-export const tOpt = ({t, child}: {t: TFunction; child?: ChildResult | undefined}) => ({
-  hisHersTag: t('common:hisHersTag', {context: `${child?.gender}`}),
-  heSheTag: t('common:heSheTag', {context: `${child?.gender}`}),
-  himHerTag: t('common:himHerTag', {context: `${child?.gender}`}),
-  himselfHerselfTag: t('common:himselfHerselfTag', {context: `${child?.gender}`}),
-  heSheUpperTag: t('common:heSheUpperTag', {context: `${child?.gender}`}),
+export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
+  hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
+  heSheTag: t('common:heSheTag', {context: `${gender}`}),
+  himHerTag: t('common:himHerTag', {context: `${gender}`}),
+  himselfHerselfTag: t('common:himselfHerselfTag', {context: `${gender}`}),
+  heSheUpperTag: t('common:heSheUpperTag', {context: `${gender}`}),
 });

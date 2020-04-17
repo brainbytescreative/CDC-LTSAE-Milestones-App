@@ -1,8 +1,9 @@
-import {queryCache, useMutation, useQuery} from 'react-query';
+import {MutateOptions, queryCache, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
+import {missingConcerns} from '../resources/constants';
 
 interface Record {
   id: number;
@@ -25,47 +26,41 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 type Key = 'children' | 'selectedChild';
 
 export function useGetCurrentChild() {
-  return useQuery<ChildResult, Key>(
-    'selectedChild',
-    async () => {
-      let selectedChild: string | null = await Storage.getItem('selectedChild');
+  return useQuery<ChildResult, Key>('selectedChild', async () => {
+    let selectedChild: string | null = await Storage.getItem('selectedChild');
+
+    if (!selectedChild) {
+      const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
+      selectedChild = res && res[0].rows.item(0)?.id;
 
       if (!selectedChild) {
-        const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
-        selectedChild = res && res[0].rows.item(0)?.id;
-
-        if (!selectedChild) {
-          throw new Error('There are no children');
-        }
-
-        await Storage.setItem('selectedChild', `${selectedChild}`);
+        throw new Error('There are no children');
       }
 
-      const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
+      await Storage.setItem('selectedChild', `${selectedChild}`);
+    }
 
-      if (!result || result[0].rows.length === 0) {
-        throw Error('Not found');
-      }
+    const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
 
-      const child = (result && result[0].rows.item(0)) || {};
+    if (!result || result[0].rows.length === 0) {
+      throw Error('Not found');
+    }
 
-      return {
-        ...child,
-        birthday: parseISO(child.birthday),
-      };
-    },
-    {
-      cacheTime: 0,
-      staleTime: 0,
-    },
-  );
+    const child = (result && result[0].rows.item(0)) || {};
+
+    return {
+      ...child,
+      birthday: parseISO(child.birthday),
+    };
+  });
 }
 
 export function useSetSelectedChild() {
   return useMutation<void, {id: number}>(async ({id}) => {
     await Storage.setItem('selectedChild', `${id}`);
-    await queryCache.refetchQueries('selectedChild');
+    await queryCache.refetchQueries('selectedChild', {force: true});
     await queryCache.refetchQueries('questions', {force: true});
+    await queryCache.refetchQueries('concerns', {force: true});
   });
 }
 
@@ -104,10 +99,10 @@ export function useDeleteChild() {
       await sqLiteClient.dB?.executeSql('delete from children where id = ?', [variables.id]);
     },
     {
-      onSuccess: (redult, variables) => {
-        queryCache.refetchQueries('selectedChild');
-        queryCache.refetchQueries('children');
-        queryCache.refetchQueries(['children', {id: variables.id}]);
+      onSuccess: () => {
+        queryCache.refetchQueries('selectedChild', {force: true});
+        queryCache.refetchQueries('children', {force: true});
+        // queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
       },
     },
   );
@@ -139,8 +134,11 @@ export function useGetChildren() {
   });
 }
 
-export function useAddChild() {
-  return useMutation<void, {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean}>(
+type AddChildResult = number | undefined;
+type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean};
+
+export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
+  return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
       const [query, values] = objectToQuery(
         {
@@ -153,8 +151,8 @@ export function useAddChild() {
       );
       const res = await sqLiteClient.dB?.executeSql(query, values);
 
+      const [{insertId}] = res || [{}];
       if (!variables.isAnotherChild) {
-        const [{insertId}] = res || [{}];
         insertId && Storage.setItem('selectedChild', `${insertId}`);
       }
 
@@ -162,11 +160,13 @@ export function useAddChild() {
       if (!rowsAffected || rowsAffected === 0) {
         throw new Error('Add child failed');
       }
+      return insertId;
     },
     {
-      onSuccess: () => {
-        queryCache.refetchQueries('selectedChild');
-        queryCache.refetchQueries(['children']);
+      onSuccess: (data, variables) => {
+        queryCache.refetchQueries('selectedChild', {force: true});
+        queryCache.refetchQueries(['children'], {force: true});
+        options?.onSuccess && options.onSuccess(data, variables);
       },
     },
   );

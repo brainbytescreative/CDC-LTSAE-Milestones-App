@@ -17,6 +17,7 @@ import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
+import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
 // console.disableYellowBox = true;
 
@@ -27,6 +28,12 @@ const theme = {
     // primary: 'tomato',
     // accent: 'yellow',
   },
+};
+
+const queryConfig: ReactQueryProviderConfig = {
+  suspense: false,
+  staleTime: Infinity,
+  onError: console.warn,
 };
 
 const App = () => {
@@ -52,11 +59,13 @@ const App = () => {
   });
 
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
-      </NavigationContainer>
-    </PaperProvider>
+    <ReactQueryConfigProvider config={queryConfig}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </ReactQueryConfigProvider>
   );
 };
 

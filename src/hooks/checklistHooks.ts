@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import {differenceInDays, differenceInMonths} from 'date-fns';
+import {differenceInDays, differenceInMonths, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {childAges, missingConcerns, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {useGetCurrentChild} from './childrenHooks';
@@ -39,44 +39,51 @@ interface ConcernAnswer {
 }
 
 export function useGetMilestone() {
-  const {data: child, ...rest} = useGetCurrentChild();
+  const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('common');
 
-  let milestoneAge;
-  let isTooYong = false;
-  const betweenCheckList = false;
-  if (child?.birthday) {
-    const ageMonth = differenceInMonths(new Date(), child?.birthday);
-    const minAge = _.min(childAges) || 0;
-    const maxAge = _.max(childAges) || Infinity;
-
-    if (ageMonth <= minAge) {
-      milestoneAge = minAge;
-      const ageDays = differenceInDays(new Date(), child?.birthday);
-      isTooYong = ageDays < tooYongAgeDays;
-    } else if (ageMonth >= maxAge) {
-      milestoneAge = maxAge;
-    } else {
-      const milestones = childAges.filter((value) => value < ageMonth);
-      milestoneAge = milestones[milestones.length - 1];
+  return useQuery(['milestone', {child}], async (key, variables) => {
+    if (!variables.child) {
+      return;
     }
-  }
+    let milestoneAge;
+    let isTooYong = false;
+    const betweenCheckList = false;
 
-  let milestoneAgeFormatted;
+    const birthDay =
+      typeof variables.child.birthday === 'string' ? parseISO(variables.child?.birthday) : variables.child?.birthday;
 
-  if (milestoneAge) {
-    milestoneAgeFormatted =
-      milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
-  }
+    if (birthDay) {
+      const ageMonth = differenceInMonths(new Date(), birthDay);
+      const minAge = _.min(childAges) || 0;
+      const maxAge = _.max(childAges) || Infinity;
 
-  return {
-    milestoneAge,
-    milestoneAgeFormatted,
-    isTooYong,
-    betweenCheckList,
-    child,
-    ...rest,
-  };
+      if (ageMonth <= minAge) {
+        milestoneAge = minAge;
+        const ageDays = differenceInDays(new Date(), birthDay);
+        isTooYong = ageDays < tooYongAgeDays;
+      } else if (ageMonth >= maxAge) {
+        milestoneAge = maxAge;
+      } else {
+        const milestones = childAges.filter((value) => value < ageMonth);
+        milestoneAge = milestones[milestones.length - 1];
+      }
+    }
+
+    let milestoneAgeFormatted;
+
+    if (milestoneAge) {
+      milestoneAgeFormatted =
+        milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
+    }
+
+    return {
+      milestoneAge,
+      milestoneAgeFormatted,
+      isTooYong,
+      betweenCheckList,
+    };
+  });
 }
 
 async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnswer[] | undefined> {
@@ -89,83 +96,90 @@ async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnsw
 }
 
 export function useGetChecklistQuestions() {
-  const {child, milestoneAge} = useGetMilestone();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
+  const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('milestones');
 
-  return useQuery(['questions', {childId: child?.id, milestoneAge}], async (key, variables) => {
-    if (!variables.childId || !milestoneAge) {
-      return;
-    }
+  return useQuery(
+    ['questions', {childId: child?.id, milestoneAge}],
+    async (key, variables) => {
+      if (!variables.childId || !variables.milestoneAge) {
+        return;
+      }
+      const checklist = _.find(milestoneChecklist, {id: variables.milestoneAge}) as MilestoneChecklist | undefined;
+      const questionsData: ChecklistData[] | undefined =
+        variables.milestoneAge &&
+        (_.chain(skillTypes)
+          .map(
+            (section: keyof Milestones) =>
+              checklist?.milestones && checklist?.milestones[section]?.map((i: any) => ({...i, section})),
+          )
+          .flatten()
+          .map((item: SkillSection) => ({
+            ...item,
+            value: item.value && t(item.value, tOpt({t, gender: child?.gender})),
+          }))
+          .value() as any);
 
-    const checklist = _.find(milestoneChecklist, {id: milestoneAge}) as MilestoneChecklist | undefined;
-    const questionsData: ChecklistData[] | undefined =
-      milestoneAge &&
-      (_.chain(skillTypes)
-        .map(
-          (section: keyof Milestones) =>
-            checklist?.milestones && checklist?.milestones[section]?.map((i: any) => ({...i, section})),
-        )
-        .flatten()
-        .map((item: SkillSection) => ({
-          ...item,
-          value: item.value && t(item.value, tOpt({t, child})),
-        }))
-        .value() as any);
+      const ids = questionsData && questionsData.map((i) => i.id || 0);
+      const data = (child?.id && ids && (await getAnswers(ids, child?.id))) || [];
 
-    const ids = questionsData && questionsData.map((i) => i.id || 0);
-    const data = (child?.id && ids && (await getAnswers(ids, child?.id))) || [];
+      data.forEach((value) => {
+        queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
+      });
 
-    data.forEach((value) => {
-      queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
-    });
+      const answersIds = data.map((value) => value.questionId || 0);
 
-    const answersIds = data.map((value) => value.questionId || 0);
+      const groupedBySection = _.groupBy(questionsData, 'section');
+      const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
+        prev.set(
+          section,
+          groupedBySection[section]
+            .filter((item) => item.section === section)
+            .sort((a) => {
+              if (a.id && !answersIds.includes(a.id)) {
+                return -1;
+              }
+              return 1;
+            }),
+        );
 
-    const groupedBySection = _.groupBy(questionsData, 'section');
-    const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
-      prev.set(
-        section,
-        groupedBySection[section]
-          .filter((item) => item.section === section)
-          .sort((a) => {
-            if (a.id && !answersIds.includes(a.id)) {
-              return -1;
-            }
-            return 1;
-          }),
-      );
+        return prev;
+      }, new Map());
 
-      return prev;
-    }, new Map());
+      const total = questionsData?.length || 0;
+      const done = data?.length || 0;
 
-    const total = questionsData?.length || 0;
-    const done = data?.length || 0;
+      const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
+      const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
-    const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
-    const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
+      questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey), ...answersById.get(mKey)}));
+      const groupedByAnswer = _.groupBy(Array.from(questionsById.values()), 'answer');
 
-    questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey), ...answersById.get(mKey)}));
-    const groupedByAnswer = _.groupBy(Array.from(questionsById.values()), 'answer');
-
-    return {
-      questions: questionsData as ChecklistData[],
-      totalProgress: `${done}/${total}`,
-      totalProgressValue: done / total,
-      answers: data,
-      questionsIds: ids,
-      child,
-      questionsGrouped,
-      groupedByAnswer,
-      answeredQuestionsCount: answersIds.length,
-    };
-  });
+      return {
+        questions: questionsData as ChecklistData[],
+        totalProgress: `${done}/${total}`,
+        totalProgressValue: done / total,
+        answers: data,
+        questionsIds: ids,
+        child,
+        questionsGrouped,
+        groupedByAnswer,
+        answeredQuestionsCount: answersIds.length,
+      };
+    },
+    {
+      staleTime: Infinity,
+    },
+  );
 }
 
 export function useGetCheckListAnswers(ids?: number[], childId?: number) {
   return useQuery(['answers', {ids, childId}], async (key, variables) => {
     const answers =
       (variables.childId && variables.ids && (await getAnswers(variables.ids, variables.childId))) || undefined;
-    return {answers};
+    const complete = answers && variables.ids && answers.length === variables.ids.length;
+    return {answers, complete};
   });
 }
 
@@ -173,14 +187,12 @@ export function useGetSectionsProgress() {
   const {data: checkListData} = useGetChecklistQuestions();
   const questions = checkListData?.questions;
   const childId = checkListData?.child?.id;
-  const {data: answersData} = useGetCheckListAnswers(
+  const {data: {answers, complete} = {}} = useGetCheckListAnswers(
     questions?.map((value) => value.id || 0),
     childId,
   );
 
-  const answers = answersData?.answers;
-
-  const result: Map<SkillType, string> | undefined = useMemo(() => {
+  const progress: Map<SkillType, string> | undefined = useMemo(() => {
     if (questions?.length) {
       return skillTypes.reduce((previousValue, section) => {
         const sectionsQuestions = questions.filter((value) => value.section === section);
@@ -192,7 +204,7 @@ export function useGetSectionsProgress() {
     }
   }, [answers, questions]);
 
-  return result;
+  return {progress, complete};
 }
 
 export function useGetQuestion(data: QuestionAnswerKey) {
@@ -233,7 +245,7 @@ export function useSetQuestionAnswer() {
     {
       throwOnError: false,
       onSuccess: (data, {childId, questionId}) => {
-        queryCache.refetchQueries(['question', {childId, questionId}]);
+        queryCache.refetchQueries(['question', {childId, questionId}], {force: true});
         queryCache.refetchQueries('answers', {force: true});
       },
     },
@@ -241,88 +253,84 @@ export function useSetQuestionAnswer() {
 }
 
 export function useGetConcerns() {
-  const {milestoneAge, child, milestoneAgeFormatted} = useGetMilestone();
+  const {data: {id: childId, gender} = {}} = useGetCurrentChild();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {t} = useTranslation('milestones');
 
-  const {data} = useQuery(['concerns', {childId: child?.id}], async (key, variables) => {
-    if (!variables.childId) {
-      return;
-    }
-    const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where childId=?', [
-      variables.childId,
-    ]);
+  // console.log({childId, milestoneAge, gender});
 
-    const answers: ConcernAnswer[] | undefined = result && result[0].rows.raw();
+  return useQuery(
+    ['concerns', {childId, milestoneAge, gender}],
+    async (key, variables) => {
+      // console.log(variables);
+      if (!variables.childId || !variables.milestoneAge || variables.gender === undefined) {
+        return;
+      }
+      const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where childId=?', [
+        variables.childId,
+      ]);
 
-    answers?.forEach((value) => {
-      queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
-    });
+      const answers: ConcernAnswer[] | undefined = result && result[0].rows.raw();
 
-    const concernsData =
-      child &&
-      (_.chain(milestoneChecklist)
+      answers?.forEach((value) => {
+        queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
+      });
+
+      const concernsData: Concern[] = _.chain(milestoneChecklist)
         .find({id: milestoneAge})
         .get('concerns')
         .map((item) => {
           return {
             ...item,
-            value: item.value && t(item.value, tOpt({t, child})),
+            value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
           };
         })
-        .value() as Concern[]);
+        .value();
 
-    const answeredIds = answers?.map((value) => value.concernId);
+      const answeredIds = answers?.map((value) => value.concernId);
 
-    const concernDataById = new Map(Object.entries(_.keyBy(concernsData, 'id')));
-    const concerned = answers
-      ?.filter((val) => val?.answer)
-      .reduce((prev, value) => {
-        const current = value?.concernId && concernDataById.get(`${value?.concernId}`);
-        if (current) {
-          return [...prev, current];
-        }
-        return prev;
-      }, new Array<Concern>());
+      const concernDataById = new Map(Object.entries(_.keyBy(concernsData, 'id')));
+      const concerned = answers
+        ?.filter((val) => val?.answer)
+        .reduce((prev, value) => {
+          const current = value?.concernId && concernDataById.get(`${value?.concernId}`);
+          if (current) {
+            return [...prev, current];
+          }
+          return prev;
+        }, new Array<Concern>());
 
-    concernsData
-      ?.filter((value) => value.id && !answeredIds?.includes(value.id))
-      ?.forEach((value) => {
-        queryCache.setQueryData(['concern', {childId: variables.childId, concernId: value.id}], {
-          childId: variables.childId,
-          concernId: value.id,
-          answered: false,
+      concernsData
+        ?.filter((value) => value.id && !answeredIds?.includes(value.id))
+        ?.forEach((value) => {
+          queryCache.setQueryData(['concern', {childId: variables.childId, concernId: value.id}], {
+            childId: variables.childId,
+            concernId: value.id,
+            answered: false,
+          });
         });
-      });
 
-    const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
+      const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
 
-    return {concerns: concernsData, concerned, missingId};
-  });
-
-  return {
-    concerns: data,
-    child,
-    milestoneAgeFormatted,
-  };
+      return {concerns: concernsData, concerned, missingId};
+    },
+    {
+      staleTime: 0,
+    },
+  );
 }
 
 type ConcernPredicate = Partial<Pick<ConcernAnswer, 'childId' | 'concernId'>>;
 
 export function useGetConcern(predicate: ConcernPredicate) {
-  return useQuery<ConcernAnswer, [string, typeof predicate]>(
-    ['concern', predicate],
-    async (key, variables) => {
-      const result = await sqLiteClient.dB?.executeSql(
-        'select * from concern_answers where concernId=? and childId=?',
-        [variables.concernId, variables.childId],
-      );
-      console.log('useGetConcern', variables);
-      return result && result[0].rows.item(0);
-    },
-    {
-      staleTime: Infinity,
-    },
-  );
+  return useQuery<ConcernAnswer, [string, typeof predicate]>(['concern', predicate], async (key, variables) => {
+    const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where concernId=? and childId=?', [
+      variables.concernId,
+      variables.childId,
+    ]);
+
+    return result && result[0].rows.item(0);
+  });
 }
 
 export function useSetConcern() {
@@ -345,8 +353,9 @@ export function useSetConcern() {
     },
     {
       onSuccess: (data, {childId, concernId}) => {
-        const predicate = {childId, concernId};
-        queryCache.refetchQueries(['concern', predicate], {force: true});
+        // const predicate = {childId, concernId};
+        // console.log(predicate, answer);
+        queryCache.refetchQueries(['concern', {childId, concernId}], {force: true});
       },
     },
   );

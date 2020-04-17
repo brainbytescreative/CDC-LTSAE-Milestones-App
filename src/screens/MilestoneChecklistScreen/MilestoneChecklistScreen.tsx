@@ -10,30 +10,47 @@ import SectionItem, {Section} from './SectionItem';
 import FrontPage from './FrontPage';
 import ActEarlyPage from './ActEarlyPage';
 import OverviewPage from './OverviewPage';
-import {useGetChecklistQuestions, useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHooks';
+import {
+  useGetChecklistQuestions,
+  useGetConcerns,
+  useGetMilestone,
+  useGetSectionsProgress,
+  useSetConcern,
+} from '../../hooks/checklistHooks';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 const sections = [...skillTypes, 'actEarly'];
 
 const MilestoneChecklistScreen: React.FC<{}> = () => {
   const [section, setSection] = useState<Section | undefined>();
   const [gotStarted, setGotStarted] = useState(false);
-  const {milestoneAgeFormatted, milestoneAge, child} = useGetMilestone();
-  const {data} = useGetChecklistQuestions();
-  // const {concerns} = useGetConcerns();
-
-  const sectionsProgress = useGetSectionsProgress();
-  const questions = section && data?.questionsGrouped.get(section);
-  const answeredQuestionsCount = data?.answeredQuestionsCount || 0;
+  const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
+  const {data: {answeredQuestionsCount, questionsGrouped} = {}} = useGetChecklistQuestions();
+  const {data: {missingId} = {}} = useGetConcerns();
+  const {progress: sectionsProgress, complete} = useGetSectionsProgress();
+  const [setConcern] = useSetConcern();
+  const questions = section && questionsGrouped?.get(section);
 
   useEffect(() => {
-    if (answeredQuestionsCount > 0 && !section) {
-      setSection(sections[0]);
+    setGotStarted(false);
+  }, [childId]);
+
+  useEffect(() => {
+    if (complete !== undefined && childId && missingId) {
+      setConcern({answer: !complete, childId, concernId: missingId});
     }
-    if (answeredQuestionsCount === 0) {
+  }, [childId, setConcern, complete, missingId]);
+
+  useEffect(() => {
+    if (answeredQuestionsCount === 0 && !gotStarted) {
       setSection(undefined);
       setGotStarted(false);
     }
-  }, [section, answeredQuestionsCount, child]);
+    if (answeredQuestionsCount && answeredQuestionsCount > 0 && section === undefined) {
+      setSection(sections[0]);
+    }
+  }, [gotStarted, section, answeredQuestionsCount, childId]);
 
   const onPressNextSection = () => {
     const currentSection = section?.length && sections.indexOf(section);
@@ -84,7 +101,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
         <FlatList
           data={questions || []}
           extraData={section}
-          renderItem={({item}) => <QuestionItem {...item} childId={child?.id} />}
+          renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `${item}-${index}`}
           ListFooterComponent={() => (
             <View style={{alignItems: 'center', marginVertical: 30}}>

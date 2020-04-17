@@ -65,7 +65,7 @@ i18next
   .use(initReactI18next)
   .init({
     fallbackLng: 'en_US',
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false,
     },

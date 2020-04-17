@@ -19,6 +19,7 @@ export type DashboardStackParamList = {
   Appointment: {appointmentId: number | string};
   MilestoneChecklist: undefined;
   ChildSummary: undefined;
+  TipsAndActivities: undefined;
 };
 
 export type SettingsStackParamList = {

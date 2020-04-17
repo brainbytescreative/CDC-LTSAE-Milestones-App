@@ -85,7 +85,8 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
-  const {milestoneAge: childAge} = useGetMilestone();
+  const {data: {milestoneAge: childAge} = {}} = useGetMilestone();
+
   const {refetch} = useGetChecklistQuestions();
 
   const childAgeText =
@@ -168,7 +169,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 <View style={styles.actionItem}>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('TipsAndActivitiesStack');
+                      navigation.navigate('TipsAndActivities');
                     }}
                     style={{alignItems: 'center'}}>
                     <TipsAndActivitiesSign />

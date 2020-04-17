@@ -9,6 +9,7 @@ import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
+import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
@@ -61,6 +62,14 @@ const DashboardStack: FC<{}> = () => {
         component={ChildSummaryScreen}
         options={() => ({
           title: t('childSummary:title'),
+          headerBackTitle: ' ',
+        })}
+      />
+      <Stack.Screen
+        name={'TipsAndActivities'}
+        component={TipsAndActivitiesScreen}
+        options={() => ({
+          title: t('tipsAndActivities:title'),
           headerBackTitle: ' ',
         })}
       />

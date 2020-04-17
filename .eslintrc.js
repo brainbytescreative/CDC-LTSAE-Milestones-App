@@ -3,6 +3,7 @@ module.exports = {
   extends: ['@react-native-community', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  ignorePatterns: ['node_modules/'],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
     'react-native/no-inline-styles': 'off',
