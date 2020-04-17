@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {differenceInDays, differenceInMonths} from 'date-fns';
 import _ from 'lodash';
-import {childAges, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
+import {childAges, missingConcerns, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
@@ -12,6 +12,7 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
+import {tOpt} from '../utils/helpers';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -105,7 +106,10 @@ export function useGetChecklistQuestions() {
             checklist?.milestones && checklist?.milestones[section]?.map((i: any) => ({...i, section})),
         )
         .flatten()
-        .map((item: SkillSection) => ({...item, value: item.value && t(item.value)}))
+        .map((item: SkillSection) => ({
+          ...item,
+          value: item.value && t(item.value, tOpt({t, child})),
+        }))
         .value() as any);
 
     const ids = questionsData && questionsData.map((i) => i.id || 0);
@@ -117,11 +121,11 @@ export function useGetChecklistQuestions() {
 
     const answersIds = data.map((value) => value.questionId || 0);
 
-    const grouped = _.groupBy(questionsData, 'section');
+    const groupedBySection = _.groupBy(questionsData, 'section');
     const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
       prev.set(
         section,
-        grouped[section]
+        groupedBySection[section]
           .filter((item) => item.section === section)
           .sort((a) => {
             if (a.id && !answersIds.includes(a.id)) {
@@ -136,6 +140,13 @@ export function useGetChecklistQuestions() {
 
     const total = questionsData?.length || 0;
     const done = data?.length || 0;
+
+    const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
+    const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
+
+    questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey), ...answersById.get(mKey)}));
+    const groupedByAnswer = _.groupBy(Array.from(questionsById.values()), 'answer');
+
     return {
       questions: questionsData as ChecklistData[],
       totalProgress: `${done}/${total}`,
@@ -144,6 +155,8 @@ export function useGetChecklistQuestions() {
       questionsIds: ids,
       child,
       questionsGrouped,
+      groupedByAnswer,
+      answeredQuestionsCount: answersIds.length,
     };
   });
 }
@@ -230,9 +243,8 @@ export function useSetQuestionAnswer() {
 export function useGetConcerns() {
   const {milestoneAge, child, milestoneAgeFormatted} = useGetMilestone();
   const {t} = useTranslation('milestones');
-  const hisHersTag = _.isNumber(child?.gender) && t(`common:hisHersTag${child?.gender}`);
 
-  const {data: concerns} = useQuery(['concerns', {childId: child?.id}], async (key, variables) => {
+  const {data} = useQuery(['concerns', {childId: child?.id}], async (key, variables) => {
     if (!variables.childId) {
       return;
     }
@@ -254,12 +266,23 @@ export function useGetConcerns() {
         .map((item) => {
           return {
             ...item,
-            value: item.value && t(item.value, {hisHersTag}),
+            value: item.value && t(item.value, tOpt({t, child})),
           };
         })
         .value() as Concern[]);
 
     const answeredIds = answers?.map((value) => value.concernId);
+
+    const concernDataById = new Map(Object.entries(_.keyBy(concernsData, 'id')));
+    const concerned = answers
+      ?.filter((val) => val?.answer)
+      .reduce((prev, value) => {
+        const current = value?.concernId && concernDataById.get(`${value?.concernId}`);
+        if (current) {
+          return [...prev, current];
+        }
+        return prev;
+      }, new Array<Concern>());
 
     concernsData
       ?.filter((value) => value.id && !answeredIds?.includes(value.id))
@@ -271,11 +294,13 @@ export function useGetConcerns() {
         });
       });
 
-    return concernsData;
+    const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
+
+    return {concerns: concernsData, concerned, missingId};
   });
 
   return {
-    concerns,
+    concerns: data,
     child,
     milestoneAgeFormatted,
   };

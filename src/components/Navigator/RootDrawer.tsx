@@ -6,6 +6,7 @@ import TipsAndActivitiesStack from './TipsAndActivitiesStack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
 import InfoStack from './InfoStack';
+import ChildSummaryStack from './ChildSummaryStack';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
@@ -40,6 +41,13 @@ const RootDrawer: React.FC<{}> = () => {
           drawerLabel: t('info:drawerLabel'),
         }}
         component={InfoStack}
+      />
+      <Drawer.Screen
+        name={'ChildSummaryStack'}
+        options={{
+          drawerLabel: t('childSummary:drawerLabel'),
+        }}
+        component={ChildSummaryStack}
       />
     </Drawer.Navigator>
   );

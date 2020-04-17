@@ -8,6 +8,7 @@ import BurgerButton from '../BurgerButton';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
+import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
@@ -54,6 +55,14 @@ const DashboardStack: FC<{}> = () => {
           title: t('milestoneChecklistScreen:title'),
           headerBackTitle: ' ',
         }}
+      />
+      <Stack.Screen
+        name={'ChildSummary'}
+        component={ChildSummaryScreen}
+        options={() => ({
+          title: t('childSummary:title'),
+          headerBackTitle: ' ',
+        })}
       />
     </Stack.Navigator>
   );

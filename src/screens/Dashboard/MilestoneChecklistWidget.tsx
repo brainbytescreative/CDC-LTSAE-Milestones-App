@@ -6,12 +6,12 @@ import {colors} from '../../resources/constants';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
-import {DashboardScreenNavigationProp} from './DashboardScreen';
+import {DashboardStackNavigationProp} from './DashboardScreen';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 
 const MilestoneChecklistWidget: React.FC<{}> = () => {
   const {t} = useTranslation('dashboard');
-  const navigation = useNavigation<DashboardScreenNavigationProp>();
+  const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data} = useGetChecklistQuestions();
 
   const totalProgress = data?.totalProgress;

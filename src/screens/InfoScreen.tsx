@@ -3,6 +3,7 @@ import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
 import {LanguageType} from '../resources/constants';
 import {SafeAreaView} from 'react-native';
+import NotificationsBadge from '../components/NotificationsBadge';
 
 const policy = {
   en: require('../resources/html/en/aboutAndPolicy.html'),
@@ -12,6 +13,7 @@ const policy = {
 const InfoScreen: React.FC<{}> = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
+      <NotificationsBadge />
       <WebView
         originWhitelist={['*']}
         scalesPageToFit={false}

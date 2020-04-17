@@ -18,10 +18,14 @@ export type DashboardStackParamList = {
   AddAppointment: {appointmentId: number | string | undefined} | undefined;
   Appointment: {appointmentId: number | string};
   MilestoneChecklist: undefined;
+  ChildSummary: undefined;
 };
 
 export type SettingsStackParamList = {
   NotificationSettings: undefined;
+};
+export type ChildSummaryParamList = {
+  ChildSummary: undefined;
 };
 export type TipsAndActivitiesParamList = {
   TipsAndActivities: undefined;
@@ -43,6 +47,7 @@ export type DashboardDrawerParamsList = {
   SettingsStack: undefined;
   TipsAndActivitiesStack: undefined;
   InfoStack: undefined;
+  ChildSummaryStack: undefined;
 };
 
 export type DashboardDrawerNavigationProp = CompositeNavigationProp<

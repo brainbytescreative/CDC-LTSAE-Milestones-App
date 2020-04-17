@@ -72,7 +72,7 @@ interface Props {
 }
 
 type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
-export type DashboardScreenNavigationProp = CompositeNavigationProp<
+export type DashboardStackNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
   StackNavigationProp<DashboardStackParamList>
 >;
@@ -81,7 +81,7 @@ const DashboardScreen: React.FC<Props> = () => {
   const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const {t} = useTranslation('dashboard');
-  const navigation = useNavigation<DashboardScreenNavigationProp>();
+  const navigation = useNavigation<DashboardStackNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);

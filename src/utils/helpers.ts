@@ -3,6 +3,8 @@ import i18next from '../resources/l18n';
 import {format} from 'date-fns';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
+import {TFunction} from 'i18next';
+import {ChildResult} from '../hooks/childrenHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -48,3 +50,11 @@ export function objectToQuery(object: any, tableName: TableNames, queryType: Que
     }
   }
 }
+
+export const tOpt = ({t, child}: {t: TFunction; child?: ChildResult | undefined}) => ({
+  hisHersTag: t('common:hisHersTag', {context: `${child?.gender}`}),
+  heSheTag: t('common:heSheTag', {context: `${child?.gender}`}),
+  himHerTag: t('common:himHerTag', {context: `${child?.gender}`}),
+  himselfHerselfTag: t('common:himselfHerselfTag', {context: `${child?.gender}`}),
+  heSheUpperTag: t('common:heSheUpperTag', {context: `${child?.gender}`}),
+});

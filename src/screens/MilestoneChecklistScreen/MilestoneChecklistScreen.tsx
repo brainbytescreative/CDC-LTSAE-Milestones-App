@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {View} from 'react-native';
@@ -12,19 +12,28 @@ import ActEarlyPage from './ActEarlyPage';
 import OverviewPage from './OverviewPage';
 import {useGetChecklistQuestions, useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHooks';
 
+const sections = [...skillTypes, 'actEarly'];
+
 const MilestoneChecklistScreen: React.FC<{}> = () => {
   const [section, setSection] = useState<Section | undefined>();
   const [gotStarted, setGotStarted] = useState(false);
   const {milestoneAgeFormatted, milestoneAge, child} = useGetMilestone();
   const {data} = useGetChecklistQuestions();
-
-  const sections = useMemo<Section[]>(() => {
-    return [...skillTypes, 'actEarly'];
-  }, []);
+  // const {concerns} = useGetConcerns();
 
   const sectionsProgress = useGetSectionsProgress();
-
   const questions = section && data?.questionsGrouped.get(section);
+  const answeredQuestionsCount = data?.answeredQuestionsCount || 0;
+
+  useEffect(() => {
+    if (answeredQuestionsCount > 0 && !section) {
+      setSection(sections[0]);
+    }
+    if (answeredQuestionsCount === 0) {
+      setSection(undefined);
+      setGotStarted(false);
+    }
+  }, [section, answeredQuestionsCount, child]);
 
   const onPressNextSection = () => {
     const currentSection = section?.length && sections.indexOf(section);

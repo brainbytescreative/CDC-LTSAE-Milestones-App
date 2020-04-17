@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Layout from '../components/Layout';
-import ParentProfileSelector, {ParentProfileSelectorValues} from '../components/ParentProfileSelector';
+import ParentProfileSelector from '../components/ParentProfileSelector';
 import Text from '../components/Text';
 import {useTranslation} from 'react-i18next';
 import {Switch} from 'react-native-paper';
@@ -39,7 +39,7 @@ const NotificationSetting: React.FC<{name: SettingName}> = ({name}) => {
 const SettingsScreen: React.FC<{}> = () => {
   const {t} = useTranslation('settings');
   const formikRef = useRef<FormikProps<NotificationSettings> | undefined>();
-  const {data: settings, error} = useGetNotificationSettings();
+  const {data: settings} = useGetNotificationSettings();
   const [setSettings] = useSetNotificationSettings();
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();

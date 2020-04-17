@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleProp, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
+import {queryCache} from 'react-query';
 
 const languages = ['en', 'es'];
 

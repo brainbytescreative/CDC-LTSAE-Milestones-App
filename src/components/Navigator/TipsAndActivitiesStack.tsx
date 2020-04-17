@@ -3,7 +3,6 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {TipsAndActivitiesParamList} from './types';
 import BurgerButton from '../BurgerButton';
-import NotificationsBadge from '../NotificationsBadge';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
 
 const Stack = createStackNavigator<TipsAndActivitiesParamList>();

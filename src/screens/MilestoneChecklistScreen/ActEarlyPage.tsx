@@ -5,10 +5,21 @@ import {Button} from 'react-native-paper';
 import {Concern} from '../../resources/milestoneChecklist';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {useGetConcern, useGetConcerns, useSetConcern} from '../../hooks/checklistHooks';
+import {useNavigation} from '@react-navigation/native';
+import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
+import {missingConcerns} from '../../resources/constants';
 
 const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
   const [setConcern] = useSetConcern();
   const {data: concern} = useGetConcern({concernId: id, childId});
+
+  const isMissingAnswerConcern = missingConcerns.includes(id || 0);
+  const onPress = isMissingAnswerConcern
+    ? undefined
+    : () => {
+        id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId});
+      };
+
   return (
     <View
       style={{
@@ -26,9 +37,8 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          onPress={() => {
-            id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId});
-          }}
+          disabled={isMissingAnswerConcern}
+          onPress={onPress}
           style={[styles.checkMarkContainer, concern?.answer && {backgroundColor: 'grey'}]}>
           <IonIcons style={[concern?.answer && {color: 'white'}]} name={'ios-checkmark'} size={40} />
         </TouchableOpacity>
@@ -43,6 +53,7 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
 
 const ActEarlyPage: React.FC<{}> = () => {
   const {milestoneAgeFormatted, concerns, child} = useGetConcerns();
+  const navigation = useNavigation<DashboardStackNavigationProp>();
 
   return (
     <FlatList
@@ -60,12 +71,18 @@ const ActEarlyPage: React.FC<{}> = () => {
           <Text style={{marginTop: 15, fontSize: 10}}>Triggered when you answer for any this items</Text>
         </View>
       }
-      data={concerns || []}
+      data={concerns?.concerns || []}
       renderItem={({item}) => <Item {...item} childId={child?.id} />}
       keyExtractor={(item) => `concern-${item.id}`}
       ListFooterComponent={() => (
         <View style={{alignItems: 'center'}}>
-          <Button mode={'outlined'}>My Child summary</Button>
+          <Button
+            onPress={() => {
+              navigation.navigate('ChildSummary');
+            }}
+            mode={'outlined'}>
+            My Child summary
+          </Button>
         </View>
       )}
     />

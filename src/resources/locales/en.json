@@ -59,8 +59,16 @@
     "dateFormat": "MM/dd/yyyy",
     "timeFormat": "h:mm a",
     "dateTimeFormat": "MM/dd/yyyy h:mm a",
-    "hisHersTag0": "his",
-    "hisHersTag1": "her",
+    "heSheTag_0": "he",
+    "heSheTag_1": "she",
+    "hisHersTag_0": "his",
+    "hisHersTag_1": "her",
+    "himHerTag_0": "him",
+    "himHerTag_1": "her",
+    "himselfHerselfTag_0": "himself",
+    "himselfHerselfTag_1": "herself",
+    "heSheUpperTag_0": "He",
+    "heSheUpperTag_1": "She",
     "year": "{{count}} year",
     "year_plural": "{{count}} years",
     "yearShort": "{{count}} yr",
@@ -87,8 +95,11 @@
   },
   "info": {
     "title": "Info",
-    "drawerLabel": "Privacy policy + App Info",
-    "privacyPolicy": "Privacy policy"
+    "drawerLabel": "Privacy policy + App Info"
+  },
+  "childSummary": {
+    "title": "My child's summary",
+    "drawerLabel": "Child summary"
   },
   "fields": {
     "territoryPlaceholder": "State or Territory field *",
