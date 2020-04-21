@@ -163,8 +163,13 @@ const DashboardScreen: React.FC<Props> = () => {
                   <Text style={styles.actionItemText}>{t('whenToActEarly')}</Text>
                 </View>
                 <View style={[styles.actionItem, {marginHorizontal: 10}]}>
-                  <MilestoneSummarySign />
-                  <Text style={styles.actionItemText}>{t('milestoneSummary')}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('ChildSummary');
+                    }}>
+                    <MilestoneSummarySign />
+                    <Text style={styles.actionItemText}>{t('milestoneSummary')}</Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.actionItem}>
                   <TouchableOpacity

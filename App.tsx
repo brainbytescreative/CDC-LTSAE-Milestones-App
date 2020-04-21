@@ -19,7 +19,7 @@ import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
-// console.disableYellowBox = true;
+console.disableYellowBox = true;
 
 const theme = {
   ...DefaultTheme,
