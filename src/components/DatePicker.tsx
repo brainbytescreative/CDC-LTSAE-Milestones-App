@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {StyleProp, ViewStyle} from 'react-native';
 import {formatDate} from '../utils/helpers';
+import TouchableArea from './TouchableArea/TouchableArea';
 
 interface PageProps {
   onChange?: (date?: Date) => void;
@@ -36,7 +36,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
 
   return (
     <>
-      <TouchableOpacity style={[style]} onPress={showDatePicker}>
+      <TouchableArea style={[style]} onPress={showDatePicker}>
         <TextInput
           editable={false}
           autoCorrect={false}
@@ -45,7 +45,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
           value={formatDate(date, mode)}
           mode={'outlined'}
         />
-      </TouchableOpacity>
+      </TouchableArea>
       <DateTimePickerModal
         isVisible={modalVisible}
         date={date}

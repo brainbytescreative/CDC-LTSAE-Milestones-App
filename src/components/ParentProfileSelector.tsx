@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {TextInput} from 'react-native-paper';
 import GuardianDialog from './GuardianDialog';
 import TerritorySelector from '../TerritorySelector';
+import TouchableArea from './TouchableArea/TouchableArea';
 
 export interface ParentProfileSelectorValues {
   territory: StateCode | undefined;
@@ -42,21 +43,20 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
       <GuardianDialog value={guardian} onChange={(value) => setGuardian(value)}>
         {(showDialog) => (
           <View style={{margin: 10}}>
-            <TextInput
-              mode={'outlined'}
-              onFocus={() => {
-                Keyboard.dismiss();
-                showDialog();
-              }}
-              label={t('fields:guardianPlaceholder')}
-              value={guardianTranslated}
-              render={(props) => (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <TextInputNative {...props} />
-                  <Icon name="chevron-down" size={40} />
-                </View>
-              )}
-            />
+            <TouchableArea onPress={showDialog}>
+              <TextInput
+                mode={'outlined'}
+                editable={false}
+                label={t('fields:guardianPlaceholder')}
+                value={guardianTranslated}
+                render={(props) => (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TextInputNative {...props} />
+                    <Icon name="chevron-down" size={40} />
+                  </View>
+                )}
+              />
+            </TouchableArea>
           </View>
         )}
       </GuardianDialog>
@@ -64,21 +64,20 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
       <View style={{margin: 10}}>
         <TerritorySelector onChange={(code) => setTerritory(code)}>
           {(showModal) => (
-            <TextInput
-              mode={'outlined'}
-              onFocus={() => {
-                Keyboard.dismiss();
-                showModal();
-              }}
-              label={t('fields:territoryPlaceholder')}
-              value={territory ? t(`states:${territory}`) : ''}
-              render={(props) => (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <TextInputNative {...props} />
-                  <Icon name="chevron-down" size={40} />
-                </View>
-              )}
-            />
+            <TouchableArea onPress={showModal}>
+              <TextInput
+                editable={false}
+                mode={'outlined'}
+                label={t('fields:territoryPlaceholder')}
+                value={territory ? t(`states:${territory}`) : ''}
+                render={(props) => (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TextInputNative {...props} />
+                    <Icon name="chevron-down" size={40} />
+                  </View>
+                )}
+              />
+            </TouchableArea>
           )}
         </TerritorySelector>
       </View>

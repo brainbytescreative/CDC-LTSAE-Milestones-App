@@ -1,6 +1,5 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
-import {Text, View} from 'react-native';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {ChevronLeft, ChevronRight} from '../../resources/svg';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {colors} from '../../resources/constants';

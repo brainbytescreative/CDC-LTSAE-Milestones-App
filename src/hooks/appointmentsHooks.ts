@@ -64,7 +64,7 @@ export function useAddAppointment() {
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.refetchQueries(['appointment', {childId: variables.childId}]);
+        queryCache.refetchQueries(['appointment', {childId: variables.childId}], {force: true});
       },
     },
   );
@@ -84,7 +84,7 @@ export function useDeleteAppointment() {
     {
       throwOnError: false,
       onSuccess: () => {
-        queryCache.refetchQueries('appointment');
+        queryCache.refetchQueries('appointment', {force: true});
       },
     },
   );

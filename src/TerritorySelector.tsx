@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Modal, View} from 'react-native';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
 import {StateCode, states} from './resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useSafeArea} from 'react-native-safe-area-context';

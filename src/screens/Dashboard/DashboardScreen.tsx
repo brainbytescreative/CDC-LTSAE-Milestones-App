@@ -1,9 +1,6 @@
 import React from 'react';
-import {ProgressBar} from 'react-native-paper';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
-import {Image, StyleSheet, View} from 'react-native';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {Image, ScrollView, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {colors} from '../../resources/constants';
 import {
   ActEarlySign,
@@ -22,7 +19,7 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
-import {CompositeNavigationProp, RouteProp, useNavigation, useFocusEffect} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
@@ -109,16 +106,16 @@ const DashboardScreen: React.FC<Props> = () => {
     <>
       <ChildSelectorModal />
 
-      <ScrollView style={{paddingTop: headerHeight, backgroundColor: '#fff'}}>
+      <ScrollView style={{backgroundColor: '#fff'}}>
         <View
           style={{
             backgroundColor: colors.iceCold,
             height: headerHeight,
-            marginTop: -headerHeight,
           }}
         />
         <View
           style={{
+            top: headerHeight,
             position: 'absolute',
             width: '100%',
           }}>
@@ -183,7 +180,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 </View>
               </View>
             </View>
-            <View style={[styles.appointmentsHeaderContainer, {marginBottom: bottom}]}>
+            <View style={[styles.appointmentsHeaderContainer]}>
               <Text
                 style={{
                   fontSize: 22,
@@ -213,7 +210,6 @@ const DashboardScreen: React.FC<Props> = () => {
             ))}
           </View>
         </View>
-        <View style={{height: headerHeight}} />
       </ScrollView>
     </>
   );

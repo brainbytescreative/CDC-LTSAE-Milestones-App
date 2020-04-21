@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Text} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Guardian} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 

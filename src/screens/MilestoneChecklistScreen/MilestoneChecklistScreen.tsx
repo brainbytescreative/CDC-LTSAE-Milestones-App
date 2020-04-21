@@ -1,8 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList, View} from 'react-native';
 import {skillTypes} from '../../resources/constants';
 import {Button} from 'react-native-paper';
 import QuestionItem from './QuestionItem';

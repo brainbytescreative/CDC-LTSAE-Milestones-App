@@ -227,12 +227,10 @@ export function useSetQuestionAnswer() {
     async (variables) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
-        INSERT INTO milestones_answers (childId, questionId, answer, note)
-        VALUES (?1, ?2, ?3, ?4)
-        on conflict(childId, questionId) do update set answer= ?3,
-                                                       note=?4
-        where childId = ?1
-          and questionId = ?2;`,
+                  INSERT OR REPLACE
+                  INTO milestones_answers (childId, questionId, answer, note)
+                  VALUES (?1, ?2, ?3, ?4)
+        `,
         [variables.childId, variables.questionId, variables.answer, variables.note],
       );
 
@@ -338,12 +336,11 @@ export function useSetConcern() {
     async (variables) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
-                INSERT INTO concern_answers (concernId, answer, note, childId)
-                VALUES (?1, ?2, ?3, ?4)
-                on conflict(childId, concernId) do update set answer= ?2,
-                                                              note=?3
-                where childId = ?4
-                  and concernId = ?1;`,
+                  INSERT OR
+                  REPLACE
+                  INTO concern_answers (concernId, answer, note, childId)
+                  VALUES (?1, ?2, ?3, ?4)
+        `,
         [variables.concernId, variables.answer || false, variables.note, variables.childId],
       );
 
