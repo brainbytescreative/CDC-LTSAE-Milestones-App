@@ -8,6 +8,7 @@ import ChevronLeft from '../svg/chevronLeft.svg';
 import ChevronRight from '../svg/chevronRight.svg';
 import BabyPlaceholder from '../svg/babyPlaceholder.svg';
 import CDClogo from '../svg/CDClogo.svg';
+import IceColdArc from '../svg/iceColdArc.svg';
 
 export {
   NabBarBackground,
@@ -20,4 +21,5 @@ export {
   ChevronRight,
   BabyPlaceholder,
   CDClogo,
+  IceColdArc,
 };

@@ -1,10 +1,17 @@
 {
   "onboardingInfo": {
     "title": "ONBOARDING - Info screen",
-    "welcome": "Welcome to the app",
+    "broughtToYouBy": "brought to you by",
+    "welcome": "Is your child’s\ndevelopment on track?",
     "getStartedBtn": "Get started",
-    "welcome1p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu condimentum quam. In interdum, ligula nec elementum lacinia, felis mi sagittis ipsum, sit amet tincidunt neque odio eu libero. Pellentesque quis turpis ut libero malesuada sollicitudin. Duis massa augue, efficitur nec varius vel, auctor non lorem.",
-    "welcome2p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu condimentum quam. In interdum, ligula nec elementum lacinia, felis mi sagittis ipsum, sit amet tincidunt neque odio eu libero. Pellentesque quis turpis ut libero malesuada sollicitudin. Duis massa augue, efficitur nec varius vel, auctor non lorem."
+    "welcome1p": "From brith to age 5, your child should reach milestones in how he or she plays, learns, speaks, acts, and moves. \nTrack your child’s development and act early if you have a concern.",
+    "welcome2p": "CDC’s Milestone Tracker makes tracking your child’s development easy and fun!",
+    "list_0": "Create a child profile",
+    "list_1": "Start tracking milestones",
+    "list_2": "View your child’s milestone results",
+    "list_3": "Tips and activities for each age",
+    "list_4": "Add appointments",
+    "list_5": "Learn More"
   },
   "onboardingParentProfile": {
     "title": "ONBOARDING - Parent profile",

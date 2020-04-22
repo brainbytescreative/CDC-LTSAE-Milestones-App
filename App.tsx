@@ -14,18 +14,24 @@ import {NavigationContainer} from '@react-navigation/native';
 import Navigator from './src/components/Navigator';
 import {I18nextProvider} from 'react-i18next';
 import i18next from './src/resources/l18n';
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
 import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
 console.disableYellowBox = true;
 
-const theme = {
+const theme: Theme = {
   ...DefaultTheme,
+  fonts: {
+    regular: {fontFamily: 'montserrat'},
+    medium: {fontFamily: 'montserrat'},
+    light: {fontFamily: 'montserrat'},
+    thin: {fontFamily: 'montserrat'},
+  },
   colors: {
     ...DefaultTheme.colors,
-    // primary: 'tomato',
+    primary: 'black',
     // accent: 'yellow',
   },
 };
