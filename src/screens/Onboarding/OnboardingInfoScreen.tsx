@@ -4,7 +4,7 @@ import Layout from '../../components/Layout';
 import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
-import {routeKeys} from '../../resources/constants';
+import {colors, routeKeys} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
 
 const OnboardingInfoScreen: React.FC<{}> = () => {
@@ -54,23 +54,25 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
       </View>
       <Portal>
         <Modal
-          dismissable={false}
+          theme={{
+            colors: {
+              backdrop: colors.whiteTransparent,
+            },
+          }}
           contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            backgroundColor: '#fff',
+            margin: 32,
+            paddingHorizontal: 16,
+            paddingVertical: 22,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: colors.darkGray,
+          }}
+          onDismiss={() => {
+            setVisible(false);
           }}
           visible={visible}>
-          <View style={{backgroundColor: '#fff', flex: 0, alignItems: 'center'}}>
-            <LanguageSelector />
-            <Button
-              mode={'contained'}
-              style={{flex: 0, marginBottom: 10}}
-              onPress={() => {
-                setVisible(false);
-              }}>
-              {t('common:done')}
-            </Button>
-          </View>
+          <LanguageSelector title={'Select a Language/\nSeleccione Un Idioma'} />
         </Modal>
       </Portal>
     </Layout>

@@ -6,18 +6,17 @@ import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUs
 import {useTranslation} from 'react-i18next';
 import AddChildScreen from '../../screens/AddChildScreen';
 import {RootStackParamList} from './types';
-import {useGetOnboarding} from '../../hooks/onboardingHooks';
 import RootDrawer from './RootDrawer';
-import {useGetChildren} from '../../hooks/childrenHooks';
+import {useGetOnboarding} from '../../hooks/onboardingHooks';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Navigator: React.FC<{}> = () => {
   const {t} = useTranslation();
-  // const {data, isFetching} = useGetOnboarding();
-  const {data: children, isFetching} = useGetChildren();
+  const {data, isFetching} = useGetOnboarding();
+  // const {data: children, isFetching} = useGetChildren();
 
-  const isOnboarded = children && children?.length > 0;
+  const isOnboarded = false;
 
   return (
     <>
@@ -29,7 +28,7 @@ const Navigator: React.FC<{}> = () => {
                 name={'OnboardingInfo'}
                 component={OnboardingInfoScreen}
                 options={{
-                  title: t('onboardingInfo:title'),
+                  header: () => null,
                 }}
               />
               <Stack.Screen

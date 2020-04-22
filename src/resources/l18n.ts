@@ -33,7 +33,7 @@ export function useChangeLanguage() {
     },
     {
       onSuccess: () => {
-        return queryCache.refetchQueries([languageCode]);
+        return queryCache.refetchQueries([languageCode], {force: true});
       },
     },
   );

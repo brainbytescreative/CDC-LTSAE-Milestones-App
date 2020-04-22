@@ -1,66 +1,77 @@
 import React from 'react';
-import {StyleProp, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
-import {queryCache} from 'react-query';
+import {colors} from '../resources/constants';
+import Text from './Text';
 
-const languages = ['en', 'es'];
+interface Props {
+  style?: StyleProp<ViewStyle>;
+  title?: string;
+}
 
-const styles = StyleSheet.create({
-  lngSelected: {
-    backgroundColor: 'gray',
-    color: 'white',
-    borderWidth: 0,
-    borderRadius: 10,
-    fontSize: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    width: 120,
-    textAlign: 'center',
-    overflow: 'hidden',
-  },
-  lngDeselected: {
-    borderRadius: 10,
-    fontSize: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    width: 120,
-    textAlign: 'center',
-  },
-});
-
-const LanguageSelector: React.FC<{style?: StyleProp<ViewStyle>}> = ({style}) => {
+const LanguageSelector: React.FC<Props> = ({style, title}) => {
   const {t} = useTranslation();
   const changeLanguage = useChangeLanguage();
   const {data: lngCode} = useGetLanguageCode();
   return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          justifyContent: 'center',
-        },
-        style,
-      ]}>
-      <View style={{padding: 20}}>
-        <Text style={{marginBottom: 10, fontSize: 16}}>{t('common:appLanguage')}</Text>
-        <View style={{borderWidth: 1, flexDirection: 'row', borderRadius: 10}}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              changeLanguage('en');
-            }}>
-            <Text style={lngCode === 'en' ? styles.lngSelected : styles.lngDeselected}>{'English'}</Text>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              changeLanguage('es');
-            }}>
-            <Text style={lngCode === 'es' ? styles.lngSelected : styles.lngDeselected}>{'Español'}</Text>
-          </TouchableWithoutFeedback>
-        </View>
+    <View>
+      <Text style={{marginBottom: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}>
+        {title || t('common:appLanguage')}
+      </Text>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[
+            styles.switchContainer,
+            lngCode === 'en' && [styles.switchContainerSel, styles.switchContainerSelLeft],
+          ]}
+          onPress={() => {
+            changeLanguage('en');
+          }}>
+          <Text style={styles.btnText}>{'English'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.switchContainer,
+            lngCode === 'es' && [styles.switchContainerSel, styles.switchContainerSelRight],
+          ]}
+          onPress={() => {
+            changeLanguage('es');
+          }}>
+          <Text style={styles.btnText}>{'Español'}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  switchContainer: {
+    justifyContent: 'center',
+    height: 47,
+    flex: 1,
+  },
+  btnText: {
+    textAlign: 'center',
+  },
+  switchContainerSel: {
+    backgroundColor: colors.yellow,
+    borderRadius: 10,
+  },
+  switchContainerSelLeft: {
+    borderRightWidth: 0.5,
+    borderRightColor: colors.gray,
+  },
+  switchContainerSelRight: {
+    borderLeftWidth: 0.5,
+    borderLeftColor: colors.gray,
+  },
+  buttonsContainer: {
+    borderWidth: 0.5,
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderColor: colors.gray,
+  },
+});
 
 export default LanguageSelector;
