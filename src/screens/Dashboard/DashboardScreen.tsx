@@ -145,7 +145,6 @@ const DashboardScreen: React.FC<Props> = () => {
             style={{
               paddingHorizontal: 32,
               backgroundColor: colors.purple,
-              marginTop: -1,
             }}>
             <MilestoneChecklistWidget />
             <View

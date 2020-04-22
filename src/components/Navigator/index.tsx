@@ -35,8 +35,7 @@ const Navigator: React.FC<{}> = () => {
                 name={'OnboardingParentProfile'}
                 component={OnboardingParentProfileScreen}
                 options={{
-                  title: t('onboardingParentProfile:title'),
-                  headerLeft: () => null,
+                  header: () => null,
                 }}
               />
               <Stack.Screen

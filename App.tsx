@@ -31,6 +31,7 @@ const theme: Theme = {
   },
   colors: {
     ...DefaultTheme.colors,
+    background: 'white',
     primary: 'black',
     // accent: 'yellow',
   },

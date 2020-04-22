@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
-import {Button, Modal, Portal} from 'react-native-paper';
+import {Image, StyleSheet, View} from 'react-native';
+import {Modal, Portal} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {colors, routeKeys} from '../../resources/constants';
@@ -9,6 +9,7 @@ import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
 import Text from '../../components/Text';
 import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 
 const OnboardingInfoScreen: React.FC<{}> = () => {
   const [visible, setVisible] = useState(true);
@@ -52,7 +53,6 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
           <View
             style={{
               flexGrow: 1,
-              marginTop: -1,
               backgroundColor: colors.purple,
               paddingBottom: bottom,
               justifyContent: 'space-around',
@@ -78,23 +78,12 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
                 </Text>
               ))}
             </View>
-            <Button
-              contentStyle={{
-                height: 60,
-                backgroundColor: 'white',
-                borderRadius: 10,
-              }}
-              labelStyle={{
-                textTransform: 'capitalize',
-                fontWeight: 'bold',
-                fontSize: 18,
-              }}
-              style={{marginHorizontal: 32, marginVertical: 16}}
+            <AEButtonRounded
               onPress={() => {
                 navigation.navigate(routeKeys.OnboardingParentProfile);
               }}>
               {t('getStartedBtn')}
-            </Button>
+            </AEButtonRounded>
           </View>
         </View>
 

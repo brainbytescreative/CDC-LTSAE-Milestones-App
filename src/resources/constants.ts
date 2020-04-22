@@ -88,6 +88,7 @@ export const colors = Object.freeze({
   yellow: '#FCFC9C',
   aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
   whiteTransparent: 'rgba(255, 255, 255, 0.8)',
+  white: 'rgba(255, 255, 255, 1)',
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];

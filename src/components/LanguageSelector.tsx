@@ -15,10 +15,8 @@ const LanguageSelector: React.FC<Props> = ({style, title}) => {
   const changeLanguage = useChangeLanguage();
   const {data: lngCode} = useGetLanguageCode();
   return (
-    <View>
-      <Text style={{marginBottom: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}>
-        {title || t('common:appLanguage')}
-      </Text>
+    <View style={[{backgroundColor: colors.white, borderRadius: 10}, style]}>
+      {title && <Text style={{marginBottom: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}>{title}</Text>}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={[

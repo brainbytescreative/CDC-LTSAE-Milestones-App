@@ -15,7 +15,8 @@
   },
   "onboardingParentProfile": {
     "title": "ONBOARDING - Parent profile",
-    "parentProfile": "Parent/Caregiver profile"
+    "parentProfile": "Parent/Caregiver profile",
+    "territoryInfo": "This section will explain why the app requires state specific information.\n\nCDC does not collect or share any personal information that can be used to identify you or your child."
   },
   "onboardingHowToUse": {
     "title": "ONBOARDING - How to use",
@@ -62,7 +63,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "skip": "Skip",
-    "required": "* required field",
+    "required": "* required",
     "dateFormat": "MM/dd/yyyy",
     "timeFormat": "h:mm a",
     "dateTimeFormat": "MM/dd/yyyy h:mm a",

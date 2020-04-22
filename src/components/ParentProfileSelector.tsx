@@ -7,6 +7,7 @@ import {TextInput} from 'react-native-paper';
 import GuardianDialog from './GuardianDialog';
 import TerritorySelector from '../TerritorySelector';
 import TouchableArea from './TouchableArea/TouchableArea';
+import {ChevronDown} from '../resources/svg';
 
 export interface ParentProfileSelectorValues {
   territory: StateCode | undefined;
@@ -40,19 +41,22 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
 
   return (
     <>
-      <GuardianDialog value={guardian} onChange={(value) => setGuardian(value)}>
+      <GuardianDialog value={guardian} onChange={(val) => setGuardian(val)}>
         {(showDialog) => (
-          <View style={{margin: 10}}>
+          <View style={{marginBottom: 10, marginHorizontal: 32}}>
             <TouchableArea onPress={showDialog}>
               <TextInput
                 mode={'outlined'}
+                style={{
+                  fontSize: 15,
+                }}
                 editable={false}
                 label={t('fields:guardianPlaceholder')}
                 value={guardianTranslated}
                 render={(props) => (
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center', paddingRight: 16}}>
                     <TextInputNative {...props} />
-                    <Icon name="chevron-down" size={40} />
+                    <ChevronDown />
                   </View>
                 )}
               />
@@ -61,7 +65,7 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
         )}
       </GuardianDialog>
 
-      <View style={{margin: 10}}>
+      <View style={{marginHorizontal: 32}}>
         <TerritorySelector onChange={(code) => setTerritory(code)}>
           {(showModal) => (
             <TouchableArea onPress={showModal}>
@@ -71,9 +75,9 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
                 label={t('fields:territoryPlaceholder')}
                 value={territory ? t(`states:${territory}`) : ''}
                 render={(props) => (
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center', paddingRight: 16}}>
                     <TextInputNative {...props} />
-                    <Icon name="chevron-down" size={40} />
+                    <ChevronDown />
                   </View>
                 )}
               />
