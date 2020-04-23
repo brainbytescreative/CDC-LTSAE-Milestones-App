@@ -3,7 +3,7 @@
     "title": "ONBOARDING - Info screen",
     "broughtToYouBy": "brought to you by",
     "welcome": "Is your child’s\ndevelopment on track?",
-    "getStartedBtn": "Get started",
+    "getStartedBtn": "$t(common:getStartedBtn)",
     "welcome1p": "From brith to age 5, your child should reach milestones in how he or she plays, learns, speaks, acts, and moves. \nTrack your child’s development and act early if you have a concern.",
     "welcome2p": "CDC’s Milestone Tracker makes tracking your child’s development easy and fun!",
     "list_0": "Create a child profile",
@@ -57,6 +57,7 @@
     "healthcareProvider": "Healthcare Provider"
   },
   "common": {
+    "getStartedBtn": "Get started",
     "appLanguage": "App language",
     "next": "Next",
     "done": "Done",

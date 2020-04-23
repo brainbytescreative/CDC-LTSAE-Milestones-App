@@ -79,6 +79,7 @@ export const colors = Object.freeze({
   lightGray: '#E3E3E3',
   gray: '#B9B9B9',
   darkGray: '#707070',
+  black: '#000',
   yellow: '#FCFC9C',
   aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
   whiteTransparent: 'rgba(255, 255, 255, 0.8)',

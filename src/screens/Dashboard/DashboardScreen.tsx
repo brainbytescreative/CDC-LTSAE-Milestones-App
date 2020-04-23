@@ -26,6 +26,7 @@ import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
+import {useSetOnboarding} from '../../hooks/onboardingHooks';
 
 const DATA: DataItem[] = [
   {
@@ -95,11 +96,13 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const childName = child?.name;
   const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);
+  const [setOnboarding] = useSetOnboarding();
 
   useFocusEffect(
     React.useCallback(() => {
       refetch({force: true});
-    }, [refetch]),
+      setOnboarding(true);
+    }, [refetch, setOnboarding]),
   );
 
   return (

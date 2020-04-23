@@ -55,7 +55,6 @@ const AddChildScreen: React.FC<{}> = () => {
   const {data: child} = useGetChild({id: childId});
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
-  // const [setOnboarding] = useSetOnboarding();
 
   const initialValues = {
     name: '',
