@@ -87,13 +87,16 @@
     "month_plural": "{{count}} months"
   },
   "addChild": {
-    "title": "Add child",
+    "title": "Add a child",
     "edit-title": "Edit child",
     "addAnotherChild": "+ Add another child",
     "boy": "Boy",
     "girl": "Girl",
-    "addPhoto": "Add photo (not required)",
-    "note": "If your child is premature: Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    "addPhoto": "Add photo",
+    "note": "If your child was born prematurely, enter their actual birth date, but use the checklist based on your child’s corrected age. If the corrected age is between checklists, use the checklist for the younger age.",
+    "noteClick": "Click here to calculate corrected age.",
+    "prematureQuestion": "Was your child born premature?",
+    "selectOne": "Select One*"
   },
   "addAppointment": {
     "title": "Add appointment",

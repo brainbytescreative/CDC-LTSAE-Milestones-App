@@ -12,11 +12,15 @@ import {NabBarBackground, PurpleArc} from '../../resources/svg';
 import {Text} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
-import {OnboardingNavigationProp} from '../../components/Navigator/types';
+import {RootStackParamList} from '../../components/Navigator/types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+const NextScreen: keyof RootStackParamList = 'AddChild';
+type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
 
 const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingParentProfile');
-  const navigation = useNavigation<OnboardingNavigationProp>();
+  const navigation = useNavigation<ParentProfileNavigationProp>();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();
   const [saveProfile] = useSetParentProfile();
   const {top} = useSafeArea();
@@ -30,7 +34,7 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
           </View>
           <CancelDoneTopControl
             onCancel={() => {
-              navigation.navigate('OnboardingHowToUse');
+              navigation.navigate(NextScreen, {onboarding: true});
             }}
             onDone={() => {
               navigation.navigate('Dashboard');
@@ -62,7 +66,16 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
         </View>
 
         <View style={{flexGrow: 1, justifyContent: 'center', paddingVertical: 16, backgroundColor: 'white'}}>
-          <Text style={{fontSize: 22, fontWeight: 'bold', marginHorizontal: 32}}>{t('common:appLanguage')}</Text>
+          <Text
+            style={{
+              fontSize: 22,
+              fontWeight: 'bold',
+              marginHorizontal: 32,
+              marginBottom: 16,
+              textTransform: 'capitalize',
+            }}>
+            {t('common:appLanguage')}
+          </Text>
           <LanguageSelector style={{marginHorizontal: 32}} />
         </View>
 
@@ -72,7 +85,9 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
             <AEButtonRounded
               disabled={!profile?.territory}
               onPress={() => {
-                navigation.navigate('OnboardingHowToUse');
+                navigation.navigate(NextScreen, {
+                  onboarding: true,
+                });
               }}>
               {t('common:next')}
             </AEButtonRounded>

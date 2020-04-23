@@ -49,8 +49,7 @@ const Navigator: React.FC<{}> = () => {
                 name={'AddChild'}
                 component={AddChildScreen}
                 options={{
-                  title: t('addChild:title'),
-                  headerLeft: () => null,
+                  header: () => null,
                 }}
               />
             </>

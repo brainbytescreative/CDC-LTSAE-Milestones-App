@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 import {formatDate} from '../utils/helpers';
 import TouchableArea from './TouchableArea/TouchableArea';
+import AETextInput from './AETextInput';
+import {sharedStyle} from '../resources/constants';
 
 interface PageProps {
   onChange?: (date?: Date) => void;
@@ -36,16 +38,13 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
 
   return (
     <>
-      <TouchableArea style={[style]} onPress={showDatePicker}>
-        <TextInput
-          editable={false}
-          autoCorrect={false}
-          // onChange={formik.handleChange('dateOfBirth') as any}
-          label={label}
-          value={formatDate(date, mode)}
-          mode={'outlined'}
-        />
-      </TouchableArea>
+      <AETextInput
+        onPress={showDatePicker}
+        editable={false}
+        autoCorrect={false}
+        placeholder={label}
+        value={formatDate(date, mode)}
+      />
       <DateTimePickerModal
         isVisible={modalVisible}
         date={date}

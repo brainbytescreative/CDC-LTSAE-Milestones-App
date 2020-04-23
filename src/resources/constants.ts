@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
+import {StyleSheet} from 'react-native';
+
 export const states = [
   'AL',
   'AK',
@@ -81,6 +83,20 @@ export const colors = Object.freeze({
   aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
   whiteTransparent: 'rgba(255, 255, 255, 0.8)',
   white: 'rgba(255, 255, 255, 1)',
+});
+
+export const sharedStyle = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
+  },
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];

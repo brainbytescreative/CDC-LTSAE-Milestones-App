@@ -1,7 +1,6 @@
 import React, {useEffect, useLayoutEffect} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
-import Layout from '../components/Layout';
-import {Button, RadioButton, Text, TextInput} from 'react-native-paper';
+import {RadioButton, Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
@@ -11,10 +10,16 @@ import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
 import {addEditChildSchema} from '../resources/validationSchemas';
 
 import {StackNavigationProp} from '@react-navigation/stack';
-import {DashboardStackParamList} from '../components/Navigator/types';
+import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
 import {useSetOnboarding} from '../hooks/onboardingHooks';
-import {missingConcerns} from '../resources/constants';
+import {colors, missingConcerns, sharedStyle} from '../resources/constants';
 import {useSetConcern} from '../hooks/checklistHooks';
+import CancelDoneTopControl from '../components/CancelDoneTopControl';
+import AETextInput from '../components/AETextInput';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {NabBarBackground, PlusIcon, PurpleArc} from '../resources/svg';
+import {useSafeArea} from 'react-native-safe-area-context';
+import AEScrollView from '../components/AEScrollView';
 
 const options = {
   quality: 1.0,
@@ -26,10 +31,14 @@ const options = {
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
-type AddChildScreenNavigationProp = StackNavigationProp<DashboardStackParamList, 'AddChild'>;
+type AddChildScreenNavigationProp = StackNavigationProp<DashboardStackParamList, 'AddChild'> &
+  StackNavigationProp<RootStackParamList, 'AddChild'>;
+
+const NextScreen: keyof RootStackParamList = 'OnboardingHowToUse';
 
 const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
+  const {top, bottom} = useSafeArea();
   const {t} = useTranslation('addChild');
 
   const [setConcern] = useSetConcern();
@@ -46,7 +55,7 @@ const AddChildScreen: React.FC<{}> = () => {
   const {data: child} = useGetChild({id: childId});
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
-  const [setOnboarding] = useSetOnboarding();
+  // const [setOnboarding] = useSetOnboarding();
 
   const initialValues = {
     name: '',
@@ -91,131 +100,182 @@ const AddChildScreen: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [child]);
 
+  const onDone = () => {
+    formik.handleSubmit();
+    if (route.params?.onboarding) {
+      navigation.navigate('OnboardingHowToUse');
+      // setOnboarding(true);
+    } else {
+      // navigation.navigate('Dashboard');
+      navigation.goBack();
+    }
+  };
+  const onCancel = () => {
+    if (route.params?.onboarding) {
+      navigation.navigate(NextScreen);
+    } else {
+      navigation.goBack();
+    }
+  };
   return (
-    <Layout>
-      <View style={{padding: 20}}>
-        <Text style={{fontWeight: 'bold', fontSize: 20}}>{t(`${prefix}title`)}</Text>
-        <View style={{alignItems: 'center', marginVertical: 30}}>
-          <TouchableOpacity
-            onPress={() => {
-              ImagePicker.showImagePicker(options, (response) => {
-                if (response.uri) {
-                  formik.setFieldValue('photo', response.uri);
-                }
-                console.log(response.uri);
-              });
-            }}
-            style={{
-              borderWidth: 1,
-              width: 150,
-              height: 150,
-              borderRadius: 150,
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-            }}>
-            {formik.values.photo ? (
-              <Image
-                style={{height: '100%', width: '100%'}}
-                source={{
-                  uri: formik.values.photo,
+    <AEScrollView>
+      <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
+        <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
+          <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>
+            <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
+            <NabBarBackground width={'100%'} />
+          </View>
+          <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
+
+          <Text
+            adjustsFontSizeToFit
+            style={{fontWeight: 'bold', fontSize: 22, marginHorizontal: 32, textAlign: 'center'}}>
+            {t(`${prefix}title`)}
+          </Text>
+          <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
+            <View style={[sharedStyle.shadow]}>
+              <TouchableOpacity
+                onPress={() => {
+                  ImagePicker.showImagePicker(options, (response) => {
+                    if (response.uri) {
+                      formik.setFieldValue('photo', response.uri);
+                    }
+                    console.log(response.uri);
+                  });
+                }}
+                style={[
+                  {
+                    width: 190,
+                    height: 190,
+                    borderRadius: 150,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    backgroundColor: colors.purple,
+                  },
+                  sharedStyle.shadow,
+                ]}>
+                {formik.values.photo ? (
+                  <Image
+                    style={{height: '100%', width: '100%'}}
+                    source={{
+                      uri: formik.values.photo,
+                    }}
+                  />
+                ) : (
+                  <PlusIcon />
+                )}
+              </TouchableOpacity>
+            </View>
+            <Text style={{marginTop: 10, fontSize: 15}}>{t('addPhoto')}</Text>
+          </View>
+        </View>
+        <View style={{backgroundColor: colors.white, flexGrow: 1, paddingHorizontal: 32}}>
+          <AETextInput
+            autoCorrect={false}
+            value={formik.values.name}
+            onChangeText={formik.handleChange('name') as any}
+            placeholder={t('fields:childNamePlaceholder')}
+          />
+          <View style={{height: 11}} />
+          <DatePicker
+            value={formik.values.birthday}
+            label={t('fields:dateOfBirthPlaceholder')}
+            onChange={(date) => formik.setFieldValue('birthday', date)}
+          />
+          <View
+            style={[
+              {
+                padding: 5,
+                backgroundColor: colors.yellow,
+                borderRadius: 10,
+                marginTop: 20,
+                paddingHorizontal: 15,
+              },
+              sharedStyle.shadow,
+            ]}>
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={{
+                fontSize: 15,
+                textAlign: 'center',
+              }}>
+              {t('prematureQuestion')}
+            </Text>
+          </View>
+          <View style={{marginTop: 20, marginBottom: 16}}>
+            <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <RadioButton.Android
+                value="boy"
+                status={formik.values.gender === 0 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  formik.setFieldValue('gender', 0);
                 }}
               />
-            ) : (
-              <Text style={{fontSize: 20}}>{'+'}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-        <TextInput
-          autoCorrect={false}
-          value={formik.values.name}
-          onChangeText={formik.handleChange('name') as any}
-          label={t('fields:childNamePlaceholder')}
-          mode={'outlined'}
-        />
-
-        <DatePicker
-          value={formik.values.birthday}
-          label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => formik.setFieldValue('birthday', date)}
-        />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginVertical: 10,
-          }}>
-          <RadioButton.Android
-            value="boy"
-            status={formik.values.gender === 0 ? 'checked' : 'unchecked'}
-            onPress={() => {
-              formik.setFieldValue('gender', 0);
-            }}
-          />
-          <Text>{t('boy')}</Text>
-          <RadioButton.Android
-            value="girl"
-            status={formik.values.gender === 1 ? 'checked' : 'unchecked'}
-            onPress={() => {
-              formik.setFieldValue('gender', 1);
-            }}
-          />
-          <Text>
-            {t('girl')} {'*'}
-          </Text>
+              <Text>{t('boy')}</Text>
+              <RadioButton.Android
+                value="girl"
+                status={formik.values.gender === 1 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  formik.setFieldValue('gender', 1);
+                }}
+              />
+              <Text>
+                {t('girl')} {'*'}
+              </Text>
+            </View>
+            <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
+          </View>
         </View>
 
-        <Button
-          disabled={isLoading || !formik.isValid}
-          mode={'contained'}
-          onPress={() => {
-            formik.handleSubmit();
-            navigation.replace('AddChild', {
-              childId: undefined,
-              anotherChild: true,
-              onboarding: !!route.params?.onboarding,
-              child: {
-                name: formik.values.name,
-                photo: formik.values.photo,
-                gender: formik.values.gender || 0,
-                birthday: formik.values.birthday || new Date(),
-              },
-            });
-          }}>
-          {t('addAnotherChild').toUpperCase()}
-        </Button>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Button
-            mode={'contained'}
-            disabled={isLoading || !formik.isValid}
-            style={{marginVertical: 50, width: 100}}
-            onPress={() => {
-              formik.handleSubmit();
-              if (route.params?.onboarding) {
-                navigation.navigate('Dashboard');
-                setOnboarding(true);
-              } else {
-                // navigation.navigate('Dashboard');
-                navigation.goBack();
-              }
-            }}>
-            {t('common:done').toUpperCase()}
-          </Button>
-          {route.params?.anotherChild && route.params?.onboarding && (
-            <Button
-              mode={'contained'}
-              style={{marginVertical: 50, width: 100}}
-              onPress={() => {
-                navigation.navigate('Dashboard');
-              }}>
-              {t('common:skip').toUpperCase()}
-            </Button>
-          )}
+        <View style={{backgroundColor: colors.white, flexGrow: 2, justifyContent: 'space-between'}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
+            <View style={{marginTop: 50}}>
+              <AEButtonRounded
+                disabled={isLoading || !formik.isValid}
+                style={{marginVertical: 0}}
+                onPress={() => {
+                  formik.handleSubmit();
+                  navigation.replace('AddChild', {
+                    childId: undefined,
+                    anotherChild: true,
+                    onboarding: !!route.params?.onboarding,
+                    child: {
+                      name: formik.values.name,
+                      photo: formik.values.photo,
+                      gender: formik.values.gender || 0,
+                      birthday: formik.values.birthday || new Date(),
+                    },
+                  });
+                }}>
+                {t('addAnotherChild').toUpperCase()}
+              </AEButtonRounded>
+              <AEButtonRounded disabled={isLoading || !formik.isValid} style={{marginBottom: 24}} onPress={onDone}>
+                {t('common:done').toUpperCase()}
+              </AEButtonRounded>
+            </View>
+            <View
+              style={[
+                {backgroundColor: colors.yellow, marginHorizontal: 32, padding: 16, borderRadius: 10},
+                sharedStyle.shadow,
+              ]}>
+              <Text style={{textAlign: 'center'}}>{t('note')}</Text>
+              <Text style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
+                {t('noteClick')}
+              </Text>
+            </View>
+          </View>
         </View>
-        <Text style={{textAlign: 'center'}}>{t('note')}</Text>
       </View>
-    </Layout>
+    </AEScrollView>
   );
 };
 

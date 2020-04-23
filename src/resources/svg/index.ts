@@ -10,6 +10,7 @@ import BabyPlaceholder from '../svg/babyPlaceholder.svg';
 import CDClogo from '../svg/CDClogo.svg';
 import IceColdArc from '../svg/iceColdArc.svg';
 import ChevronDown from '../svg/chevron-down.svg';
+import PlusIcon from '../svg/plusIcon.svg';
 
 export {
   NabBarBackground,
@@ -24,4 +25,5 @@ export {
   CDClogo,
   IceColdArc,
   ChevronDown,
+  PlusIcon,
 };

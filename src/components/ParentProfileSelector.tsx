@@ -45,27 +45,25 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
     <View style={[style]}>
       <GuardianDialog value={guardian} onChange={(val) => setGuardian(val)}>
         {(showDialog) => (
-          <TouchableArea onPress={showDialog}>
-            <AETextInput
-              rightIcon={<ChevronDown />}
-              editable={false}
-              value={guardianTranslated}
-              placeholder={t('fields:guardianPlaceholder')}
-            />
-          </TouchableArea>
+          <AETextInput
+            onPress={showDialog}
+            rightIcon={<ChevronDown />}
+            editable={false}
+            value={guardianTranslated}
+            placeholder={t('fields:guardianPlaceholder')}
+          />
         )}
       </GuardianDialog>
       <View style={{height: 10}} />
       <TerritorySelector onChange={(code) => setTerritory(code)}>
         {(showModal) => (
-          <TouchableArea onPress={showModal}>
-            <AETextInput
-              rightIcon={<ChevronDown />}
-              editable={false}
-              value={territory ? t(`states:${territory}`) : ''}
-              placeholder={t('fields:territoryPlaceholder')}
-            />
-          </TouchableArea>
+          <AETextInput
+            onPress={showModal}
+            rightIcon={<ChevronDown />}
+            editable={false}
+            value={territory ? t(`states:${territory}`) : ''}
+            placeholder={t('fields:territoryPlaceholder')}
+          />
         )}
       </TerritorySelector>
     </View>

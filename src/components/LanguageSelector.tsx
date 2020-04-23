@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
-import {colors} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import Text from './Text';
 
 interface Props {
@@ -11,13 +10,12 @@ interface Props {
 }
 
 const LanguageSelector: React.FC<Props> = ({style, title}) => {
-  const {t} = useTranslation();
   const changeLanguage = useChangeLanguage();
   const {data: lngCode} = useGetLanguageCode();
   return (
     <View style={[{backgroundColor: colors.white, borderRadius: 10}, style]}>
       {title && <Text style={{marginBottom: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}>{title}</Text>}
-      <View style={styles.buttonsContainer}>
+      <View style={[styles.buttonsContainer, sharedStyle.shadow]}>
         <TouchableOpacity
           style={[
             styles.switchContainer,
@@ -65,6 +63,7 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.gray,
   },
   buttonsContainer: {
+    backgroundColor: colors.white,
     borderWidth: 0.5,
     flexDirection: 'row',
     borderRadius: 10,

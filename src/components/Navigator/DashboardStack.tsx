@@ -30,7 +30,7 @@ const DashboardStack: FC<{}> = () => {
         name={'AddChild'}
         component={AddChildScreen}
         options={{
-          title: t('addChild:title'),
+          header: () => null,
         }}
       />
       <Stack.Screen
