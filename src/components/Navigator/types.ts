@@ -22,6 +22,8 @@ export type DashboardStackParamList = {
   TipsAndActivities: undefined;
 };
 
+export type OnboardingNavigationProp = StackNavigationProp<RootStackParamList>;
+
 export type SettingsStackParamList = {
   NotificationSettings: undefined;
 };

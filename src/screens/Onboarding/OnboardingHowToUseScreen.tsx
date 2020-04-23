@@ -3,11 +3,10 @@ import {StyleSheet, View} from 'react-native';
 import Layout from '../../components/Layout';
 import {useTranslation} from 'react-i18next';
 import {Button, Text} from 'react-native-paper';
-import {routeKeys} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
 import ViewPager from '@react-native-community/viewpager';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {DashboardStackParamList, RootStackParamList} from '../../components/Navigator/types';
+import {RootStackParamList} from '../../components/Navigator/types';
 
 const styles = StyleSheet.create({
   viewPager: {

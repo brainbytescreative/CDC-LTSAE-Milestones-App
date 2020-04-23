@@ -60,6 +60,7 @@
     "appLanguage": "App language",
     "next": "Next",
     "done": "Done",
+    "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
     "skip": "Skip",
@@ -110,7 +111,7 @@
     "drawerLabel": "Child summary"
   },
   "fields": {
-    "territoryPlaceholder": "State or Territory field *",
+    "territoryPlaceholder": "State or Territory *",
     "guardianPlaceholder": "Guardian / Healthcare Provider",
     "childNamePlaceholder": "Child Name *",
     "dateOfBirthPlaceholder": "Birthday *",

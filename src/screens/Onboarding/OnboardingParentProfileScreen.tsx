@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, routeKeys} from '../../resources/constants';
+import {colors} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
 import LanguageSelector from '../../components/LanguageSelector';
 import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
@@ -10,62 +10,84 @@ import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {NabBarBackground, PurpleArc} from '../../resources/svg';
 import {Text} from 'react-native-paper';
+import AEScrollView from '../../components/AEScrollView';
+import CancelDoneTopControl from '../../components/CancelDoneTopControl';
+import {OnboardingNavigationProp} from '../../components/Navigator/types';
 
 const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingParentProfile');
-  const navigation = useNavigation();
+  const navigation = useNavigation<OnboardingNavigationProp>();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();
   const [saveProfile] = useSetParentProfile();
   const {top} = useSafeArea();
   return (
-    <View style={{flex: 1, paddingTop: top, backgroundColor: colors.white}}>
-      <View style={{position: 'absolute', width: '100%'}}>
-        <View style={{backgroundColor: colors.iceCold, height: 200}} />
-        <NabBarBackground width={'100%'} />
-      </View>
-
-      <View style={{flexGrow: 1, justifyContent: 'space-around'}}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontWeight: 'bold',
-            margin: 10,
-            fontSize: 22,
-            marginHorizontal: 32,
-            textTransform: 'capitalize',
-          }}>
-          {t('parentProfile')}
-        </Text>
-        <View>
-          <ParentProfileSelector
-            onChange={(values) => {
-              setProfile(values);
-              saveProfile(values);
+    <AEScrollView>
+      <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top}}>
+        <View style={{flexGrow: 1, justifyContent: 'space-around', backgroundColor: 'white'}}>
+          <View style={{top: 0, position: 'absolute', width: '100%', height: '100%'}}>
+            <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
+            <NabBarBackground width={'100%'} />
+          </View>
+          <CancelDoneTopControl
+            onCancel={() => {
+              navigation.navigate('OnboardingHowToUse');
+            }}
+            onDone={() => {
+              navigation.navigate('Dashboard');
             }}
           />
-          <Text style={{textAlign: 'right', marginHorizontal: 50, marginTop: 10}}>{t('common:required')}</Text>
-        </View>
-      </View>
-
-      <View style={{flexGrow: 3, justifyContent: 'center'}}>
-        <Text style={{fontSize: 22, fontWeight: 'bold', marginHorizontal: 32}}>{t('common:appLanguage')}</Text>
-        <LanguageSelector style={{marginHorizontal: 32}} />
-      </View>
-
-      <View style={{flexGrow: 2}}>
-        <PurpleArc width={'100%'} />
-        <View style={{backgroundColor: colors.purple, flexGrow: 1}}>
-          <AEButtonRounded
-            disabled={!profile?.territory}
-            onPress={() => {
-              navigation.navigate(routeKeys.OnboardingHowToUse);
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: 22,
+              marginHorizontal: 32,
+              textTransform: 'capitalize',
+              marginBottom: 24,
             }}>
-            {t('common:next')}
-          </AEButtonRounded>
-          <Text style={{fontSize: 15, marginHorizontal: 50}}>{t('territoryInfo')}</Text>
+            {t('parentProfile')}
+          </Text>
+          <View>
+            <ParentProfileSelector
+              style={{marginHorizontal: 32}}
+              onChange={(values) => {
+                setProfile(values);
+                saveProfile(values);
+              }}
+            />
+            <Text style={{textAlign: 'right', marginHorizontal: 50, marginTop: 10}}>{t('common:required')}</Text>
+          </View>
+        </View>
+
+        <View style={{flexGrow: 1, justifyContent: 'center', paddingVertical: 16, backgroundColor: 'white'}}>
+          <Text style={{fontSize: 22, fontWeight: 'bold', marginHorizontal: 32}}>{t('common:appLanguage')}</Text>
+          <LanguageSelector style={{marginHorizontal: 32}} />
+        </View>
+
+        <View style={{flexGrow: 2, backgroundColor: 'white'}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, flexGrow: 1}}>
+            <AEButtonRounded
+              disabled={!profile?.territory}
+              onPress={() => {
+                navigation.navigate('OnboardingHowToUse');
+              }}>
+              {t('common:next')}
+            </AEButtonRounded>
+            <Text
+              style={{
+                fontSize: 15,
+                marginHorizontal: 50,
+                marginBottom: 16,
+              }}>
+              {t('territoryInfo')}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </AEScrollView>
   );
 };
 

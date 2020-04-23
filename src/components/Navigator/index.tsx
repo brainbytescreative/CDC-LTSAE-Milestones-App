@@ -42,8 +42,7 @@ const Navigator: React.FC<{}> = () => {
                 name={'OnboardingHowToUse'}
                 component={OnboardingHowToUseScreen}
                 options={{
-                  title: t('onboardingHowToUse:title'),
-                  headerLeft: () => null,
+                  header: () => null,
                 }}
               />
               <Stack.Screen

@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
-export const routeKeys = Object.freeze({
-  OnboardingInfo: 'OnboardingInfo',
-  OnboardingHowToUse: 'OnboardingHowToUse',
-  OnboardingParentProfile: 'OnboardingParentProfile',
-  Dashboard: 'Dashboard',
-  AddChild: 'AddChild',
-});
-
 export const states = [
   'AL',
   'AK',

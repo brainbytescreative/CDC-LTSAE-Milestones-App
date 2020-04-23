@@ -10,6 +10,8 @@ const AEScrollView: React.FC<ScrollViewProps> = ({children, ...rest}) => {
           setScrollEnabled(false);
         }
       }}
+      style={{flex: 1}}
+      contentContainerStyle={{flexGrow: 1}}
       {...rest}
       scrollEnabled={scrollEnabled}>
       {children}
