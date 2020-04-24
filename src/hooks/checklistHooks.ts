@@ -192,15 +192,15 @@ export function useGetSectionsProgress() {
     childId,
   );
 
-  const progress: Map<SkillType, string> | undefined = useMemo(() => {
+  const progress: Map<SkillType, {total: number; answered: number}> | undefined = useMemo(() => {
     if (questions?.length) {
       return skillTypes.reduce((previousValue, section) => {
         const sectionsQuestions = questions.filter((value) => value.section === section);
         const questionsIds = sectionsQuestions.map((value) => value.id);
         const answeredInSection = answers?.filter((value) => questionsIds.includes(value.questionId)) || [];
-        previousValue.set(section, `${answeredInSection.length}/${sectionsQuestions.length}`);
+        previousValue.set(section, {total: sectionsQuestions.length, answered: answeredInSection.length});
         return previousValue;
-      }, new Map<SkillType, string>());
+      }, new Map<SkillType, {total: number; answered: number}>());
     }
   }, [answers, questions]);
 

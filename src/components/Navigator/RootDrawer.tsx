@@ -15,6 +15,7 @@ import ChildSummaryStack from './ChildSummaryStack';
 import {SafeAreaView, ScrollView, View} from 'react-native';
 import {colors} from '../../resources/constants';
 import {Text} from 'react-native-paper';
+import MilestoneChecklistStack from './MilestoneChecklistStack';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
@@ -62,6 +63,13 @@ const RootDrawer: React.FC<{}> = () => {
           drawerLabel: t('dashboard:drawerLabel'),
         }}
         component={DashboardStack}
+      />
+      <Drawer.Screen
+        name={'MilestoneChecklistStack'}
+        options={{
+          drawerLabel: t('milestoneChecklist:drawerLabel'),
+        }}
+        component={MilestoneChecklistStack}
       />
       <Drawer.Screen
         name={'SettingsStack'}

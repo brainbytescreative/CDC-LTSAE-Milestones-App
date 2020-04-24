@@ -84,6 +84,13 @@ export const colors = Object.freeze({
   aquamarineTransparent: 'rgba(100, 252, 212, 0.28)',
   whiteTransparent: 'rgba(255, 255, 255, 0.8)',
   white: 'rgba(255, 255, 255, 1)',
+  sections: {
+    social: '#EBDEFE',
+    language: '#C9FFF0',
+    cognitive: '#DBFFD2',
+    movement: '#FFFECF',
+    actEarly: '#FFC7C7',
+  },
 });
 
 export const sharedStyle = StyleSheet.create({

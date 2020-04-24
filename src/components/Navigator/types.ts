@@ -36,6 +36,9 @@ export type TipsAndActivitiesParamList = {
 export type InfoParamList = {
   Info: undefined;
 };
+export type MilestoneCheckListParamList = {
+  MilestoneChecklist: undefined;
+};
 
 export type RootStackParamList = {
   AddChild: AddChildScreenParams;
@@ -48,6 +51,7 @@ export type RootStackParamList = {
 export type DashboardDrawerParamsList = {
   DashboardStack: undefined;
   SettingsStack: undefined;
+  MilestoneChecklistStack: undefined;
   TipsAndActivitiesStack: undefined;
   InfoStack: undefined;
   ChildSummaryStack: undefined;

@@ -137,6 +137,13 @@
     "movement": "Movement"
   },
   "milestoneChecklist": {
+    "milestoneChecklist": "Milestone checklist",
+    "milestoneQuickView": "Milestone Quickview",
+    "quickViewMessage": "Here’s a quick look at all of the milestones most children reach by {{milestone}}.",
+    "message1": "Please note: if your child is between milestones, you will answer questions for the younger milestone.",
+    "message2": "\"Unsure\" items will trigger reminder every xx weeks until answered.",
+    "message3": "You’ll be answering questions about Social, Language, Cognitive, Movement, and When to Act Early.",
+    "drawerLabel": "Milestone",
     "section-social": "$t(skillTypes:social)",
     "section-language": "$t(skillTypes:language)",
     "section-cognitive": "$t(skillTypes:cognitive)",

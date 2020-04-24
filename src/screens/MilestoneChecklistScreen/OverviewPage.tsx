@@ -4,6 +4,11 @@ import Text from '../../components/Text';
 import {useTranslation} from 'react-i18next';
 import {Button} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
+import {PurpleArc} from '../../resources/svg';
+import {colors} from '../../resources/constants';
+import AEScrollView from '../../components/AEScrollView';
+import {useSafeArea} from 'react-native-safe-area-context';
 
 interface Props {
   onNext: () => void;
@@ -12,64 +17,63 @@ interface Props {
 }
 
 const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge}) => {
-  const {t} = useTranslation('milestones');
-  // const questions = (milestoneAge &&
-  //   _.chain(
-  //     skillTypes.map((section) =>
-  //       _.chain(milestoneChecklist).find({id: milestoneAge}).get(`milestones.${section}`).value(),
-  //     ),
-  //   )
-  //     .flatten()
-  //     .map((item) => ({...item, value: t(item.value)}))
-  //     .value()) as SkillSection[] | undefined;
-
+  const {t} = useTranslation('milestoneChecklist');
   const {data, error} = useGetChecklistQuestions();
-
   const questions = data?.questions || [];
+  const {bottom} = useSafeArea();
 
   return (
-    <>
-      <FlatList
-        ListHeaderComponent={() => (
-          <>
-            <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
-            <Text style={[styles.header]}>Milestone Quickview</Text>
-            <Text style={[styles.text]}>Here a quick look at all of the milestones most children reach</Text>
-          </>
-        )}
-        data={questions}
-        keyExtractor={(item) => `overview-${item.id}`}
-        renderItem={({item}) => (
-          <Text style={[styles.text]}>
-            {'•'} {item.value}
+    <AEScrollView>
+      <View style={{flex: 1}}>
+        <View style={{flexGrow: 1}}>
+          <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
+          <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
+          <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+            {t('quickViewMessage', {milestone: milestoneAgeFormatted})}
           </Text>
-        )}
-        ListFooterComponent={() => (
-          <>
-            <View style={{alignItems: 'center', marginTop: 30}}>
-              <Button onPress={onNext} mode={'contained'}>
-                Next
-              </Button>
+
+          {questions.map((item, index) => (
+            <View
+              key={`overview-${index}`}
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: 48,
+                marginTop: 15,
+              }}>
+              <Text style={{fontSize: 15, fontWeight: 'bold', marginRight: 15}}>{'+'}</Text>
+              <View
+                style={{
+                  flexGrow: 1,
+                  flex: 1,
+                  width: 0,
+                }}>
+                <Text style={{fontSize: 15}}>{item.value}</Text>
+              </View>
             </View>
-          </>
-        )}
-      />
-    </>
+          ))}
+        </View>
+        <View style={{marginTop: 30}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingBottom: bottom ? bottom : 32, paddingTop: 16}}>
+            <AEButtonRounded onPress={onNext}>{t('common:next')}</AEButtonRounded>
+          </View>
+        </View>
+      </View>
+    </AEScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
     marginTop: 5,
+    marginHorizontal: 48,
   },
   text: {
-    paddingHorizontal: 20,
-    marginTop: 20,
-    fontSize: 16,
+    fontSize: 15,
   },
   answerButton: {
     borderWidth: 1,

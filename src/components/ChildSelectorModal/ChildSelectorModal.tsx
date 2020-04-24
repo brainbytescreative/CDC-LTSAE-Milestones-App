@@ -31,28 +31,26 @@ const ChildSelectorModal: React.FC<{}> = () => {
     navigation.setOptions({
       headerTitle: () => {
         return (
-          <View style={{marginHorizontal: 64}}>
-            <TouchableOpacity
-              onPress={() => setChildSelectorVisible(!childSelectorVisible)}
+          <TouchableOpacity
+            onPress={() => setChildSelectorVisible(!childSelectorVisible)}
+            style={{
+              // flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text
+              numberOfLines={1}
               style={{
-                // flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
+                fontFamily: 'montserrat',
+                fontSize: 22,
+                fontWeight: 'bold',
+                textAlign: 'center',
               }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: 'montserrat',
-                  fontSize: 22,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}>
-                {selectedChild?.name}
-              </Text>
-              <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
-            </TouchableOpacity>
-          </View>
+              {selectedChild?.name}
+            </Text>
+            <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
+          </TouchableOpacity>
         );
       },
     });

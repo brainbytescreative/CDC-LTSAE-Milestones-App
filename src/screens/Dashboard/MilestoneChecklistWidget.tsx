@@ -19,7 +19,7 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('MilestoneChecklist');
+        navigation.navigate('MilestoneChecklistStack');
       }}
       style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
       <View style={styles.milestoneCheckListContainer}>

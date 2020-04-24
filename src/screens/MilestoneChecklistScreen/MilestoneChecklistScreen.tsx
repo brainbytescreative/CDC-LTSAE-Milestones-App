@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {FlatList, View} from 'react-native';
-import {skillTypes} from '../../resources/constants';
+import {FlatList, ScrollView, View} from 'react-native';
+import {colors, skillTypes} from '../../resources/constants';
 import {Button} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
@@ -17,6 +17,8 @@ import {
   useSetConcern,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {useHeaderHeight} from '@react-navigation/stack';
+import AEScrollView from '../../components/AEScrollView';
 
 const sections = [...skillTypes, 'actEarly'];
 
@@ -30,6 +32,9 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
   const {progress: sectionsProgress, complete} = useGetSectionsProgress();
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
+  const headerHeight = useHeaderHeight();
+
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     setGotStarted(false);
@@ -51,6 +56,12 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
     }
   }, [gotStarted, section, answeredQuestionsCount, childId]);
 
+  useEffect(() => {
+    if (section) {
+      flatListRef?.current?.scrollToIndex({index: 0, animated: false});
+    }
+  }, [section]);
+
   const onPressNextSection = () => {
     const currentSection = section?.length && sections.indexOf(section);
     if (currentSection !== undefined && currentSection < sections.length - 1) {
@@ -61,7 +72,13 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
   };
 
   return (
-    <Layout>
+    <View style={{backgroundColor: colors.white, flex: 1}}>
+      <View
+        style={{
+          backgroundColor: colors.iceCold,
+          height: headerHeight,
+        }}
+      />
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList
@@ -98,6 +115,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
       )}
       {section && skillTypes.includes(section) && (
         <FlatList
+          ref={flatListRef}
           data={questions || []}
           extraData={section}
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
@@ -112,7 +130,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
         />
       )}
       {section === 'actEarly' && <ActEarlyPage />}
-    </Layout>
+    </View>
   );
 };
 

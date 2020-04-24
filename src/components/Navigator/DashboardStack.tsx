@@ -49,14 +49,14 @@ const DashboardStack: FC<{}> = () => {
           headerBackTitle: ' ',
         }}
       />
-      <Stack.Screen
-        name={'MilestoneChecklist'}
-        component={MilestoneChecklistScreen}
-        options={{
-          title: t('milestoneChecklistScreen:title'),
-          headerBackTitle: ' ',
-        }}
-      />
+      {/*<Stack.Screen*/}
+      {/*  name={'MilestoneChecklist'}*/}
+      {/*  component={MilestoneChecklistScreen}*/}
+      {/*  options={{*/}
+      {/*    title: t('milestoneChecklistScreen:title'),*/}
+      {/*    headerBackTitle: ' ',*/}
+      {/*  }}*/}
+      {/*/>*/}
       <Stack.Screen
         name={'ChildSummary'}
         component={ChildSummaryScreen}

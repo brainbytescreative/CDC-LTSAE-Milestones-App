@@ -1,7 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button} from 'react-native-paper';
-import Text from '../../components/Text';
+import {Button, Text} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
+import {colors, sharedStyle} from '../../resources/constants';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
+import {PurpleArc} from '../../resources/svg';
+import {useSafeArea} from 'react-native-safe-area-context';
+import AEScrollView from '../../components/AEScrollView';
 
 interface Props {
   onGetStarted: () => void;
@@ -9,39 +14,53 @@ interface Props {
 }
 
 const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
+  const {t} = useTranslation('milestoneChecklist');
+  const {bottom} = useSafeArea();
   return (
-    <>
-      <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
-      <Text style={[styles.header]}>Milestone checklist</Text>
-      <Text style={[styles.header, {fontWeight: 'normal'}]}>Front page</Text>
-      <Text style={[styles.text]}>
-        Please note: if your child is between milestones, you will answer questions for the younger milestone
-      </Text>
-      <Text style={[styles.text]}>"Unsure" items will trigger reminder every xx weeks until answered</Text>
-      <Text style={[styles.text]}>You'll be answering questions about Social, Cognitive etc.</Text>
-
-      <View style={{alignItems: 'center', marginTop: 30}}>
-        <Button onPress={onGetStarted} mode={'outlined'}>
-          Get started
-        </Button>
+    <AEScrollView>
+      <View style={{flexGrow: 1}}>
+        <View style={{marginVertical: 32}}>
+          <Text style={[styles.header]}>{milestoneAgeFormatted}</Text>
+          <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
+        </View>
+        <View
+          style={[
+            {
+              backgroundColor: colors.yellow,
+              marginHorizontal: 32,
+              borderRadius: 10,
+              padding: 16,
+              marginBottom: 32,
+            },
+            sharedStyle.shadow,
+          ]}>
+          <Text style={[styles.text]}>{t('message1')}</Text>
+          <Text style={[styles.text, {marginTop: 15}]}>{t('message2')}</Text>
+        </View>
       </View>
-    </>
+
+      <View>
+        <PurpleArc width={'100%'} />
+        <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom, paddingTop: 32}}>
+          <Text style={[styles.text, {marginHorizontal: 32, marginBottom: 16}]}>{t('message3')}</Text>
+          <AEButtonRounded onPress={onGetStarted}>{t('common:getStartedBtn')}</AEButtonRounded>
+        </View>
+      </View>
+    </AEScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
     marginTop: 5,
   },
   text: {
     textAlign: 'center',
-    paddingHorizontal: 20,
-    marginTop: 20,
-    fontSize: 16,
+    fontSize: 15,
   },
   answerButton: {
     borderWidth: 1,
