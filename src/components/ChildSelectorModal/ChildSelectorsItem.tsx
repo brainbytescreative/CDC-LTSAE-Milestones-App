@@ -69,7 +69,7 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
               onPress={() => {
                 onDelete(id);
               }}
-              style={{marginLeft: 10}}>
+              style={{marginLeft: 16}}>
               <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
             </TouchableOpacity>
           </View>
