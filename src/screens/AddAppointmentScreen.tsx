@@ -47,12 +47,12 @@ const AddAppointmentScreen: React.FC<{}> = () => {
       const action = apptId
         ? updateAppointment({
             ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
-            childId: child?.id || '-1',
+            childId: `${child?.id}` || '-1',
             date: values.date || new Date(),
             id: `${apptId}`,
           })
         : addAppointment({
-            childId: child?.id || '-1',
+            childId: `${child?.id}` || '-1',
             doctorName: values.doctorName,
             notes: values.notes,
             questions: values.questions,

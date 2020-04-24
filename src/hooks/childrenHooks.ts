@@ -81,9 +81,9 @@ export function useUpdateChild() {
     },
     {
       onSuccess: (redult, variables) => {
-        queryCache.refetchQueries('selectedChild');
-        queryCache.refetchQueries('children');
-        queryCache.refetchQueries(['children', {id: variables.id}]);
+        queryCache.refetchQueries('selectedChild', {force: true});
+        queryCache.refetchQueries('children', {force: true});
+        queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
       },
     },
   );

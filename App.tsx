@@ -18,6 +18,7 @@ import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper
 import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+import {colors} from './src/resources/constants';
 
 console.disableYellowBox = true;
 
@@ -33,6 +34,7 @@ const theme: Theme = {
     ...DefaultTheme.colors,
     background: 'white',
     primary: 'black',
+    backdrop: colors.whiteTransparent,
     // accent: 'yellow',
   },
 };

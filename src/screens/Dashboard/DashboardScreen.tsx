@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
-import {Image, ScrollView, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors} from '../../resources/constants';
 import {
   ActEarlySign,
@@ -12,7 +12,6 @@ import {
 } from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import {useSafeArea} from 'react-native-safe-area-context';
-import Text from '../../components/Text';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
@@ -27,6 +26,7 @@ import {formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
+import {Text} from 'react-native-paper';
 
 const DATA: DataItem[] = [
   {
@@ -83,7 +83,7 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
-  const {data: {milestoneAge: childAge} = {}} = useGetMilestone();
+  const {data: {milestoneAge: childAge, milestoneAgeFormatted} = {}} = useGetMilestone();
 
   const {refetch} = useGetChecklistQuestions();
 
@@ -154,12 +154,18 @@ const DashboardScreen: React.FC<Props> = () => {
               style={{
                 marginVertical: 20,
               }}>
-              <Text style={styles.actionItemsTitle}>{t('actionItemsTitle')}</Text>
+              <Text style={styles.actionItemsTitle}>
+                {t('actionItemsTitle', {
+                  age: `${milestoneAgeFormatted}`,
+                })}
+              </Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.actionItem}>
                   <ActEarlySign />
-                  <Text style={styles.actionItemText}>{t('whenToActEarly')}</Text>
+                  <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                    {t('whenToActEarly')}
+                  </Text>
                 </View>
                 <View style={[styles.actionItem, {marginHorizontal: 10}]}>
                   <TouchableOpacity
@@ -167,7 +173,9 @@ const DashboardScreen: React.FC<Props> = () => {
                       navigation.navigate('ChildSummary');
                     }}>
                     <MilestoneSummarySign />
-                    <Text style={styles.actionItemText}>{t('milestoneSummary')}</Text>
+                    <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                      {t('milestoneSummary')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.actionItem}>
@@ -177,7 +185,9 @@ const DashboardScreen: React.FC<Props> = () => {
                     }}
                     style={{alignItems: 'center'}}>
                     <TipsAndActivitiesSign />
-                    <Text style={styles.actionItemText}>{t('tipsAndActivities')}</Text>
+                    <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                      {t('tipsAndActivities')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -244,6 +254,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: 20,
     marginBottom: 20,
+    textTransform: 'capitalize',
   },
   actionItemText: {
     fontSize: 15,
@@ -255,6 +266,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     fontFamily: 'montserrat',
+    textAlign: 'center',
+    marginHorizontal: 32,
   },
   childAgeText: {fontSize: 22, fontFamily: 'Montserrat'},
   yellowTipText: {

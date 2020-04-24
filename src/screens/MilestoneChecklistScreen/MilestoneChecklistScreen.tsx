@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';

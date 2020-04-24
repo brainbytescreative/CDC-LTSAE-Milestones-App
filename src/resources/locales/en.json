@@ -33,7 +33,7 @@
     "childAge": "is {{value}} old!",
     "milestoneCheckList": "Milestone check list",
     "milestonesAnswered": "{{progress}} Milestones answered",
-    "actionItemsTitle": "9 Month Milestone\nAction Items",
+    "actionItemsTitle": "{{age}} Milestone\nAction Items",
     "yellowTip": "If your child is between these\nages, you will receive the checklist\nfor the younger age."
   },
   "settings": {

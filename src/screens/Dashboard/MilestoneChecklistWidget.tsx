@@ -24,6 +24,8 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
       style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
       <View style={styles.milestoneCheckListContainer}>
         <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
           style={{
             fontSize: 20,
             fontWeight: 'bold',

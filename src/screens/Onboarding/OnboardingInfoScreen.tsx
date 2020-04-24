@@ -90,11 +90,6 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
 
         <Portal>
           <Modal
-            theme={{
-              colors: {
-                backdrop: colors.whiteTransparent,
-              },
-            }}
             contentContainerStyle={{
               backgroundColor: '#fff',
               margin: 32,
