@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Layout from '../../components/Layout';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {FlatList, ScrollView, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {colors, skillTypes} from '../../resources/constants';
 import {Button} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
@@ -18,7 +17,6 @@ import {
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useHeaderHeight} from '@react-navigation/stack';
-import AEScrollView from '../../components/AEScrollView';
 
 const sections = [...skillTypes, 'actEarly'];
 

@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Portal} from 'react-native-paper';
+import {Portal, Text, Title} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import Text from './Text';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useSafeArea} from 'react-native-safe-area-context';
 
@@ -23,7 +22,7 @@ const NotificationsBadge: React.FC<{}> = () => {
       headerRight: () => {
         return (
           <TouchableOpacity onPress={onPress} style={visible ? styles.crossContainer : styles.badgeContainer}>
-            {visible ? <EvilIcons size={32} name={'close'} /> : <Text style={styles.badgeText}>4</Text>}
+            {visible ? <EvilIcons size={32} name={'close'} /> : <Title style={styles.badgeText}>4</Title>}
           </TouchableOpacity>
         );
       },
@@ -35,15 +34,14 @@ const NotificationsBadge: React.FC<{}> = () => {
       {visible && (
         <Portal>
           <View style={{flex: 1, backgroundColor: 'white', marginTop: headerHeight}}>
-            <Text
+            <Title
               style={{
-                fontWeight: 'bold',
                 fontSize: 22,
                 textAlign: 'center',
                 marginVertical: 16,
               }}>
               Notifications
-            </Text>
+            </Title>
             <FlatList
               data={notifications}
               style={{flex: 1}}
@@ -92,9 +90,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 28,
   },
   badgeText: {
-    fontFamily: 'montserrat',
     fontSize: 15,
-    fontWeight: 'bold',
   },
 });
 

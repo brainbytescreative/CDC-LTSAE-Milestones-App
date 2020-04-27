@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native-paper';
+import {Text, Title} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import ViewPager from '@react-native-community/viewpager';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {colors, sharedStyle} from '../../resources/constants';
 import {useSafeArea} from 'react-native-safe-area-context';
-import {NabBarBackground, PurpleArc} from '../../resources/svg';
+import {PurpleArc} from '../../resources/svg';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
-
+import NavBarBackground from '../../resources/svg/NavBarBackground';
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 
 const NextScreen: keyof RootStackParamList = 'Dashboard';
@@ -28,7 +28,7 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
       <View style={{flexGrow: 6, justifyContent: 'space-between', backgroundColor: 'white'}}>
         <View style={{top: 0, position: 'absolute', width: '100%', height: '40%'}}>
           <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
-          <NabBarBackground width={'100%'} />
+          <NavBarBackground width={'100%'} />
         </View>
         <CancelDoneTopControl
           onCancel={() => {
@@ -38,15 +38,14 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
             navigation.navigate('Dashboard');
           }}
         />
-        <Text
+        <Title
           style={{
-            fontWeight: 'bold',
             fontSize: 20,
             textAlign: 'center',
             margin: 20,
           }}>
           {t('howToUseApp')}
-        </Text>
+        </Title>
         <ViewPager
           onPageSelected={(event) => {
             setPosition(event.nativeEvent.position);

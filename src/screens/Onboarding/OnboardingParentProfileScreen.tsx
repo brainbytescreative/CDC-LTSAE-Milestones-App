@@ -8,12 +8,13 @@ import ParentProfileSelector, {ParentProfileSelectorValues} from '../../componen
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeArea} from 'react-native-safe-area-context';
-import {NabBarBackground, PurpleArc} from '../../resources/svg';
-import {Text} from 'react-native-paper';
+import {PurpleArc} from '../../resources/svg';
+import {Text, Title} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
+import NavBarBackground from '../../resources/svg/NavBarBackground';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
@@ -30,7 +31,7 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
         <View style={{flexGrow: 1, justifyContent: 'space-around', backgroundColor: 'white'}}>
           <View style={{top: 0, position: 'absolute', width: '100%', height: '100%'}}>
             <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
-            <NabBarBackground width={'100%'} />
+            <NavBarBackground width={'100%'} />
           </View>
           <CancelDoneTopControl
             onCancel={() => {
@@ -40,19 +41,18 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
               navigation.navigate('Dashboard');
             }}
           />
-          <Text
+          <Title
             numberOfLines={1}
             adjustsFontSizeToFit
             style={{
               textAlign: 'center',
-              fontWeight: 'bold',
               fontSize: 22,
               marginHorizontal: 32,
               textTransform: 'capitalize',
               marginBottom: 24,
             }}>
             {t('parentProfile')}
-          </Text>
+          </Title>
           <View>
             <ParentProfileSelector
               style={{marginHorizontal: 32}}
@@ -66,16 +66,15 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
         </View>
 
         <View style={{flexGrow: 1, justifyContent: 'center', paddingVertical: 16, backgroundColor: 'white'}}>
-          <Text
+          <Title
             style={{
               fontSize: 22,
-              fontWeight: 'bold',
               marginHorizontal: 32,
               marginBottom: 16,
               textTransform: 'capitalize',
             }}>
             {t('common:appLanguage')}
-          </Text>
+          </Title>
           <LanguageSelector style={{marginHorizontal: 32}} />
         </View>
 

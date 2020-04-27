@@ -1,4 +1,3 @@
-import NabBarBackground from '../svg/navBarBackground.svg';
 import ActEarlySign from '../svg/actEarlySign.svg';
 import MilestoneSummarySign from '../svg/milestoneSummarySign.svg';
 import TipsAndActivitiesSign from '../svg/tipsAndActivitiesSign.svg';
@@ -13,7 +12,6 @@ import ChevronDown from '../svg/chevron-down.svg';
 import PlusIcon from '../svg/plusIcon.svg';
 
 export {
-  NabBarBackground,
   ActEarlySign,
   MilestoneSummarySign,
   TipsAndActivitiesSign,

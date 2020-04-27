@@ -3,6 +3,7 @@ import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-na
 import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
 import {colors, sharedStyle} from '../resources/constants';
 import Text from './Text';
+import {Title} from 'react-native-paper';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -14,7 +15,7 @@ const LanguageSelector: React.FC<Props> = ({style, title}) => {
   const {data: lngCode} = useGetLanguageCode();
   return (
     <View style={[{backgroundColor: colors.white, borderRadius: 10}, style]}>
-      {title && <Text style={{marginBottom: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center'}}>{title}</Text>}
+      {title && <Title style={{marginBottom: 20, fontSize: 22, textAlign: 'center'}}>{title}</Title>}
       <View style={[styles.buttonsContainer, sharedStyle.shadow]}>
         <TouchableOpacity
           style={[

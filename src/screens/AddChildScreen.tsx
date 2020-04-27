@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect} from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
-import {RadioButton, Text} from 'react-native-paper';
+import {RadioButton, Text, Title} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useFormik} from 'formik';
@@ -17,9 +17,10 @@ import {useSetConcern} from '../hooks/checklistHooks';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import {NabBarBackground, PlusIcon, PurpleArc} from '../resources/svg';
+import {PlusIcon, PurpleArc} from '../resources/svg';
 import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../components/AEScrollView';
+import NavBarBackground from '../resources/svg/NavBarBackground';
 
 const options = {
   quality: 1.0,
@@ -122,15 +123,13 @@ const AddChildScreen: React.FC<{}> = () => {
         <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
           <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>
             <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
-            <NabBarBackground width={'100%'} />
+            <NavBarBackground width={'100%'} />
           </View>
           <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
 
-          <Text
-            adjustsFontSizeToFit
-            style={{fontWeight: 'bold', fontSize: 22, marginHorizontal: 32, textAlign: 'center'}}>
+          <Title adjustsFontSizeToFit style={{fontSize: 22, marginHorizontal: 32, textAlign: 'center'}}>
             {t(`${prefix}title`)}
-          </Text>
+          </Title>
           <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
             <View style={[sharedStyle.shadow]}>
               <TouchableOpacity

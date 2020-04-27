@@ -21,7 +21,7 @@ const AEButtonRounded: React.FC<Created & Props> = ({children, style, ...rest}) 
       ]}
       labelStyle={{
         textTransform: 'capitalize',
-        fontWeight: 'bold',
+        fontFamily: 'Montserrat-Bold',
         fontSize: 18,
       }}
       style={[{marginHorizontal: 32, marginVertical: 16}, style, sharedStyle.shadow]}

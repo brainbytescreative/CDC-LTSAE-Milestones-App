@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import Text from '../components/Text';
 import {FlatList, TouchableOpacity, View} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, Title} from 'react-native-paper';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import SkillTypeDialog from '../components/SkillTypeDialog';
 import {LanguageType, SkillType, skillTypes} from '../resources/constants';
@@ -73,7 +73,7 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
   return (
     <Layout style={{backgroundColor: 'white'}}>
       <ChildSelectorModal />
-      <Text style={{fontWeight: 'bold', textAlign: 'center', fontSize: 22, marginTop: 20}}>{t('title')}</Text>
+      <Title style={{textAlign: 'center', fontSize: 22, marginTop: 20}}>{t('title')}</Title>
       <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>{t('subtitle')}</Text>
 
       <SkillTypeDialog

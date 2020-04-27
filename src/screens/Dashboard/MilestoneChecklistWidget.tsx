@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {ProgressBar} from 'react-native-paper';
+import {ProgressBar, Title} from 'react-native-paper';
 import {colors} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
@@ -23,16 +23,14 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
       }}
       style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
       <View style={styles.milestoneCheckListContainer}>
-        <Text
+        <Title
           numberOfLines={1}
           adjustsFontSizeToFit
           style={{
             fontSize: 20,
-            fontWeight: 'bold',
-            fontFamily: 'montserrat',
           }}>
           {t('milestoneCheckList')}
-        </Text>
+        </Title>
         <EvilIcons name={'chevron-right'} size={30} />
       </View>
       <ProgressBar
@@ -44,7 +42,7 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
         progress={totalProgressValue}
         color={colors.lightGreen}
       />
-      <Text> {t('milestonesAnswered', {progress: totalProgress})}</Text>
+      <Text>{t('milestonesAnswered', {progress: totalProgress})}</Text>
     </TouchableOpacity>
   );
 };
