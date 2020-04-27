@@ -145,6 +145,7 @@ const DashboardScreen: React.FC<Props> = () => {
           <PurpleArc width={'100%'} />
           <View
             style={{
+              paddingTop: 26,
               paddingHorizontal: 32,
               backgroundColor: colors.purple,
             }}>
@@ -255,6 +256,7 @@ const styles = StyleSheet.create({
   actionItemText: {
     fontSize: 15,
     marginTop: 6,
+    textAlign: 'center',
   },
 
   childNameText: {

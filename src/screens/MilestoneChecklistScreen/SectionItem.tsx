@@ -20,7 +20,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
   const toGo = progress?.total && progress?.total && progress.total - progress.answered;
 
   const opacity = !selectedSection || (section === selectedSection && 1) ? 1 : 0.5;
-  console.log(opacity);
+
   return (
     <TouchableOpacity
       onPress={() => {

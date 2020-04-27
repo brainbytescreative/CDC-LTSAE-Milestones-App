@@ -248,7 +248,6 @@ const AddChildScreen: React.FC<{}> = () => {
                     onboarding: !!route.params?.onboarding,
                     child: {
                       name: formik.values.name,
-                      photo: formik.values.photo,
                       gender: formik.values.gender || 0,
                       birthday: formik.values.birthday || new Date(),
                     },

@@ -1,12 +1,13 @@
 import React from 'react';
 import {SkillSection} from '../../resources/milestoneChecklist';
 import {useTranslation} from 'react-i18next';
-import {images} from '../../resources/constants';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {colors, images, sharedStyle} from '../../resources/constants';
+import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import YouTube from 'react-native-youtube';
 import ViewPager from '@react-native-community/viewpager';
 import Text from '../../components/Text';
 import {Answer, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import NoteIcon from '../../resources/svg/NoteIcon';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data} = useGetQuestion({
@@ -24,15 +25,15 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     const image = images[name];
     return (
       <Image
-        // resizeMethod={'scale'}
-        resizeMode={'contain'}
         key={`photo-${index}`}
         accessibilityLabel={item.alt && t(item.alt)}
         source={image}
-        style={{width: '100%'}}
+        style={{width: '100%', borderRadius: 10}}
       />
     );
   });
+
+  const height = (Dimensions.get('window').width - 64) * 0.595;
 
   const video = videos?.map((item, index) => {
     const code = item.name && t(item?.name);
@@ -47,7 +48,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         // onChangeState={(e) => this.setState({status: e.state})}
         // onChangeQuality={(e) => this.setState({quality: e.quality})}
         // onError={(e) => this.setState({error: e.error})}
-        style={{alignSelf: 'stretch', height: 260}}
+        style={{alignSelf: 'stretch', height}}
       />
     );
   });
@@ -57,51 +58,96 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   };
 
   return (
-    <View style={{paddingHorizontal: 20, paddingBottom: 20, flex: 1}}>
+    <View style={{flex: 1, marginTop: 38, marginHorizontal: 32}}>
+      <Text>{value}</Text>
       {photos && photos.length > 0 && (
-        <ViewPager style={{flex: 1, height: 260}} initialPage={0}>
+        <ViewPager style={{flex: 1, height}} initialPage={0}>
           {photo}
         </ViewPager>
       )}
       {video}
-      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+      <View style={[styles.buttonsContainer]}>
         <TouchableOpacity
           onPress={doAnswer(Answer.YES)}
-          style={[styles.answerButton, answer === Answer.YES ? styles.selected : undefined]}>
-          <Text style={[answer === Answer.YES ? styles.selectedText : undefined]}>YES</Text>
+          style={[
+            styles.answerButton,
+            sharedStyle.shadow,
+            answer === Answer.YES ? {backgroundColor: '#BCFDAC'} : undefined,
+          ]}>
+          <Text>YES</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.UNSURE)}
           style={[
             styles.answerButton,
-            {width: 50, borderRadius: 100},
-            answer === Answer.UNSURE ? styles.selected : undefined,
+            sharedStyle.shadow,
+            {marginHorizontal: 8},
+            answer === Answer.UNSURE ? {backgroundColor: '#FC9554'} : undefined,
           ]}>
-          <Text style={[{fontSize: 9}, answer === Answer.UNSURE ? styles.selectedText : undefined]}>UNSURE</Text>
+          <Text>UNSURE</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.NOT_YET)}
-          style={[styles.answerButton, answer === Answer.NOT_YET ? styles.selected : undefined]}>
-          <Text style={[answer === Answer.NOT_YET ? styles.selectedText : undefined]}>NOT YET</Text>
+          style={[
+            styles.answerButton,
+            sharedStyle.shadow,
+            answer === Answer.NOT_YET ? {backgroundColor: '#EB7373'} : undefined,
+          ]}>
+          <Text>NOT YET</Text>
         </TouchableOpacity>
       </View>
+
+      {/*<View style={[styles.addNoteContainer, sharedStyle.shadow]}>*/}
+      {/*  <TextInput*/}
+      {/*    // onChange={(e) => {}}*/}
+      {/*    multiline*/}
+      {/*    style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}*/}
+      {/*    placeholder={t('addANote')}*/}
+      {/*  />*/}
+      {/*  <NoteIcon style={{marginLeft: 10}} />*/}
+      {/*</View>*/}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: -30,
+  },
   answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    borderColor: colors.gray,
+    height: 51,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 15,
   },
   selected: {
     backgroundColor: 'gray',
   },
   selectedText: {
     color: 'white',
+  },
+  addNoteContainer: {
+    minHeight: 50,
+    flexDirection: 'row',
+    borderWidth: 0.5,
+    borderColor: colors.gray,
+    // paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    flexGrow: 1,
+    width: 0,
+    paddingHorizontal: 17,
+    paddingVertical: 10,
+    maxHeight: 100,
   },
 });
 
