@@ -1,5 +1,14 @@
-import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {Concern} from '../../resources/milestoneChecklist';
 import {useGetConcern, useGetConcerns, useGetMilestone, useSetConcern} from '../../hooks/checklistHooks';
 import {useNavigation} from '@react-navigation/native';
@@ -9,15 +18,16 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useTranslation} from 'react-i18next';
 import CheckMark from '../../resources/svg/CheckMark';
 import NoteIcon from '../../resources/svg/NoteIcon';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import ChevronRightBig from '../../resources/svg/ChevronRightBig';
 import {Text, Title} from 'react-native-paper';
 import {PurpleArc} from '../../resources/svg';
+import _ from 'lodash';
 
 const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
   const [setConcern] = useSetConcern();
-  const {data: concern} = useGetConcern({concernId: id, childId});
+  const {data: concern, isFetching} = useGetConcern({concernId: id, childId});
   const {t} = useTranslation('milestoneChecklist');
+  const [note, setNote] = useState('');
 
   const isMissingAnswerConcern = missingConcerns.includes(id || 0);
   const onPress = isMissingAnswerConcern
@@ -26,15 +36,28 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
         id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId});
       };
 
+  const saveNote = useCallback(
+    _.debounce((text: string) => {
+      id && childId && setConcern({concernId: id, childId, note: text, answer: !!concern?.answer});
+    }, 500),
+    [id, childId, concern?.answer],
+  );
+
+  useEffect(() => {
+    !isFetching && setNote(concern?.note || '');
+  }, [concern, isFetching]);
+
   return (
-    <View style={[itemStyles.container, sharedStyle.shadow]}>
-      <View
-        style={{
-          paddingHorizontal: 16,
-        }}>
-        <Text style={{textAlign: 'center'}}>{value}</Text>
+    <View>
+      <View style={[itemStyles.container, sharedStyle.shadow]}>
+        <View
+          style={{
+            paddingHorizontal: 16,
+          }}>
+          <Text style={{textAlign: 'center'}}>{value}</Text>
+        </View>
       </View>
-      <View style={itemStyles.buttonsContainer}>
+      <View style={[itemStyles.buttonsContainer]}>
         <TouchableOpacity
           disabled={isMissingAnswerConcern}
           onPress={onPress}
@@ -46,10 +69,19 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
           <CheckMark />
         </TouchableOpacity>
 
-        <TouchableOpacity style={itemStyles.addNoteContainer}>
-          <NoteIcon />
-          <Text>{t('addANote')}</Text>
-        </TouchableOpacity>
+        <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
+          <TextInput
+            value={note}
+            onChange={(e) => {
+              setNote(e.nativeEvent.text);
+              saveNote(e.nativeEvent.text);
+            }}
+            multiline
+            style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
+            placeholder={t('addANote')}
+          />
+          <NoteIcon style={{marginLeft: 10}} />
+        </View>
       </View>
     </View>
   );
@@ -58,35 +90,45 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
 const itemStyles = StyleSheet.create({
   container: {
     marginHorizontal: 32,
-    marginBottom: 30 + 35, //buttonsContainer margin + margin
     paddingTop: 20,
     paddingBottom: 30,
     backgroundColor: colors.purple,
     borderRadius: 10,
   },
   buttonsContainer: {
+    marginHorizontal: 32,
+    marginTop: -20,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    position: 'absolute',
-    width: '100%',
-    bottom: -30,
+    marginBottom: 35,
   },
   checkMarkContainer: {
     borderRadius: 10,
     paddingHorizontal: 12,
     backgroundColor: 'white',
     marginLeft: 30,
+    marginRight: 23,
     width: 58,
     height: 51,
     justifyContent: 'center',
     alignItems: 'center',
   },
   addNoteContainer: {
-    borderWidth: 1,
-    paddingHorizontal: 12,
+    minHeight: 50,
+    flexDirection: 'row',
+    borderWidth: 0.5,
+    borderColor: colors.gray,
+    // paddingHorizontal: 12,
     justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 20,
     backgroundColor: 'white',
+    borderRadius: 10,
+    flexGrow: 1,
+    width: 0,
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    maxHeight: 100,
   },
 });
 
@@ -97,67 +139,69 @@ const ActEarlyPage: React.FC<{}> = () => {
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {t} = useTranslation('milestoneChecklist');
   return (
-    <FlatList
-      ListHeaderComponent={
-        <View>
-          <Title style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Title>
-          <Title style={[styles.header]}>{t('milestoneChecklist')}</Title>
-          <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
-            {t('complete')}
-          </Text>
-          <Title style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Title>
-          <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
-            {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
-          </Text>
-          <Text
-            style={[
-              {
-                backgroundColor: colors.yellow,
-                padding: 5,
-                marginHorizontal: 32,
-                marginTop: 20,
-                marginBottom: 50,
-                textAlign: 'center',
-                fontSize: 15,
-              },
-              sharedStyle.shadow,
-            ]}>
-            {t('actEarlyWarning')}
-          </Text>
-        </View>
-      }
-      data={concerns?.concerns || []}
-      renderItem={({item}) => <Item {...item} childId={childId} />}
-      keyExtractor={(item) => `concern-${item.id}`}
-      ListFooterComponent={() => (
-        <View>
-          <PurpleArc width={'100%'} />
-          <View style={{backgroundColor: colors.purple}}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                navigation.navigate('ChildSummary');
-              }}>
-              <View
-                style={[
-                  {
-                    backgroundColor: colors.white,
-                    margin: 32,
-                    borderRadius: 10,
-                    flexDirection: 'row',
-                    padding: 16,
-                    height: 60,
-                    alignItems: 'center',
-                  },
-                  sharedStyle.shadow,
-                ]}>
-                <Title style={{flexGrow: 1, textAlign: 'center'}}>My Child’s Summary</Title>
-                <ChevronRightBig width={10} height={20} />
-              </View>
-            </TouchableWithoutFeedback>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>
+      <FlatList
+        ListHeaderComponent={
+          <View>
+            <Title style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Title>
+            <Title style={[styles.header]}>{t('milestoneChecklist')}</Title>
+            <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
+              {t('complete')}
+            </Text>
+            <Title style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Title>
+            <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
+              {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
+            </Text>
+            <Text
+              style={[
+                {
+                  backgroundColor: colors.yellow,
+                  padding: 5,
+                  marginHorizontal: 32,
+                  marginTop: 20,
+                  marginBottom: 50,
+                  textAlign: 'center',
+                  fontSize: 15,
+                },
+                sharedStyle.shadow,
+              ]}>
+              {t('actEarlyWarning')}
+            </Text>
           </View>
-        </View>
-      )}
-    />
+        }
+        data={concerns?.concerns || []}
+        renderItem={({item}) => <Item {...item} childId={childId} />}
+        keyExtractor={(item) => `concern-${item.id}`}
+        ListFooterComponent={() => (
+          <View>
+            <PurpleArc width={'100%'} />
+            <View style={{backgroundColor: colors.purple}}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  navigation.navigate('ChildSummary');
+                }}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: colors.white,
+                      margin: 32,
+                      borderRadius: 10,
+                      flexDirection: 'row',
+                      padding: 16,
+                      height: 60,
+                      alignItems: 'center',
+                    },
+                    sharedStyle.shadow,
+                  ]}>
+                  <Title style={{flexGrow: 1, textAlign: 'center'}}>My Child’s Summary</Title>
+                  <ChevronRightBig width={10} height={20} />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+        )}
+      />
+    </KeyboardAvoidingView>
   );
 };
 

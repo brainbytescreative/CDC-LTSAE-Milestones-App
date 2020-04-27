@@ -25,7 +25,7 @@ console.disableYellowBox = true;
 const theme: Theme = {
   ...DefaultTheme,
   fonts: {
-    regular: {fontFamily: 'Montserrat'},
+    regular: {fontFamily: 'Montserrat-Regular'},
     medium: {fontFamily: 'Montserrat-Bold'},
     light: {fontFamily: 'Montserrat-Regular'},
     thin: {fontFamily: 'Montserrat-Regular'},

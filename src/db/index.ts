@@ -6,7 +6,7 @@ import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import SQLiteClient from './SQLiteClient';
 
 const DB_NAME = 'act-early-rn.sqlite';
-const DB_DEBUG = false;
+const DB_DEBUG = true;
 const DB_MIGRATIONS = [
   async (dB: SQLiteDatabase): Promise<void> => {
     // USE dB TO CREATE TABLES

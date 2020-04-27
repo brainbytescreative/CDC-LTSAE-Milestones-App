@@ -22,7 +22,7 @@ const NotificationsBadge: React.FC<{}> = () => {
       headerRight: () => {
         return (
           <TouchableOpacity onPress={onPress} style={visible ? styles.crossContainer : styles.badgeContainer}>
-            {visible ? <EvilIcons size={32} name={'close'} /> : <Title style={styles.badgeText}>4</Title>}
+            {visible ? <EvilIcons size={32} name={'close'} /> : <Text style={styles.badgeText}>4</Text>}
           </TouchableOpacity>
         );
       },
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 15,
+    fontFamily: 'Montserrat-Bold',
   },
 });
 
