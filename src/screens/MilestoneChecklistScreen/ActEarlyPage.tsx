@@ -126,7 +126,7 @@ const itemStyles = StyleSheet.create({
     borderRadius: 10,
     flexGrow: 1,
     width: 0,
-    paddingHorizontal: 25,
+    paddingHorizontal: 17,
     paddingVertical: 10,
     maxHeight: 100,
   },

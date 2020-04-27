@@ -19,6 +19,8 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
   const {t} = useTranslation('milestoneChecklist');
   const toGo = progress?.total && progress?.total && progress.total - progress.answered;
 
+  const opacity = !selectedSection || (section === selectedSection && 1) ? 1 : 0.5;
+  console.log(opacity);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -27,7 +29,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
       style={{flex: 1}}>
       <View
         // @ts-ignore
-        opacity={!selectedSection || (section === selectedSection && 1) || 0.5}
+        opacity={opacity}
         style={[
           {
             backgroundColor: _.get(colors.sections, section),
