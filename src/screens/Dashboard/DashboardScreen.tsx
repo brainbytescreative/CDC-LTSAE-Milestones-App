@@ -27,6 +27,7 @@ import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text, Title} from 'react-native-paper';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
+import ChildPhoto from '../../components/ChildPhoto';
 
 const DATA: DataItem[] = [
   {
@@ -111,13 +112,6 @@ const DashboardScreen: React.FC<Props> = () => {
       <ScrollView style={{backgroundColor: '#fff'}}>
         <View
           style={{
-            backgroundColor: colors.iceCold,
-            height: headerHeight,
-          }}
-        />
-        <View
-          style={{
-            top: headerHeight,
             position: 'absolute',
             width: '100%',
           }}>
@@ -125,17 +119,9 @@ const DashboardScreen: React.FC<Props> = () => {
           <NavBarBackground width={'100%'} />
         </View>
         <View>
-          <View style={{alignItems: 'center', marginTop: 16, marginBottom: 25}}>
-            <View style={styles.image}>
-              {child?.photo ? (
-                <Image style={{width: '100%', height: '100%', borderRadius: 500}} source={{uri: child?.photo}} />
-              ) : (
-                <BabyPlaceholder width={'90%'} height={'90%'} />
-              )}
-            </View>
-          </View>
+          <ChildPhoto photo={child?.photo} />
           <View style={{alignItems: 'center'}}>
-            <Title style={styles.childNameText}>{childName}</Title>
+            <Text style={styles.childNameText}>{childName}</Text>
             <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
           </View>
           <MonthCarousel data={DATA} childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
@@ -154,11 +140,11 @@ const DashboardScreen: React.FC<Props> = () => {
               style={{
                 marginVertical: 20,
               }}>
-              <Title style={styles.actionItemsTitle}>
+              <Text style={styles.actionItemsTitle}>
                 {t('actionItemsTitle', {
                   age: `${milestoneAgeFormatted}`,
                 })}
-              </Title>
+              </Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.actionItem}>
@@ -169,6 +155,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 </View>
                 <View style={[styles.actionItem, {marginHorizontal: 10}]}>
                   <TouchableOpacity
+                    style={{alignItems: 'center'}}
                     onPress={() => {
                       navigation.navigate('ChildSummary');
                     }}>
@@ -193,12 +180,13 @@ const DashboardScreen: React.FC<Props> = () => {
               </View>
             </View>
             <View style={[styles.appointmentsHeaderContainer]}>
-              <Title
+              <Text
                 style={{
                   fontSize: 22,
+                  fontFamily: 'Montserrat-Bold',
                 }}>
                 {t('appointments')}
-              </Title>
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('AddAppointment');
@@ -252,6 +240,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 20,
     textTransform: 'capitalize',
+    fontFamily: 'Montserrat-Bold',
   },
   actionItemText: {
     fontSize: 15,
@@ -263,6 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     marginHorizontal: 32,
+    fontFamily: 'Montserrat-Bold',
   },
   childAgeText: {fontSize: 22},
   yellowTipText: {

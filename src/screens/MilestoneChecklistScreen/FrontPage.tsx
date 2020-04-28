@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {colors, sharedStyle} from '../../resources/constants';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
@@ -20,8 +20,8 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
     <AEScrollView>
       <View style={{flexGrow: 1}}>
         <View style={{marginVertical: 32}}>
-          <Title style={[styles.header]}>{milestoneAgeFormatted}</Title>
-          <Title style={[styles.header]}>{t('milestoneChecklist')}</Title>
+          <Text style={[styles.header]}>{milestoneAgeFormatted}</Text>
+          <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
         </View>
         <View
           style={[
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textTransform: 'capitalize',
     marginTop: 5,
+    fontFamily: 'Montserrat-Bold',
   },
   text: {
     textAlign: 'center',

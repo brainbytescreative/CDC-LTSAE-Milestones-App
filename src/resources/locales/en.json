@@ -57,6 +57,7 @@
     "healthcareProvider": "Healthcare Provider"
   },
   "common": {
+    "emailSummary": "Email summary",
     "getStartedBtn": "Get started",
     "appLanguage": "App language",
     "next": "Next",
@@ -111,8 +112,13 @@
     "drawerLabel": "Privacy policy + App Info"
   },
   "childSummary": {
-    "title": "My child's summary",
-    "drawerLabel": "Child summary"
+    "emailSummary": "$t(common:emailSummary)",
+    "title": "'s summary",
+    "unanswered": "Unanswered",
+    "drawerLabel": "Child summary",
+    "link1": "cdc.gov/FindEl",
+    "link2": "cdc.gov/Concerned",
+    "message1": "Below are the responses you entered for Mina.\n\n Click the “email” or “show doctor” buttons below for a summary of your child’s milestones to share with your child’s doctor and other care providers.\n\nIf you have noted any concerns or selected “not yet” or “not sure” for any milestones, talk to your child’s doctor, share the summary, ask for developmental screening, and go to <0>{{link1}}</0> to learn more about services that can help. Forr more information, visit <1>{{link2}}<1>."
   },
   "fields": {
     "territoryPlaceholder": "State or Territory *",

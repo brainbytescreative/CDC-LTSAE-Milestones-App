@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {ChildSummaryParamList} from './types';
 import {useTranslation} from 'react-i18next';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
+import {colors} from '../../resources/constants';
 
 const Stack = createStackNavigator<ChildSummaryParamList>();
 
@@ -15,7 +16,9 @@ const ChildSummaryStack: React.FC<{}> = () => {
         name={'ChildSummary'}
         component={ChildSummaryScreen}
         options={() => ({
-          title: t('childSummary:title'),
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
           headerLeft: () => <BurgerButton />,
         })}
       />

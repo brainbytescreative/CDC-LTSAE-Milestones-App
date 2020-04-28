@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {MilestoneCheckListParamList} from './types';
 import BurgerButton from '../BurgerButton';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
+import {colors} from '../../resources/constants';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 
@@ -13,7 +14,9 @@ const MilestoneChecklistStack: React.FC<{}> = () => {
         name={'MilestoneChecklist'}
         component={MilestoneChecklistScreen}
         options={() => ({
-          headerTransparent: true,
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
           headerLeft: () => <BurgerButton />,
         })}
       />

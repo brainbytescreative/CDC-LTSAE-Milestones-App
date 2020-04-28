@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {ProgressBar, Title} from 'react-native-paper';
+import {ProgressBar, Text} from 'react-native-paper';
 import {colors} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
@@ -23,14 +23,15 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
       }}
       style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
       <View style={styles.milestoneCheckListContainer}>
-        <Title
+        <Text
           numberOfLines={1}
           adjustsFontSizeToFit
           style={{
             fontSize: 20,
+            fontFamily: 'Montserrat-Bold',
           }}>
           {t('milestoneCheckList')}
-        </Title>
+        </Text>
         <EvilIcons name={'chevron-right'} size={30} />
       </View>
       <ProgressBar

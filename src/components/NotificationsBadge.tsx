@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Portal, Text, Title} from 'react-native-paper';
+import {Portal, Text} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -34,14 +34,15 @@ const NotificationsBadge: React.FC<{}> = () => {
       {visible && (
         <Portal>
           <View style={{flex: 1, backgroundColor: 'white', marginTop: headerHeight}}>
-            <Title
+            <Text
               style={{
                 fontSize: 22,
                 textAlign: 'center',
                 marginVertical: 16,
+                fontFamily: 'Montserrat-Bold',
               }}>
               Notifications
-            </Title>
+            </Text>
             <FlatList
               data={notifications}
               style={{flex: 1}}

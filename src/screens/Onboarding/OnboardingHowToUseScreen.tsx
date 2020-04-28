@@ -38,14 +38,15 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
             navigation.navigate('Dashboard');
           }}
         />
-        <Title
+        <Text
           style={{
             fontSize: 20,
             textAlign: 'center',
             margin: 20,
+            fontFamily: 'Montserrat-Bold',
           }}>
           {t('howToUseApp')}
-        </Title>
+        </Text>
         <ViewPager
           onPageSelected={(event) => {
             setPosition(event.nativeEvent.position);

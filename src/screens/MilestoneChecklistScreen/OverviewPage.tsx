@@ -1,8 +1,8 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import Text from '../../components/Text';
+import {StyleSheet, View} from 'react-native';
+
 import {useTranslation} from 'react-i18next';
-import {Button, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../../resources/svg';
@@ -26,8 +26,8 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
     <AEScrollView>
       <View style={{flex: 1}}>
         <View style={{flexGrow: 1}}>
-          <Title style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Title>
-          <Title style={[styles.header]}>{t('milestoneQuickView')}</Title>
+          <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
+          <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
           <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
             {t('quickViewMessage', {milestone: milestoneAgeFormatted})}
           </Text>
@@ -40,7 +40,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
                 marginHorizontal: 48,
                 marginTop: 15,
               }}>
-              <Title style={{fontSize: 15, marginRight: 15}}>{'+'}</Title>
+              <Text style={{fontSize: 15, marginRight: 15, fontFamily: 'Montserrat-Bold'}}>{'+'}</Text>
               <View
                 style={{
                   flexGrow: 1,
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     marginTop: 5,
     marginHorizontal: 48,
+    fontFamily: 'Montserrat-Bold',
   },
   text: {
     fontSize: 15,

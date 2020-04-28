@@ -10,6 +10,7 @@ import AppointmentScreen from '../../screens/AppointmentScreen';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
+import {colors} from '../../resources/constants';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
@@ -22,7 +23,9 @@ const DashboardStack: FC<{}> = () => {
         component={DashboardScreen}
         options={() => ({
           title: t('dashboard:title'),
-          headerTransparent: true,
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
           headerLeft: () => <BurgerButton />,
         })}
       />

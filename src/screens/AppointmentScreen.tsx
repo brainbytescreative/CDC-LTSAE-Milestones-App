@@ -1,11 +1,11 @@
 import React from 'react';
-import Text from '../components/Text';
+
 import {useTranslation} from 'react-i18next';
 import Layout from '../components/Layout';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
-import {Button, Title} from 'react-native-paper';
+import {Button, Title, Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
 import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
@@ -24,33 +24,35 @@ const AppointmentScreen: React.FC<{}> = () => {
     <Layout style={{justifyContent: 'space-between', alignItems: 'center'}}>
       <ChildSelectorModal />
       <View style={{alignItems: 'center'}}>
-        <Title style={{textAlign: 'center', fontSize: 20, marginVertical: 20}}>{t('appointment:title')}</Title>
+        <Text style={[{textAlign: 'center', fontSize: 20, marginVertical: 20, fontFamily: 'Montserrat-Bold'}]}>
+          {t('appointment:title')}
+        </Text>
         <View style={styles.item}>
-          <Title style={[styles.label]}>
+          <Text style={[styles.label]}>
             {t('fields:apptTypePlaceholder')}
             {':'}
-          </Title>
+          </Text>
           <Text>{appointment?.apptType}</Text>
         </View>
         <Text style={styles.item}>
-          <Title style={[styles.label]}>
+          <Text style={[styles.label]}>
             {t('fields:datePlaceholder')}
             {': '}
-          </Title>
+          </Text>
           {formatDate(appointment?.date, 'date')}
         </Text>
         <Text style={styles.item}>
-          <Title style={[styles.label]}>
+          <Text style={[styles.label]}>
             {t('fields:timePlaceholder')}
             {': '}
-          </Title>
+          </Text>
           {formatDate(appointment?.date, 'time')}
         </Text>
         <Text style={styles.item}>
-          <Title style={[styles.label]}>
+          <Text style={[styles.label]}>
             {t('fields:doctorPlaceholder')}
             {': '}
-          </Title>
+          </Text>
           {appointment?.doctorName}
         </Text>
       </View>
@@ -102,7 +104,9 @@ const AppointmentScreen: React.FC<{}> = () => {
 };
 
 const styles = StyleSheet.create({
-  label: {},
+  label: {
+    fontFamily: 'Montserrat-Bold',
+  },
   item: {
     marginBottom: 10,
     fontSize: 15,

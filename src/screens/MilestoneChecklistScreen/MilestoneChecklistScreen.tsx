@@ -75,12 +75,6 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
-      <View
-        style={{
-          backgroundColor: colors.iceCold,
-          height: headerHeight,
-        }}
-      />
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList
@@ -123,7 +117,9 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `${item}-${index}`}
           ListHeaderComponent={() => (
-            <Title style={{textAlign: 'center', marginTop: 38}}>{milestoneAgeFormatted}</Title>
+            <Text style={{textAlign: 'center', marginTop: 38, fontFamily: 'Montserrat-Bold'}}>
+              {milestoneAgeFormatted}
+            </Text>
           )}
           ListFooterComponent={() => (
             <View style={{marginTop: 50}}>
@@ -143,7 +139,9 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
                       },
                       sharedStyle.shadow,
                     ]}>
-                    <Title style={{flexGrow: 1, textAlign: 'center'}}>{t('nextSection')}</Title>
+                    <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
+                      {t('nextSection')}
+                    </Text>
                     <ChevronRightBig width={10} height={20} />
                   </View>
                 </TouchableWithoutFeedback>

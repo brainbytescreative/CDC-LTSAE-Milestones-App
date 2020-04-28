@@ -11,7 +11,7 @@ import {colors, sharedStyle} from '../../resources/constants';
 import {useSafeArea} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
@@ -39,14 +39,15 @@ const ChildSelectorModal: React.FC<{}> = () => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Title
+            <Text
               numberOfLines={1}
               style={{
                 fontSize: 22,
                 textAlign: 'center',
+                fontFamily: 'Montserrat-Bold',
               }}>
               {selectedChild?.name}
-            </Title>
+            </Text>
             <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         );

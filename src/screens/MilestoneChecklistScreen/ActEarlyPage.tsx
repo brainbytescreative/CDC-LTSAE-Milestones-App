@@ -145,12 +145,12 @@ const ActEarlyPage: React.FC<{}> = () => {
       <FlatList
         ListHeaderComponent={
           <View>
-            <Title style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Title>
-            <Title style={[styles.header]}>{t('milestoneChecklist')}</Title>
+            <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
+            <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
               {t('complete')}
             </Text>
-            <Title style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Title>
+            <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
               {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
             </Text>
@@ -180,7 +180,7 @@ const ActEarlyPage: React.FC<{}> = () => {
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigation.navigate('ChildSummary');
+                  navigation.navigate('ChildSummaryStack');
                 }}>
                 <View
                   style={[
@@ -195,7 +195,9 @@ const ActEarlyPage: React.FC<{}> = () => {
                     },
                     sharedStyle.shadow,
                   ]}>
-                  <Title style={{flexGrow: 1, textAlign: 'center'}}>My Child’s Summary</Title>
+                  <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
+                    My Child’s Summary
+                  </Text>
                   <ChevronRightBig width={10} height={20} />
                 </View>
               </TouchableWithoutFeedback>
@@ -213,6 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textTransform: 'capitalize',
     marginTop: 5,
+    fontFamily: 'Montserrat-Bold',
   },
   text: {
     textAlign: 'center',

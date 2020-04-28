@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {Modal, Portal, Title} from 'react-native-paper';
+import {Modal, Portal, Title, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
 import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
-import Text from '../../components/Text';
 import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
@@ -30,7 +29,9 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
                 <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
               </View>
             </View>
-            <Title style={{fontSize: 20, textAlign: 'center', marginBottom: 16}}>{t('welcome')}</Title>
+            <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 16, fontFamily: 'Montserrat-Bold'}}>
+              {t('welcome')}
+            </Text>
           </View>
           <IceColdArc width={'100%'} />
         </View>
@@ -56,14 +57,15 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
               paddingBottom: bottom,
               justifyContent: 'space-around',
             }}>
-            <Title
+            <Text
               style={{
                 marginHorizontal: 32,
                 textAlign: 'center',
                 fontSize: 22,
+                fontFamily: 'Montserrat-Bold',
               }}>
               {t('welcome2p')}
-            </Title>
+            </Text>
             <View
               style={{
                 marginHorizontal: 32,
@@ -71,7 +73,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
               }}>
               {Array.from(new Array(6)).map((value, index) => (
                 <Text style={[{fontSize: 15}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
-                  <Title>{'+   '}</Title>
+                  <Text style={{fontFamily: 'Montserrat-Bold'}}>{'+   '}</Text>
                   {t('list', {context: `${index}`})}
                 </Text>
               ))}

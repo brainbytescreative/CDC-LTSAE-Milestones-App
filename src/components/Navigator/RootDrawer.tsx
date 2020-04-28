@@ -14,7 +14,7 @@ import InfoStack from './InfoStack';
 import ChildSummaryStack from './ChildSummaryStack';
 import {SafeAreaView, ScrollView, View} from 'react-native';
 import {colors} from '../../resources/constants';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
@@ -31,16 +31,17 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
             marginVertical: 60,
           }}>
           <View style={{flexDirection: 'row'}}>
-            <Title
+            <Text
               style={{
                 fontSize: 22,
                 textAlign: 'center',
                 marginTop: 16,
                 marginBottom: 35,
                 flexGrow: 1,
+                fontFamily: 'Montserrat-Bold',
               }}>
               Menu
-            </Title>
+            </Text>
           </View>
           <DrawerItemList {...props} />
         </View>

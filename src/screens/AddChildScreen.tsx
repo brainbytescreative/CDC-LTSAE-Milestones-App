@@ -127,9 +127,11 @@ const AddChildScreen: React.FC<{}> = () => {
           </View>
           <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
 
-          <Title adjustsFontSizeToFit style={{fontSize: 22, marginHorizontal: 32, textAlign: 'center'}}>
+          <Text
+            adjustsFontSizeToFit
+            style={{fontSize: 22, marginHorizontal: 32, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
             {t(`${prefix}title`)}
-          </Title>
+          </Text>
           <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
             <View style={[sharedStyle.shadow]}>
               <TouchableOpacity

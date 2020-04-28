@@ -73,7 +73,9 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
   return (
     <Layout style={{backgroundColor: 'white'}}>
       <ChildSelectorModal />
-      <Title style={{textAlign: 'center', fontSize: 22, marginTop: 20}}>{t('title')}</Title>
+      <Text style={{textAlign: 'center', fontSize: 22, marginTop: 20, fontFamily: 'Montserrat-Bold'}}>
+        {t('title')}
+      </Text>
       <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>{t('subtitle')}</Text>
 
       <SkillTypeDialog

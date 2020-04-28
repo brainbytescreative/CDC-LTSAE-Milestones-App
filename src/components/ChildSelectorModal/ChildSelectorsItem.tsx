@@ -7,7 +7,7 @@ import {BabyPlaceholder} from '../../resources/svg';
 import {formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from 'i18next';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: number) => void;
@@ -48,9 +48,9 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
         )}
       </View>
       <View style={{flexGrow: 1, justifyContent: 'center', width: 0}}>
-        <Title numberOfLines={1} style={styles.childNameText}>
+        <Text numberOfLines={1} style={styles.childNameText}>
           {name}
-        </Title>
+        </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 3}}>
           <Text style={{fontSize: 12}}>
             {formatDistanceStrict(new Date(), birthday, {
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   childNameText: {
     fontSize: 18,
     flexGrow: 0,
+    fontFamily: 'Montserrat-Bold',
     // width: 0,
   },
 });

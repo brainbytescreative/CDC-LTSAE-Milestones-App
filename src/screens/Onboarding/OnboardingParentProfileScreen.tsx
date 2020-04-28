@@ -41,7 +41,7 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
               navigation.navigate('Dashboard');
             }}
           />
-          <Title
+          <Text
             numberOfLines={1}
             adjustsFontSizeToFit
             style={{
@@ -50,9 +50,10 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
               marginHorizontal: 32,
               textTransform: 'capitalize',
               marginBottom: 24,
+              fontFamily: 'Montserrat-Bold',
             }}>
             {t('parentProfile')}
-          </Title>
+          </Text>
           <View>
             <ParentProfileSelector
               style={{marginHorizontal: 32}}
@@ -66,15 +67,16 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
         </View>
 
         <View style={{flexGrow: 1, justifyContent: 'center', paddingVertical: 16, backgroundColor: 'white'}}>
-          <Title
+          <Text
             style={{
               fontSize: 22,
               marginHorizontal: 32,
               marginBottom: 16,
               textTransform: 'capitalize',
+              fontFamily: 'Montserrat-Bold',
             }}>
             {t('common:appLanguage')}
-          </Title>
+          </Text>
           <LanguageSelector style={{marginHorizontal: 32}} />
         </View>
 
