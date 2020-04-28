@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {FlatList, View} from 'react-native';
-import {colors, skillTypes} from '../../resources/constants';
-import {Button} from 'react-native-paper';
+import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
+import {colors, sharedStyle, skillTypes} from '../../resources/constants';
+import {Text, Title} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
 import FrontPage from './FrontPage';
@@ -17,6 +17,9 @@ import {
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useHeaderHeight} from '@react-navigation/stack';
+import ChevronRightBig from '../../resources/svg/ChevronRightBig';
+import {PurpleArc} from '../../resources/svg';
+import {useTranslation} from 'react-i18next';
 
 const sections = [...skillTypes, 'actEarly'];
 
@@ -31,6 +34,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
   const headerHeight = useHeaderHeight();
+  const {t} = useTranslation('milestoneChecklist');
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -56,7 +60,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
 
   useEffect(() => {
     if (section) {
-      flatListRef?.current?.scrollToIndex({index: 0, animated: false});
+      flatListRef?.current?.scrollToOffset({animated: true, offset: 0});
     }
   }, [section]);
 
@@ -118,11 +122,32 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           extraData={section}
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `${item}-${index}`}
+          ListHeaderComponent={() => (
+            <Title style={{textAlign: 'center', marginTop: 38}}>{milestoneAgeFormatted}</Title>
+          )}
           ListFooterComponent={() => (
-            <View style={{alignItems: 'center', marginVertical: 30}}>
-              <Button onPress={onPressNextSection} style={{width: 200}} mode={'contained'}>
-                Next section
-              </Button>
+            <View style={{marginTop: 50}}>
+              <PurpleArc width={'100%'} />
+              <View style={{backgroundColor: colors.purple}}>
+                <TouchableWithoutFeedback onPress={onPressNextSection}>
+                  <View
+                    style={[
+                      {
+                        backgroundColor: colors.white,
+                        margin: 32,
+                        borderRadius: 10,
+                        flexDirection: 'row',
+                        paddingRight: 16,
+                        height: 60,
+                        alignItems: 'center',
+                      },
+                      sharedStyle.shadow,
+                    ]}>
+                    <Title style={{flexGrow: 1, textAlign: 'center'}}>{t('nextSection')}</Title>
+                    <ChevronRightBig width={10} height={20} />
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
             </View>
           )}
         />

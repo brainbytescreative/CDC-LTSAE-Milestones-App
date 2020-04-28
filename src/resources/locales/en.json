@@ -137,11 +137,16 @@
     "movement": "Movement"
   },
   "milestoneChecklist": {
+    "nextSection": "Next Section",
+    "answer_yes": "yes",
+    "answer_unsure": "unsure",
+    "answer_not_yet": "not yet",
     "milestoneChecklist": "Milestone checklist",
     "milestoneQuickView": "Milestone Quickview",
     "whenToActEarly": "When to act early",
     "complete": "Complete",
     "addANote": "Add a note",
+    "addANoteLong": "Notes will save automatically, \nenter them here.",
     "actEarlyWarning": "You may need to act early!",
     "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit",
     "actEarlyLinkText": "www.cdc.gov/Concerned",

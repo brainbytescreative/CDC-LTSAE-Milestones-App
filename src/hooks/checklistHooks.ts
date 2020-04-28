@@ -25,7 +25,7 @@ export enum Answer {
 interface MilestoneAnswer {
   childId: number;
   questionId: number;
-  answer: Answer;
+  answer?: Answer;
   note?: string | undefined;
 }
 

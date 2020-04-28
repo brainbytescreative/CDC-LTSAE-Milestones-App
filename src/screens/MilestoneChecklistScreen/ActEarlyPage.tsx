@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -80,7 +81,7 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
             style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
             placeholder={t('addANote')}
           />
-          <NoteIcon style={{marginLeft: 10}} />
+          {Dimensions.get('window').width > 375 && <NoteIcon style={{marginLeft: 10}} />}
         </View>
       </View>
     </View>
@@ -137,6 +138,7 @@ const ActEarlyPage: React.FC<{}> = () => {
   const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
   const {data: concerns} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
+
   const {t} = useTranslation('milestoneChecklist');
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>

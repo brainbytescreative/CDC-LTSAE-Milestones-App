@@ -51,7 +51,7 @@ const DB_MIGRATIONS = [
                 references children (id)
                     on update cascade on delete cascade,
             questionId INTEGER not null,
-            answer     INTEGER not null,
+            answer     INTEGER,
             note       TEXT,
             PRIMARY KEY (childId, questionId)
         );
