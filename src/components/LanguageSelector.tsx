@@ -1,15 +1,16 @@
 import React from 'react';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
-import {useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
+import {LangCode, useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
 import {colors, sharedStyle} from '../resources/constants';
 import {Text} from 'react-native-paper';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
   title?: string;
+  onLanguageChange?: (language: LangCode) => void;
 }
 
-const LanguageSelector: React.FC<Props> = ({style, title}) => {
+const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => {
   const changeLanguage = useChangeLanguage();
   const {data: lngCode} = useGetLanguageCode();
   return (
@@ -27,6 +28,7 @@ const LanguageSelector: React.FC<Props> = ({style, title}) => {
           ]}
           onPress={() => {
             changeLanguage('en');
+            onLanguageChange && onLanguageChange('en');
           }}>
           <Text style={styles.btnText}>{'English'}</Text>
         </TouchableOpacity>
@@ -37,6 +39,7 @@ const LanguageSelector: React.FC<Props> = ({style, title}) => {
           ]}
           onPress={() => {
             changeLanguage('es');
+            onLanguageChange && onLanguageChange('es');
           }}>
           <Text style={styles.btnText}>{'Español'}</Text>
         </TouchableOpacity>

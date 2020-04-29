@@ -1,1 +1,7 @@
-{}
+{
+  "common": {
+    "dateFormat": "MM/dd/yyyy",
+    "timeFormat": "h:mm a",
+    "dateTimeFormat": "MM/dd/yyyy h:mm a"
+  }
+}

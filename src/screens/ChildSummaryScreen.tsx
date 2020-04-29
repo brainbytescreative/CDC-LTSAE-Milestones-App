@@ -94,7 +94,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
             <AEButtonRounded style={{marginBottom: 0}}>{t('emailSummary')}</AEButtonRounded>
             <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('showDoctor')}</AEButtonRounded>
-            <LanguageSelector style={{marginHorizontal: 32}} />
+            <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
           </View>
         </View>
 

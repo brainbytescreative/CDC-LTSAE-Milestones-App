@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import translationES from './locales/es.json';
@@ -9,7 +8,7 @@ import {useCallback} from 'react';
 import {queryCache, useMutation, useQuery} from 'react-query';
 
 const languageCode = 'Language';
-type LangCode = 'en' | 'es' | undefined;
+export type LangCode = 'en' | 'es' | undefined;
 
 export const getLanguageCode = () => {
   return AsyncStorage.getItem(languageCode) as Promise<LangCode>;
