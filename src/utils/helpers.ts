@@ -1,10 +1,9 @@
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 import i18next from '../resources/l18n';
-import {format} from 'date-fns';
+import {differenceInDays, format, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
-import {ChildResult} from '../hooks/childrenHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -27,6 +26,18 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
     case 'datetime':
       return (dateVal && format(dateVal, i18next.t('common:dateTimeFormat'))) || '';
   }
+};
+
+export const formatAge = (childBirth: Date | undefined): string => {
+  const days = (childBirth && Math.abs(differenceInDays(new Date(), childBirth))) || 0;
+
+  return childBirth
+    ? formatDistanceStrict(new Date(), childBirth, {
+        unit: days > 0 ? undefined : 'day',
+        roundingMethod: 'floor',
+        locale: dateFnsLocales[i18next.language],
+      })
+    : '';
 };
 
 type TableNames = 'children' | 'appointments';

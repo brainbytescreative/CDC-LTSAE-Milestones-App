@@ -20,6 +20,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import ChevronRightBig from '../../resources/svg/ChevronRightBig';
 import {PurpleArc} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
+import ButtonWithChevron from '../../components/ButtonWithChevron';
 
 const sections = [...skillTypes, 'actEarly'];
 
@@ -125,26 +126,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
             <View style={{marginTop: 50}}>
               <PurpleArc width={'100%'} />
               <View style={{backgroundColor: colors.purple}}>
-                <TouchableWithoutFeedback onPress={onPressNextSection}>
-                  <View
-                    style={[
-                      {
-                        backgroundColor: colors.white,
-                        margin: 32,
-                        borderRadius: 10,
-                        flexDirection: 'row',
-                        paddingRight: 16,
-                        height: 60,
-                        alignItems: 'center',
-                      },
-                      sharedStyle.shadow,
-                    ]}>
-                    <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
-                      {t('nextSection')}
-                    </Text>
-                    <ChevronRightBig width={10} height={20} />
-                  </View>
-                </TouchableWithoutFeedback>
+                <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
               </View>
             </View>
           )}

@@ -1,31 +1,21 @@
 import React from 'react';
-import {StackNavigationProp, useHeaderHeight} from '@react-navigation/stack';
-import {Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors} from '../../resources/constants';
-import {
-  ActEarlySign,
-  BabyPlaceholder,
-  MilestoneSummarySign,
-  PurpleArc,
-  TipsAndActivitiesSign,
-} from '../../resources/svg';
+import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
-import {useSafeArea} from 'react-native-safe-area-context';
 import MonthCarousel, {DataItem} from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {formatDistanceStrict} from 'date-fns';
-import {dateFnsLocales} from '../../resources/dateFnsLocales';
-import i18next from 'i18next';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
-import {formatDate} from '../../utils/helpers';
+import {formatAge, formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 
@@ -86,12 +76,7 @@ const DashboardScreen: React.FC<Props> = () => {
 
   const {refetch} = useGetChecklistQuestions();
 
-  const childAgeText =
-    child?.birthday &&
-    formatDistanceStrict(child?.birthday, new Date(), {
-      locale: dateFnsLocales[i18next.language],
-      roundingMethod: 'floor',
-    });
+  const childAgeText = formatAge(child?.birthday);
 
   const childName = child?.name;
   const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);

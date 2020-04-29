@@ -49,8 +49,11 @@
   },
   "tipsAndActivities": {
     "title": "Tips & Activities",
-    "subtitle": "You can help your baby learn and grow lore ipsum dolor sit amet...",
-    "drawerLabel": "$t(tipsAndActivities:title)"
+    "subtitle": "You can help you baby/child learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old baby/child today.",
+    "drawerLabel": "$t(tipsAndActivities:title)",
+    "like": "Like",
+    "remindMe": "Remind me",
+    "nextSection": "Next section"
   },
   "guardianTypes": {
     "guardian": "Guardian",

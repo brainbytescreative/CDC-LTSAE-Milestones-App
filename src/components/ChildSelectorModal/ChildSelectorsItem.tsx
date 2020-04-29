@@ -4,10 +4,8 @@ import {ChildResult, useGetCurrentChild} from '../../hooks/childrenHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {BabyPlaceholder} from '../../resources/svg';
-import {formatDistanceStrict} from 'date-fns';
-import {dateFnsLocales} from '../../resources/dateFnsLocales';
-import i18next from 'i18next';
 import {Text} from 'react-native-paper';
+import {formatAge} from '../../utils/helpers';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: number) => void;
@@ -52,12 +50,7 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
           {name}
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 3}}>
-          <Text style={{fontSize: 12}}>
-            {formatDistanceStrict(new Date(), birthday, {
-              roundingMethod: 'floor',
-              locale: dateFnsLocales[i18next.language],
-            })}
-          </Text>
+          <Text style={{fontSize: 12}}>{formatAge(birthday)}</Text>
           <View style={{flexDirection: 'row', marginRight: 16}}>
             <TouchableOpacity
               onPress={() => {

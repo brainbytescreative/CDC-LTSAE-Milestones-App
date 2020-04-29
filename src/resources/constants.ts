@@ -107,6 +107,11 @@ export const sharedStyle = StyleSheet.create({
 
     elevation: 4,
   },
+  border: {
+    borderWidth: 0.5,
+    borderRadius: 10,
+    borderColor: colors.gray,
+  },
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];
