@@ -63,8 +63,8 @@ export function useAddAppointment() {
       return insertId;
     },
     {
-      onSuccess: (data, variables) => {
-        queryCache.refetchQueries(['appointment', {childId: variables.childId}], {force: true});
+      onSuccess: () => {
+        queryCache.refetchQueries(['appointment'], {force: true});
       },
     },
   );

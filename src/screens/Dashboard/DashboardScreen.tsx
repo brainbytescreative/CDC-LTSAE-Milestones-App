@@ -77,7 +77,6 @@ export type DashboardStackNavigationProp = CompositeNavigationProp<
 >;
 
 const DashboardScreen: React.FC<Props> = () => {
-  const headerHeight = useHeaderHeight();
   const {t} = useTranslation('dashboard');
   const navigation = useNavigation<DashboardStackNavigationProp>();
 

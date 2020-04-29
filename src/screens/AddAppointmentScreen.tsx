@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {View} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Button, TextInput} from 'react-native-paper';
 import {useFormik} from 'formik';
@@ -14,6 +14,15 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import _ from 'lodash';
 import {addAppointmentSchema} from '../resources/validationSchemas';
+import {colors} from '../resources/constants';
+import NavBarBackground from '../resources/svg/NavBarBackground';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AEScrollView from '../components/AEScrollView';
+import AETextInput from '../components/AETextInput';
+import {PurpleArc} from '../resources/svg';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import LanguageSelector from '../components/LanguageSelector';
+import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 
 interface FormValues {
   apptType: string;
@@ -34,6 +43,14 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   const route = useRoute<AddAppointmentScreenRouteProp>();
   const apptId = route.params?.appointmentId;
   const {data: appointment} = useGetAppointmentById(apptId);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: colors.iceCold,
+      },
+    });
+  }, [navigation]);
 
   const formik = useFormik<FormValues>({
     validationSchema: addAppointmentSchema,
@@ -93,65 +110,87 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   const titlePrefix = apptId ? 'edit-' : '';
   const disabled = addStatus === 'loading' || updateStatus === 'loading' || !formik.isValid;
   return (
-    <Layout>
-      <View style={{padding: 20}}>
-        <ChildSelectorModal />
-        <Text style={{fontSize: 22, textAlign: 'center', marginBottom: 20}}>{t(`${titlePrefix}title`)}</Text>
-        <TextInput
-          autoCorrect={false}
-          value={formik.values.apptType}
-          onChangeText={formik.handleChange('apptType') as any}
-          label={`${t('fields:apptTypePlaceholder')} *`}
-          mode={'outlined'}
-        />
-        <DatePicker
-          style={{marginTop: 10}}
-          value={formik.values.date}
-          label={`${t('fields:datePlaceholder')} *`}
-          onChange={(date) => formik.setFieldValue('date', date)}
-        />
-        <DatePicker
-          mode={'time'}
-          style={{marginTop: 10}}
-          value={formik.values.time}
-          label={`${t('fields:timePlaceholder')} *`}
-          onChange={(date) => formik.setFieldValue('time', date)}
-        />
-        <TextInput
-          autoCorrect={false}
-          style={{maxHeight: 100, marginTop: 10}}
-          value={formik.values.doctorName}
-          onChangeText={formik.handleChange('doctorName') as any}
-          label={t('fields:doctorPlaceholder')}
-          mode={'outlined'}
-        />
-        <TextInput
-          multiline={true}
-          autoCorrect={false}
-          numberOfLines={3}
-          style={{maxHeight: 100, marginTop: 10}}
-          value={formik.values.notes}
-          onChangeText={formik.handleChange('notes') as any}
-          label={t('fields:notesConcernsPlaceholder')}
-          mode={'outlined'}
-        />
-        <TextInput
-          multiline={true}
-          autoCorrect={false}
-          numberOfLines={3}
-          style={{maxHeight: 100, marginTop: 10}}
-          value={formik.values.questions}
-          onChangeText={formik.handleChange('questions') as any}
-          label={t('fields:questionsPlaceholder')}
-          mode={'outlined'}
-        />
+    <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: colors.white}} style={{flex: 1}}>
+      <View
+        style={{
+          position: 'absolute',
+          width: '100%',
+        }}>
+        <View style={{backgroundColor: colors.iceCold, height: 40}} />
+        <NavBarBackground width={'100%'} />
       </View>
-      <View style={{alignItems: 'center', marginVertical: 30}}>
-        <Button onPress={formik.handleSubmit} disabled={disabled} style={{width: 200}} mode={'contained'}>
-          {t('common:done')}
-        </Button>
+      <View style={{flexGrow: 1, justifyContent: 'space-between'}}>
+        <AEKeyboardAvoidingView>
+          <View style={{paddingHorizontal: 32}}>
+            <ChildSelectorModal />
+            <Text
+              style={{
+                fontSize: 22,
+                textAlign: 'center',
+                marginTop: 16,
+                marginBottom: 5,
+                fontFamily: 'Montserrat-Bold',
+              }}>
+              {t(`${titlePrefix}title`)}
+            </Text>
+            <AETextInput
+              style={{marginTop: 11}}
+              autoCorrect={false}
+              value={formik.values.apptType}
+              onChangeText={formik.handleChange('apptType') as any}
+              placeholder={`${t('fields:apptTypePlaceholder')} *`}
+            />
+            <DatePicker
+              style={{marginTop: 11}}
+              value={formik.values.date}
+              label={`${t('fields:datePlaceholder')} *`}
+              onChange={(date) => formik.setFieldValue('date', date)}
+            />
+            <DatePicker
+              mode={'time'}
+              style={{marginTop: 11}}
+              value={formik.values.time}
+              label={`${t('fields:timePlaceholder')} *`}
+              onChange={(date) => formik.setFieldValue('time', date)}
+            />
+            <AETextInput
+              autoCorrect={false}
+              style={{marginTop: 11}}
+              value={formik.values.doctorName}
+              onChangeText={formik.handleChange('doctorName') as any}
+              placeholder={t('fields:doctorPlaceholder')}
+            />
+            <AETextInput
+              multiline={true}
+              autoCorrect={false}
+              numberOfLines={3}
+              style={{marginTop: 11}}
+              value={formik.values.notes}
+              onChangeText={formik.handleChange('notes') as any}
+              placeholder={t('fields:notesConcernsPlaceholder')}
+            />
+            <AETextInput
+              multiline={true}
+              autoCorrect={false}
+              numberOfLines={3}
+              style={{maxHeight: 100, marginTop: 11}}
+              value={formik.values.questions}
+              onChangeText={formik.handleChange('questions') as any}
+              placeholder={t('fields:questionsPlaceholder')}
+            />
+          </View>
+        </AEKeyboardAvoidingView>
+        <View style={{marginTop: 47}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
+            <AEButtonRounded disabled={disabled} onPress={formik.handleSubmit} style={{marginBottom: 0}}>
+              {apptId ? t('common:done') : t('title')}
+            </AEButtonRounded>
+            <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('common:cancel')}</AEButtonRounded>
+          </View>
+        </View>
       </View>
-    </Layout>
+    </ScrollView>
   );
 };
 

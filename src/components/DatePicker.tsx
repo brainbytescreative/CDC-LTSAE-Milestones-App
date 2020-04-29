@@ -39,6 +39,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
   return (
     <>
       <AETextInput
+        style={style}
         onPress={showDatePicker}
         editable={false}
         autoCorrect={false}
