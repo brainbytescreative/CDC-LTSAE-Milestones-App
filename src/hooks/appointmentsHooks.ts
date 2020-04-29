@@ -91,24 +91,32 @@ export function useDeleteAppointment() {
 }
 
 export function useGetAppointmentById(id: string | number | undefined) {
-  return useQuery<Appointment, [string, {id: typeof id}]>(['appointment', {id}], async (key, variables) => {
-    if (!variables.id) {
-      throw new Error('Id is not defined');
-    }
+  return useQuery<Appointment & {childName?: string}, [string, {id: typeof id}]>(
+    ['appointment', {id}],
+    async (key, variables) => {
+      if (!variables.id) {
+        throw new Error('Id is not defined');
+      }
 
-    const res = await sqLiteClient.dB?.executeSql('select * from appointments where id=?', [variables.id]);
+      // language=SQLite
+      const query = `select appointments.*, children.name 'childName'
+       from appointments
+                left join children on appointments.childId = children.id
+       where appointments.id = ?`;
+      const res = await sqLiteClient.dB?.executeSql(query, [variables.id]);
 
-    if (!res) {
-      throw new Error('fetch failed');
-    }
+      if (!res) {
+        throw new Error('fetch failed');
+      }
 
-    const dbRes: AppointmentDb = res && res[0].rows.item(0);
+      const dbRes: AppointmentDb = res && res[0].rows.item(0);
 
-    return {
-      ...dbRes,
-      date: parseISO(dbRes.date),
-    } as Appointment;
-  });
+      return {
+        ...dbRes,
+        date: parseISO(dbRes.date),
+      } as Appointment;
+    },
+  );
 }
 
 export function useGetChildAppointments(childId: number | string | undefined) {

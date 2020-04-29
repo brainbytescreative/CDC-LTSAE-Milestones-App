@@ -67,7 +67,7 @@
     "delete": "Delete",
     "skip": "Skip",
     "required": "* required",
-    "dateFormat": "MM/dd/yyyy",
+    "dateFormat": "MMMM dd, yyyy",
     "timeFormat": "h:mm a",
     "dateTimeFormat": "MM/dd/yyyy h:mm a",
     "heSheTag_0": "he",
@@ -105,7 +105,10 @@
     "edit-title": "Edit appointment"
   },
   "appointment": {
-    "title": "Appointment"
+    "title": "Appointment",
+    "showChildsSummary": "Show child's summary",
+    "emailChildsSummary": "Email child's summary",
+    "concernsOrNotesForDoctor": "Concerns or notes for doctor:"
   },
   "info": {
     "title": "Info",

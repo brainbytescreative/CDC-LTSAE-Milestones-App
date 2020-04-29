@@ -9,7 +9,13 @@ import {ChildResult} from '../hooks/childrenHooks';
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
     case 'date':
-      return (dateVal && format(dateVal, i18next.t('common:dateFormat'))) || '';
+      return (
+        (dateVal &&
+          format(dateVal, i18next.t('common:dateFormat'), {
+            locale: dateFnsLocales[i18next.language],
+          })) ||
+        ''
+      );
     case 'time':
       return (
         (dateVal &&

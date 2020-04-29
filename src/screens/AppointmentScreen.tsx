@@ -1,105 +1,162 @@
 import React from 'react';
 
 import {useTranslation} from 'react-i18next';
-import Layout from '../components/Layout';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
-import {Button, Title, Text} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
 import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
+import {colors} from '../resources/constants';
+import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
+import {PurpleArc} from '../resources/svg';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import AEScrollView from '../components/AEScrollView';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 
 const AppointmentScreen: React.FC<{}> = () => {
-  const {t} = useTranslation();
+  const {t} = useTranslation('appointment');
   const route = useRoute<AppointmentScreenRouteProp>();
   const navigation = useNavigation<DashboardDrawerNavigationProp>();
   const {data: appointment, status: loadStatus} = useGetAppointmentById(route.params.appointmentId);
   const [deleteAppointment, {status: deleteStatus}] = useDeleteAppointment();
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: colors.iceCold,
+      },
+    });
+  }, [navigation]);
+
   const loading = loadStatus === 'loading' || deleteStatus === 'loading';
   return (
-    <Layout style={{justifyContent: 'space-between', alignItems: 'center'}}>
-      <ChildSelectorModal />
-      <View style={{alignItems: 'center'}}>
-        <Text style={[{textAlign: 'center', fontSize: 20, marginVertical: 20, fontFamily: 'Montserrat-Bold'}]}>
-          {t('appointment:title')}
-        </Text>
-        <View style={styles.item}>
-          <Text style={[styles.label]}>
-            {t('fields:apptTypePlaceholder')}
-            {':'}
-          </Text>
-          <Text>{appointment?.apptType}</Text>
+    <View style={{backgroundColor: colors.white, flex: 1}}>
+      <AEScrollView>
+        <View
+          style={{
+            width: '100%',
+            backgroundColor: 'transparent',
+          }}>
+          <View style={{height: 16, backgroundColor: colors.iceCold}} />
+          <ShortHeaderArc width={'100%'} />
         </View>
-        <Text style={styles.item}>
-          <Text style={[styles.label]}>
-            {t('fields:datePlaceholder')}
-            {': '}
+        <ChildSelectorModal />
+        <View style={{flexGrow: 1, marginHorizontal: 32}}>
+          <Text
+            style={[
+              {
+                textAlign: 'center',
+                fontSize: 22,
+                marginBottom: 22,
+                marginTop: 28,
+                fontFamily: 'Montserrat-Bold',
+              },
+            ]}>
+            {appointment?.apptType}
           </Text>
-          {formatDate(appointment?.date, 'date')}
-        </Text>
-        <Text style={styles.item}>
-          <Text style={[styles.label]}>
-            {t('fields:timePlaceholder')}
-            {': '}
-          </Text>
-          {formatDate(appointment?.date, 'time')}
-        </Text>
-        <Text style={styles.item}>
-          <Text style={[styles.label]}>
-            {t('fields:doctorPlaceholder')}
-            {': '}
-          </Text>
-          {appointment?.doctorName}
-        </Text>
-      </View>
-      <Button
-        onPress={() => {
-          navigation.navigate('AddAppointment', {
-            appointmentId: route.params?.appointmentId,
-          });
-        }}
-        style={{width: 200}}
-        mode={'contained'}>
-        {t('common:edit')}
-      </Button>
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddAppointment', {
-              appointmentId: route.params?.appointmentId,
-            });
-          }}
-          style={{width: 300}}
-          mode={'outlined'}>
-          Show child's summary
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddAppointment', {
-              appointmentId: route.params?.appointmentId,
-            });
-          }}
-          style={{width: 300}}
-          mode={'outlined'}>
-          Email child's summary
-        </Button>
-      </View>
+          <Text style={[styles.item]}>{appointment?.childName}</Text>
+          <Text style={[styles.item]}>{formatDate(appointment?.date, 'date')}</Text>
+          <Text style={[styles.item]}>{formatDate(appointment?.date, 'time')}</Text>
+          {!!appointment?.doctorName && <Text style={[styles.item]}>{appointment?.doctorName}</Text>}
+          {(!!appointment?.questions || !!appointment?.notes) && (
+            <>
+              <Text
+                style={{
+                  fontFamily: 'Montserrat-Bold',
+                  fontSize: 15,
+                  marginTop: 27,
+                  marginBottom: 23,
+                }}>
+                {t('concernsOrNotesForDoctor')}
+              </Text>
+              {!!appointment?.notes && <Text style={[styles.item]}>{appointment?.notes}</Text>}
+              {!!appointment?.questions && <Text style={[styles.item]}>{appointment?.questions}</Text>}
+            </>
+          )}
+        </View>
+        <View style={{marginTop: 47}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.navigate('AddAppointment', {
+                  appointmentId: route.params?.appointmentId,
+                });
+              }}
+              style={{marginBottom: 0}}>
+              {t('common:edit')}
+            </AEButtonRounded>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.navigate('ChildSummaryStack');
+              }}
+              disabled={loading}
+              style={{marginTop: 10, marginBottom: 0}}>
+              {t('showChildsSummary')}
+            </AEButtonRounded>
+            <AEButtonRounded disabled={loading} style={{marginTop: 10, marginBottom: 30}}>
+              {t('emailChildsSummary')}
+            </AEButtonRounded>
+            <Button
+              disabled={loading}
+              onPress={() => {
+                appointment?.id && deleteAppointment(appointment?.id);
+                navigation.navigate('Dashboard');
+              }}
+              labelStyle={{textTransform: 'capitalize', textDecorationLine: 'underline'}}
+              mode={'text'}>
+              Delete Appointment
+            </Button>
+          </View>
+        </View>
+        {/*<Button*/}
+        {/*  onPress={() => {*/}
+        {/*    navigation.navigate('AddAppointment', {*/}
+        {/*      appointmentId: route.params?.appointmentId,*/}
+        {/*    });*/}
+        {/*  }}*/}
+        {/*  style={{width: 200}}*/}
+        {/*  mode={'contained'}>*/}
+        {/*  {t('common:edit')}*/}
+        {/*</Button>*/}
+        {/*<View>*/}
+        {/*  <Button*/}
+        {/*    onPress={() => {*/}
+        {/*      navigation.navigate('AddAppointment', {*/}
+        {/*        appointmentId: route.params?.appointmentId,*/}
+        {/*      });*/}
+        {/*    }}*/}
+        {/*    style={{width: 300}}*/}
+        {/*    mode={'outlined'}>*/}
+        {/*    Show child's summary*/}
+        {/*  </Button>*/}
+        {/*  <Button*/}
+        {/*    onPress={() => {*/}
+        {/*      navigation.navigate('AddAppointment', {*/}
+        {/*        appointmentId: route.params?.appointmentId,*/}
+        {/*      });*/}
+        {/*    }}*/}
+        {/*    style={{width: 300}}*/}
+        {/*    mode={'outlined'}>*/}
+        {/*    Email child's summary*/}
+        {/*  </Button>*/}
+        {/*</View>*/}
 
-      <Button
-        disabled={loading}
-        onPress={() => {
-          appointment?.id && deleteAppointment(appointment?.id);
-          navigation.navigate('Dashboard');
-        }}
-        style={{width: 200}}
-        mode={'text'}>
-        {t('common:delete')}
-      </Button>
-    </Layout>
+        {/*<Button*/}
+        {/*  disabled={loading}*/}
+        {/*  onPress={() => {*/}
+        {/*    appointment?.id && deleteAppointment(appointment?.id);*/}
+        {/*    navigation.navigate('Dashboard');*/}
+        {/*  }}*/}
+        {/*  style={{width: 200}}*/}
+        {/*  mode={'text'}>*/}
+        {/*  {t('common:delete')}*/}
+        {/*</Button>*/}
+      </AEScrollView>
+    </View>
   );
 };
 
@@ -108,9 +165,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
   item: {
-    marginBottom: 10,
+    marginBottom: 3,
     fontSize: 15,
-    alignItems: 'center',
   },
 });
 
