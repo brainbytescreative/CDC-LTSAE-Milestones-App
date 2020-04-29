@@ -108,7 +108,8 @@
     "title": "Appointment",
     "showChildsSummary": "Show child's summary",
     "emailChildsSummary": "Email child's summary",
-    "concernsOrNotesForDoctor": "Concerns or notes for doctor:"
+    "concernsOrNotesForDoctor": "Concerns or notes for doctor:",
+    "deleteAppointment": "Delete Appointment"
   },
   "info": {
     "title": "Info",

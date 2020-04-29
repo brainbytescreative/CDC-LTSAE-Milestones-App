@@ -108,53 +108,10 @@ const AppointmentScreen: React.FC<{}> = () => {
               }}
               labelStyle={{textTransform: 'capitalize', textDecorationLine: 'underline'}}
               mode={'text'}>
-              Delete Appointment
+              {t('deleteAppointment')}
             </Button>
           </View>
         </View>
-        {/*<Button*/}
-        {/*  onPress={() => {*/}
-        {/*    navigation.navigate('AddAppointment', {*/}
-        {/*      appointmentId: route.params?.appointmentId,*/}
-        {/*    });*/}
-        {/*  }}*/}
-        {/*  style={{width: 200}}*/}
-        {/*  mode={'contained'}>*/}
-        {/*  {t('common:edit')}*/}
-        {/*</Button>*/}
-        {/*<View>*/}
-        {/*  <Button*/}
-        {/*    onPress={() => {*/}
-        {/*      navigation.navigate('AddAppointment', {*/}
-        {/*        appointmentId: route.params?.appointmentId,*/}
-        {/*      });*/}
-        {/*    }}*/}
-        {/*    style={{width: 300}}*/}
-        {/*    mode={'outlined'}>*/}
-        {/*    Show child's summary*/}
-        {/*  </Button>*/}
-        {/*  <Button*/}
-        {/*    onPress={() => {*/}
-        {/*      navigation.navigate('AddAppointment', {*/}
-        {/*        appointmentId: route.params?.appointmentId,*/}
-        {/*      });*/}
-        {/*    }}*/}
-        {/*    style={{width: 300}}*/}
-        {/*    mode={'outlined'}>*/}
-        {/*    Email child's summary*/}
-        {/*  </Button>*/}
-        {/*</View>*/}
-
-        {/*<Button*/}
-        {/*  disabled={loading}*/}
-        {/*  onPress={() => {*/}
-        {/*    appointment?.id && deleteAppointment(appointment?.id);*/}
-        {/*    navigation.navigate('Dashboard');*/}
-        {/*  }}*/}
-        {/*  style={{width: 200}}*/}
-        {/*  mode={'text'}>*/}
-        {/*  {t('common:delete')}*/}
-        {/*</Button>*/}
       </AEScrollView>
     </View>
   );
