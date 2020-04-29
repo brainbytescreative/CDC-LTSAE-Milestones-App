@@ -9,7 +9,7 @@ import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {PurpleArc} from '../../resources/svg';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';

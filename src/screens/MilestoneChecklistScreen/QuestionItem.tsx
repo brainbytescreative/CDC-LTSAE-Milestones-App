@@ -134,7 +134,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           style={[
             styles.answerButton,
             sharedStyle.shadow,
-            answer === Answer.YES ? {backgroundColor: '#BCFDAC'} : undefined,
+            answer === Answer.YES ? {backgroundColor: colors.lightGreen} : undefined,
           ]}>
           <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
             {t('milestoneChecklist:answer_yes')}
@@ -146,7 +146,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             styles.answerButton,
             sharedStyle.shadow,
             {marginHorizontal: 8},
-            answer === Answer.UNSURE ? {backgroundColor: '#FC9554'} : undefined,
+            answer === Answer.UNSURE ? {backgroundColor: colors.tanHide} : undefined,
           ]}>
           <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
             {t('milestoneChecklist:answer_unsure')}
@@ -157,7 +157,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           style={[
             styles.answerButton,
             sharedStyle.shadow,
-            answer === Answer.NOT_YET ? {backgroundColor: '#EB7373'} : undefined,
+            answer === Answer.NOT_YET ? {backgroundColor: colors.apricot} : undefined,
           ]}>
           <Text numberOfLines={1} adjustsFontSizeToFit style={{textTransform: 'uppercase'}}>
             {t('milestoneChecklist:answer_not_yet')}

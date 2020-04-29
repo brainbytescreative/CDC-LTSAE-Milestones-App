@@ -1,9 +1,9 @@
 import React from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import LanguageSelector from '../components/LanguageSelector';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSafeArea} from 'react-native-safe-area-context';
@@ -13,6 +13,26 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import ChildPhoto from '../components/ChildPhoto';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../resources/svg';
+
+interface ItemProps {
+  value?: string;
+  id?: string | number;
+}
+
+const Item: React.FC<ItemProps> = ({value, id}) => {
+  const {t} = useTranslation('childSummary');
+  return (
+    <View style={{marginTop: 32, marginHorizontal: 16}}>
+      <Text style={{fontSize: 15}} key={`${id}`}>
+        {value}
+      </Text>
+      <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6}}>
+        <Text style={{textDecorationLine: 'underline', fontSize: 12}}>{t('editAnswer')}</Text>
+        <Text style={{textDecorationLine: 'underline', fontSize: 12, marginLeft: 15}}>{t('editNote')}</Text>
+      </View>
+    </View>
+  );
+};
 
 const ChildSummaryScreen: React.FC<{}> = () => {
   const {t} = useTranslation('childSummary');
@@ -28,23 +48,22 @@ const ChildSummaryScreen: React.FC<{}> = () => {
       refetch({force: true});
     }, [refetch]),
   );
-  const link1 = t('link1');
-  const link2 = t('link2');
+  const link1 = t('link1Text');
+  const link2 = t('link2Text');
 
   return (
-    <>
+    <View style={{backgroundColor: colors.white}}>
       <View
         style={{
           width: '100%',
-          backgroundColor: colors.white,
+          backgroundColor: 'transparent',
         }}>
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: bottom,
-          backgroundColor: colors.white,
+          paddingBottom: bottom + 32,
         }}>
         <ChildSelectorModal />
         <ChildPhoto photo={child?.photo} />
@@ -73,94 +92,62 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <View style={{marginTop: 35}}>
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-            <AEButtonRounded>{t('emailSummary')}</AEButtonRounded>
+            <AEButtonRounded style={{marginBottom: 0}}>{t('emailSummary')}</AEButtonRounded>
+            <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('showDoctor')}</AEButtonRounded>
             <LanguageSelector style={{marginHorizontal: 32}} />
           </View>
         </View>
 
         <View style={{marginHorizontal: 32}}>
-          <View
-            style={[
-              {
-                backgroundColor: colors.iceCold,
-                marginTop: 20,
-                padding: 15,
-                borderRadius: 10,
-              },
-              sharedStyle.shadow,
-            ]}>
-            <Text
-              style={{
-                fontSize: 18,
-                borderRadius: 10,
-                fontFamily: 'Montserrat-Bold',
-              }}>
-              {t('unanswered')}
-            </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
+            <Text style={styles.blockText}>{t('unanswered')}</Text>
           </View>
           {data?.groupedByAnswer[`${undefined}`]?.map((item) => (
-            <View style={{marginTop: 32}}>
-              <Text style={{fontSize: 15}} key={`${item.id}`}>
-                {item.value}
-              </Text>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6}}>
-                <Text style={{textDecorationLine: 'underline', fontSize: 12}}>Edit answer</Text>
-                <Text style={{textDecorationLine: 'underline', fontSize: 12, marginLeft: 15}}>Edit note</Text>
-              </View>
-            </View>
+            <Item value={item.value} id={item.id} />
           ))}
-          <Text
-            style={{
-              marginTop: 20,
-              fontSize: 18,
-              textTransform: 'uppercase',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            Concerns
-          </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+            <Text style={styles.blockText}>{t('concerns')}</Text>
+          </View>
           {concerns?.concerned?.map((item) => (
-            <Text key={`${item.id}`}>{item.value}</Text>
+            <Item value={item.value} id={item.id} />
           ))}
-          <Text
-            style={{
-              marginTop: 20,
-              fontSize: 18,
-              textTransform: 'uppercase',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            Yes
-          </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+            <Text style={styles.blockText}>{t('yes')}</Text>
+          </View>
           {data?.groupedByAnswer['0']?.map((item) => (
-            <Text key={`${item.id}`}>{item.value}</Text>
+            <Item value={item.value} id={item.id} />
           ))}
-          <Text
-            style={{
-              marginTop: 20,
-              fontSize: 18,
-              textTransform: 'uppercase',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            Unsure
-          </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+            <Text style={styles.blockText}>{t('notSure')}</Text>
+          </View>
           {data?.groupedByAnswer['1']?.map((item) => (
-            <Text key={`${item.id}`}>{item.value}</Text>
+            <Item value={item.value} id={item.id} />
           ))}
-          <Text
-            style={{
-              marginTop: 20,
-              fontSize: 18,
-              textTransform: 'uppercase',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            Not yet
-          </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+            <Text style={styles.blockText}>{t('notYet')}</Text>
+          </View>
           {data?.groupedByAnswer['2']?.map((item) => (
-            <Text key={`${item.id}`}>{item.value}</Text>
+            <Item value={item.value} id={item.id} />
           ))}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  blockContainer: {
+    marginTop: 20,
+    padding: 15,
+    borderRadius: 10,
+    ...sharedStyle.shadow,
+  },
+  blockText: {
+    fontSize: 18,
+    borderRadius: 10,
+    fontFamily: 'Montserrat-Bold',
+    textTransform: 'capitalize',
+  },
+});
 
 export default ChildSummaryScreen;

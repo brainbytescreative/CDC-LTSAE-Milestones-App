@@ -157,7 +157,7 @@ const DashboardScreen: React.FC<Props> = () => {
                   <TouchableOpacity
                     style={{alignItems: 'center'}}
                     onPress={() => {
-                      navigation.navigate('ChildSummary');
+                      navigation.navigate('ChildSummaryStack');
                     }}>
                     <MilestoneSummarySign />
                     <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
