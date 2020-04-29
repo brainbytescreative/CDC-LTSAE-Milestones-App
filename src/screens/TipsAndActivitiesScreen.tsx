@@ -13,8 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
-import {PurpleArc} from '../resources/svg';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {ChevronDown, PurpleArc} from '../resources/svg';
 import LikeHeart from '../resources/svg/LikeHeart';
 import ButtonWithChevron from '../components/ButtonWithChevron';
 
@@ -40,7 +39,6 @@ const Item: React.FC<{title: string; t: TFunction}> = ({title, t}) => (
         marginHorizontal: 48,
         marginTop: -25,
         justifyContent: 'space-between',
-        // marginBottom: 25,
       }}>
       <TouchableOpacity style={[itemStyle.button, sharedStyle.border, sharedStyle.shadow]}>
         <LikeHeart style={{marginRight: 5}} />
@@ -118,10 +116,28 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
               }}
               value={skillType}>
               {(showDialog) => (
-                <View style={{alignItems: 'center', marginTop: 30}}>
-                  <Button onPress={showDialog} style={{width: 160}} mode={'contained'}>
-                    {t(`skillTypes:${skillType}`)} <EvilIcons size={20} name={'chevron-down'} />
-                  </Button>
+                <View
+                  style={[
+                    {
+                      marginTop: 30,
+                      backgroundColor: colors.iceCold,
+                      marginHorizontal: 32,
+                      paddingHorizontal: 16,
+                      paddingVertical: 11,
+                    },
+                    sharedStyle.border,
+                    sharedStyle.shadow,
+                  ]}>
+                  <TouchableOpacity
+                    onPress={showDialog}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 18}}>{t(`skillTypes:${skillType}`)}</Text>
+                    <ChevronDown />
+                  </TouchableOpacity>
                 </View>
               )}
             </SkillTypeDialog>
