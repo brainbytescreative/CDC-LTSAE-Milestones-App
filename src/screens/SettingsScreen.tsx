@@ -1,9 +1,8 @@
 import React, {useEffect, useRef} from 'react';
 import Layout from '../components/Layout';
 import ParentProfileSelector from '../components/ParentProfileSelector';
-import Text from '../components/Text';
 import {useTranslation} from 'react-i18next';
-import {Switch} from 'react-native-paper';
+import {Switch, Text} from 'react-native-paper';
 import {View} from 'react-native';
 import {Formik, useField} from 'formik';
 import LanguageSelector from '../components/LanguageSelector';

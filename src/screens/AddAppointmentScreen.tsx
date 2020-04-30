@@ -1,11 +1,8 @@
 import React, {useCallback, useEffect} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {Button, TextInput} from 'react-native-paper';
 import {useFormik} from 'formik';
 import {useTranslation} from 'react-i18next';
-import Layout from '../components/Layout';
-import Text from '../components/Text';
 import DatePicker from '../components/DatePicker';
 import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
@@ -16,13 +13,11 @@ import _ from 'lodash';
 import {addAppointmentSchema} from '../resources/validationSchemas';
 import {colors} from '../resources/constants';
 import NavBarBackground from '../resources/svg/NavBarBackground';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import AEScrollView from '../components/AEScrollView';
 import AETextInput from '../components/AETextInput';
 import {PurpleArc} from '../resources/svg';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import LanguageSelector from '../components/LanguageSelector';
 import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
+import {Text} from 'react-native-paper';
 
 interface FormValues {
   apptType: string;

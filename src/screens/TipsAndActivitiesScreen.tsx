@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {Text} from 'react-native-paper';
 import SkillTypeDialog from '../components/SkillTypeDialog';
 import {colors, LanguageType, sharedStyle, SkillType, skillTypes} from '../resources/constants';
 import tipsAndActivities from '../resources/tipsAndActivities';
@@ -63,7 +62,7 @@ const itemStyle = StyleSheet.create({
 const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {t} = useTranslation('tipsAndActivities');
   const navigation = useNavigation();
-  const [skillType, setSkillType] = useState<SkillType>('cognitive');
+  const [skillType, setSkillType] = useState<string>('All');
   const {data: child} = useGetCurrentChild();
 
   const onPressNextSection = () => {

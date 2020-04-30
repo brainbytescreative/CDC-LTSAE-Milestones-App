@@ -30,7 +30,7 @@ const SkillTypeDialog: React.FC<Props> = ({children, onChange, value}) => {
       <Portal>
         <Dialog visible={guardianDialogVisible} onDismiss={hideDialog}>
           <Dialog.Content>
-            {skillTypes.map((item) => (
+            {['All', 'Liked', 'Remind me'].map((item) => (
               <TouchableOpacity onPress={onPress(item)} style={{flexDirection: 'row', alignItems: 'center'}}>
                 <RadioButton.Android value="guardian" status={value === item ? 'checked' : 'unchecked'} />
                 <Text>{t(`skillTypes:${item}`)}</Text>
