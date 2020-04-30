@@ -60,6 +60,7 @@
     "healthcareProvider": "Healthcare Provider"
   },
   "common": {
+    "notifications": "Notifications",
     "emailSummary": "Email summary",
     "getStartedBtn": "Get started",
     "appLanguage": "App language",

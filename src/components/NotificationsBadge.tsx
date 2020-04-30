@@ -1,18 +1,22 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Portal, Text} from 'react-native-paper';
+import {FlatList, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useSafeArea} from 'react-native-safe-area-context';
+import {colors, sharedStyle} from '../resources/constants';
+import CloseCross from '../resources/svg/CloseCross';
+import {ChevronLeft} from '../resources/svg';
+import {useTranslation} from 'react-i18next';
 
 const notifications = Array(45);
 
 const NotificationsBadge: React.FC<{}> = () => {
-  const headerHeight = useHeaderHeight();
   const {bottom} = useSafeArea();
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
+  const {top} = useSafeArea();
+  const {t} = useTranslation('common');
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -21,8 +25,8 @@ const NotificationsBadge: React.FC<{}> = () => {
     navigation.setOptions({
       headerRight: () => {
         return (
-          <TouchableOpacity onPress={onPress} style={visible ? styles.crossContainer : styles.badgeContainer}>
-            {visible ? <EvilIcons size={32} name={'close'} /> : <Text style={styles.badgeText}>4</Text>}
+          <TouchableOpacity onPress={onPress} style={styles.badgeContainer}>
+            <Text style={styles.badgeText}>4</Text>
           </TouchableOpacity>
         );
       },
@@ -31,48 +35,86 @@ const NotificationsBadge: React.FC<{}> = () => {
 
   return (
     <>
-      {visible && (
-        <Portal>
-          <View style={{flex: 1, backgroundColor: 'white', marginTop: headerHeight}}>
-            <Text
+      <Modal animated visible={visible} transparent>
+        <View style={{flex: 1, backgroundColor: colors.whiteTransparent}}>
+          <View
+            style={[
+              {
+                flex: 1,
+                marginTop: top + 16,
+                marginHorizontal: 32,
+                backgroundColor: colors.white,
+                marginBottom: 32,
+              },
+              sharedStyle.border,
+              sharedStyle.shadow,
+            ]}>
+            <View
               style={{
-                fontSize: 22,
-                textAlign: 'center',
-                marginVertical: 16,
-                fontFamily: 'Montserrat-Bold',
+                marginHorizontal: 16,
+                marginVertical: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              Notifications
-            </Text>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontFamily: 'Montserrat-Bold',
+                }}>
+                {t('notifications')}
+              </Text>
+              <TouchableOpacity
+                hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+                onPress={() => {
+                  setIsVisible(false);
+                }}>
+                <ChevronLeft />
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={notifications}
               style={{flex: 1}}
               keyExtractor={(item, index) => `${index}`}
-              ItemSeparatorComponent={() => (
-                <View style={{borderWidth: 1, margin: 20, borderColor: 'gray', borderStyle: 'dashed'}} />
-              )}
               ListFooterComponent={() => <View style={{height: bottom}} />}
-              renderItem={() => (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingHorizontal: 20,
-                    // justifyContent: 'space-between',
-                  }}>
-                  <Text style={{flex: 1}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed iaculis velit, eu fermentum ipsum.
-                    Vivamus velit sem, lacinia eget ante in, eleifend finibus tellus. Proin tempus sodales tellus non
-                    lobortis.
-                  </Text>
+              renderItem={({index}) => (
+                <>
+                  <View
+                    style={[
+                      {
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: colors.gray,
+                        marginBottom: 20,
+                      },
+                      index > 0 && {marginTop: 20},
+                    ]}
+                  />
+                  <View style={{flexDirection: 'row', marginHorizontal: 16, alignItems: 'center'}}>
+                    <View
+                      style={{
+                        width: 0,
+                        flexGrow: 1,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: 'Montserrat-Bold',
+                        }}>
+                        Milestone
+                      </Text>
+                      <Text>Lorem ipsum dolar sit amet, consectetur adispiscing elt.</Text>
+                    </View>
 
-                  <TouchableOpacity style={{justifyContent: 'flex-start', alignItems: 'flex-end'}}>
-                    <EvilIcons style={{margin: -5}} size={32} name={'close'} />
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity>
+                      <CloseCross />
+                    </TouchableOpacity>
+                  </View>
+                </>
               )}
             />
           </View>
-        </Portal>
-      )}
+        </View>
+      </Modal>
     </>
   );
 };
