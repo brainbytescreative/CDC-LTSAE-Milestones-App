@@ -64,6 +64,13 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
   );
 };
 
+const notificationPreferences = Array.from<SettingName>([
+  'milestoneNotifications',
+  'appointmentNotifications',
+  'recommendationNotifications',
+  'tipsAndActivitiesNotification',
+]);
+
 const SettingsScreen: React.FC<{}> = () => {
   const {t} = useTranslation('settings');
   const formikRef = useRef<FormikProps<NotificationSettings> | undefined>();
@@ -87,13 +94,6 @@ const SettingsScreen: React.FC<{}> = () => {
       },
     });
   }, [navigation]);
-
-  const notificationPreferences = Array.from<SettingName>([
-    'milestoneNotifications',
-    'appointmentNotifications',
-    'recommendationNotifications',
-    'tipsAndActivitiesNotification',
-  ]);
 
   return (
     <AEScrollView>
