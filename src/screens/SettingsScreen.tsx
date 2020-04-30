@@ -1,8 +1,7 @@
-import React, {useEffect, useRef} from 'react';
-import Layout from '../components/Layout';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {View} from 'react-native';
+import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
 import {Formik, useField} from 'formik';
 import {
   NotificationSettings,
@@ -18,20 +17,43 @@ import {colors} from '../resources/constants';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {useNavigation} from '@react-navigation/native';
 import {PurpleArc} from '../resources/svg';
-import ButtonWithChevron from '../components/ButtonWithChevron';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
 
-const NotificationSetting: React.FC<{name: SettingName}> = ({name}) => {
+interface Props {
+  name: SettingName;
+  onLayout?: (e: LayoutChangeEvent) => void;
+  textStyle?: StyleProp<TextStyle>;
+}
+
+const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
   const {t} = useTranslation('fields');
 
   const [field, , helpers] = useField<boolean>(name);
 
   return (
-    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 21}}>
-      <NotificationsBadge />
-      <Text style={{fontSize: 15, textTransform: 'capitalize'}}>{t(name)}</Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 21,
+      }}>
+      <Text
+        numberOfLines={1}
+        onLayout={onLayout}
+        adjustsFontSizeToFit
+        style={[
+          {
+            fontSize: 15,
+            textTransform: 'capitalize',
+            width: '75%',
+          },
+          textStyle,
+        ]}>
+        {t(name)}
+      </Text>
       <AESwitch
         value={field.value}
         onValueChange={(value) => {
@@ -50,6 +72,7 @@ const SettingsScreen: React.FC<{}> = () => {
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
   const navigation = useNavigation();
+  const [height, setHeight] = useState<number | undefined>();
 
   useEffect(() => {
     if (settings) {
@@ -60,15 +83,22 @@ const SettingsScreen: React.FC<{}> = () => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: {
-        title: '',
         backgroundColor: colors.iceCold,
       },
     });
   }, [navigation]);
 
+  const notificationPreferences = Array.from<SettingName>([
+    'milestoneNotifications',
+    'appointmentNotifications',
+    'recommendationNotifications',
+    'tipsAndActivitiesNotification',
+  ]);
+
   return (
     <AEScrollView>
       <View style={{backgroundColor: colors.white, flex: 1}}>
+        <NotificationsBadge />
         <View
           style={{
             width: '100%',
@@ -105,10 +135,16 @@ const SettingsScreen: React.FC<{}> = () => {
               formikRef.current = formik;
               return (
                 <View style={{marginHorizontal: 32}}>
-                  <NotificationSetting name={'milestoneNotifications'} />
-                  <NotificationSetting name={'appointmentNotifications'} />
-                  <NotificationSetting name={'recommendationNotifications'} />
-                  <NotificationSetting name={'tipsAndActivitiesNotification'} />
+                  {notificationPreferences.map((value, index) => (
+                    <NotificationSetting
+                      key={`notif-${index}`}
+                      onLayout={(e) => {
+                        e.nativeEvent.layout.height < (height || 100) && setHeight(e.nativeEvent.layout.height);
+                      }}
+                      textStyle={!!height && {height}}
+                      name={value}
+                    />
+                  ))}
                 </View>
               );
             }}
