@@ -40,7 +40,7 @@
     "title": "Settings",
     "drawerLabel": "Notification + Account settings",
     "notificationSettings": "Notification settings",
-    "accountSettings": "Account settings"
+    "userProfile": "User profile"
   },
   "childSelector": {
     "edit": "Edit",

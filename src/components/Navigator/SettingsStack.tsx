@@ -15,7 +15,7 @@ const SettingsStack: React.FC<{}> = () => {
         name={'NotificationSettings'}
         component={SettingsScreen}
         options={() => ({
-          title: t('settings:title'),
+          title: '',
           headerLeft: () => <BurgerButton />,
         })}
       />
