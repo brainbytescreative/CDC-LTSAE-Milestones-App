@@ -96,88 +96,91 @@ const SettingsScreen: React.FC<{}> = () => {
   }, [navigation]);
 
   return (
-    <AEScrollView>
-      <View style={{backgroundColor: colors.white, flex: 1}}>
-        <NotificationsBadge />
-        <View
-          style={{
-            width: '100%',
-            backgroundColor: 'transparent',
-          }}>
-          <View style={{height: 16, backgroundColor: colors.iceCold}} />
-          <ShortHeaderArc width={'100%'} />
-        </View>
-        <View style={{flexGrow: 1}}>
-          <Text
-            style={{
-              marginHorizontal: 32,
-              marginTop: 36,
-              fontSize: 22,
-              textTransform: 'capitalize',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            {t('notificationSettings')}
-          </Text>
-          <Formik
-            initialValues={{
-              milestoneNotifications: true,
-              appointmentNotifications: true,
-              recommendationNotifications: true,
-              tipsAndActivitiesNotification: true,
-            }}
-            validate={(values) => {
-              setSettings(values);
-            }}
-            onSubmit={() => {
-              return;
-            }}>
-            {(formik) => {
-              formikRef.current = formik;
-              return (
-                <View style={{marginHorizontal: 32}}>
-                  {notificationPreferences.map((value, index) => (
-                    <NotificationSetting
-                      key={`notif-${index}`}
-                      onLayout={(e) => {
-                        e.nativeEvent.layout.height < (height || 100) && setHeight(e.nativeEvent.layout.height);
-                      }}
-                      textStyle={!!height && {height}}
-                      name={value}
-                    />
-                  ))}
-                </View>
-              );
-            }}
-          </Formik>
-        </View>
-        <View style={{marginTop: 47}}>
-          <PurpleArc width={'100%'} />
-          <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
+    <View style={{backgroundColor: colors.white, flex: 1}}>
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: 'transparent',
+        }}>
+        <View style={{height: 16, backgroundColor: colors.iceCold}} />
+        <ShortHeaderArc width={'100%'} />
+      </View>
+      <AEScrollView>
+        <View style={{flex: 1}}>
+          <NotificationsBadge />
+
+          <View style={{flexGrow: 1}}>
             <Text
               style={{
+                marginHorizontal: 32,
+                marginTop: 36,
                 fontSize: 22,
-                fontFamily: 'Montserrat-Bold',
-                textTransform: 'capitalize',
-              }}>
-              {t('userProfile')}
-            </Text>
-            <Text style={{fontSize: 15, marginVertical: 26}}>{'{State-privacy language}'}</Text>
-            <ParentProfileSelector value={profile} onChange={(values) => setProfile(values)} />
-            <Text style={{textAlign: 'right', marginTop: 10}}>*required for state</Text>
-            <Text
-              style={{
-                fontSize: 22,
-                marginBottom: 16,
                 textTransform: 'capitalize',
                 fontFamily: 'Montserrat-Bold',
               }}>
-              {t('common:appLanguage')}
+              {t('notificationSettings')}
             </Text>
-            <LanguageSelector style={{marginBottom: 40}} />
+            <Formik
+              initialValues={{
+                milestoneNotifications: true,
+                appointmentNotifications: true,
+                recommendationNotifications: true,
+                tipsAndActivitiesNotification: true,
+              }}
+              validate={(values) => {
+                setSettings(values);
+              }}
+              onSubmit={() => {
+                return;
+              }}>
+              {(formik) => {
+                formikRef.current = formik;
+                return (
+                  <View style={{marginHorizontal: 32}}>
+                    {notificationPreferences.map((value, index) => (
+                      <NotificationSetting
+                        key={`notif-${index}`}
+                        onLayout={(e) => {
+                          e.nativeEvent.layout.height < (height || 100) && setHeight(e.nativeEvent.layout.height);
+                        }}
+                        textStyle={!!height && {height}}
+                        name={value}
+                      />
+                    ))}
+                  </View>
+                );
+              }}
+            </Formik>
+          </View>
+          <View style={{marginTop: 47}}>
+            <PurpleArc width={'100%'} />
+            <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontFamily: 'Montserrat-Bold',
+                  textTransform: 'capitalize',
+                }}>
+                {t('userProfile')}
+              </Text>
+              <Text style={{fontSize: 15, marginVertical: 26}}>{'{State-privacy language}'}</Text>
+              <ParentProfileSelector value={profile} onChange={(values) => setProfile(values)} />
+              <Text style={{textAlign: 'right', marginTop: 10}}>*required for state</Text>
+              <Text
+                style={{
+                  fontSize: 22,
+                  marginBottom: 16,
+                  textTransform: 'capitalize',
+                  fontFamily: 'Montserrat-Bold',
+                }}>
+                {t('common:appLanguage')}
+              </Text>
+              <LanguageSelector style={{marginBottom: 40}} />
+            </View>
           </View>
         </View>
-      </View>
-    </AEScrollView>
+      </AEScrollView>
+    </View>
   );
 };
 

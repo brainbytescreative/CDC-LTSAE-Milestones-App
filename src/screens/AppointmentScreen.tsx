@@ -34,15 +34,15 @@ const AppointmentScreen: React.FC<{}> = () => {
   const loading = loadStatus === 'loading' || deleteStatus === 'loading';
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: 'transparent',
+        }}>
+        <View style={{height: 16, backgroundColor: colors.iceCold}} />
+        <ShortHeaderArc width={'100%'} />
+      </View>
       <AEScrollView>
-        <View
-          style={{
-            width: '100%',
-            backgroundColor: 'transparent',
-          }}>
-          <View style={{height: 16, backgroundColor: colors.iceCold}} />
-          <ShortHeaderArc width={'100%'} />
-        </View>
         <ChildSelectorModal />
         <View style={{flexGrow: 1, marginHorizontal: 32}}>
           <Text
