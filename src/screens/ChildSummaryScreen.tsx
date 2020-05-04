@@ -13,6 +13,7 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import ChildPhoto from '../components/ChildPhoto';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../resources/svg';
+import * as MailComposer from 'expo-mail-composer';
 
 interface ItemProps {
   value?: string;
@@ -92,7 +93,13 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <View style={{marginTop: 35}}>
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-            <AEButtonRounded style={{marginBottom: 0}}>{t('emailSummary')}</AEButtonRounded>
+            <AEButtonRounded
+              onPress={() => {
+                MailComposer.composeAsync({});
+              }}
+              style={{marginBottom: 0}}>
+              {t('emailSummary')}
+            </AEButtonRounded>
             <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('showDoctor')}</AEButtonRounded>
             <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
           </View>

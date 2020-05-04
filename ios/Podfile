@@ -1,5 +1,6 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
 
 def add_flipper_pods!
   version = '~> 0.33.1'
@@ -60,6 +61,7 @@ target 'brainbytescreativeactearly' do
   end
 
   use_native_modules!
+  use_unimodules!(exclude: ['expo-face-detector', 'expo-file-system', 'expo-permissions','expo-image-picker', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface'])
 
   # Enables Flipper.
   #
