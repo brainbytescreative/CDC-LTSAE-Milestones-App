@@ -13,13 +13,14 @@ import {FormikProps} from 'formik/dist/types';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
 import NotificationsBadge from '../components/NotificationsBadge';
 import AESwitch from '../components/AESwitch';
-import {colors} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {useNavigation} from '@react-navigation/native';
 import {PurpleArc} from '../resources/svg';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
   name: SettingName;
@@ -164,6 +165,38 @@ const SettingsScreen: React.FC<{}> = () => {
                 {t('userProfile')}
               </Text>
               <Text style={{fontSize: 15, marginVertical: 26}}>{'{State-privacy language}'}</Text>
+              {/*<DropDownPicker*/}
+              {/*  // itemStyle={{alignItems: 'center'}}*/}
+              {/*  activeItemStyle={{alignItems: 'flex-end'}}*/}
+              {/*  activeLabelStyle={{color: 'red', borderWidth: 1}}*/}
+              {/*  labelStyle={{*/}
+              {/*    fontSize: 14,*/}
+              {/*    color: 'red',*/}
+              {/*    flexGrow: 1,*/}
+              {/*  }}*/}
+              {/*  arrowStyle={{marginRight: 10}}*/}
+              {/*  placeholder="Select your country"*/}
+              {/*  items={Array.from(new Array(40)).map((value, index) => ({*/}
+              {/*    label: `Item ${index}`,*/}
+              {/*    value: `item${index}`,*/}
+              {/*  }))}*/}
+              {/*  // defaultNull*/}
+              {/*  defaultIndex={0}*/}
+              {/*  // dropDownMaxHeight={50}*/}
+              {/*  containerStyle={[*/}
+              {/*    {*/}
+              {/*      height: 40,*/}
+              {/*      alignItems: 'flex-start',*/}
+              {/*      // borderRadius: 20,*/}
+              {/*      // borderWidth: 1,*/}
+              {/*      // overflow: 'hidden',*/}
+              {/*    },*/}
+              {/*    sharedStyle.shadow,*/}
+              {/*  ]}*/}
+              {/*  style={[sharedStyle.shadow, sharedStyle.border]}*/}
+              {/*  onChangeItem={(item) => console.log(item.label, item.value)}*/}
+              {/*/>*/}
+
               <ParentProfileSelector value={profile} onChange={(values) => setProfile(values)} />
               <Text style={{textAlign: 'right', marginTop: 10}}>*required for state</Text>
               <Text
