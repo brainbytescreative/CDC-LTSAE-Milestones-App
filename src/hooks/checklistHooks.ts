@@ -13,6 +13,7 @@ import milestoneChecklist, {
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {tOpt} from '../utils/helpers';
+import {number} from 'yup';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -154,7 +155,10 @@ export function useGetChecklistQuestions() {
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
       questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey), ...answersById.get(mKey)}));
-      const groupedByAnswer = _.groupBy(Array.from(questionsById.values()), 'answer');
+      const groupedByAnswer: Record<string, {id: number; value?: string; note: string}[]> = _.groupBy(
+        Array.from(questionsById.values()),
+        'answer',
+      ) as any;
 
       return {
         questions: questionsData as ChecklistData[],
@@ -250,6 +254,8 @@ export function useSetQuestionAnswer() {
   );
 }
 
+type Concerned = Concern & Pick<ConcernAnswer, 'note'>;
+
 export function useGetConcerns() {
   const {data: {id: childId, gender} = {}} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
@@ -291,12 +297,12 @@ export function useGetConcerns() {
       const concerned = answers
         ?.filter((val) => val?.answer)
         .reduce((prev, value) => {
-          const current = value?.concernId && concernDataById.get(`${value?.concernId}`);
+          const current = value?.concernId ? concernDataById.get(`${value?.concernId}`) : undefined;
           if (current) {
-            return [...prev, current];
+            return [...prev, {...current, note: value.note}];
           }
           return prev;
-        }, new Array<Concern>());
+        }, new Array<Concerned>());
 
       concernsData
         ?.filter((value) => value.id && !answeredIds?.includes(value.id))
@@ -309,7 +315,6 @@ export function useGetConcerns() {
         });
 
       const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
-
       return {concerns: concernsData, concerned, missingId};
     },
     {

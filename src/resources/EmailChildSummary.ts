@@ -1,0 +1,131 @@
+// language=twig
+const en = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta
+                name="viewport"
+                content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    </head>
+    <body>
+    <div style="padding-bottom: 20px;"><i>05/04/2020</i></div>
+    <div style="padding-bottom: 5px;">
+        <b>Thank you for using CDC’s Milestone Tracker App for tracking {{ childName }}’s
+            milestones. A summary of your responses and other helpful information
+            are below.</b>
+    </div>
+    <p>
+        Share this with your child’s doctor and other care providers. Remember, if
+        you ever become concerned about {{ childName }}’s development, talk with the doctor
+        and ask for developmental screening and services that can help make a big
+        difference. Don’t wait.
+    </p>
+    {% if concerns.length %}
+    ACT EARLY by talking with {{ childName }}’s doctor right away about:
+    {% endif %}
+    <div style="padding-top: 10px; padding-left: 25px;">
+        <ins>Items You Marked as <b>Concerns</b></ins>
+    </div>
+    <ol style="margin: 0 0; padding-left: 45px;">
+        {% for concern in concerns %}
+        <li style="padding-left: 5px;">{{concern.value}}</li>
+        {% endfor %}
+    </ol>
+    {% if notYetItems.length %}
+    <div style="padding-top: 5px; padding-left: 25px;">
+        <ins><b style="text-transform: capitalize">{{formattedAge}}</b> Milestones You Marked as <b>“Not Yet”</b></ins>
+    </div>
+    <ol style="margin: 0 0; padding-left: 45px;">
+        {% for item in notYetItems %}
+        <li style="padding-left: 5px;">{{item.value}}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+    {% if notYetItems.length or concerns.length %}
+    <div style="padding-top: 20px;">
+        Ask the doctor for developmental screening and about services that can
+        help. Remember, acting early on concerns and missed milestones can make a
+        big difference for {{ childName }}. Don’t wait. Learn more about how to help your
+        child at:
+        <a href="https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_em1">cdc.gov/Concerned</a>
+    </div>
+    {% endif %}
+    {% if yesItems.length %}
+    <div style="padding: 25px 0 5px 0;">
+        <p>
+            <b>Take time to CELEBRATE {{ childName }} having reached these important
+                milestones:</b>
+        </p>
+    </div>
+    <div style="padding-top: 5px; padding-left: 25px;">
+        <ins><b style="text-transform: capitalize">{{formattedAge}}</b> Milestones You Marked as <b>“Yes”</b></ins>
+    </div>
+    <ol style="margin: 0 0; padding-left: 45px;">
+        {% for item in yesItems %}
+        <li style="padding-left: 5px;">{{item.value}}
+            {% if item.note and item.note.length %}
+                <div style="padding-left: 45px;"><small>[Note: {{item.note}}]</small></div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+    {% if skippedItems.length+notSureItems.length %}
+    <div style="padding-top: 20px;">
+        <p>
+            <b>Return to the Milestone Tracker app to REVISIT these milestones:</b>
+        </p>
+    </div>
+    {% if skippedItems.length %}
+    <div style="padding-left: 25px;">
+        <ins><b style="text-transform: capitalize">{{formattedAge}}</b> Milestones You <b>Skipped</b></ins>
+    </div>
+    <ol style="margin: 0 0; padding-left: 45px;">
+        {% for skipped in skippedItems %}
+        <li style="padding-left: 5px;">{{skipped.value}}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+
+    {% if notSureItems.length %}
+    <div style="padding-top: 5px; padding-left: 25px;">
+        <ins><b style="text-transform: capitalize">{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins>
+    </div>
+    <ol style="margin: 0 0; padding-left: 45px;">
+        {% for item in notSureItems %}
+        <li style="padding-left: 5px;">{{item.value}}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+    {% endif %}
+    <div style="padding: 25px 0 25px 0;">
+        <p>
+            <strong>You know {{ childName }} best. If {{heSheTag}} is missing milestones or you ever become
+                concerned about {{hisHersTag}} development, talk with the doctor, share your
+                concerns, and ask for developmental screening.</strong>
+        </p>
+    </div>
+    Thank you again for using CDC’s Milestone Tracker App!
+    <div style="padding-bottom: 40px;">
+        Learn more about developmental milestones and acting early on concerns at
+        <a href="https://www.cdc.gov/ncbddd/actearly/index.html">
+            <a href="https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_em2">cdc.gov/ActEarly</a></a>.
+    </div>
+    <p>
+        <i>This e-mail was auto-generated by CDC’s Milestone Tracker Application;
+            please do not reply.</i>
+    </p>
+    </body>
+    </html>
+`;
+
+const emailSummaryContent = {
+  en,
+};
+
+export default emailSummaryContent;

@@ -120,6 +120,7 @@
     "drawerLabel": "Privacy policy + App Info"
   },
   "childSummary": {
+    "note": "Note",
     "editAnswer": "Edit answer",
     "editNote": "Edit note",
     "emailSummary": "$t(common:emailSummary)",
@@ -183,7 +184,9 @@
     "section-actEarly": "When to\nact early",
     "answered": "answered"
   },
-  "email": {"emailSubject": "{{name}}'s {{milestone}} Milestones Summary"},
+  "email": {
+    "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
+  },
   "states": {
     "AL": "Alabama (AL)",
     "AK": "Alaska (AK)",

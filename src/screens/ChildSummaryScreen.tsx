@@ -14,19 +14,32 @@ import ChildPhoto from '../components/ChildPhoto';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../resources/svg';
 import * as MailComposer from 'expo-mail-composer';
+import emailSummaryContent from '../resources/EmailChildSummary';
+import nunjucks from 'nunjucks';
+import {tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;
   id?: string | number;
+  note?: string | null;
 }
 
-const Item: React.FC<ItemProps> = ({value, id}) => {
+const Item: React.FC<ItemProps> = ({value, id, note}) => {
   const {t} = useTranslation('childSummary');
   return (
     <View style={{marginTop: 32, marginHorizontal: 16}}>
       <Text style={{fontSize: 15}} key={`${id}`}>
         {value}
       </Text>
+      {note && (
+        <Text style={{fontSize: 15}} key={`${id}`}>
+          <Text style={{fontFamily: 'Montserrat-Bold'}}>
+            {t('note')}
+            {': '}
+          </Text>{' '}
+          {note}
+        </Text>
+      )}
       <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6}}>
         <Text style={{textDecorationLine: 'underline', fontSize: 12}}>{t('editAnswer')}</Text>
         <Text style={{textDecorationLine: 'underline', fontSize: 12, marginLeft: 15}}>{t('editNote')}</Text>
@@ -40,14 +53,15 @@ const ChildSummaryScreen: React.FC<{}> = () => {
 
   const {data, refetch} = useGetChecklistQuestions();
   const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
-  const {data: concerns} = useGetConcerns();
+  const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
   const {data: child} = useGetCurrentChild();
   const {bottom} = useSafeArea();
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch({force: true});
-    }, [refetch]),
+      refetch({force: true}).then();
+      refetchConcerns({force: true}).then();
+    }, [refetch, refetchConcerns]),
   );
   const link1 = t('link1Text');
   const link2 = t('link2Text');
@@ -95,7 +109,19 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
             <AEButtonRounded
               onPress={() => {
-                MailComposer.composeAsync({});
+                MailComposer.composeAsync({
+                  isHtml: true,
+                  body: nunjucks.renderString(emailSummaryContent.en, {
+                    childName: child?.name,
+                    concerns: concerns?.concerned,
+                    skippedItems: data?.groupedByAnswer[`${undefined}`],
+                    yesItems: data?.groupedByAnswer['0'],
+                    notSureItems: data?.groupedByAnswer['1'],
+                    notYetItems: data?.groupedByAnswer['2'],
+                    formattedAge: milestoneAgeFormatted,
+                    ...tOpt({t, gender: child?.gender}),
+                  }),
+                });
               }}
               style={{marginBottom: 0}}>
               {t('emailSummary')}
@@ -109,32 +135,32 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>{t('unanswered')}</Text>
           </View>
-          {data?.groupedByAnswer[`${undefined}`]?.map((item) => (
-            <Item value={item.value} id={item.id} />
+          {data?.groupedByAnswer['undefined']?.map((item) => (
+            <Item value={item.value} id={item.id} note={item.note} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item) => (
-            <Item value={item.value} id={item.id} />
+            <Item value={item.value} note={item.note} id={item.id} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
             <Text style={styles.blockText}>{t('yes')}</Text>
           </View>
           {data?.groupedByAnswer['0']?.map((item) => (
-            <Item value={item.value} id={item.id} />
+            <Item value={item.value} note={item.note} id={item.id} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>{t('notSure')}</Text>
           </View>
           {data?.groupedByAnswer['1']?.map((item) => (
-            <Item value={item.value} id={item.id} />
+            <Item value={item.value} note={item.note} id={item.id} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
             <Text style={styles.blockText}>{t('notYet')}</Text>
           </View>
           {data?.groupedByAnswer['2']?.map((item) => (
-            <Item value={item.value} id={item.id} />
+            <Item value={item.value} note={item.note} id={item.id} />
           ))}
         </View>
       </ScrollView>
