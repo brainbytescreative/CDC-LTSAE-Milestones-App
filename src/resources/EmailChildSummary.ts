@@ -11,7 +11,7 @@ const en = `
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     </head>
     <body>
-    <div style="padding-bottom: 20px;"><i>05/04/2020</i></div>
+    <div style="padding-bottom: 20px;"><i>{{currentDayText}}</i></div>
     <div style="padding-bottom: 5px;">
         <b>Thank you for using CDC’s Milestone Tracker App for tracking {{ childName }}’s
             milestones. A summary of your responses and other helpful information

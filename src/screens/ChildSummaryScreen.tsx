@@ -16,7 +16,7 @@ import {PurpleArc} from '../resources/svg';
 import * as MailComposer from 'expo-mail-composer';
 import emailSummaryContent from '../resources/EmailChildSummary';
 import nunjucks from 'nunjucks';
-import {tOpt} from '../utils/helpers';
+import {formatDate, tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;
@@ -119,6 +119,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                     notSureItems: data?.groupedByAnswer['1'],
                     notYetItems: data?.groupedByAnswer['2'],
                     formattedAge: milestoneAgeFormatted,
+                    currentDayText: formatDate(new Date(), 'date'),
                     ...tOpt({t, gender: child?.gender}),
                   }),
                 });
@@ -144,12 +145,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           {concerns?.concerned?.map((item) => (
             <Item value={item.value} note={item.note} id={item.id} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
-            <Text style={styles.blockText}>{t('yes')}</Text>
-          </View>
-          {data?.groupedByAnswer['0']?.map((item) => (
-            <Item value={item.value} note={item.note} id={item.id} />
-          ))}
+
           <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>{t('notSure')}</Text>
           </View>
@@ -160,6 +156,12 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <Text style={styles.blockText}>{t('notYet')}</Text>
           </View>
           {data?.groupedByAnswer['2']?.map((item) => (
+            <Item value={item.value} note={item.note} id={item.id} />
+          ))}
+          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+            <Text style={styles.blockText}>{t('yes')}</Text>
+          </View>
+          {data?.groupedByAnswer['0']?.map((item) => (
             <Item value={item.value} note={item.note} id={item.id} />
           ))}
         </View>

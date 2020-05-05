@@ -4,6 +4,10 @@ import {differenceInDays, format, formatDistanceStrict} from 'date-fns';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
+import * as MailComposer from 'expo-mail-composer';
+import nunjucks from 'nunjucks';
+import emailSummaryContent from '../resources/EmailChildSummary';
+import {ChildResult} from '../hooks/childrenHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {

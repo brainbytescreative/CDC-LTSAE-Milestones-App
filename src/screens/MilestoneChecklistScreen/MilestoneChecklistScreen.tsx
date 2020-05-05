@@ -118,7 +118,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `${item}-${index}`}
           ListHeaderComponent={() => (
-            <Text style={{textAlign: 'center', marginTop: 38, fontFamily: 'Montserrat-Bold'}}>
+            <Text style={{textAlign: 'center', marginTop: 38, fontSize: 22, fontFamily: 'Montserrat-Bold'}}>
               {milestoneAgeFormatted}
             </Text>
           )}
