@@ -5,7 +5,7 @@ import {Trans, useTranslation} from 'react-i18next';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {Text} from 'react-native-paper';
 import LanguageSelector from '../components/LanguageSelector';
-import {useFocusEffect} from '@react-navigation/native';
+import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
@@ -17,6 +17,9 @@ import * as MailComposer from 'expo-mail-composer';
 import emailSummaryContent from '../resources/EmailChildSummary';
 import nunjucks from 'nunjucks';
 import {formatDate, tOpt} from '../utils/helpers';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {ChildSummaryParamList, DashboardDrawerParamsList, DashboardStackParamList} from '../components/Navigator/types';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 interface ItemProps {
   value?: string;
@@ -48,9 +51,14 @@ const Item: React.FC<ItemProps> = ({value, id, note}) => {
   );
 };
 
+export type ChildSummaryStackNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'ChildSummaryStack'>,
+  StackNavigationProp<ChildSummaryParamList>
+>;
+
 const ChildSummaryScreen: React.FC<{}> = () => {
   const {t} = useTranslation('childSummary');
-
+  const navigation = useNavigation<ChildSummaryStackNavigationProp>();
   const {data, refetch} = useGetChecklistQuestions();
   const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
@@ -127,7 +135,13 @@ const ChildSummaryScreen: React.FC<{}> = () => {
               style={{marginBottom: 0}}>
               {t('emailSummary')}
             </AEButtonRounded>
-            <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('showDoctor')}</AEButtonRounded>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.navigate('Revisit');
+              }}
+              style={{marginTop: 10, marginBottom: 30}}>
+              {t('showDoctor')}
+            </AEButtonRounded>
             <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
           </View>
         </View>

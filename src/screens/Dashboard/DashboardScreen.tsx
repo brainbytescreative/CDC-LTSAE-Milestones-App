@@ -1,7 +1,7 @@
 import React from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {colors} from '../../resources/constants';
+import {colors, sharedStyle} from '../../resources/constants';
 import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import MonthCarousel, {DataItem} from './MonthCarousel';
@@ -251,15 +251,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.yellow,
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+    ...sharedStyle.shadow,
   },
   imageContainer: {
     flexDirection: 'row',

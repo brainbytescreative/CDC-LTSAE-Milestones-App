@@ -29,6 +29,7 @@ export type SettingsStackParamList = {
 };
 export type ChildSummaryParamList = {
   ChildSummary: undefined;
+  Revisit: undefined;
 };
 export type TipsAndActivitiesParamList = {
   TipsAndActivities: undefined;

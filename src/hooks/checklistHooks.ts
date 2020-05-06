@@ -13,7 +13,6 @@ import milestoneChecklist, {
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {tOpt} from '../utils/helpers';
-import {number} from 'yup';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -72,15 +71,19 @@ export function useGetMilestone() {
     }
 
     let milestoneAgeFormatted;
+    let milestoneAgeFormattedDashes;
 
     if (milestoneAge) {
       milestoneAgeFormatted =
         milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
+      milestoneAgeFormattedDashes =
+        milestoneAge % 12 === 0 ? t('yearDash', {count: milestoneAge / 12}) : t('monthDash', {count: milestoneAge});
     }
 
     return {
       milestoneAge,
       milestoneAgeFormatted,
+      milestoneAgeFormattedDashes,
       isTooYong,
       betweenCheckList,
     };
