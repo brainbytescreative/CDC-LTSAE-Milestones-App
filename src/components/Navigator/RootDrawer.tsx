@@ -8,6 +8,7 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerNavigationProp,
 } from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
 import InfoStack from './InfoStack';
@@ -18,10 +19,14 @@ import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../../resources/svg/CloseCross';
 import i18next from 'i18next';
+import {DrawerContentOptions} from '@react-navigation/drawer/src/types';
+import {useNavigation} from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
-const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
+const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
+  const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
+
   return (
     <DrawerContentScrollView {...props}>
       <SafeAreaView>
@@ -53,7 +58,9 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                 paddingHorizontal: 32,
                 justifyContent: 'center',
               }}
-              onPress={props.navigation.closeDrawer}>
+              onPress={() => {
+                navigation.closeDrawer();
+              }}>
               <CloseCross />
             </TouchableOpacity>
           </View>
@@ -87,7 +94,7 @@ const RootDrawer: React.FC<{}> = () => {
   const {t} = useTranslation();
   return (
     <Drawer.Navigator
-      drawerContent={DefaultDrawer}
+      drawerContent={(contentProps) => <DefaultDrawer {...contentProps} />}
       overlayColor={colors.whiteTransparent}
       drawerStyle={{width: '100%', backgroundColor: 'transparent'}}
       initialRouteName={'DashboardStack'}>
