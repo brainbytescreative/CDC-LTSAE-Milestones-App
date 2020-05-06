@@ -112,6 +112,21 @@ export const sharedStyle = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.gray,
   },
+  screenTitle: {
+    fontSize: 22,
+    fontFamily: 'Montserrat-Bold',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+    marginHorizontal: 32,
+    marginTop: 36,
+  },
+  boldText: {
+    fontFamily: 'Montserrat-Bold',
+  },
+  largeBoldText: {
+    fontSize: 22,
+    fontFamily: 'Montserrat-Bold',
+  },
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];

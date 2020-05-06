@@ -20,7 +20,7 @@ import {PurpleArc} from '../resources/svg';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
-import DropDownPicker from 'react-native-dropdown-picker';
+// import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
   name: SettingName;
@@ -111,16 +111,7 @@ const SettingsScreen: React.FC<{}> = () => {
           <NotificationsBadge />
 
           <View style={{flexGrow: 1}}>
-            <Text
-              style={{
-                marginHorizontal: 32,
-                marginTop: 36,
-                fontSize: 22,
-                textTransform: 'capitalize',
-                fontFamily: 'Montserrat-Bold',
-              }}>
-              {t('notificationSettings')}
-            </Text>
+            <Text style={[sharedStyle.screenTitle]}>{t('notificationSettings')}</Text>
             <Formik
               initialValues={{
                 milestoneNotifications: true,

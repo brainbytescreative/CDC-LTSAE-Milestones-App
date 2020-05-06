@@ -25,7 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
 const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
-  const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
+  // const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
 
   return (
     <DrawerContentScrollView {...props}>
@@ -59,7 +59,9 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
                 justifyContent: 'center',
               }}
               onPress={() => {
-                navigation.closeDrawer();
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore
+                props.navigation.closeDrawer();
               }}>
               <CloseCross />
             </TouchableOpacity>

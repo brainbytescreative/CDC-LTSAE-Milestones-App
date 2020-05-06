@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
-import {colors, sharedStyle, skillTypes} from '../../resources/constants';
-import {Text, Title} from 'react-native-paper';
+import {FlatList, View} from 'react-native';
+import {colors, skillTypes} from '../../resources/constants';
+import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
 import FrontPage from './FrontPage';
@@ -16,8 +16,6 @@ import {
   useSetConcern,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {useHeaderHeight} from '@react-navigation/stack';
-import ChevronRightBig from '../../resources/svg/ChevronRightBig';
 import {PurpleArc} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
@@ -34,7 +32,6 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
   const {progress: sectionsProgress, complete} = useGetSectionsProgress();
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
-  const headerHeight = useHeaderHeight();
   const {t} = useTranslation('milestoneChecklist');
 
   const flatListRef = useRef<FlatList>(null);
