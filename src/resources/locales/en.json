@@ -38,7 +38,7 @@
   },
   "settings": {
     "title": "Settings",
-    "drawerLabel": "Notification + Account settings",
+    "drawerLabel": "Notifications & Settings",
     "notificationSettings": "Notification settings",
     "userProfile": "User profile"
   },
@@ -90,7 +90,8 @@
     "yearShort_plural": "{{count}} yrs",
     "month": "{{count}} month",
     "monthShort": "{{count}} mo",
-    "month_plural": "{{count}} months"
+    "month_plural": "{{count}} months",
+    "menu": "Menu"
   },
   "addChild": {
     "title": "Add a child",
@@ -117,7 +118,7 @@
   },
   "info": {
     "title": "Info",
-    "drawerLabel": "Privacy policy + App Info"
+    "drawerLabel": "Privacy policy & App Info"
   },
   "childSummary": {
     "note": "Note",

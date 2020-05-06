@@ -6,22 +6,24 @@ import TipsAndActivitiesStack from './TipsAndActivitiesStack';
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
-  DrawerContentOptions,
+  DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
 import InfoStack from './InfoStack';
 import ChildSummaryStack from './ChildSummaryStack';
-import {SafeAreaView, ScrollView, View} from 'react-native';
-import {colors} from '../../resources/constants';
+import {SafeAreaView, TouchableOpacity, View} from 'react-native';
+import {colors, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
+import CloseCross from '../../resources/svg/CloseCross';
+import i18next from 'i18next';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
-const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
+const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
   return (
-    <ScrollView>
+    <DrawerContentScrollView {...props}>
       <SafeAreaView>
         <View
           style={{
@@ -29,6 +31,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
             marginHorizontal: 32,
             borderRadius: 10,
             marginVertical: 60,
+            paddingBottom: 19,
           }}>
           <View style={{flexDirection: 'row'}}>
             <Text
@@ -40,13 +43,43 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
                 flexGrow: 1,
                 fontFamily: 'Montserrat-Bold',
               }}>
-              Menu
+              {i18next.t('common:menu')}
             </Text>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 0,
+                paddingVertical: 25,
+                paddingHorizontal: 32,
+                justifyContent: 'center',
+              }}
+              onPress={props.navigation.closeDrawer}>
+              <CloseCross />
+            </TouchableOpacity>
           </View>
-          <DrawerItemList {...props} />
+          <DrawerItemList
+            itemStyle={[
+              {
+                backgroundColor: colors.white,
+                marginHorizontal: 16,
+                borderRadius: 10,
+                marginTop: 0,
+                marginBottom: 12,
+                overflow: 'visible',
+              },
+              sharedStyle.shadow,
+            ]}
+            labelStyle={{
+              marginHorizontal: 8,
+              fontSize: 18,
+              fontFamily: 'Montserrat-Regular',
+              fontWeight: 'normal',
+            }}
+            {...props}
+          />
         </View>
       </SafeAreaView>
-    </ScrollView>
+    </DrawerContentScrollView>
   );
 };
 
@@ -55,6 +88,7 @@ const RootDrawer: React.FC<{}> = () => {
   return (
     <Drawer.Navigator
       drawerContent={DefaultDrawer}
+      overlayColor={colors.whiteTransparent}
       drawerStyle={{width: '100%', backgroundColor: 'transparent'}}
       initialRouteName={'DashboardStack'}>
       <Drawer.Screen
@@ -72,13 +106,6 @@ const RootDrawer: React.FC<{}> = () => {
         component={MilestoneChecklistStack}
       />
       <Drawer.Screen
-        name={'SettingsStack'}
-        options={{
-          drawerLabel: t('settings:drawerLabel'),
-        }}
-        component={SettingsStack}
-      />
-      <Drawer.Screen
         name={'TipsAndActivitiesStack'}
         options={{
           drawerLabel: t('tipsAndActivities:drawerLabel'),
@@ -86,18 +113,26 @@ const RootDrawer: React.FC<{}> = () => {
         component={TipsAndActivitiesStack}
       />
       <Drawer.Screen
-        name={'InfoStack'}
-        options={{
-          drawerLabel: t('info:drawerLabel'),
-        }}
-        component={InfoStack}
-      />
-      <Drawer.Screen
         name={'ChildSummaryStack'}
         options={{
           drawerLabel: t('childSummary:drawerLabel'),
         }}
         component={ChildSummaryStack}
+      />
+      <Drawer.Screen
+        name={'SettingsStack'}
+        options={{
+          drawerLabel: t('settings:drawerLabel'),
+        }}
+        component={SettingsStack}
+      />
+
+      <Drawer.Screen
+        name={'InfoStack'}
+        options={{
+          drawerLabel: t('info:drawerLabel'),
+        }}
+        component={InfoStack}
       />
     </Drawer.Navigator>
   );
