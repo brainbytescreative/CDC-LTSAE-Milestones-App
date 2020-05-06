@@ -60,13 +60,26 @@ const DB_MIGRATIONS = [
     await dB.executeSql(`
         create table concern_answers
         (
-            concernId     INTEGER not null,
-            answer BOOLEAN not null,
-            note          TEXT,
-            childId       INTEGER not null 
+            concernId INTEGER not null,
+            answer    BOOLEAN not null,
+            note      TEXT,
+            childId   INTEGER not null
                 references Children (id)
                     on update cascade on delete cascade,
-                    primary key (concernId, childId)
+            primary key (concernId, childId)
+        );
+    `);
+
+    await dB.executeSql(`
+        create table tips_status
+        (
+            hintId   INTEGER,
+            childId  INTEGER
+                references Children (id)
+                    on update cascade on delete cascade,
+            like     BOOLEAN,
+            remindMe BOOLEAN,
+            primary key (hintId, childId)
         );
     `);
   },

@@ -4,51 +4,69 @@ import ChildSelectorModal from '../components/ChildSelectorModal';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import SkillTypeDialog from '../components/SkillTypeDialog';
-import {colors, LanguageType, sharedStyle, SkillType, skillTypes} from '../resources/constants';
-import tipsAndActivities from '../resources/tipsAndActivities';
-import i18next, {TFunction} from 'i18next';
+import {colors, sharedStyle} from '../resources/constants';
+import {TFunction} from 'i18next';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {useNavigation} from '@react-navigation/native';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
-import {ChevronDown, PurpleArc} from '../resources/svg';
+import {ChevronDown} from '../resources/svg';
 import LikeHeart from '../resources/svg/LikeHeart';
-import ButtonWithChevron from '../components/ButtonWithChevron';
+import {Tip, useGetTipValue, useGetTips, useSetTip} from '../hooks/checklistHooks';
 
-const Item: React.FC<{title: string; t: TFunction}> = ({title, t}) => (
-  <View>
-    <View
-      style={[
-        {
-          padding: 20,
-          paddingBottom: 40,
-          marginHorizontal: 32,
-          marginTop: 30,
-          backgroundColor: colors.white,
-        },
-        sharedStyle.shadow,
-        sharedStyle.border,
-      ]}>
-      <Text>{title}</Text>
+type ItemProps = {
+  title: string | undefined;
+  t: TFunction;
+  itemId: number | undefined;
+  onLikePress: (id: number | undefined, value: boolean) => void;
+  childId?: number;
+} & Tip;
+
+const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId}) => {
+  const {data: {like} = {}} = useGetTipValue({hintId: itemId, childId});
+
+  return (
+    <View>
+      <View
+        style={[
+          {
+            padding: 20,
+            paddingBottom: 40,
+            marginHorizontal: 32,
+            marginTop: 30,
+            backgroundColor: colors.white,
+          },
+          sharedStyle.shadow,
+          sharedStyle.border,
+        ]}>
+        <Text>{title}</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 48,
+          marginTop: -25,
+          justifyContent: 'space-between',
+        }}>
+        <TouchableOpacity
+          onPress={() => onLikePress(itemId, !like)}
+          style={[
+            itemStyle.button,
+            sharedStyle.border,
+            sharedStyle.shadow,
+            !!like && {backgroundColor: colors.purple},
+          ]}>
+          <LikeHeart selected={!!like} style={{marginRight: 5}} />
+          <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[itemStyle.button, sharedStyle.border, sharedStyle.shadow]}>
+          <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-    <View
-      style={{
-        flexDirection: 'row',
-        marginHorizontal: 48,
-        marginTop: -25,
-        justifyContent: 'space-between',
-      }}>
-      <TouchableOpacity style={[itemStyle.button, sharedStyle.border, sharedStyle.shadow]}>
-        <LikeHeart style={{marginRight: 5}} />
-        <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[itemStyle.button, sharedStyle.border, sharedStyle.shadow]}>
-        <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
+};
 
 const itemStyle = StyleSheet.create({
   button: {
@@ -64,15 +82,8 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const navigation = useNavigation();
   const [skillType, setSkillType] = useState<string>('All');
   const {data: child} = useGetCurrentChild();
-
-  const onPressNextSection = () => {
-    const currentSection = skillTypes.indexOf(skillType);
-    if (currentSection < skillTypes.length - 1) {
-      setSkillType(skillTypes[currentSection + 1]);
-    } else {
-      setSkillType(skillTypes[0]);
-    }
-  };
+  const {data: tips} = useGetTips();
+  const [setTip] = useSetTip();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -82,9 +93,19 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
     });
   }, [navigation]);
 
-  const tips = tipsAndActivities
-    .filter((value) => value.age === '2-hint')
-    .map((value) => value[i18next.language as LanguageType]);
+  // const {data: {milestoneAge} = {}} = useGetMilestone();
+  // console.log(tipsData);
+
+  // const tips = useMemo(
+  //   () =>
+  //     milestoneChecklist
+  //       .filter((value) => value.id === milestoneAge)[0]
+  //       ?.helpful_hints?.map((item) => ({
+  //         ...item,
+  //         value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
+  //       })),
+  //   [milestoneAge, t, child],
+  // );
 
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
@@ -97,7 +118,7 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
         <ShortHeaderArc width={'100%'} />
       </View>
       <FlatList
-        data={tips}
+        data={tips || []}
         ListHeaderComponent={() => (
           <>
             <ChildSelectorModal />
@@ -143,14 +164,25 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
           </>
         )}
         ListFooterComponent={() => (
-          <View style={{marginTop: 47}}>
-            <PurpleArc width={'100%'} />
-            <View style={{backgroundColor: colors.purple}}>
-              <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
-            </View>
+          <View style={{height: 40}}>
+            {/*<PurpleArc width={'100%'} />*/}
+            {/*<View style={{backgroundColor: colors.purple}}>*/}
+            {/*  <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>*/}
+            {/*</View>*/}
           </View>
         )}
-        renderItem={({item}) => <Item t={t} title={item} />}
+        renderItem={({item}) => (
+          <Item
+            onLikePress={(id, value) => {
+              id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
+            }}
+            t={t}
+            like={item.like}
+            itemId={item.id}
+            title={item.value}
+            childId={child?.id}
+          />
+        )}
         keyExtractor={(item, index) => `${index}`}
       />
     </View>

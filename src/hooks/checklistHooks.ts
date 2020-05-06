@@ -365,3 +365,92 @@ export function useSetConcern() {
     },
   );
 }
+
+export interface Tip {
+  childId?: number;
+  hintId?: number;
+  id?: number;
+  like?: number;
+  remindMe?: number;
+  value?: string;
+}
+
+export function useGetTips() {
+  const {data: {milestoneAge} = {}} = useGetMilestone();
+  const {t} = useTranslation('milestones');
+  const {data: child} = useGetCurrentChild();
+  useMemo(
+    () =>
+      milestoneChecklist
+        .filter((value) => value.id === milestoneAge)[0]
+        ?.helpful_hints?.map((item) => ({
+          ...item,
+          value: item.value && t(`${item.value}`, tOpt({t, gender: child?.gender})),
+        })),
+    [milestoneAge, t, child],
+  );
+
+  return useQuery<Tip[], [string, {milestoneAge?: number; childId?: number}]>(
+    ['tips', {milestoneAge, childId: child?.id}],
+    async (key, variables) => {
+      if (!variables.milestoneAge || !variables.childId) {
+        return;
+      }
+
+      const tips = milestoneChecklist
+        .filter((value) => value.id === milestoneAge)[0]
+        ?.helpful_hints?.map((item) => ({
+          ...item,
+          value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
+        }));
+
+      const tipsIds = tips?.map((value) => value.id) || [0].join(',');
+
+      const result = await sqLiteClient.dB?.executeSql(
+        `select * from tips_status where childId=? and hintId in (${tipsIds})`,
+        [variables.childId],
+      );
+
+      const resultData = (result && result[0].rows.raw()) || [];
+
+      const merged = _.merge(_.keyBy(tips, 'id'), _.keyBy(resultData, 'hintId'));
+      const mergedArray = Array.from(new Map(Object.entries(merged)).values()) as any;
+      mergedArray.forEach((value: Tip) =>
+        queryCache.setQueryData(['tip', {childId: variables.childId, hintId: value.id}], value),
+      );
+      return mergedArray;
+    },
+  );
+}
+
+export function useGetTipValue(variables: {childId?: number; hintId?: number}) {
+  return useQuery<Pick<Tip, 'remindMe' | 'like'> | undefined, [string, typeof variables]>(
+    ['tip', {childId: variables.childId, hintId: variables.hintId}],
+    async () => undefined,
+  );
+}
+
+export function useSetTip() {
+  return useMutation<void, {childId: number; hintId: number; like?: boolean; remindMe?: boolean}>(async (variables) => {
+    const key: any = ['tip', {childId: variables.childId, hintId: variables.hintId}];
+    const cache = queryCache.getQueryData(key) as Tip | undefined;
+
+    if (cache) {
+      queryCache.setQueryData(key, {...cache, like: variables.like, remindMe: variables.remindMe});
+    }
+
+    const result = await sqLiteClient.dB?.executeSql(
+      `
+                  INSERT OR
+                  REPLACE
+                  INTO tips_status (hintId, childId, like, remindMe)
+                  VALUES (?1, ?2, ?3, ?4)
+        `,
+      [variables.hintId, variables.childId, variables.like || false, variables.remindMe || false],
+    );
+
+    if (!result || result[0].rowsAffected === 0) {
+      throw new Error('Update failed');
+    }
+  });
+}
