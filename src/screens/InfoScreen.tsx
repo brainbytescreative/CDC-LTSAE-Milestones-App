@@ -10,7 +10,6 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import NotificationsBadge from '../components/NotificationsBadge';
 
 const InfoScreen: React.FC<{}> = () => {
-  // const source = policy[i18next.language as LanguageType];
   const {t} = useTranslation('info');
   const {bottom} = useSafeArea();
   return (
