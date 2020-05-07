@@ -6,7 +6,7 @@ import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import SQLiteClient from './SQLiteClient';
 
 const DB_NAME = 'act-early-rn.sqlite';
-const DB_DEBUG = false;
+const DB_DEBUG = true;
 const DB_MIGRATIONS = [
   async (dB: SQLiteDatabase): Promise<void> => {
     // USE dB TO CREATE TABLES
@@ -73,8 +73,8 @@ const DB_MIGRATIONS = [
     await dB.executeSql(`
         create table tips_status
         (
-            hintId   INTEGER,
-            childId  INTEGER
+            hintId   INTEGER not null,
+            childId  INTEGER not null
                 references Children (id)
                     on update cascade on delete cascade,
             like     BOOLEAN,

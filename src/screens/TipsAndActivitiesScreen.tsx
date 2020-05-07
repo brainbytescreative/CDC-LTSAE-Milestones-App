@@ -19,12 +19,13 @@ type ItemProps = {
   title: string | undefined;
   t: TFunction;
   itemId: number | undefined;
-  onLikePress: (id: number | undefined, value: boolean) => void;
+  onLikePress?: (id: number | undefined, value: boolean) => void;
+  onRemindMePress?: (id: number | undefined, value: boolean) => void;
   childId?: number;
 } & Tip;
 
-const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId}) => {
-  const {data: {like} = {}} = useGetTipValue({hintId: itemId, childId});
+const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId, onRemindMePress}) => {
+  const {data: {like, remindMe} = {}} = useGetTipValue({hintId: itemId, childId});
 
   return (
     <View>
@@ -49,20 +50,33 @@ const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId}) => 
           marginTop: -25,
           justifyContent: 'space-between',
         }}>
-        <TouchableOpacity
-          onPress={() => onLikePress(itemId, !like)}
+        <View
           style={[
             itemStyle.button,
             sharedStyle.border,
             sharedStyle.shadow,
             !!like && {backgroundColor: colors.purple},
           ]}>
-          <LikeHeart selected={!!like} style={{marginRight: 5}} />
-          <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[itemStyle.button, sharedStyle.border, sharedStyle.shadow]}>
-          <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={itemStyle.buttonTouchable} onPress={() => onLikePress && onLikePress(itemId, !like)}>
+            <LikeHeart selected={!!like} style={{marginRight: 5}} />
+            <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={[
+            itemStyle.button,
+            sharedStyle.border,
+            sharedStyle.shadow,
+            !!remindMe && {backgroundColor: colors.purple},
+          ]}>
+          <TouchableOpacity
+            style={itemStyle.buttonTouchable}
+            onPress={() => {
+              onRemindMePress && onRemindMePress(itemId, !remindMe);
+            }}>
+            <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -71,9 +85,13 @@ const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId}) => 
 const itemStyle = StyleSheet.create({
   button: {
     backgroundColor: colors.white,
-    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  buttonTouchable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
   },
 });
 
@@ -175,6 +193,9 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
           <Item
             onLikePress={(id, value) => {
               id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
+            }}
+            onRemindMePress={(id, value) => {
+              id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
             }}
             t={t}
             like={item.like}

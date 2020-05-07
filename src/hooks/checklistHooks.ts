@@ -426,7 +426,14 @@ export function useGetTips() {
 export function useGetTipValue(variables: {childId?: number; hintId?: number}) {
   return useQuery<Pick<Tip, 'remindMe' | 'like'> | undefined, [string, typeof variables]>(
     ['tip', {childId: variables.childId, hintId: variables.hintId}],
-    async () => undefined,
+    async () => {
+      const result = await sqLiteClient.dB?.executeSql('select * from tips_status where childId=? and hintId =?', [
+        variables.childId,
+        variables.hintId,
+      ]);
+
+      return result && result[0].rows.item(0);
+    },
   );
 }
 
@@ -435,20 +442,22 @@ export function useSetTip() {
     const key: any = ['tip', {childId: variables.childId, hintId: variables.hintId}];
     const cache = queryCache.getQueryData(key) as Tip | undefined;
 
+    const data = _.pick({...cache, ...variables}, ['hintId', 'childId', 'like', 'remindMe']);
+
     if (cache) {
-      queryCache.setQueryData(key, {...cache, like: variables.like, remindMe: variables.remindMe});
+      queryCache.setQueryData(key, {...cache, like: data.like, remindMe: data.remindMe});
     }
 
-    const result = await sqLiteClient.dB?.executeSql(
-      `
-                  INSERT OR
-                  REPLACE
-                  INTO tips_status (hintId, childId, like, remindMe)
-                  VALUES (?1, ?2, ?3, ?4)
-        `,
-      [variables.hintId, variables.childId, variables.like || false, variables.remindMe || false],
-    );
+    const query = `
+                INSERT OR
+                REPLACE
+                INTO tips_status (${Object.keys(data).join(',')})
+                VALUES (${Object.keys(data)
+                  .map((value, index) => `?${index + 1}`)
+                  .join(',')})
+      `;
 
+    const result = await sqLiteClient.dB?.executeSql(query, Object.values(data));
     if (!result || result[0].rowsAffected === 0) {
       throw new Error('Update failed');
     }
