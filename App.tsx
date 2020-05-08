@@ -19,6 +19,9 @@ import {initialize} from './src/db';
 import {DowngradeError} from './src/db/SQLiteClient';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors} from './src/resources/constants';
+import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
+
+ACPAnalytics.registerExtension();
 
 console.disableYellowBox = true;
 
@@ -65,6 +68,9 @@ const App = () => {
         console.warn(err);
         setLoading(false);
       });
+    ACPAnalytics.extensionVersion().then((version) =>
+      console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
+    );
   });
 
   return (

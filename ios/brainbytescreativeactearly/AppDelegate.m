@@ -4,6 +4,10 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+#import "ACPCore.h"
+#import "ACPAnalytics.h"
+#import "ACPIdentity.h"
+
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -45,6 +49,13 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  [ACPCore configureWithAppId:@"yourAppId"];
+  [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
+  [ACPAnalytics registerExtension];
+  [ACPIdentity registerExtension];
+  [ACPCore start:nil];
+  
   return YES;
 }
 

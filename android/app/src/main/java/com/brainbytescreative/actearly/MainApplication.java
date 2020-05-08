@@ -15,6 +15,7 @@ import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import org.unimodules.adapters.react.ReactModuleRegistryProvider;
 import org.unimodules.core.interfaces.SingletonModule;
 import java.util.Arrays;
+import com.adobe.marketing.mobile.*;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -57,6 +58,19 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+
+      MobileCore.setApplication(this);
+      MobileCore.configureWithAppId("yourAppId");
+      MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
+
+      try {
+          Analytics.registerExtension(); //Register Analytics with Mobile Core
+          Identity.registerExtension();
+          MobileCore.start(null);
+      } catch (Exception e) {
+          //Log the exception
+      }
+
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
