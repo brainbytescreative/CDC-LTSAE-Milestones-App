@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {ProgressBar, Text} from 'react-native-paper';
-import {colors} from '../../resources/constants';
+import {colors, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from './DashboardScreen';
@@ -21,7 +21,7 @@ const MilestoneChecklistWidget: React.FC<{}> = () => {
       onPress={() => {
         navigation.navigate('MilestoneChecklistStack');
       }}
-      style={{backgroundColor: 'white', padding: 20, borderRadius: 15}}>
+      style={[{backgroundColor: 'white', padding: 20, borderRadius: 15, overflow: 'visible'}, sharedStyle.shadow]}>
       <View style={styles.milestoneCheckListContainer}>
         <Text
           numberOfLines={1}

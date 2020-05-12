@@ -102,7 +102,7 @@ const DashboardScreen: React.FC<Props> = () => {
                 </View>
                 <View style={[styles.actionItem, {marginHorizontal: 10}]}>
                   <TouchableOpacity
-                    style={{alignItems: 'center'}}
+                    style={[{alignItems: 'center'}]}
                     onPress={() => {
                       navigation.navigate('ChildSummaryStack');
                     }}>
@@ -149,7 +149,7 @@ const DashboardScreen: React.FC<Props> = () => {
                     appointmentId: appt.id,
                   });
                 }}
-                style={[styles.appointmentsContainer, {marginBottom: 20}]}>
+                style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
                 <Text style={{fontSize: 18}}>{appt.apptType}</Text>
                 <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
               </TouchableOpacity>
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   actionItem: {
+    ...sharedStyle.shadow,
     backgroundColor: '#fff',
     flex: 1,
     borderRadius: 10,
