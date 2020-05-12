@@ -134,6 +134,8 @@ export const sharedStyle = StyleSheet.create({
   },
 });
 
+export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
+
 export const sharedScreenOptions: StackNavigationOptions = {
   headerStyle: {
     elevation: 0, // remove shadow on Android
