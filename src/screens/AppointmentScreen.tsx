@@ -23,14 +23,6 @@ const AppointmentScreen: React.FC<{}> = () => {
   const {data: appointment, status: loadStatus} = useGetAppointmentById(route.params.appointmentId);
   const [deleteAppointment, {status: deleteStatus}] = useDeleteAppointment();
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: colors.iceCold,
-      },
-    });
-  }, [navigation]);
-
   const loading = loadStatus === 'loading' || deleteStatus === 'loading';
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>

@@ -7,25 +7,21 @@ import {DashboardStackParamList} from './types';
 import BurgerButton from '../BurgerButton';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
-import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
-import {colors} from '../../resources/constants';
+import {sharedScreenOptions} from '../../resources/constants';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
 const DashboardStack: FC<{}> = () => {
   const {t} = useTranslation();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={sharedScreenOptions}>
       <Stack.Screen
         name={'Dashboard'}
         component={DashboardScreen}
         options={() => ({
           title: t('dashboard:title'),
-          headerStyle: {
-            backgroundColor: colors.iceCold,
-          },
           headerLeft: () => <BurgerButton />,
         })}
       />

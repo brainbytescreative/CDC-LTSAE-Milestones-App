@@ -4,7 +4,7 @@ import {Text} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeArea} from 'react-native-safe-area-context';
-import {colors, sharedStyle} from '../resources/constants';
+import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
 import CloseCross from '../resources/svg/CloseCross';
 import {ChevronLeft} from '../resources/svg';
 import {useTranslation} from 'react-i18next';
@@ -23,6 +23,7 @@ const NotificationsBadge: React.FC<{}> = () => {
       setIsVisible(!visible);
     };
     navigation.setOptions({
+      ...sharedScreenOptions,
       headerRight: () => {
         return (
           <TouchableOpacity onPress={onPress} style={styles.badgeContainer}>

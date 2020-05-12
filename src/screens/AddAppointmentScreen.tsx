@@ -39,14 +39,6 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   const apptId = route.params?.appointmentId;
   const {data: appointment} = useGetAppointmentById(apptId);
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: colors.iceCold,
-      },
-    });
-  }, [navigation]);
-
   const formik = useFormik<FormValues>({
     validationSchema: addAppointmentSchema,
     validateOnMount: true,

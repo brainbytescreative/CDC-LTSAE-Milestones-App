@@ -2,6 +2,7 @@
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
 import {StyleSheet} from 'react-native';
+import {StackNavigationOptions} from '@react-navigation/stack';
 
 export const states = [
   'AL',
@@ -132,6 +133,15 @@ export const sharedStyle = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
   },
 });
+
+export const sharedScreenOptions: StackNavigationOptions = {
+  headerStyle: {
+    elevation: 0, // remove shadow on Android
+    shadowOpacity: 0, // remove shadow on iOS
+    backgroundColor: colors.iceCold,
+  },
+  headerTitleAlign: 'center',
+};
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];
 export const missingConcerns = [1, 7, 15, 25, 34, 42, 51, 58, 68, 80];

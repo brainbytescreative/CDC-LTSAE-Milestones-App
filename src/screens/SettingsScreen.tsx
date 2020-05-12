@@ -80,7 +80,6 @@ const SettingsScreen: React.FC<{}> = () => {
   const [setSettings] = useSetNotificationSettings();
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
-  const navigation = useNavigation();
   const [height, setHeight] = useState<number | undefined>();
 
   useEffect(() => {
@@ -88,16 +87,6 @@ const SettingsScreen: React.FC<{}> = () => {
       formikRef.current?.setValues(settings);
     }
   }, [settings]);
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: colors.iceCold,
-      },
-    });
-  }, [navigation]);
-
-  // console.log('profile', profile);
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>

@@ -7,7 +7,7 @@ import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild}
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import NotificationsBadge from '../NotificationsBadge';
-import {colors, sharedStyle} from '../../resources/constants';
+import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
 import {useSafeArea} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
@@ -29,6 +29,7 @@ const ChildSelectorModal: React.FC<{}> = () => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      ...sharedScreenOptions,
       headerTitle: () => {
         return (
           <TouchableOpacity
