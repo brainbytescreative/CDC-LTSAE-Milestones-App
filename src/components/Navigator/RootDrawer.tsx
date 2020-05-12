@@ -29,13 +29,16 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
     <DrawerContentScrollView {...props}>
       <SafeAreaView>
         <View
-          style={{
-            backgroundColor: colors.purple,
-            marginHorizontal: 32,
-            borderRadius: 10,
-            marginVertical: 60,
-            paddingBottom: 19,
-          }}>
+          style={[
+            {
+              backgroundColor: colors.purple,
+              marginHorizontal: 32,
+              borderRadius: 10,
+              marginVertical: 60,
+              paddingBottom: 19,
+            },
+            sharedStyle.shadow,
+          ]}>
           <View style={{flexDirection: 'row'}}>
             <Text
               style={{

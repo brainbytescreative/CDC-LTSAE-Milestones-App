@@ -96,6 +96,8 @@ export const colors = Object.freeze({
   },
 });
 
+export const checklistSections = [...skillTypes, 'actEarly'];
+
 export const sharedStyle = StyleSheet.create({
   shadow: {
     shadowColor: '#000',

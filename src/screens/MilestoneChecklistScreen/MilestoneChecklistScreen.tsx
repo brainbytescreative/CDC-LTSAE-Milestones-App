@@ -1,13 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
-import {colors, skillTypes} from '../../resources/constants';
+import {checklistSections, colors, skillTypes} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem, {Section} from './SectionItem';
-import FrontPage from './FrontPage';
 import ActEarlyPage from './ActEarlyPage';
-import OverviewPage from './OverviewPage';
 import {
   useGetChecklistQuestions,
   useGetConcerns,
@@ -23,7 +21,7 @@ import ButtonWithChevron from '../../components/ButtonWithChevron';
 const sections = [...skillTypes, 'actEarly'];
 
 const MilestoneChecklistScreen: React.FC<{}> = () => {
-  const [section, setSection] = useState<Section | undefined>();
+  const [section, setSection] = useState<Section>(checklistSections[0]);
   const [gotStarted, setGotStarted] = useState(false);
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
@@ -36,9 +34,9 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    setGotStarted(false);
-  }, [childId]);
+  // useEffect(() => {
+  //   setGotStarted(false);
+  // }, [childId]);
 
   useEffect(() => {
     if (complete !== undefined && childId && missingId) {
@@ -46,15 +44,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
     }
   }, [childId, setConcern, complete, missingId]);
 
-  useEffect(() => {
-    if (answeredQuestionsCount === 0 && !gotStarted) {
-      setSection(undefined);
-      setGotStarted(false);
-    }
-    if (answeredQuestionsCount && answeredQuestionsCount > 0 && section === undefined) {
-      setSection(sections[0]);
-    }
-  }, [gotStarted, section, answeredQuestionsCount, childId]);
+
 
   useEffect(() => {
     if (section) {
@@ -77,7 +67,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
       <View style={{flex: 0}}>
         <FlatList
           extraData={sectionsProgress}
-          data={sections}
+          data={checklistSections}
           horizontal={true}
           renderItem={({item}) => (
             <SectionItem
@@ -90,23 +80,23 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      {!section && !gotStarted && (
-        <FrontPage
-          milestoneAgeFormatted={milestoneAgeFormatted}
-          onGetStarted={() => {
-            setGotStarted(true);
-          }}
-        />
-      )}
-      {!section && gotStarted && (
-        <OverviewPage
-          milestoneAge={milestoneAge}
-          milestoneAgeFormatted={milestoneAgeFormatted}
-          onNext={() => {
-            setSection(sections[0]);
-          }}
-        />
-      )}
+      {/*{!section && !gotStarted && (*/}
+      {/*  <FrontPage*/}
+      {/*    milestoneAgeFormatted={milestoneAgeFormatted}*/}
+      {/*    onGetStarted={() => {*/}
+      {/*      setGotStarted(true);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*)}*/}
+      {/*{!section && gotStarted && (*/}
+      {/*  <OverviewPage*/}
+      {/*    milestoneAge={milestoneAge}*/}
+      {/*    milestoneAgeFormatted={milestoneAgeFormatted}*/}
+      {/*    onNext={() => {*/}
+      {/*      setSection(sections[0]);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*)}*/}
       {section && skillTypes.includes(section) && (
         <FlatList
           ref={flatListRef}

@@ -10,8 +10,8 @@ export type Section = SkillType | 'actEarly';
 
 interface ItemProps {
   section: Section;
-  setSection: React.Dispatch<React.SetStateAction<Section | undefined>>;
-  selectedSection: Section | undefined;
+  setSection?: React.Dispatch<React.SetStateAction<Section>>;
+  selectedSection?: Section | undefined;
   progress: {total: number; answered: number} | undefined;
 }
 
@@ -24,7 +24,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
   return (
     <TouchableOpacity
       onPress={() => {
-        setSection(section);
+        setSection && setSection(section);
       }}
       style={{flex: 1}}>
       <View

@@ -39,6 +39,8 @@ export type InfoParamList = {
 };
 export type MilestoneCheckListParamList = {
   MilestoneChecklist: undefined;
+  MilestoneChecklistGetStarted: undefined;
+  MilestoneChecklistQuickView: undefined;
 };
 
 export type RootStackParamList = {
