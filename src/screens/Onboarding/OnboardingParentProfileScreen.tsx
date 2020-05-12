@@ -54,9 +54,9 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
             }}>
             {t('parentProfile')}
           </Text>
-          <View>
+          <View style={{marginHorizontal: 32}}>
             <ParentProfileSelector
-              style={{marginHorizontal: 32}}
+              value={profile}
               onChange={(values) => {
                 setProfile(values);
                 saveProfile(values);

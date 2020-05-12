@@ -127,6 +127,10 @@ export const sharedStyle = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Montserrat-Bold',
   },
+  regularText: {
+    fontSize: 15,
+    fontFamily: 'Montserrat-Regular',
+  },
 });
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];

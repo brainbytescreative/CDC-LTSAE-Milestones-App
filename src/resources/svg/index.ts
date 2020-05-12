@@ -8,8 +8,8 @@ import ChevronRight from '../svg/chevronRight.svg';
 import BabyPlaceholder from '../svg/BabyPlaceholder';
 import CDClogo from '../svg/CDClogo.svg';
 import IceColdArc from '../svg/iceColdArc.svg';
-import ChevronDown from '../svg/chevron-down.svg';
 import PlusIcon from '../svg/plusIcon.svg';
+import ChevronDown from '../svg/ChevronDown';
 
 export {
   ActEarlySign,

@@ -16,7 +16,7 @@ const Navigator: React.FC<{}> = () => {
   const {data, isFetching} = useGetOnboarding();
   // const {data: children, isFetching} = useGetChildren();
 
-  const isOnboarded = true;
+  const isOnboarded = false;
 
   return (
     <>

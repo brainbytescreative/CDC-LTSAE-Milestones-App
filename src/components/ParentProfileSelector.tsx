@@ -1,18 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Keyboard, TextInput as TextInputNative, View, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/EvilIcons';
-import {colors, Guardian, StateCode} from '../resources/constants';
+import React from 'react';
+import {View, ViewStyle} from 'react-native';
+import {sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
-import {TextInput} from 'react-native-paper';
-import GuardianDialog from './GuardianDialog';
-import TerritorySelector from '../TerritorySelector';
-import TouchableArea from './TouchableArea/TouchableArea';
 import {ChevronDown} from '../resources/svg';
-import AETextInput from './AETextInput';
+import DropDownPicker from './DropDownPicker';
 
 export interface ParentProfileSelectorValues {
-  territory: StateCode | undefined;
-  guardian: Guardian | undefined;
+  territory: string | undefined | null;
+  guardian: string | undefined | null;
 }
 
 interface Props {
@@ -21,52 +16,47 @@ interface Props {
   style?: ViewStyle;
 }
 
+const guardianTypes = ['guardian', 'healthcareProvider'];
+
 const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
   const {t} = useTranslation();
-  const [territory, setTerritory] = useState<StateCode | undefined>();
-  const [guardian, setGuardian] = useState<Guardian | undefined>();
-
-  useEffect(() => {
-    value?.guardian && setGuardian(value.guardian);
-    value?.territory && setTerritory(value.territory);
-  }, [value]);
-
-  const guardianTranslated = guardian ? t(`guardianTypes:${guardian}`) : '';
-
-  const change = useCallback(onChange, []);
-
-  useEffect(() => {
-    if (!!territory || !!guardian) {
-      change({territory, guardian});
-    }
-  }, [territory, guardian, change]);
 
   return (
-    <View style={[style]}>
-      <GuardianDialog value={guardian} onChange={(val) => setGuardian(val)}>
-        {(showDialog) => (
-          <AETextInput
-            onPress={showDialog}
-            rightIcon={<ChevronDown />}
-            editable={false}
-            value={guardianTranslated}
-            placeholder={t('fields:guardianPlaceholder')}
-          />
-        )}
-      </GuardianDialog>
+    <>
+      <DropDownPicker
+        labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
+        placeholder={t('fields:guardianPlaceholder')}
+        items={guardianTypes.map((val) => ({
+          label: t(`guardianTypes:${val}`),
+          value: val,
+        }))}
+        customArrowDown={<ChevronDown direction={'up'} />}
+        customArrowUp={<ChevronDown />}
+        defaultNull
+        value={value?.guardian}
+        zIndex={11000}
+        style={[sharedStyle.shadow, sharedStyle.border]}
+        onChangeItem={(item) => {
+          onChange({guardian: item.value, territory: value?.territory});
+        }}
+      />
       <View style={{height: 10}} />
-      <TerritorySelector onChange={(code) => setTerritory(code)}>
-        {(showModal) => (
-          <AETextInput
-            onPress={showModal}
-            rightIcon={<ChevronDown />}
-            editable={false}
-            value={territory ? t(`states:${territory}`) : ''}
-            placeholder={t('fields:territoryPlaceholder')}
-          />
-        )}
-      </TerritorySelector>
-    </View>
+      <DropDownPicker
+        customArrowDown={<ChevronDown direction={'up'} />}
+        customArrowUp={<ChevronDown />}
+        labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
+        style={[sharedStyle.shadow, sharedStyle.border]}
+        placeholder={t('fields:territoryPlaceholder')}
+        items={states.map((val) => ({
+          label: t(`states:${val}`),
+          value: val,
+        }))}
+        defaultNull
+        value={value?.territory}
+        zIndex={10000}
+        onChangeItem={(item) => onChange({guardian: value?.guardian, territory: item.value})}
+      />
+    </>
   );
 };
 

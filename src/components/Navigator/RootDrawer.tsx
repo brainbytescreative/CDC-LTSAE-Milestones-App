@@ -8,7 +8,6 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerNavigationProp,
 } from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
 import InfoStack from './InfoStack';
@@ -20,7 +19,6 @@ import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../../resources/svg/CloseCross';
 import i18next from 'i18next';
 import {DrawerContentOptions} from '@react-navigation/drawer/src/types';
-import {useNavigation} from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 

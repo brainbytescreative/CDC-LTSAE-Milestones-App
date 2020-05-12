@@ -6621,14 +6621,6 @@ react-native-circular-progress@^1.3.6:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-dropdown-picker@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-dropdown-picker/-/react-native-dropdown-picker-2.1.1.tgz#790610b34e965ab5878024105e23d21536fd8b3e"
-  integrity sha512-zLECjazOUbTCsFcP5v+RmWPPAHei5tw/Nc1Fe/pRLgPjoD3BMuO3pUYJHPBeB3AbX+DWSzv/laNO92SLhWMwKg==
-  dependencies:
-    prop-types "^15.7.2"
-    react-native-vector-icons "^6.6.0"
-
 react-native-gesture-handler@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"

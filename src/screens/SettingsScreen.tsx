@@ -20,6 +20,7 @@ import {PurpleArc} from '../resources/svg';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
+import DropDownPicker from 'react-native-dropdown-picker';
 // import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
@@ -96,6 +97,8 @@ const SettingsScreen: React.FC<{}> = () => {
     });
   }, [navigation]);
 
+  // console.log('profile', profile);
+
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <View
@@ -156,39 +159,13 @@ const SettingsScreen: React.FC<{}> = () => {
                 {t('userProfile')}
               </Text>
               <Text style={{fontSize: 15, marginVertical: 26}}>{'{State-privacy language}'}</Text>
-              {/*<DropDownPicker*/}
-              {/*  // itemStyle={{alignItems: 'center'}}*/}
-              {/*  activeItemStyle={{alignItems: 'flex-end'}}*/}
-              {/*  activeLabelStyle={{color: 'red', borderWidth: 1}}*/}
-              {/*  labelStyle={{*/}
-              {/*    fontSize: 14,*/}
-              {/*    color: 'red',*/}
-              {/*    flexGrow: 1,*/}
-              {/*  }}*/}
-              {/*  arrowStyle={{marginRight: 10}}*/}
-              {/*  placeholder="Select your country"*/}
-              {/*  items={Array.from(new Array(40)).map((value, index) => ({*/}
-              {/*    label: `Item ${index}`,*/}
-              {/*    value: `item${index}`,*/}
-              {/*  }))}*/}
-              {/*  // defaultNull*/}
-              {/*  defaultIndex={0}*/}
-              {/*  // dropDownMaxHeight={50}*/}
-              {/*  containerStyle={[*/}
-              {/*    {*/}
-              {/*      height: 40,*/}
-              {/*      alignItems: 'flex-start',*/}
-              {/*      // borderRadius: 20,*/}
-              {/*      // borderWidth: 1,*/}
-              {/*      // overflow: 'hidden',*/}
-              {/*    },*/}
-              {/*    sharedStyle.shadow,*/}
-              {/*  ]}*/}
-              {/*  style={[sharedStyle.shadow, sharedStyle.border]}*/}
-              {/*  onChangeItem={(item) => console.log(item.label, item.value)}*/}
-              {/*/>*/}
 
-              <ParentProfileSelector value={profile} onChange={(values) => setProfile(values)} />
+              <ParentProfileSelector
+                value={profile}
+                onChange={(values) => {
+                  setProfile(values);
+                }}
+              />
               <Text style={{textAlign: 'right', marginTop: 10}}>*required for state</Text>
               <Text
                 style={{
