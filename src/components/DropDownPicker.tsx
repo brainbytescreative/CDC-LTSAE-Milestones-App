@@ -222,7 +222,7 @@ const DropDownPicker: React.FC<Props> = ({
             zIndex,
           },
         ]}>
-        <ScrollView style={{width: '100%', zIndex}} nestedScrollEnabled={true}>
+        <ScrollView bounces={false} style={{width: '100%', zIndex}} nestedScrollEnabled={true}>
           {items.map((item, index) => (
             <TouchableOpacity
               key={index}

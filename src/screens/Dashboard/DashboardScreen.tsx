@@ -56,7 +56,7 @@ const DashboardScreen: React.FC<Props> = () => {
     <>
       <ChildSelectorModal />
 
-      <ScrollView style={{backgroundColor: '#fff'}}>
+      <ScrollView bounces={false} style={{backgroundColor: '#fff'}}>
         <View
           style={{
             position: 'absolute',

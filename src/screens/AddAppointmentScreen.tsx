@@ -97,7 +97,7 @@ const AddAppointmentScreen: React.FC<{}> = () => {
   const titlePrefix = apptId ? 'edit-' : '';
   const disabled = addStatus === 'loading' || updateStatus === 'loading' || !formik.isValid;
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: colors.white}} style={{flex: 1}}>
+    <ScrollView bounces={false} contentContainerStyle={{flexGrow: 1, backgroundColor: colors.white}} style={{flex: 1}}>
       <View
         style={{
           position: 'absolute',

@@ -85,6 +85,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <ShortHeaderArc width={'100%'} />
       </View>
       <ScrollView
+        bounces={false}
         contentContainerStyle={{
           paddingBottom: bottom + 32,
         }}>

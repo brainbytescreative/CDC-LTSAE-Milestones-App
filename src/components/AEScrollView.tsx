@@ -5,6 +5,7 @@ const AEScrollView: React.FC<ScrollViewProps> = ({children, ...rest}) => {
   const [scrollEnabled, setScrollEnabled] = useState(rest.scrollEnabled || true);
   return (
     <ScrollView
+      bounces={false}
       onContentSizeChange={(w, h) => {
         if (h === Dimensions.get('window').height) {
           setScrollEnabled(false);
