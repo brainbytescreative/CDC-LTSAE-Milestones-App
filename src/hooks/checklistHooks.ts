@@ -230,6 +230,8 @@ export function useGetQuestion(data: QuestionAnswerKey) {
 }
 
 export function useSetQuestionAnswer() {
+  const {data: {milestoneAge} = {}} = useGetMilestone();
+
   return useMutation<void, MilestoneAnswer>(
     async (variables) => {
       const result = await sqLiteClient.dB?.executeSql(
@@ -252,6 +254,11 @@ export function useSetQuestionAnswer() {
       onSuccess: (data, {childId, questionId}) => {
         queryCache.refetchQueries(['question', {childId, questionId}], {force: true});
         queryCache.refetchQueries('answers', {force: true});
+        if (milestoneAge) {
+          queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true});
+        } else {
+          queryCache.refetchQueries('monthProgress', {force: true});
+        }
       },
     },
   );
@@ -461,5 +468,25 @@ export function useSetTip() {
     if (!result || result[0].rowsAffected === 0) {
       throw new Error('Update failed');
     }
+  });
+}
+
+export function useGetMonthProgress(predicate: {childId?: number; milestone?: number}) {
+  return useQuery<number, [string, typeof predicate]>(['monthProgress', predicate], async (key, variables) => {
+    if (!variables.childId || !variables.milestone) {
+      return 0;
+    }
+    const milestoneEntries = new Map(
+      Object.entries(milestoneChecklist.filter((value) => value.id === variables.milestone)[0].milestones || {}),
+    );
+    const molestoneQuestionsIds = (Array.from(milestoneEntries.values()).flat() as SkillSection[]).map(
+      (value) => value.id,
+    );
+    const result = await sqLiteClient.dB?.executeSql(
+      `SELECT count(questionId) cnt from milestones_answers where questionId in (${molestoneQuestionsIds.join(',')})`,
+    );
+
+    const answeredQuestionsCount = (result && result[0].rows.item(0).cnt) || 0;
+    return (answeredQuestionsCount / (molestoneQuestionsIds.length || 1)) * 100;
   });
 }

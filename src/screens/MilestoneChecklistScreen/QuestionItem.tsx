@@ -37,7 +37,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         style={{width: '100%', borderRadius: 10}}
       />
     );
-  });
+  }) as any;
 
   const height = (Dimensions.get('window').width - 64) * 0.595;
 

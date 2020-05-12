@@ -2,26 +2,24 @@ import React, {useLayoutEffect, useRef, useState} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {ChevronLeft, ChevronRight} from '../../resources/svg';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {colors} from '../../resources/constants';
+import {childAges, colors} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
-
-export interface DataItem {
-  month: number;
-  progress?: number;
-}
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {useGetMonthProgress} from '../../hooks/checklistHooks';
 
 interface Props {
   currentAgeIndex: number;
-  data: DataItem[];
   childAge: number;
 }
 
-const Item: React.FC<DataItem & {childAge: number}> = ({month, childAge, progress}) => {
+const Item: React.FC<{childAge: number; childId?: number; month: number}> = ({month, childAge, childId}) => {
   const {t} = useTranslation('dashboard');
   const isCurrent = childAge === month;
   const suffix = isCurrent ? '' : 'Short';
   const unit =
     month % 12 === 0 ? t(`common:year${suffix}`, {count: month / 12}) : t(`common:month${suffix}`, {count: month});
+
+  const {data: progress = 0} = useGetMonthProgress({childId, milestone: month});
 
   return (
     <TouchableOpacity>
@@ -57,11 +55,12 @@ const Item: React.FC<DataItem & {childAge: number}> = ({month, childAge, progres
   );
 };
 
-const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
+const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
   const flatListRef = useRef<any>(null);
   currentAgeIndex = currentAgeIndex === -1 || !currentAgeIndex ? 0 : currentAgeIndex;
 
   const [currentItemIndex, setCurrentItemIndex] = useState(currentAgeIndex);
+  const {data: child} = useGetCurrentChild();
 
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -101,14 +100,14 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, data, childAge}) => {
         style={{
           marginHorizontal: 13,
         }}
-        data={data}
+        data={childAges}
         horizontal
-        renderItem={({item}) => <Item {...item} childAge={childAge} />}
-        keyExtractor={(item) => `${item.month}`}
+        renderItem={({item}) => <Item month={item} childId={child?.id} childAge={childAge} />}
+        keyExtractor={(item) => `${item}`}
       />
       <TouchableOpacity
         onPress={() => {
-          if (currentAgeIndex < data.length - 1) {
+          if (currentAgeIndex < childAges.length - 1) {
             flatListRef.current.scrollToIndex({
               index: currentItemIndex + 1,
               viewPosition: 0.5,

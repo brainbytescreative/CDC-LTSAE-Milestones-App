@@ -1,10 +1,10 @@
 import React from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {colors, sharedStyle} from '../../resources/constants';
+import {childAges, colors, sharedStyle} from '../../resources/constants';
 import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
-import MonthCarousel, {DataItem} from './MonthCarousel';
+import MonthCarousel from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -18,43 +18,6 @@ import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
-
-const DATA: DataItem[] = [
-  {
-    month: 2,
-    progress: 100,
-  },
-  {
-    month: 4,
-    progress: 100,
-  },
-  {
-    month: 6,
-    progress: 80,
-  },
-  {
-    month: 9,
-    progress: 50,
-  },
-  {
-    month: 12,
-  },
-  {
-    month: 18,
-  },
-  {
-    month: 24,
-  },
-  {
-    month: 36,
-  },
-  {
-    month: 48,
-  },
-  {
-    month: 60,
-  },
-];
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -79,7 +42,7 @@ const DashboardScreen: React.FC<Props> = () => {
   const childAgeText = formatAge(child?.birthday);
 
   const childName = child?.name;
-  const currentAgeIndex = DATA.findIndex((value) => value.month === childAge);
+  const currentAgeIndex = childAges.findIndex((value) => value === childAge);
   const [setOnboarding] = useSetOnboarding();
 
   useFocusEffect(
@@ -108,7 +71,7 @@ const DashboardScreen: React.FC<Props> = () => {
             <Text style={styles.childNameText}>{childName}</Text>
             <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
           </View>
-          <MonthCarousel data={DATA} childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
+          <MonthCarousel childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
           <View style={styles.yellowTipContainer}>
             <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
           </View>

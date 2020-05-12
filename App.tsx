@@ -20,10 +20,12 @@ import {DowngradeError} from './src/db/SQLiteClient';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
+import {YellowBox} from 'react-native';
 
 ACPAnalytics.registerExtension();
 
 console.disableYellowBox = true;
+YellowBox.ignoreWarnings(['Setting a timer']);
 
 const theme: Theme = {
   ...DefaultTheme,
