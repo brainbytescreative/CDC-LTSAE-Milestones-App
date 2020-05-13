@@ -13,6 +13,7 @@ import milestoneChecklist, {
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {tOpt} from '../utils/helpers';
+import {number} from 'yup';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 

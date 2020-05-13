@@ -51,6 +51,7 @@
     "title": "Tips & Activities",
     "subtitle": "You can help you baby/child learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old baby/child today.",
     "drawerLabel": "$t(tipsAndActivities:title)",
+    "all": "All",
     "like": "Like",
     "remindMe": "Remind me",
     "nextSection": "Next section"

@@ -75,6 +75,7 @@ interface Props {
    * 	Additional styles for the items.	object	{}	No
    */
   itemStyle?: StyleProp<ViewStyle>;
+  itemsContainerStyle?: StyleProp<ViewStyle>;
 
   /**
    * 	Customize the arrow-up.	jsx	null	No
@@ -116,6 +117,7 @@ const DropDownPicker: React.FC<Props> = ({
   style = {},
   containerStyle = {},
   itemStyle = {},
+  itemsContainerStyle = {},
   labelStyle = {},
   activeItemStyle = {},
   activeLabelStyle = {},
@@ -221,8 +223,9 @@ const DropDownPicker: React.FC<Props> = ({
             maxHeight: dropDownMaxHeight,
             zIndex,
           },
+          itemsContainerStyle,
         ]}>
-        <ScrollView bounces={false} style={{width: '100%', zIndex}} nestedScrollEnabled={true}>
+        <ScrollView bounces={false} style={[{width: '100%', zIndex}]} nestedScrollEnabled={true}>
           {items.map((item, index) => (
             <TouchableOpacity
               key={index}

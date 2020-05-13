@@ -14,6 +14,9 @@ import {formatAge} from '../utils/helpers';
 import {ChevronDown} from '../resources/svg';
 import LikeHeart from '../resources/svg/LikeHeart';
 import {Tip, useGetTipValue, useGetTips, useSetTip} from '../hooks/checklistHooks';
+import DropDownPicker from '../components/DropDownPicker';
+import {number} from 'yup';
+import AEScrollView from '../components/AEScrollView';
 
 type ItemProps = {
   title: string | undefined;
@@ -95,10 +98,13 @@ const itemStyle = StyleSheet.create({
   },
 });
 
+const tipFilters = ['all', 'like', 'remindMe'];
+type TipType = typeof tipFilters[number];
+
 const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {t} = useTranslation('tipsAndActivities');
   const navigation = useNavigation();
-  const [skillType, setSkillType] = useState<string>('All');
+  const [tipType, setTipType] = useState<TipType>('all');
   const {data: child} = useGetCurrentChild();
   const {data: tips} = useGetTips();
   const [setTip] = useSetTip();
@@ -111,19 +117,29 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
     });
   }, [navigation]);
 
-  // const {data: {milestoneAge} = {}} = useGetMilestone();
-  // console.log(tipsData);
+  let sortedTips;
 
-  // const tips = useMemo(
-  //   () =>
-  //     milestoneChecklist
-  //       .filter((value) => value.id === milestoneAge)[0]
-  //       ?.helpful_hints?.map((item) => ({
-  //         ...item,
-  //         value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
-  //       })),
-  //   [milestoneAge, t, child],
-  // );
+  switch (tipType) {
+    case 'like':
+      sortedTips = tips?.slice().sort((a, b) => {
+        if (a?.like && !b.like) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
+    case 'remindMe':
+      sortedTips = tips?.slice().sort((a, b) => {
+        if (a?.remindMe && !b.remindMe) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
+    default:
+      sortedTips = tips;
+      break;
+  }
 
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
@@ -135,62 +151,44 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <FlatList
-        data={tips || []}
-        ListHeaderComponent={() => (
-          <>
-            <ChildSelectorModal />
-            <ChildPhoto photo={child?.photo} />
-            <Text style={{textAlign: 'center', fontSize: 22, fontFamily: 'Montserrat-Bold'}}>{t('title')}</Text>
-            <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>
-              {t('subtitle', {
-                childAge: formatAge(child?.birthday),
-              })}
-            </Text>
+      <AEScrollView>
+        <ChildSelectorModal />
+        <ChildPhoto photo={child?.photo} />
+        <Text style={{textAlign: 'center', fontSize: 22, fontFamily: 'Montserrat-Bold'}}>{t('title')}</Text>
+        <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>
+          {t('subtitle', {
+            childAge: formatAge(child?.birthday),
+          })}
+        </Text>
 
-            <SkillTypeDialog
-              onChange={(value) => {
-                value && setSkillType(value);
-              }}
-              value={skillType}>
-              {(showDialog) => (
-                <View
-                  style={[
-                    {
-                      marginTop: 30,
-                      backgroundColor: colors.iceCold,
-                      marginHorizontal: 32,
-                      paddingHorizontal: 16,
-                      paddingVertical: 11,
-                    },
-                    sharedStyle.border,
-                    sharedStyle.shadow,
-                  ]}>
-                  <TouchableOpacity
-                    onPress={showDialog}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 18}}>{t(`skillTypes:${skillType}`)}</Text>
-                    <ChevronDown />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </SkillTypeDialog>
-          </>
-        )}
-        ListFooterComponent={() => (
-          <View style={{height: 40}}>
-            {/*<PurpleArc width={'100%'} />*/}
-            {/*<View style={{backgroundColor: colors.purple}}>*/}
-            {/*  <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>*/}
-            {/*</View>*/}
-          </View>
-        )}
-        renderItem={({item}) => (
+        <DropDownPicker
+          customArrowDown={<ChevronDown direction={'up'} />}
+          customArrowUp={<ChevronDown />}
+          containerStyle={{
+            marginTop: 30,
+            marginHorizontal: 32,
+            height: 45,
+          }}
+          style={[
+            sharedStyle.shadow,
+            sharedStyle.border,
+            {
+              height: 100,
+              backgroundColor: colors.iceCold,
+            },
+          ]}
+          itemsContainerStyle={{backgroundColor: colors.iceCold}}
+          labelStyle={[sharedStyle.boldText, {flexGrow: 1, fontSize: 18, paddingHorizontal: 5}]}
+          zIndex={20000}
+          defaultNull
+          placeholder={t('all')}
+          items={tipFilters.map((value) => ({label: t(value), value}))}
+          onChangeItem={(item) => setTipType(item.value as TipType)}
+        />
+
+        {sortedTips?.map((item) => (
           <Item
+            key={item.id}
             onLikePress={(id, value) => {
               id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
             }}
@@ -203,9 +201,14 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
             title={item.value}
             childId={child?.id}
           />
-        )}
-        keyExtractor={(item, index) => `${index}`}
-      />
+        ))}
+        <View style={{height: 40}}>
+          {/*<PurpleArc width={'100%'} />*/}
+          {/*<View style={{backgroundColor: colors.purple}}>*/}
+          {/*  <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>*/}
+          {/*</View>*/}
+        </View>
+      </AEScrollView>
     </View>
   );
 };
