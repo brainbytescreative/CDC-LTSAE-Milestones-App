@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Dimensions, ScrollView, ScrollViewProps} from 'react-native';
 
-const AEScrollView: React.FC<ScrollViewProps> = ({children, ...rest}) => {
+const AEScrollView: React.FC<ScrollViewProps> = ({children, contentContainerStyle, ...rest}) => {
   const [scrollEnabled, setScrollEnabled] = useState(rest.scrollEnabled || true);
   return (
     <ScrollView

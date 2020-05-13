@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import SkillTypeDialog from '../components/SkillTypeDialog';
 import {colors, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
@@ -13,9 +12,8 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
 import {ChevronDown} from '../resources/svg';
 import LikeHeart from '../resources/svg/LikeHeart';
-import {Tip, useGetTipValue, useGetTips, useSetTip} from '../hooks/checklistHooks';
+import {Tip, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
-import {number} from 'yup';
 import AEScrollView from '../components/AEScrollView';
 
 type ItemProps = {

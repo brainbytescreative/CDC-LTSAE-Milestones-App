@@ -1,17 +1,15 @@
-import React, {useEffect, useLayoutEffect} from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
-import {RadioButton, Text, Title} from 'react-native-paper';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {RadioButton, Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {useFormik} from 'formik';
+import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
-import {addEditChildSchema} from '../resources/validationSchemas';
 
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
-import {useSetOnboarding} from '../hooks/onboardingHooks';
 import {colors, missingConcerns, sharedStyle} from '../resources/constants';
 import {useSetConcern} from '../hooks/checklistHooks';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
@@ -21,6 +19,9 @@ import {PlusIcon, PurpleArc} from '../resources/svg';
 import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../components/AEScrollView';
 import NavBarBackground from '../resources/svg/NavBarBackground';
+import {TFunction} from 'i18next';
+import {addEditChildSchema} from '../resources/validationSchemas';
+import _ from 'lodash';
 
 const options = {
   quality: 1.0,
@@ -36,6 +37,125 @@ type AddChildScreenNavigationProp = StackNavigationProp<DashboardStackParamList,
   StackNavigationProp<RootStackParamList, 'AddChild'>;
 
 const NextScreen: keyof RootStackParamList = 'OnboardingHowToUse';
+
+interface CommonFieldProps {
+  t: TFunction;
+  name: string;
+}
+
+const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
+  <FastField name={name}>
+    {({field, form, meta}: FastFieldProps<string | undefined>) => (
+      <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
+        <View style={[sharedStyle.shadow]}>
+          <TouchableOpacity
+            onPress={() => {
+              ImagePicker.showImagePicker(options, (response) => {
+                if (response.uri) {
+                  form.setFieldValue(field.name, response.uri);
+                }
+                console.log(response.uri);
+              });
+            }}
+            style={[styles.childImage, sharedStyle.shadow]}>
+            {field.value ? (
+              <Image
+                style={{height: '100%', width: '100%'}}
+                source={{
+                  uri: field.value,
+                }}
+              />
+            ) : (
+              <PlusIcon />
+            )}
+          </TouchableOpacity>
+        </View>
+        <Text style={{marginTop: 10, fontSize: 15}}>{t('addPhoto')}</Text>
+      </View>
+    )}
+  </FastField>
+);
+
+const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
+  return (
+    <FastField name={name}>
+      {({field, form, meta}: FastFieldProps<string>) => (
+        <AETextInput
+          autoCorrect={false}
+          value={field.value}
+          onChangeText={form.handleChange(field.name) as any}
+          placeholder={t('fields:childNamePlaceholder')}
+        />
+      )}
+    </FastField>
+  );
+};
+
+const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
+  return (
+    <FastField name={name}>
+      {({field, form, meta}: FastFieldProps<Date | undefined>) => (
+        <DatePicker
+          value={field.value}
+          label={t('fields:dateOfBirthPlaceholder')}
+          onChange={(date) => form.setFieldValue(name, date)}
+        />
+      )}
+    </FastField>
+  );
+};
+
+const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
+  return (
+    <FastField name={name}>
+      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
+        <View style={{marginTop: 20, marginBottom: 16}}>
+          <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: 10,
+            }}>
+            <RadioButton.Android
+              value="boy"
+              status={field.value === 0 ? 'checked' : 'unchecked'}
+              onPress={() => {
+                form.setFieldValue(field.name, 0);
+              }}
+            />
+            <Text>{t('boy')}</Text>
+            <RadioButton.Android
+              value="girl"
+              status={field.value === 1 ? 'checked' : 'unchecked'}
+              onPress={() => {
+                form.setFieldValue(field.name, 1);
+              }}
+            />
+            <Text>
+              {t('girl')} {'*'}
+            </Text>
+          </View>
+          <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
+        </View>
+      )}
+    </FastField>
+  );
+};
+
+const PrematureTip: React.FC<{t: TFunction}> = ({t}) => (
+  <View style={[styles.prematureTip, sharedStyle.shadow]}>
+    <Text
+      numberOfLines={1}
+      adjustsFontSizeToFit
+      style={{
+        fontSize: 15,
+        textAlign: 'center',
+      }}>
+      {t('prematureQuestion')}
+    </Text>
+  </View>
+);
 
 const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
@@ -57,33 +177,19 @@ const AddChildScreen: React.FC<{}> = () => {
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
 
-  const initialValues = {
+  const formikRef = useRef<FormikProps<typeof initialValues> | undefined>(undefined);
+
+  const firstChild = {
     name: '',
     gender: undefined,
     birthday: undefined,
     photo: undefined,
     ...route.params?.child,
   };
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: addEditChildSchema,
-    validateOnChange: true,
-    validateOnMount: true,
-    onSubmit: (values) => {
-      const childInput = {
-        ...values,
-        birthday: values.birthday || new Date(),
-        gender: values.gender || 0,
-      };
-
-      if (childId) {
-        return updateChild({...childInput, id: childId});
-      } else {
-        return addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild});
-      }
-    },
-  });
+  const initialValues: {firstChild: typeof firstChild; anotherChildren: typeof firstChild[]} = {
+    firstChild,
+    anotherChildren: [],
+  };
 
   const isLoading = updateStatus === 'loading' || addStatus === 'loading';
 
@@ -94,21 +200,20 @@ const AddChildScreen: React.FC<{}> = () => {
   }, [title, navigation, route.params]);
 
   useEffect(() => {
-    if (child) {
-      formik.setValues(child as any);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    child && formikRef.current?.setValues({firstChild: child});
   }, [child]);
 
   const onDone = () => {
-    formik.handleSubmit();
-    if (route.params?.onboarding) {
-      navigation.navigate('OnboardingHowToUse');
-      // setOnboarding(true);
-    } else {
-      // navigation.navigate('Dashboard');
-      navigation.goBack();
-    }
+    formikRef.current?.handleSubmit();
+    // if (route.params?.onboarding) {
+    //   navigation.navigate('OnboardingHowToUse');
+    //   // setOnboarding(true);
+    // } else {
+    //   // navigation.navigate('Dashboard');
+    //   navigation.goBack();
+    // }
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -117,165 +222,140 @@ const AddChildScreen: React.FC<{}> = () => {
       navigation.goBack();
     }
   };
+
+  console.log(formikRef.current?.isValid);
+
   return (
     <AEScrollView>
-      <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
-        <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
-          <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>
-            <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
-            <NavBarBackground width={'100%'} />
-          </View>
-          <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={addEditChildSchema}
+        innerRef={(ref) => (formikRef.current = ref)}
+        validateOnChange
+        validateOnMount
+        validate={(values) => {
+          console.log(values);
+        }}
+        onSubmit={(values) => {
+          // const childInput = {
+          //   ...values,
+          //   birthday: values.birthday || new Date(),
+          //   gender: values.gender || 0,
+          // };
+          //
+          // if (childId) {
+          //   return updateChild({...childInput, id: childId});
+          // } else {
+          //   return addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild});
+          // }
 
-          <Text
-            adjustsFontSizeToFit
-            style={{fontSize: 22, marginHorizontal: 32, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
-            {t(`${prefix}title`)}
-          </Text>
-          <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
-            <View style={[sharedStyle.shadow]}>
-              <TouchableOpacity
-                onPress={() => {
-                  ImagePicker.showImagePicker(options, (response) => {
-                    if (response.uri) {
-                      formik.setFieldValue('photo', response.uri);
-                    }
-                    console.log(response.uri);
-                  });
-                }}
-                style={[
-                  {
-                    width: 190,
-                    height: 190,
-                    borderRadius: 150,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    backgroundColor: colors.purple,
-                  },
-                  sharedStyle.shadow,
-                ]}>
-                {formik.values.photo ? (
-                  <Image
-                    style={{height: '100%', width: '100%'}}
-                    source={{
-                      uri: formik.values.photo,
-                    }}
-                  />
-                ) : (
-                  <PlusIcon />
-                )}
-              </TouchableOpacity>
-            </View>
-            <Text style={{marginTop: 10, fontSize: 15}}>{t('addPhoto')}</Text>
-          </View>
-        </View>
-        <View style={{backgroundColor: colors.white, flexGrow: 1, paddingHorizontal: 32}}>
-          <AETextInput
-            autoCorrect={false}
-            value={formik.values.name}
-            onChangeText={formik.handleChange('name') as any}
-            placeholder={t('fields:childNamePlaceholder')}
-          />
-          <View style={{height: 11}} />
-          <DatePicker
-            value={formik.values.birthday}
-            label={t('fields:dateOfBirthPlaceholder')}
-            onChange={(date) => formik.setFieldValue('birthday', date)}
-          />
-          <View
-            style={[
-              {
-                padding: 5,
-                backgroundColor: colors.yellow,
-                borderRadius: 10,
-                marginTop: 20,
-                paddingHorizontal: 15,
-              },
-              sharedStyle.shadow,
-            ]}>
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              style={{
-                fontSize: 15,
-                textAlign: 'center',
-              }}>
-              {t('prematureQuestion')}
-            </Text>
-          </View>
-          <View style={{marginTop: 20, marginBottom: 16}}>
-            <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}>
-              <RadioButton.Android
-                value="boy"
-                status={formik.values.gender === 0 ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  formik.setFieldValue('gender', 0);
-                }}
-              />
-              <Text>{t('boy')}</Text>
-              <RadioButton.Android
-                value="girl"
-                status={formik.values.gender === 1 ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  formik.setFieldValue('gender', 1);
-                }}
-              />
-              <Text>
-                {t('girl')} {'*'}
+          console.log(values);
+        }}>
+        {(formikProps) => (
+          // <>{console.log(formikProps.values.firstChild)}</>
+          <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
+            <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
+              <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>
+                <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
+                <NavBarBackground width={'100%'} />
+              </View>
+              <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
+              <Text
+                adjustsFontSizeToFit
+                style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
+                {t(`${prefix}title`)}
               </Text>
+              <PhotoField name={'firstChild.photo'} t={t} />
             </View>
-            <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
-          </View>
-        </View>
+            <View style={{backgroundColor: colors.white, flexGrow: 1, paddingHorizontal: 32}}>
+              <NameField t={t} name={'firstChild.name'} />
+              <View style={{height: 11}} />
+              <BirthdayField name={'firstChild.birthday'} t={t} />
+              <PrematureTip t={t} />
+              <GenderField t={t} name={'firstChild.gender'} />
+            </View>
 
-        <View style={{backgroundColor: colors.white, flexGrow: 2, justifyContent: 'space-between'}}>
-          <PurpleArc width={'100%'} />
-          <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
-            <View style={{marginTop: 50}}>
-              <AEButtonRounded
-                disabled={isLoading || !formik.isValid}
-                style={{marginVertical: 0}}
-                onPress={() => {
-                  formik.handleSubmit();
-                  navigation.replace('AddChild', {
-                    childId: undefined,
-                    anotherChild: true,
-                    onboarding: !!route.params?.onboarding,
-                    child: {
-                      name: formik.values.name,
-                      gender: formik.values.gender || 0,
-                      birthday: formik.values.birthday || new Date(),
-                    },
-                  });
-                }}>
-                {t('addAnotherChild').toUpperCase()}
-              </AEButtonRounded>
-              <AEButtonRounded disabled={isLoading || !formik.isValid} style={{marginBottom: 24}} onPress={onDone}>
-                {t('common:done').toUpperCase()}
-              </AEButtonRounded>
-            </View>
-            <View
-              style={[
-                {backgroundColor: colors.yellow, marginHorizontal: 32, padding: 16, borderRadius: 10},
-                sharedStyle.shadow,
-              ]}>
-              <Text style={{textAlign: 'center'}}>{t('note')}</Text>
-              <Text style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
-                {t('noteClick')}
-              </Text>
-            </View>
+            <FieldArray name={'anotherChildren'}>
+              {(arrayHelpers) => (
+                <>
+                  <View style={{backgroundColor: colors.white, paddingHorizontal: 32}}>
+                    {formikProps.values.anotherChildren?.map((child, index) => (
+                      <>
+                        <PhotoField name={`anotherChildren.${index}.photo`} t={t} />
+                        <NameField t={t} name={`anotherChildren.${index}.name`} />
+                        <View style={{height: 11}} />
+                        <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
+                        <PrematureTip t={t} />
+                        <GenderField t={t} name={`anotherChildren.${index}.gender`} />
+                      </>
+                    ))}
+                  </View>
+                  <View style={{backgroundColor: colors.white, flexGrow: 2, justifyContent: 'space-between'}}>
+                    <PurpleArc width={'100%'} />
+                    <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
+                      <View style={{marginTop: 50}}>
+                        <AEButtonRounded
+                          disabled={isLoading || !formikProps.isValid}
+                          style={{marginVertical: 0}}
+                          onPress={() => {
+                            const anotherChildren = formikProps.values.anotherChildren;
+                            const prevChild =
+                              anotherChildren.length > 0 ? _.last(anotherChildren) : formikProps.values.firstChild;
+
+                            arrayHelpers.push({
+                              name: prevChild?.name || '',
+                              birthday: prevChild?.birthday,
+                              gender: prevChild?.gender,
+                            });
+                          }}>
+                          {t('addAnotherChild').toUpperCase()}
+                        </AEButtonRounded>
+                        <AEButtonRounded
+                          disabled={isLoading || !formikProps.isValid}
+                          style={{marginBottom: 24}}
+                          onPress={onDone}>
+                          {t('common:done').toUpperCase()}
+                        </AEButtonRounded>
+                      </View>
+                      <View
+                        style={[
+                          {backgroundColor: colors.yellow, marginHorizontal: 32, padding: 16, borderRadius: 10},
+                          sharedStyle.shadow,
+                        ]}>
+                        <Text style={{textAlign: 'center'}}>{t('note')}</Text>
+                        <Text style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
+                          {t('noteClick')}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </>
+              )}
+            </FieldArray>
           </View>
-        </View>
-      </View>
+        )}
+      </Formik>
     </AEScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  prematureTip: {
+    padding: 5,
+    backgroundColor: colors.yellow,
+    borderRadius: 10,
+    marginTop: 20,
+    paddingHorizontal: 15,
+  },
+  childImage: {
+    width: 190,
+    height: 190,
+    borderRadius: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    backgroundColor: colors.purple,
+  },
+});
 
 export default AddChildScreen;

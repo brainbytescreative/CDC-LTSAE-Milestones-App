@@ -1,10 +1,14 @@
 import * as yup from 'yup';
 
-export const addEditChildSchema = yup.object({
+const childSchema = yup.object({
   name: yup.string().required(),
   gender: yup.number().required().min(0).max(1),
   birthday: yup.date().required(),
   photo: yup.string().nullable(),
+});
+export const addEditChildSchema = yup.object({
+  firstChild: childSchema,
+  anotherChildren: yup.array().of(childSchema),
 });
 
 export const addAppointmentSchema = yup.object({

@@ -137,6 +137,7 @@ export const sharedStyle = StyleSheet.create({
 });
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
+export type DeepWriteable<T> = {-readonly [P in keyof T]: DeepWriteable<T[P]>};
 
 export const sharedScreenOptions: StackNavigationOptions = {
   headerStyle: {
