@@ -1,4 +1,4 @@
-import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {FlatList, FlatListProps, Text, TouchableOpacity, View} from 'react-native';
 import {ChevronLeft, ChevronRight} from '../../resources/svg';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
@@ -84,6 +84,9 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
     visible.current = {first: _.first(info.viewableItems)?.index, last: _.last(info.viewableItems)?.index};
   }, []);
 
+  // workaround to fix crashes on fast refresh
+  const flatListKey = useMemo(() => Math.random(), []);
+
   return (
     <View
       style={{
@@ -103,6 +106,7 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
         <ChevronLeft />
       </TouchableOpacity>
       <FlatList
+        key={flatListKey}
         ref={flatListRef}
         style={{
           marginHorizontal: 13,

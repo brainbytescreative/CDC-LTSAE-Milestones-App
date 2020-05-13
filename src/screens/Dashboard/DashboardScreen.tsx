@@ -12,7 +12,7 @@ import {DashboardDrawerParamsList, DashboardStackParamList} from '../../componen
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatAge, formatDate} from '../../utils/helpers';
-import {useGetChecklistQuestions, useGetMilestone} from '../../hooks/checklistHooks';
+import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
@@ -36,7 +36,7 @@ const DashboardScreen: React.FC<Props> = () => {
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
   const {data: {milestoneAge: childAge, milestoneAgeFormatted} = {}} = useGetMilestone();
-
+  useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
   const {refetch} = useGetChecklistQuestions();
 
   const childAgeText = formatAge(child?.birthday);

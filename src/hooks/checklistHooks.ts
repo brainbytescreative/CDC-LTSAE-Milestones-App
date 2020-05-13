@@ -490,3 +490,34 @@ export function useGetMonthProgress(predicate: {childId?: number; milestone?: nu
     return (answeredQuestionsCount / (molestoneQuestionsIds.length || 1)) * 100;
   });
 }
+
+export function useGetMilestoneGotStarted(predicate: {childId?: number; milestoneId?: number}) {
+  return useQuery(
+    ['milestoneGotStarted', predicate],
+    async (key, {childId, milestoneId}) => {
+      if (!childId || !milestoneId) {
+        return false;
+      }
+      const result = await sqLiteClient.dB?.executeSql(
+        'SELECT * from milestone_got_started where childId=? and milestoneId=?',
+        [childId, milestoneId],
+      );
+
+      return !!result && result[0].rows.length > 0;
+    },
+    {staleTime: 0},
+  );
+}
+
+export function useSetMilestoneGotStarted() {
+  return useMutation<void, {childId?: number; milestoneId?: number}>(async ({childId, milestoneId}) => {
+    if (!childId || !milestoneId) {
+      return;
+    }
+
+    await sqLiteClient.dB?.executeSql(
+      'insert or replace into milestone_got_started (childId, milestoneId) values (?,?)',
+      [childId, milestoneId],
+    );
+  });
+}

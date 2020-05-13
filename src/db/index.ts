@@ -82,6 +82,14 @@ const DB_MIGRATIONS = [
             primary key (hintId, childId)
         );
     `);
+
+    await dB.executeSql(`
+        create table milestone_got_started
+        (
+            childId     int,
+            milestoneId int
+        );
+    `);
   },
 ];
 

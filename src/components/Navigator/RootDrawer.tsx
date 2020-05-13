@@ -18,7 +18,7 @@ import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../../resources/svg/CloseCross';
 import i18next from 'i18next';
-import {DrawerContentOptions} from '@react-navigation/drawer/src/types';
+import {DrawerContentOptions} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
@@ -113,6 +113,14 @@ const RootDrawer: React.FC<{}> = () => {
         options={{
           drawerLabel: t('milestoneChecklist:drawerLabel'),
         }}
+        component={MilestoneChecklistStack}
+      />
+      <Drawer.Screen
+        name={'MilestoneQuickViewStack'}
+        options={{
+          drawerLabel: t('milestoneChecklist:milestoneQuickView'),
+        }}
+        initialParams={{initialRouteName: 'MilestoneChecklistQuickView', quickView: true}}
         component={MilestoneChecklistStack}
       />
       <Drawer.Screen

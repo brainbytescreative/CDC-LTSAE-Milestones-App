@@ -1,32 +1,32 @@
-import React, {useEffect} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {MilestoneCheckListParamList} from './types';
+import React from 'react';
+import {createStackNavigator, StackNavigationProp} from '@react-navigation/stack';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
 import BurgerButton from '../BurgerButton';
-import MilestoneChecklistScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistScreen';
+import MilestoneChecklistScreen from '../../screens/MilestoneChecklist/MilestoneChecklistScreen';
 import {sharedScreenOptions} from '../../resources/constants';
-import MilestoneChecklistGetStartedScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistGetStartedScreen';
-import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklistScreen/MilestoneChecklistQuickViewScreen';
-import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import MilestoneChecklistGetStartedScreen from '../../screens/MilestoneChecklist/MilestoneChecklistGetStartedScreen';
+import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/MilestoneChecklistQuickViewScreen';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 
-const MilestoneChecklistStack: React.FC<{}> = () => {
-  // const {data: {answeredQuestionsCount, questionsGrouped} = {}} = useGetChecklistQuestions();
-  // const {data: {id: childId} = {}} = useGetCurrentChild();
-  //
-  // useEffect(() => {
-  //   if (answeredQuestionsCount === 0) {
-  //     // setSection(undefined);
-  //     // setGotStarted(false);
-  //   }
-  //   if (answeredQuestionsCount && answeredQuestionsCount > 0) {
-  //     // setSection(sections[0]);
-  //   }
-  // }, [answeredQuestionsCount, childId]);
+type NavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneQuickViewStack'>,
+  StackNavigationProp<MilestoneCheckListParamList>
+>;
+
+type MilestoneRouteProp = RouteProp<DashboardDrawerParamsList, 'MilestoneQuickViewStack'>;
+
+const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: NavigationProp}> = (props) => {
+  const initialRouteName = props.route.params?.initialRouteName;
 
   return (
-    <Stack.Navigator screenOptions={sharedScreenOptions}>
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{
+        ...sharedScreenOptions,
+      }}>
       <Stack.Screen
         name={'MilestoneChecklistGetStarted'}
         component={MilestoneChecklistGetStartedScreen}
@@ -37,6 +37,7 @@ const MilestoneChecklistStack: React.FC<{}> = () => {
       <Stack.Screen
         name={'MilestoneChecklistQuickView'}
         component={MilestoneChecklistQuickViewScreen}
+        initialParams={{quickView: props.route.params?.quickView}}
         options={() => ({
           headerLeft: () => <BurgerButton />,
         })}

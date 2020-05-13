@@ -10,6 +10,7 @@ import {
   useGetChecklistQuestions,
   useGetConcerns,
   useGetMilestone,
+  useGetMilestoneGotStarted,
   useGetSectionsProgress,
   useSetConcern,
 } from '../../hooks/checklistHooks';
@@ -17,34 +18,43 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {PurpleArc} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const sections = [...skillTypes, 'actEarly'];
 
-const MilestoneChecklistScreen: React.FC<{}> = () => {
+type NavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
+  StackNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklist'>
+>;
+
+const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navigation}) => {
   const [section, setSection] = useState<Section>(checklistSections[0]);
-  const [gotStarted, setGotStarted] = useState(false);
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {data: {answeredQuestionsCount, questionsGrouped} = {}} = useGetChecklistQuestions();
+  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {data: {missingId} = {}} = useGetConcerns();
   const {progress: sectionsProgress, complete} = useGetSectionsProgress();
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
   const {t} = useTranslation('milestoneChecklist');
+  const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
+
+  useEffect(() => {
+    if (gotStartedStatus === 'success' && !gotStarted) {
+      navigation.replace('MilestoneChecklistGetStarted');
+    }
+  }, [gotStarted, gotStartedStatus, navigation]);
 
   const flatListRef = useRef<FlatList>(null);
-
-  // useEffect(() => {
-  //   setGotStarted(false);
-  // }, [childId]);
 
   useEffect(() => {
     if (complete !== undefined && childId && missingId) {
       setConcern({answer: !complete, childId, concernId: missingId});
     }
   }, [childId, setConcern, complete, missingId]);
-
-
 
   useEffect(() => {
     if (section) {
@@ -64,7 +74,7 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <ChildSelectorModal />
-      <View style={{flex: 0}}>
+      <View style={{flex: 0, overflow: 'visible'}}>
         <FlatList
           extraData={sectionsProgress}
           data={checklistSections}
@@ -80,23 +90,6 @@ const MilestoneChecklistScreen: React.FC<{}> = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      {/*{!section && !gotStarted && (*/}
-      {/*  <FrontPage*/}
-      {/*    milestoneAgeFormatted={milestoneAgeFormatted}*/}
-      {/*    onGetStarted={() => {*/}
-      {/*      setGotStarted(true);*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*)}*/}
-      {/*{!section && gotStarted && (*/}
-      {/*  <OverviewPage*/}
-      {/*    milestoneAge={milestoneAge}*/}
-      {/*    milestoneAgeFormatted={milestoneAgeFormatted}*/}
-      {/*    onNext={() => {*/}
-      {/*      setSection(sections[0]);*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*)}*/}
       {section && skillTypes.includes(section) && (
         <FlatList
           ref={flatListRef}

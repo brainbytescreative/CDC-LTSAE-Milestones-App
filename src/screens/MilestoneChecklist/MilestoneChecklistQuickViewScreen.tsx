@@ -1,24 +1,28 @@
 import React from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import OverviewPage from './OverviewPage';
 import {useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHooks';
 import {checklistSections, colors} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import SectionItem from './SectionItem';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 type NavigationProp = CompositeNavigationProp<
-  DrawerNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklistQuickView'>,
-  StackNavigationProp<DashboardStackParamList>
+  DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
+  StackNavigationProp<MilestoneCheckListParamList>
 >;
 
-const MilestoneChecklistQuickViewScreen: React.FC<{}> = () => {
+type MilestoneRouteProp = RouteProp<MilestoneCheckListParamList, 'MilestoneChecklistQuickView'>;
+
+const MilestoneChecklistQuickViewScreen: React.FC<{
+  navigation: NavigationProp;
+  route: MilestoneRouteProp;
+}> = ({navigation, route}) => {
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {progress: sectionsProgress, complete} = useGetSectionsProgress();
-  const navigation = useNavigation<NavigationProp>();
+  const {progress: sectionsProgress} = useGetSectionsProgress();
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -35,7 +39,11 @@ const MilestoneChecklistQuickViewScreen: React.FC<{}> = () => {
         milestoneAge={milestoneAge}
         milestoneAgeFormatted={milestoneAgeFormatted}
         onNext={() => {
-          navigation.navigate('MilestoneChecklist');
+          if (route.params?.quickView) {
+            navigation.navigate('MilestoneChecklistStack');
+          } else {
+            navigation.navigate('MilestoneChecklist');
+          }
         }}
       />
     </View>

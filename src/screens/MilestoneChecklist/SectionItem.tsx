@@ -26,7 +26,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
       onPress={() => {
         setSection && setSection(section);
       }}
-      style={{flex: 1}}>
+      style={{flex: 1, paddingBottom: 5}}>
       <View
         // @ts-ignore
         opacity={opacity}

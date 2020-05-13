@@ -40,7 +40,7 @@ export type InfoParamList = {
 export type MilestoneCheckListParamList = {
   MilestoneChecklist: undefined;
   MilestoneChecklistGetStarted: undefined;
-  MilestoneChecklistQuickView: undefined;
+  MilestoneChecklistQuickView: {quickView?: boolean} | undefined;
 };
 
 export type RootStackParamList = {
@@ -55,6 +55,7 @@ export type DashboardDrawerParamsList = {
   DashboardStack: undefined;
   SettingsStack: undefined;
   MilestoneChecklistStack: undefined;
+  MilestoneQuickViewStack: {initialRouteName?: keyof MilestoneCheckListParamList; quickView?: boolean} | undefined;
   TipsAndActivitiesStack: undefined;
   InfoStack: undefined;
   ChildSummaryStack: undefined;
