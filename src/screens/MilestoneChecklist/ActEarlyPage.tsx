@@ -24,7 +24,7 @@ import {Text} from 'react-native-paper';
 import {PurpleArc} from '../../resources/svg';
 import _ from 'lodash';
 
-const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
+const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();
   const {data: concern, isFetching} = useGetConcern({concernId: id, childId});
   const {t} = useTranslation('milestoneChecklist');
@@ -86,7 +86,7 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
       </View>
     </View>
   );
-};
+});
 
 const itemStyles = StyleSheet.create({
   container: {

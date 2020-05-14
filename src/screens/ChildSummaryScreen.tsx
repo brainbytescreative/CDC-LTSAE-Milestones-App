@@ -1,5 +1,14 @@
 import React, {useCallback, useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {
@@ -31,6 +40,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import _ from 'lodash';
 import NoteIcon from '../resources/svg/NoteIcon';
+import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -241,134 +251,135 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={{
-          paddingBottom: bottom + 32,
-        }}>
-        <ChildSelectorModal />
-        <ChildPhoto photo={child?.photo} />
-        <Text
-          style={{
-            textAlign: 'center',
-            marginTop: 20,
-            fontSize: 22,
-            textTransform: 'capitalize',
-            marginHorizontal: 32,
-            fontFamily: 'Montserrat-Bold',
+      <KeyboardAvoidingView behavior={Platform.select({ios: 'padding'})}>
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={{
+            paddingBottom: bottom + 76,
           }}>
-          {`${child?.name}${t('childSummary:title')}`}
-          {'\n'}
-          {milestoneAgeFormatted}
-        </Text>
-        <View style={{paddingHorizontal: 32}}>
-          <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
-            <Trans t={t} i18nKey={'message1'}>
-              <Text style={{textDecorationLine: 'underline'}}>{{link1}}</Text>
-              <Text style={{textDecorationLine: 'underline'}}>{{link2}}</Text>
-            </Trans>
+          <ChildSelectorModal />
+          <ChildPhoto photo={child?.photo} />
+          <Text
+            style={{
+              textAlign: 'center',
+              marginTop: 20,
+              fontSize: 22,
+              textTransform: 'capitalize',
+              marginHorizontal: 32,
+              fontFamily: 'Montserrat-Bold',
+            }}>
+            {`${child?.name}${t('childSummary:title')}`}
+            {'\n'}
+            {milestoneAgeFormatted}
           </Text>
-          {/*<Text>Show your doctor or email summary</Text>*/}
-        </View>
-        <View style={{marginTop: 35}}>
-          <PurpleArc width={'100%'} />
-          <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-            <AEButtonRounded
-              onPress={() => {
-                MailComposer.composeAsync({
-                  isHtml: true,
-                  body: nunjucks.renderString(emailSummaryContent.en, {
-                    childName: child?.name,
-                    concerns: concerns?.concerned,
-                    skippedItems: data?.groupedByAnswer[`${undefined}`],
-                    yesItems: data?.groupedByAnswer['0'],
-                    notSureItems: data?.groupedByAnswer['1'],
-                    notYetItems: data?.groupedByAnswer['2'],
-                    formattedAge: milestoneAgeFormatted,
-                    currentDayText: formatDate(new Date(), 'date'),
-                    ...tOpt({t, gender: child?.gender}),
-                  }),
-                });
-              }}
-              style={{marginBottom: 0}}>
-              {t('emailSummary')}
-            </AEButtonRounded>
-            <AEButtonRounded
-              onPress={() => {
-                navigation.navigate('Revisit');
-              }}
-              style={{marginTop: 10, marginBottom: 30}}>
-              {t('showDoctor')}
-            </AEButtonRounded>
-            <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
+          <View style={{paddingHorizontal: 32}}>
+            <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
+              <Trans t={t} i18nKey={'message1'}>
+                <Text style={{textDecorationLine: 'underline'}}>{{link1}}</Text>
+                <Text style={{textDecorationLine: 'underline'}}>{{link2}}</Text>
+              </Trans>
+            </Text>
+            {/*<Text>Show your doctor or email summary</Text>*/}
           </View>
-        </View>
+          <View style={{marginTop: 35}}>
+            <PurpleArc width={'100%'} />
+            <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
+              <AEButtonRounded
+                onPress={() => {
+                  MailComposer.composeAsync({
+                    isHtml: true,
+                    body: nunjucks.renderString(emailSummaryContent.en, {
+                      childName: child?.name,
+                      concerns: concerns?.concerned,
+                      skippedItems: data?.groupedByAnswer[`${undefined}`],
+                      yesItems: data?.groupedByAnswer['0'],
+                      notSureItems: data?.groupedByAnswer['1'],
+                      notYetItems: data?.groupedByAnswer['2'],
+                      formattedAge: milestoneAgeFormatted,
+                      currentDayText: formatDate(new Date(), 'date'),
+                      ...tOpt({t, gender: child?.gender}),
+                    }),
+                  });
+                }}
+                style={{marginBottom: 0}}>
+                {t('emailSummary')}
+              </AEButtonRounded>
+              <AEButtonRounded
+                onPress={() => {
+                  navigation.navigate('Revisit');
+                }}
+                style={{marginTop: 10, marginBottom: 30}}>
+                {t('showDoctor')}
+              </AEButtonRounded>
+              <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
+            </View>
+          </View>
 
-        <View style={{marginHorizontal: 32}}>
-          <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
-            <Text style={styles.blockText}>{t('unanswered')}</Text>
+          <View style={{marginHorizontal: 32}}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
+              <Text style={styles.blockText}>{t('unanswered')}</Text>
+            </View>
+            {data?.groupedByAnswer['undefined']?.map((item) => (
+              <Item
+                key={`answer-${item.id}`}
+                onEditAnswerPress={onEditQuestionPress}
+                value={item.value}
+                id={item.id}
+                note={item.note}
+              />
+            ))}
+            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+              <Text style={styles.blockText}>{t('concerns')}</Text>
+            </View>
+            {concerns?.concerned?.map((item) => (
+              <Item
+                key={`concern-${item.id}`}
+                onEditAnswerPress={onEditConcernPress}
+                hideControls={!!item.id && missingConcerns.includes(item.id)}
+                value={item.value}
+                note={item.note}
+                id={item.id}
+              />
+            ))}
+            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+              <Text style={styles.blockText}>{t('notSure')}</Text>
+            </View>
+            {data?.groupedByAnswer['1']?.map((item) => (
+              <Item
+                key={`answer-${item.id}`}
+                onEditAnswerPress={onEditQuestionPress}
+                value={item.value}
+                note={item.note}
+                id={item.id}
+              />
+            ))}
+            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+              <Text style={styles.blockText}>{t('notYet')}</Text>
+            </View>
+            {data?.groupedByAnswer['2']?.map((item) => (
+              <Item
+                key={`answer-${item.id}`}
+                onEditAnswerPress={onEditQuestionPress}
+                value={item.value}
+                note={item.note}
+                id={item.id}
+              />
+            ))}
+            <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+              <Text style={styles.blockText}>{t('yes')}</Text>
+            </View>
+            {data?.groupedByAnswer['0']?.map((item) => (
+              <Item
+                key={`answer-${item.id}`}
+                onEditAnswerPress={onEditQuestionPress}
+                value={item.value}
+                note={item.note}
+                id={item.id}
+              />
+            ))}
           </View>
-          {data?.groupedByAnswer['undefined']?.map((item) => (
-            <Item
-              key={`answer-${item.id}`}
-              onEditAnswerPress={onEditQuestionPress}
-              value={item.value}
-              id={item.id}
-              note={item.note}
-            />
-          ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
-            <Text style={styles.blockText}>{t('concerns')}</Text>
-          </View>
-          {concerns?.concerned?.map((item) => (
-            <Item
-              key={`concern-${item.id}`}
-              onEditAnswerPress={onEditConcernPress}
-              hideControls={!!item.id && missingConcerns.includes(item.id)}
-              value={item.value}
-              note={item.note}
-              id={item.id}
-            />
-          ))}
-
-          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
-            <Text style={styles.blockText}>{t('notSure')}</Text>
-          </View>
-          {data?.groupedByAnswer['1']?.map((item) => (
-            <Item
-              key={`answer-${item.id}`}
-              onEditAnswerPress={onEditQuestionPress}
-              value={item.value}
-              note={item.note}
-              id={item.id}
-            />
-          ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
-            <Text style={styles.blockText}>{t('notYet')}</Text>
-          </View>
-          {data?.groupedByAnswer['2']?.map((item) => (
-            <Item
-              key={`answer-${item.id}`}
-              onEditAnswerPress={onEditQuestionPress}
-              value={item.value}
-              note={item.note}
-              id={item.id}
-            />
-          ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
-            <Text style={styles.blockText}>{t('yes')}</Text>
-          </View>
-          {data?.groupedByAnswer['0']?.map((item) => (
-            <Item
-              key={`answer-${item.id}`}
-              onEditAnswerPress={onEditQuestionPress}
-              value={item.value}
-              note={item.note}
-              id={item.id}
-            />
-          ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

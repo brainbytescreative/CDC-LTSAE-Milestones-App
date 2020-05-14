@@ -240,7 +240,7 @@ export function useSetQuestionAnswer() {
         `
                   INSERT OR REPLACE
                   INTO milestones_answers (childId, questionId, answer, note)
-                  VALUES (?1, ?2, ?3, ?4)
+                  VALUES (?1, ?2, ?3, COALESCE(?4, (SELECT note FROM milestones_answers WHERE questionId = ?2 and childId = ?1)))
         `,
         [variables.childId, variables.questionId, variables.answer, variables.note],
       );
@@ -353,12 +353,11 @@ export function useSetConcern() {
         `
                   INSERT OR
                   REPLACE
-                  INTO concern_answers (${Object.keys(variables).join(',')})
-                  VALUES (${Object.keys(variables)
-                    .map((value, index) => `?${index + 1}`)
-                    .join(',')})
+                  INTO concern_answers (concernId, answer, childId, note)
+                  VALUES (?1, ?2, ?3,
+                          COALESCE(?4, (SELECT note FROM concern_answers WHERE concernId = ?1 and childId = ?3)))
         `,
-        Object.values(variables),
+        [variables.concernId, variables.answer || false, variables.childId, variables.note],
       );
 
       if (!result || result[0].rowsAffected === 0) {

@@ -51,8 +51,8 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const flatListRef = useRef<FlatList>(null);
   useEffect(() => {
     if (hasNotYet !== undefined && childId && missingId) {
-      const note = concernsAnswers?.filter((val) => val.concernId === missingId)[0]?.note;
-      setConcern({answer: hasNotYet, childId, concernId: missingId, note}).then();
+      // const note = concernsAnswers?.filter((val) => val.concernId === missingId)[0]?.note;
+      setConcern({answer: hasNotYet, childId, concernId: missingId}).then();
     }
   }, [childId, setConcern, hasNotYet, missingId, concernsAnswers]);
 
