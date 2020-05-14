@@ -12,6 +12,7 @@
   "dependencies": {
     "@adobe/react-native-acpanalytics": "^1.1.5",
     "@adobe/react-native-acpcore": "^1.2.3",
+    "@expo/react-native-action-sheet": "^3.7.0",
     "@react-native-community/async-storage": "^1.10.0",
     "@react-native-community/datetimepicker": "2.3.2",
     "@react-native-community/masked-view": "^0.1.10",

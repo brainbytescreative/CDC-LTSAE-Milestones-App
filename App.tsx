@@ -21,6 +21,7 @@ import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {YellowBox} from 'react-native';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
 ACPAnalytics.registerExtension();
 
@@ -76,13 +77,15 @@ const App = () => {
   });
 
   return (
-    <ReactQueryConfigProvider config={queryConfig}>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
-        </NavigationContainer>
-      </PaperProvider>
-    </ReactQueryConfigProvider>
+    <ActionSheetProvider>
+      <ReactQueryConfigProvider config={queryConfig}>
+        <PaperProvider theme={theme}>
+          <NavigationContainer>
+            <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
+          </NavigationContainer>
+        </PaperProvider>
+      </ReactQueryConfigProvider>
+    </ActionSheetProvider>
   );
 };
 

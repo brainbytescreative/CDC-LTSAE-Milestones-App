@@ -34,7 +34,7 @@ const Item: React.FC<Concern & {childId?: number}> = ({id, value, childId}) => {
   const onPress = isMissingAnswerConcern
     ? undefined
     : () => {
-        id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId});
+        id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note});
       };
 
   const saveNote = useCallback(

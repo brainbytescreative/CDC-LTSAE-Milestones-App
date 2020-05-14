@@ -145,6 +145,7 @@
     "note": "Note",
     "editAnswer": "Edit answer",
     "editNote": "Edit note",
+    "saveNote": "Save note",
     "emailSummary": "$t(common:emailSummary)",
     "title": "'s summary",
     "unanswered": "Unanswered",
@@ -152,6 +153,7 @@
     "notSure": "Not sure",
     "notYet": "Not yet",
     "yes": "Yes",
+    "changeYourAnswerTitle": "Change your answer to this milestone to",
     "drawerLabel": "Child summary",
     "showDoctor": "Show Doctor",
     "link1Text": "cdc.gov/FindEl",
@@ -183,6 +185,7 @@
   "milestoneChecklist": {
     "nextSection": "Next Section",
     "answer_yes": "yes",
+    "answer_no": "no",
     "answer_unsure": "unsure",
     "answer_not_yet": "not yet",
     "milestoneChecklist": "Milestone checklist",

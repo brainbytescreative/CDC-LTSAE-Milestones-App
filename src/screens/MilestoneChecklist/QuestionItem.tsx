@@ -60,7 +60,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   });
 
   const doAnswer = (answerValue: Answer) => () => {
-    id && childId && answerQuestion({questionId: id, childId, answer: answerValue});
+    id && childId && answerQuestion({questionId: id, childId, answer: answerValue, note: note});
   };
 
   const saveNote = useCallback(

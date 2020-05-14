@@ -22,11 +22,11 @@ export enum Answer {
   NOT_YET,
 }
 
-interface MilestoneAnswer {
+export interface MilestoneAnswer {
   childId: number;
   questionId: number;
   answer?: Answer;
-  note?: string | undefined;
+  note?: string | undefined | null;
 }
 
 type QuestionAnswerKey = Partial<Pick<MilestoneAnswer, 'childId' | 'questionId'>>;
@@ -273,8 +273,6 @@ export function useGetConcerns() {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {t} = useTranslation('milestones');
 
-  // console.log({childId, milestoneAge, gender});
-
   return useQuery(
     ['concerns', {childId, milestoneAge, gender}],
     async (key, variables) => {
@@ -327,7 +325,7 @@ export function useGetConcerns() {
         });
 
       const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
-      return {concerns: concernsData, concerned, missingId};
+      return {concerns: concernsData, concerned, missingId, answers};
     },
     {
       staleTime: 0,
@@ -355,10 +353,12 @@ export function useSetConcern() {
         `
                   INSERT OR
                   REPLACE
-                  INTO concern_answers (concernId, answer, note, childId)
-                  VALUES (?1, ?2, ?3, ?4)
+                  INTO concern_answers (${Object.keys(variables).join(',')})
+                  VALUES (${Object.keys(variables)
+                    .map((value, index) => `?${index + 1}`)
+                    .join(',')})
         `,
-        [variables.concernId, variables.answer || false, variables.note, variables.childId],
+        Object.values(variables),
       );
 
       if (!result || result[0].rowsAffected === 0) {
