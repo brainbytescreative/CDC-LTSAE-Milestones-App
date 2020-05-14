@@ -199,7 +199,7 @@ export function useGetSectionsProgress() {
     childId,
   );
 
-  const hasNotYet = answers && answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
+  const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
   const progress: Map<SkillType, {total: number; answered: number}> | undefined = useMemo(() => {
     if (questions?.length) {
