@@ -1,5 +1,13 @@
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  TouchableWithoutFeedbackProps,
+  View,
+} from 'react-native';
 import {RadioButton, Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
@@ -143,18 +151,20 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   );
 };
 
-const PrematureTip: React.FC<{t: TFunction}> = ({t}) => (
-  <View style={[styles.prematureTip, sharedStyle.shadow]}>
-    <Text
-      numberOfLines={1}
-      adjustsFontSizeToFit
-      style={{
-        fontSize: 15,
-        textAlign: 'center',
-      }}>
-      {t('prematureQuestion')}
-    </Text>
-  </View>
+const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps, 'onPress'>> = ({t, onPress}) => (
+  <TouchableWithoutFeedback onPress={onPress}>
+    <View style={[styles.prematureTip, sharedStyle.shadow]}>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={{
+          fontSize: 15,
+          textAlign: 'center',
+        }}>
+        {t('prematureQuestion')}
+      </Text>
+    </View>
+  </TouchableWithoutFeedback>
 );
 
 const AddChildScreen: React.FC<{}> = () => {
@@ -178,6 +188,7 @@ const AddChildScreen: React.FC<{}> = () => {
   const title = t(`${prefix}title`);
 
   const formikRef = useRef<FormikProps<typeof initialValues> | undefined>(undefined);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const firstChild = {
     name: '',
@@ -186,7 +197,7 @@ const AddChildScreen: React.FC<{}> = () => {
     photo: undefined,
     ...route.params?.child,
   };
-  const initialValues: {firstChild: typeof firstChild; anotherChildren: typeof firstChild[]} = {
+  const initialValues: {firstChild: typeof firstChild; anotherChildren?: typeof firstChild[]} = {
     firstChild,
     anotherChildren: [],
   };
@@ -202,18 +213,18 @@ const AddChildScreen: React.FC<{}> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    child && formikRef.current?.setValues({firstChild: child});
+    child && formikRef.current?.setValues({firstChild: child, anotherChildren: []});
   }, [child]);
 
   const onDone = () => {
     formikRef.current?.handleSubmit();
-    // if (route.params?.onboarding) {
-    //   navigation.navigate('OnboardingHowToUse');
-    //   // setOnboarding(true);
-    // } else {
-    //   // navigation.navigate('Dashboard');
-    //   navigation.goBack();
-    // }
+    if (route.params?.onboarding) {
+      navigation.navigate('OnboardingHowToUse');
+      // setOnboarding(true);
+    } else {
+      // navigation.navigate('Dashboard');
+      navigation.goBack();
+    }
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -223,33 +234,38 @@ const AddChildScreen: React.FC<{}> = () => {
     }
   };
 
-  console.log(formikRef.current?.isValid);
-
   return (
-    <AEScrollView>
+    <AEScrollView innerRef={scrollViewRef}>
       <Formik
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
         innerRef={(ref) => (formikRef.current = ref)}
         validateOnChange
         validateOnMount
-        validate={(values) => {
-          console.log(values);
-        }}
         onSubmit={(values) => {
-          // const childInput = {
-          //   ...values,
-          //   birthday: values.birthday || new Date(),
-          //   gender: values.gender || 0,
-          // };
-          //
-          // if (childId) {
-          //   return updateChild({...childInput, id: childId});
-          // } else {
-          //   return addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild});
-          // }
+          const childInput = {
+            ...values.firstChild,
+            birthday: values.firstChild.birthday || new Date(),
+            gender: values.firstChild.gender || 0,
+          };
 
-          console.log(values);
+          if (childId) {
+            updateChild({...childInput, id: childId}).then();
+          } else {
+            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then();
+          }
+
+          Promise.all(
+            values.anotherChildren?.map((item) => {
+              const otherInput = {
+                ...item,
+                birthday: item.birthday || new Date(),
+                gender: item.gender || 0,
+              };
+
+              return addChild({data: otherInput, isAnotherChild: true});
+            }) || [],
+          );
         }}>
         {(formikProps) => (
           // <>{console.log(formikProps.values.firstChild)}</>
@@ -271,7 +287,12 @@ const AddChildScreen: React.FC<{}> = () => {
               <NameField t={t} name={'firstChild.name'} />
               <View style={{height: 11}} />
               <BirthdayField name={'firstChild.birthday'} t={t} />
-              <PrematureTip t={t} />
+              <PrematureTip
+                t={t}
+                onPress={() => {
+                  scrollViewRef.current?.scrollToEnd();
+                }}
+              />
               <GenderField t={t} name={'firstChild.gender'} />
             </View>
 
@@ -279,7 +300,7 @@ const AddChildScreen: React.FC<{}> = () => {
               {(arrayHelpers) => (
                 <>
                   <View style={{backgroundColor: colors.white, paddingHorizontal: 32}}>
-                    {formikProps.values.anotherChildren?.map((child, index) => (
+                    {formikProps.values.anotherChildren?.map((item, index) => (
                       <>
                         <PhotoField name={`anotherChildren.${index}.photo`} t={t} />
                         <NameField t={t} name={`anotherChildren.${index}.name`} />
@@ -300,7 +321,9 @@ const AddChildScreen: React.FC<{}> = () => {
                           onPress={() => {
                             const anotherChildren = formikProps.values.anotherChildren;
                             const prevChild =
-                              anotherChildren.length > 0 ? _.last(anotherChildren) : formikProps.values.firstChild;
+                              anotherChildren && anotherChildren?.length > 0
+                                ? _.last(anotherChildren)
+                                : formikProps.values.firstChild;
 
                             arrayHelpers.push({
                               name: prevChild?.name || '',
