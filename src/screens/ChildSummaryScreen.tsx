@@ -185,9 +185,9 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           message: t('changeYourAnswerTitle'),
           cancelButtonIndex: options.length - 1,
           options,
-          textStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
-          titleTextStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
-          messageTextStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
+          textStyle: {...sharedStyle.regularText},
+          titleTextStyle: {...sharedStyle.regularText},
+          messageTextStyle: {...sharedStyle.regularText},
         },
         (index) => {
           Object.values(Answer).includes(index) &&
@@ -215,9 +215,9 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           message: t('changeYourAnswerTitle'),
           cancelButtonIndex: options.length - 1,
           options,
-          textStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
-          titleTextStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
-          messageTextStyle: {textTransform: 'capitalize', ...sharedStyle.regularText},
+          textStyle: {...sharedStyle.regularText},
+          titleTextStyle: {...sharedStyle.regularText},
+          messageTextStyle: {...sharedStyle.regularText},
         },
         (index) => {
           [0, 1].includes(index) &&
