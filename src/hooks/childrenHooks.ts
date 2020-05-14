@@ -3,7 +3,6 @@ import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
-import {missingConcerns} from '../resources/constants';
 
 interface Record {
   id: number;

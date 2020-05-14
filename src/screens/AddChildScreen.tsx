@@ -18,8 +18,7 @@ import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
 
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
-import {colors, missingConcerns, sharedStyle} from '../resources/constants';
-import {useSetConcern} from '../hooks/checklistHooks';
+import {colors, sharedStyle} from '../resources/constants';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
@@ -172,13 +171,7 @@ const AddChildScreen: React.FC<{}> = () => {
   const {top, bottom} = useSafeArea();
   const {t} = useTranslation('addChild');
 
-  const [setConcern] = useSetConcern();
-
-  const [addChild, {status: addStatus}] = useAddChild({
-    onSuccess: (data) => {
-      data && Promise.all(missingConcerns.map((concernId) => setConcern({concernId, childId: data, answer: true})));
-    },
-  });
+  const [addChild, {status: addStatus}] = useAddChild();
 
   const route = useRoute<AddChildRouteProp>();
   const childId = route?.params?.childId;

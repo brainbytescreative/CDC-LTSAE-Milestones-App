@@ -36,7 +36,7 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {data: {missingId} = {}} = useGetConcerns();
-  const {progress: sectionsProgress, complete} = useGetSectionsProgress();
+  const {progress: sectionsProgress, complete, hasNotYet} = useGetSectionsProgress();
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
   const {t} = useTranslation('milestoneChecklist');
@@ -51,10 +51,11 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    if (complete !== undefined && childId && missingId) {
-      setConcern({answer: !complete, childId, concernId: missingId});
+    console.log(hasNotYet);
+    if (hasNotYet !== undefined && childId && missingId) {
+      setConcern({answer: hasNotYet, childId, concernId: missingId}).then();
     }
-  }, [childId, setConcern, complete, missingId]);
+  }, [childId, setConcern, hasNotYet, missingId]);
 
   useEffect(() => {
     if (section) {

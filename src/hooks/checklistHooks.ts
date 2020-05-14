@@ -13,7 +13,6 @@ import milestoneChecklist, {
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {tOpt} from '../utils/helpers';
-import {number} from 'yup';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -200,6 +199,8 @@ export function useGetSectionsProgress() {
     childId,
   );
 
+  const hasNotYet = answers && answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
+
   const progress: Map<SkillType, {total: number; answered: number}> | undefined = useMemo(() => {
     if (questions?.length) {
       return skillTypes.reduce((previousValue, section) => {
@@ -212,7 +213,7 @@ export function useGetSectionsProgress() {
     }
   }, [answers, questions]);
 
-  return {progress, complete};
+  return {progress, complete, hasNotYet};
 }
 
 export function useGetQuestion(data: QuestionAnswerKey) {
@@ -254,7 +255,7 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (data, {childId, questionId}) => {
         queryCache.refetchQueries(['question', {childId, questionId}], {force: true});
-        queryCache.refetchQueries('answers', {force: true});
+        queryCache.refetchQueries('answers', {force: true, exact: false});
         if (milestoneAge) {
           queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true});
         } else {

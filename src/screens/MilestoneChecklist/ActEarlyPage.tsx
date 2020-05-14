@@ -20,7 +20,7 @@ import {useTranslation} from 'react-i18next';
 import CheckMark from '../../resources/svg/CheckMark';
 import NoteIcon from '../../resources/svg/NoteIcon';
 import ChevronRightBig from '../../resources/svg/ChevronRightBig';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {PurpleArc} from '../../resources/svg';
 import _ from 'lodash';
 
