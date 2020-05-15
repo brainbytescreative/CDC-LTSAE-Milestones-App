@@ -9,6 +9,7 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -22,7 +23,8 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   route: MilestoneRouteProp;
 }> = ({navigation, route}) => {
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {progress: sectionsProgress} = useGetSectionsProgress();
+  const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>

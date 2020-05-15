@@ -23,9 +23,9 @@ type NavigationProp = CompositeNavigationProp<
 
 const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {progress: sectionsProgress} = useGetSectionsProgress();
-  const navigation = useNavigation<NavigationProp>();
   const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
+  const navigation = useNavigation<NavigationProp>();
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
 
   const [setGetStarted] = useSetMilestoneGotStarted();

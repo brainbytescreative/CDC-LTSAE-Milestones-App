@@ -198,10 +198,9 @@ export function useGetCheckListAnswers(ids?: number[], childId?: number) {
   });
 }
 
-export function useGetSectionsProgress() {
+export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
   const {data: checkListData} = useGetChecklistQuestions();
   const questions = checkListData?.questions;
-  const childId = checkListData?.child?.id;
   const {data: {answers, complete} = {}} = useGetCheckListAnswers(
     questions?.map((value) => value.id || 0),
     childId,

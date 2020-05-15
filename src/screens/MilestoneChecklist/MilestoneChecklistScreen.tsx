@@ -36,7 +36,7 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {data: {missingId, answers: concernsAnswers} = {}} = useGetConcerns();
-  const {progress: sectionsProgress, hasNotYet} = useGetSectionsProgress();
+  const {progress: sectionsProgress, hasNotYet} = useGetSectionsProgress(childId);
   const [setConcern] = useSetConcern();
   const questions = section && questionsGrouped?.get(section);
   const {t} = useTranslation('milestoneChecklist');
