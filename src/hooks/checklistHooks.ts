@@ -1,8 +1,8 @@
 import {useTranslation} from 'react-i18next';
 import {differenceInDays, differenceInMonths, parseISO} from 'date-fns';
 import _ from 'lodash';
-import {childAges, missingConcerns, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
-import {useGetCurrentChild} from './childrenHooks';
+import {childAges, missingConcerns, PropType, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
+import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
   Concern,
@@ -12,7 +12,10 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {tOpt} from '../utils/helpers';
+import {formatDate, tOpt} from '../utils/helpers';
+import * as MailComposer from 'expo-mail-composer';
+import nunjucks from 'nunjucks';
+import emailSummaryContent from '../resources/EmailChildSummary';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -38,11 +41,12 @@ interface ConcernAnswer {
   note?: string | undefined | null;
 }
 
-export function useGetMilestone() {
-  const {data: child} = useGetCurrentChild();
+export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
+  const {data: currentChild} = useGetCurrentChild();
+  const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
 
-  return useQuery(['milestone', {child}], async (key, variables) => {
+  return useQuery(['milestone', {child: child || currentChild}], async (key, variables) => {
     if (!variables.child) {
       return;
     }
@@ -99,13 +103,16 @@ async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnsw
   return result && result[0].rows.raw();
 }
 
-export function useGetChecklistQuestions() {
+export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) {
   const {data: {milestoneAge} = {}} = useGetMilestone();
-  const {data: child} = useGetCurrentChild();
+  const {data: currentChild} = useGetCurrentChild();
+  const {data: anotherChild} = useGetChild({id: childId});
   const {t} = useTranslation('milestones');
 
+  const child = anotherChild || currentChild;
+
   return useQuery(
-    ['questions', {childId: child?.id, milestoneAge}],
+    ['questions', {childId: child?.id, childGender: child?.gender, milestoneAge}],
     async (key, variables) => {
       if (!variables.childId || !variables.milestoneAge) {
         return;
@@ -121,12 +128,12 @@ export function useGetChecklistQuestions() {
           .flatten()
           .map((item: SkillSection) => ({
             ...item,
-            value: item.value && t(item.value, tOpt({t, gender: child?.gender})),
+            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
           }))
           .value() as any);
 
       const ids = questionsData && questionsData.map((i) => i.id || 0);
-      const data = (child?.id && ids && (await getAnswers(ids, child?.id))) || [];
+      const data = (variables.childId && ids && (await getAnswers(ids, variables.childId))) || [];
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
@@ -171,7 +178,6 @@ export function useGetChecklistQuestions() {
         totalProgressValue: done / total,
         answers: data,
         questionsIds: ids,
-        child,
         questionsGrouped,
         groupedByAnswer,
         answeredQuestionsCount: answersIds.length,
@@ -270,13 +276,13 @@ export function useSetQuestionAnswer() {
 
 type Concerned = Concern & Pick<ConcernAnswer, 'note'>;
 
-export function useGetConcerns() {
-  const {data: {id: childId, gender} = {}} = useGetCurrentChild();
-  const {data: {milestoneAge} = {}} = useGetMilestone();
+export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
+  const {data: {id: currentChildId, gender} = {}} = useGetCurrentChild();
+  const {data: {milestoneAge} = {}} = useGetMilestone(childId);
   const {t} = useTranslation('milestones');
 
   return useQuery(
-    ['concerns', {childId, milestoneAge, gender}],
+    ['concerns', {childId: childId || currentChildId, milestoneAge, gender}],
     async (key, variables) => {
       // console.log(variables);
       if (!variables.childId || !variables.milestoneAge || variables.gender === undefined) {
@@ -523,4 +529,32 @@ export function useSetMilestoneGotStarted() {
       [childId, milestoneId],
     );
   });
+}
+
+export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, 'id' | 'name' | 'gender'>>) {
+  const {data: child} = useGetCurrentChild();
+  const {data: concerns, status: concernsStatus} = useGetConcerns(childData?.id);
+  const {data, status: questionsStatus} = useGetChecklistQuestions(childData?.id);
+  const {data: {milestoneAgeFormatted} = {}, status: milestoneStatus} = useGetMilestone(childData?.id);
+  const {t} = useTranslation('childSummary');
+
+  return {
+    compose: () => {
+      return MailComposer.composeAsync({
+        isHtml: true,
+        body: nunjucks.renderString(emailSummaryContent.en, {
+          childName: childData?.name || child?.name,
+          concerns: concerns?.concerned,
+          skippedItems: data?.groupedByAnswer[`${undefined}`],
+          yesItems: data?.groupedByAnswer['0'],
+          notSureItems: data?.groupedByAnswer['1'],
+          notYetItems: data?.groupedByAnswer['2'],
+          formattedAge: milestoneAgeFormatted,
+          currentDayText: formatDate(new Date(), 'date'),
+          ...tOpt({t, gender: childData?.gender || child?.gender}),
+        }),
+      });
+    },
+    loading: !(concernsStatus === 'success' && questionsStatus === 'success' && milestoneStatus === 'success'),
+  };
 }

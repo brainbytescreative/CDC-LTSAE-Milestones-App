@@ -1,8 +1,9 @@
-import {MutateOptions, queryCache, useMutation, useQuery} from 'react-query';
+import {MutateOptions, queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
+import {PropType} from '../resources/constants';
 
 interface Record {
   id: number;

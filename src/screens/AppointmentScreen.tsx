@@ -5,7 +5,7 @@ import ChildSelectorModal from '../components/ChildSelectorModal';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import {Button, Text} from 'react-native-paper';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
 import {colors} from '../resources/constants';
@@ -13,6 +13,7 @@ import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {PurpleArc} from '../resources/svg';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
+import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 
@@ -22,8 +23,14 @@ const AppointmentScreen: React.FC<{}> = () => {
   const navigation = useNavigation<DashboardDrawerNavigationProp>();
   const {data: appointment, status: loadStatus} = useGetAppointmentById(route.params.appointmentId);
   const [deleteAppointment, {status: deleteStatus}] = useDeleteAppointment();
+  const {compose: composeMail, loading: composeLoading} = useGetComposeSummaryMail({
+    id: appointment?.childId,
+    name: appointment?.childName,
+    gender: appointment?.childGender,
+  });
 
-  const loading = loadStatus === 'loading' || deleteStatus === 'loading';
+  const loading = loadStatus === 'loading' || deleteStatus === 'loading' || composeLoading;
+
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <View
@@ -89,7 +96,14 @@ const AppointmentScreen: React.FC<{}> = () => {
               style={{marginTop: 10, marginBottom: 0}}>
               {t('showChildsSummary')}
             </AEButtonRounded>
-            <AEButtonRounded disabled={loading} style={{marginTop: 10, marginBottom: 30}}>
+            <AEButtonRounded
+              onPress={() => {
+                composeMail().catch((e) => {
+                  Alert.alert('', e.message);
+                });
+              }}
+              disabled={loading}
+              style={{marginTop: 10, marginBottom: 30}}>
               {t('emailChildsSummary')}
             </AEButtonRounded>
             <Button

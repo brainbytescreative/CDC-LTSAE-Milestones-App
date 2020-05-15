@@ -2,10 +2,14 @@ import {queryCache, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
+import {PropType} from '../resources/constants';
+import {ChildResult} from './childrenHooks';
 
 export interface AppointmentDb {
   id: string;
-  childId: string;
+  childId: PropType<ChildResult, 'id'>;
+  childName: PropType<ChildResult, 'name'>;
+  childGender: PropType<ChildResult, 'gender'>;
   date: string;
   notes?: string;
   apptType: string;
@@ -99,7 +103,7 @@ export function useGetAppointmentById(id: string | number | undefined) {
       }
 
       // language=SQLite
-      const query = `select appointments.*, children.name 'childName'
+      const query = `select appointments.*, children.name 'childName', children.id 'childId', children.gender 'childGender'
        from appointments
                 left join children on appointments.childId = children.id
        where appointments.id = ?`;

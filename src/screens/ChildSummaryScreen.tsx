@@ -1,11 +1,21 @@
 import React, {useCallback, useState} from 'react';
-import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {
   Answer,
   MilestoneAnswer,
   useGetChecklistQuestions,
+  useGetComposeSummaryMail,
   useGetConcerns,
   useGetMilestone,
   useSetConcern,
@@ -168,6 +178,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
   const {bottom} = useSafeArea();
   const [answerQuestion] = useSetQuestionAnswer();
   const [setConcern] = useSetConcern();
+  const {compose: composeMail, loading} = useGetComposeSummaryMail();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -302,20 +313,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
               <AEButtonRounded
+                disabled={loading}
                 onPress={() => {
-                  MailComposer.composeAsync({
-                    isHtml: true,
-                    body: nunjucks.renderString(emailSummaryContent.en, {
-                      childName: child?.name,
-                      concerns: concerns?.concerned,
-                      skippedItems: data?.groupedByAnswer[`${undefined}`],
-                      yesItems: data?.groupedByAnswer['0'],
-                      notSureItems: data?.groupedByAnswer['1'],
-                      notYetItems: data?.groupedByAnswer['2'],
-                      formattedAge: milestoneAgeFormatted,
-                      currentDayText: formatDate(new Date(), 'date'),
-                      ...tOpt({t, gender: child?.gender}),
-                    }),
+                  composeMail().catch((e) => {
+                    Alert.alert('', e.message);
                   });
                 }}
                 style={{marginBottom: 0}}>
