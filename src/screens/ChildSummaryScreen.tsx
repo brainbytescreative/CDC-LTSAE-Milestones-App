@@ -1,14 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {
@@ -40,7 +31,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import _ from 'lodash';
 import NoteIcon from '../resources/svg/NoteIcon';
-import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -50,16 +40,25 @@ interface ItemProps {
   id?: IdType;
   note?: NoteType;
   onEditAnswerPress?: (id: IdType, note: NoteType) => void;
-  onEditNotePress?: (id: IdType, note: NoteType) => void;
+  onEditNotePress?: (id: IdType, note: NoteType, answer: any) => void;
   hideControls?: boolean;
+  answer: any;
 }
 
-const Item: React.FC<ItemProps> = ({value, id, note, onEditAnswerPress, hideControls = false, onEditNotePress}) => {
+const Item: React.FC<ItemProps> = ({
+  value,
+  id,
+  note,
+  onEditAnswerPress,
+  hideControls = false,
+  onEditNotePress,
+  answer,
+}) => {
   const {t} = useTranslation('childSummary');
   const [noteLocal, setNote] = useState<string | undefined>(undefined);
 
   const onSavePress = () => {
-    id && onEditNotePress && onEditNotePress(id, noteLocal);
+    id && onEditNotePress && onEditNotePress(id, noteLocal, answer);
     setNote(undefined);
   };
   return (
@@ -85,8 +84,8 @@ const Item: React.FC<ItemProps> = ({value, id, note, onEditAnswerPress, hideCont
               setNote(e.nativeEvent.text);
               // saveNote(e.nativeEvent.text);
             }}
-            returnKeyType={'done'}
-            onSubmitEditing={onSavePress}
+            // returnKeyType={'done'}
+            // onSubmitEditing={onSavePress}
             multiline
             style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
             placeholder={t('editNote')}
@@ -107,7 +106,7 @@ const Item: React.FC<ItemProps> = ({value, id, note, onEditAnswerPress, hideCont
         {noteLocal === undefined && (
           <TouchableOpacity
             onPress={() => {
-              setNote('');
+              setNote(note || '');
             }}>
             <Text
               style={{
@@ -241,6 +240,24 @@ const ChildSummaryScreen: React.FC<{}> = () => {
     [refetchConcerns, t, child, showActionSheetWithOptions, setConcern],
   );
 
+  const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
+    (id, note, answer) => {
+      child?.id &&
+        answerQuestion({questionId: id, childId: child?.id, note, answer}).then(() => refetch({force: true}));
+    },
+    [child, answerQuestion, refetch],
+  );
+
+  const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
+    (id, note, answer) => {
+      child?.id &&
+        setConcern({concernId: id, answer, childId: child?.id, note}).then(() => {
+          refetchConcerns({force: true});
+        });
+    },
+    [child, refetchConcerns, setConcern],
+  );
+
   return (
     <View style={{backgroundColor: colors.white}}>
       <View
@@ -321,8 +338,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             </View>
             {data?.groupedByAnswer['undefined']?.map((item) => (
               <Item
+                answer={null}
                 key={`answer-${item.id}`}
                 onEditAnswerPress={onEditQuestionPress}
+                onEditNotePress={onSaveQuestionNotePress}
                 value={item.value}
                 id={item.id}
                 note={item.note}
@@ -333,8 +352,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             </View>
             {concerns?.concerned?.map((item) => (
               <Item
+                answer={true}
                 key={`concern-${item.id}`}
                 onEditAnswerPress={onEditConcernPress}
+                onEditNotePress={onSaveConcernNotePress}
                 hideControls={!!item.id && missingConcerns.includes(item.id)}
                 value={item.value}
                 note={item.note}
@@ -346,8 +367,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             </View>
             {data?.groupedByAnswer['1']?.map((item) => (
               <Item
+                answer={Answer.UNSURE}
                 key={`answer-${item.id}`}
                 onEditAnswerPress={onEditQuestionPress}
+                onEditNotePress={onSaveQuestionNotePress}
                 value={item.value}
                 note={item.note}
                 id={item.id}
@@ -358,8 +381,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             </View>
             {data?.groupedByAnswer['2']?.map((item) => (
               <Item
+                answer={Answer.NOT_YET}
                 key={`answer-${item.id}`}
                 onEditAnswerPress={onEditQuestionPress}
+                onEditNotePress={onSaveQuestionNotePress}
                 value={item.value}
                 note={item.note}
                 id={item.id}
@@ -371,7 +396,9 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             {data?.groupedByAnswer['0']?.map((item) => (
               <Item
                 key={`answer-${item.id}`}
+                answer={Answer.YES}
                 onEditAnswerPress={onEditQuestionPress}
+                onEditNotePress={onSaveQuestionNotePress}
                 value={item.value}
                 note={item.note}
                 id={item.id}

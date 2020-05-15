@@ -163,6 +163,8 @@ export function useGetChecklistQuestions() {
         'answer',
       ) as any;
 
+      groupedByAnswer.undefined = _.merge(groupedByAnswer.undefined, groupedByAnswer.null);
+
       return {
         questions: questionsData as ChecklistData[],
         totalProgress: `${done}/${total}`,
@@ -254,12 +256,12 @@ export function useSetQuestionAnswer() {
     {
       throwOnError: false,
       onSuccess: (data, {childId, questionId}) => {
-        queryCache.refetchQueries(['question', {childId, questionId}], {force: true});
-        queryCache.refetchQueries('answers', {force: true, exact: false});
+        queryCache.refetchQueries(['question', {childId, questionId}], {force: true}).then();
+        queryCache.refetchQueries('answers', {force: true, exact: false}).then();
         if (milestoneAge) {
-          queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true});
+          queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
         } else {
-          queryCache.refetchQueries('monthProgress', {force: true});
+          queryCache.refetchQueries('monthProgress', {force: true}).then();
         }
       },
     },
