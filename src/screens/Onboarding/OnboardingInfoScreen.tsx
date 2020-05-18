@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modal, Portal, Title, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
-import {colors} from '../../resources/constants';
+import {colors, sharedStyle} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
 import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
 import {useSafeArea} from 'react-native-safe-area-context';
@@ -29,7 +29,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
                 <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
               </View>
             </View>
-            <Text style={{fontSize: 20, textAlign: 'center', marginBottom: 16, fontFamily: 'Montserrat-Bold'}}>
+            <Text style={[{fontSize: 20, textAlign: 'center', marginBottom: 16}, sharedStyle.boldText]}>
               {t('welcome')}
             </Text>
           </View>
@@ -58,12 +58,13 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
               justifyContent: 'space-around',
             }}>
             <Text
-              style={{
-                marginHorizontal: 32,
-                textAlign: 'center',
-                fontSize: 22,
-                fontFamily: 'Montserrat-Bold',
-              }}>
+              style={[
+                {
+                  marginHorizontal: 32,
+                  textAlign: 'center',
+                },
+                sharedStyle.largeBoldText,
+              ]}>
               {t('welcome2p')}
             </Text>
             <View
@@ -73,7 +74,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
               }}>
               {Array.from(new Array(6)).map((value, index) => (
                 <Text style={[{fontSize: 15}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
-                  <Text style={{fontFamily: 'Montserrat-Bold'}}>{'+   '}</Text>
+                  <Text style={[sharedStyle.boldText]}>{'+   '}</Text>
                   {t('list', {context: `${index}`})}
                 </Text>
               ))}
@@ -103,6 +104,21 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
             }}
             visible={visible}>
             <LanguageSelector title={'Select a Language/\nSeleccione Un Idioma'} />
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(false);
+              }}>
+              <Text
+                style={[
+                  {
+                    textAlign: 'center',
+                    marginTop: 16,
+                  },
+                  sharedStyle.largeBoldText,
+                ]}>
+                {t('common:done')}
+              </Text>
+            </TouchableOpacity>
           </Modal>
         </Portal>
       </View>

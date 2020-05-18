@@ -71,7 +71,7 @@ export type Guardian = 'guardian' | 'healthcareProvider';
 
 export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
 
-export const skillTypes = ['cognitive', 'social', 'language', 'movement'];
+export const skillTypes = ['social', 'language', 'cognitive', 'movement'];
 export type SkillType = typeof skillTypes[number];
 
 export const colors = Object.freeze({
