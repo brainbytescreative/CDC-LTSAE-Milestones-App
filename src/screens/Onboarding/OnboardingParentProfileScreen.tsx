@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors} from '../../resources/constants';
+import {colors, sharedStyle} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
 import LanguageSelector from '../../components/LanguageSelector';
 import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
@@ -27,9 +27,9 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const {top} = useSafeArea();
   return (
     <AEScrollView>
-      <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top}}>
-        <View style={{flexGrow: 1, justifyContent: 'space-around', backgroundColor: 'white'}}>
-          <View style={{top: 0, position: 'absolute', width: '100%', height: '100%'}}>
+      <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top, overflow: 'visible'}}>
+        <View style={{flexGrow: 3, backgroundColor: 'white', overflow: 'visible'}}>
+          <View style={{top: 0, position: 'absolute', width: '100%', height: 275}}>
             <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
             <NavBarBackground width={'100%'} />
           </View>
@@ -44,17 +44,19 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
-            style={{
-              textAlign: 'center',
-              fontSize: 22,
-              marginHorizontal: 32,
-              textTransform: 'capitalize',
-              marginBottom: 24,
-              fontFamily: 'Montserrat-Bold',
-            }}>
+            style={[
+              {
+                marginTop: 20,
+                textAlign: 'center',
+                marginHorizontal: 32,
+                textTransform: 'capitalize',
+                marginBottom: 40,
+              },
+              sharedStyle.largeBoldText,
+            ]}>
             {t('parentProfile')}
           </Text>
-          <View style={{marginHorizontal: 32}}>
+          <View style={{marginHorizontal: 32, zIndex: 20000, marginBottom: 56}}>
             <ParentProfileSelector
               value={profile}
               onChange={(values) => {
@@ -64,20 +66,21 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
             />
             <Text style={{textAlign: 'right', marginHorizontal: 50, marginTop: 10}}>{t('common:required')}</Text>
           </View>
-        </View>
 
-        <View style={{flexGrow: 1, justifyContent: 'center', paddingVertical: 16, backgroundColor: 'white'}}>
-          <Text
-            style={{
-              fontSize: 22,
-              marginHorizontal: 32,
-              marginBottom: 16,
-              textTransform: 'capitalize',
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            {t('common:appLanguage')}
-          </Text>
-          <LanguageSelector style={{marginHorizontal: 32}} />
+          <View style={{flexGrow: 1, justifyContent: 'center', paddingBottom: 40}}>
+            <Text
+              style={[
+                {
+                  marginHorizontal: 32,
+                  marginBottom: 16,
+                  textTransform: 'capitalize',
+                },
+                sharedStyle.largeBoldText,
+              ]}>
+              {t('common:appLanguage')}
+            </Text>
+            <LanguageSelector style={{marginHorizontal: 32}} />
+          </View>
         </View>
 
         <View style={{flexGrow: 2, backgroundColor: 'white'}}>

@@ -34,7 +34,7 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
         customArrowUp={<ChevronDown />}
         defaultNull
         value={value?.guardian}
-        zIndex={11000}
+        zIndex={110000}
         style={[sharedStyle.shadow, sharedStyle.border]}
         onChangeItem={(item) => {
           onChange({guardian: item.value, territory: value?.territory});
@@ -52,8 +52,9 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
           value: val,
         }))}
         defaultNull
+        dropDownMaxHeight={140}
         value={value?.territory}
-        zIndex={10000}
+        zIndex={100000}
         onChangeItem={(item) => onChange({guardian: value?.guardian, territory: item.value})}
       />
     </>
