@@ -3,9 +3,14 @@ PODS:
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
+  - EXApplication (2.1.1):
+    - UMCore
   - EXMailComposer (8.1.0):
     - UMCore
     - UMFileSystemInterface
+  - EXNotifications (0.1.7):
+    - UMCore
+    - UMPermissionsInterface
   - FBLazyVector (0.62.2)
   - FBReactNativeSpec (0.62.2):
     - Folly (= 2018.10.22.00)
@@ -350,7 +355,9 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXApplication (from `../node_modules/expo-application/ios`)
   - EXMailComposer (from `../node_modules/expo-mail-composer/ios`)
+  - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - FlipperKit (~> 0.33.1)
@@ -428,8 +435,12 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
   EXMailComposer:
     :path: "../node_modules/expo-mail-composer/ios"
+  EXNotifications:
+    :path: "../node_modules/expo-notifications/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -534,7 +545,9 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+  EXApplication: 7cf81de6fafccff42f5d1caa5c24a159db6b9437
   EXMailComposer: 8efe254989ceace18681b98c049c6c0209d4ae56
+  EXNotifications: cc5d647c15b5f00602e1c4f7244d6a3a15dd2eb6
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Flipper: 6c1f484f9a88d30ab3e272800d53688439e50f69

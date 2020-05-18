@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {colors, sharedStyle} from '../resources/constants';
+import {colors, notificationIntervals, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {useNavigation} from '@react-navigation/native';
@@ -15,6 +15,7 @@ import LikeHeart from '../resources/svg/LikeHeart';
 import {Tip, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
+import * as Notifications from 'expo-notifications';
 
 type ItemProps = {
   title: string | undefined;
@@ -139,6 +140,34 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       break;
   }
 
+  const onRemindMePress = useCallback<NonNullable<PropType<ItemProps, 'onRemindMePress'>>>(
+    (id, value) => {
+      id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
+
+      const selectedTip = tips?.filter(({id: tipId}) => id === tipId)[0];
+      const notificationId = `tips-${id}-${child?.id}`;
+
+      if (id && selectedTip?.value && child?.id && value) {
+        Notifications.scheduleNotificationAsync({
+          identifier: notificationId,
+          content: {
+            title: 'Tips & activities',
+            body: selectedTip.value,
+            sound: true,
+          },
+          trigger: notificationIntervals.tips,
+        }).then(console.log);
+      } else if (id && child?.id && !value) {
+        Notifications.cancelScheduledNotificationAsync(notificationId).then();
+      }
+    },
+    [setTip, child, tips],
+  );
+
+  const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
+    id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
+  };
+
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
       <View
@@ -187,12 +216,8 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
         {sortedTips?.map((item) => (
           <Item
             key={item.id}
-            onLikePress={(id, value) => {
-              id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
-            }}
-            onRemindMePress={(id, value) => {
-              id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
-            }}
+            onLikePress={onLikePress}
+            onRemindMePress={onRemindMePress}
             t={t}
             like={item.like}
             itemId={item.id}

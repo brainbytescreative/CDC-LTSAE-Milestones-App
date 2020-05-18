@@ -22,6 +22,18 @@ import {colors} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {YellowBox} from 'react-native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import * as Notifications from 'expo-notifications';
+
+// First, set the handler that will cause the notification
+// to show the alert
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 ACPAnalytics.registerExtension();
 
@@ -75,6 +87,21 @@ const App = () => {
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
     );
   });
+
+  React.useEffect(() => {
+    const subscription = Notifications.addNotificationReceivedListener((notification) => {
+      console.log(notification);
+    });
+    return () => subscription.remove();
+  }, []);
+
+  React.useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const url = response.notification.request; //.content.data.url;
+      console.log(url);
+    });
+    return () => subscription.remove();
+  }, []);
 
   return (
     <ActionSheetProvider>

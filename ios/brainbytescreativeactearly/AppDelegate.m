@@ -15,6 +15,8 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import <UMReactNativeAdapter/UMNativeModulesProxy.h>
+#import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -29,11 +31,19 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+@synthesize window = _window;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if DEBUG
   InitializeFlipper(application);
 #endif
+  
+  [ACPCore configureWithAppId:@"yourAppId"];
+  [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
+  [ACPAnalytics registerExtension];
+  [ACPIdentity registerExtension];
+  [ACPCore start:nil];
   
   self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
 
@@ -50,11 +60,7 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
-  [ACPCore configureWithAppId:@"yourAppId"];
-  [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
-  [ACPAnalytics registerExtension];
-  [ACPIdentity registerExtension];
-  [ACPCore start:nil];
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
   
   return YES;
 }

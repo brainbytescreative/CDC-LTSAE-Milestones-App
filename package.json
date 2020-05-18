@@ -25,6 +25,7 @@
     "browser-pug": "^0.1.0",
     "date-fns": "^2.13.0",
     "expo-mail-composer": "^8.1.0",
+    "expo-notifications": "^0.1.7",
     "formik": "^2.1.4",
     "i18next": "^19.4.4",
     "lodash": "^4.17.15",
