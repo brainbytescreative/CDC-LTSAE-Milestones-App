@@ -154,7 +154,7 @@ const ActEarlyPage: React.FC<{}> = () => {
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
               {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
             </Text>
-            <Text
+            <View
               style={[
                 {
                   backgroundColor: colors.yellow,
@@ -162,13 +162,20 @@ const ActEarlyPage: React.FC<{}> = () => {
                   marginHorizontal: 32,
                   marginTop: 20,
                   marginBottom: 50,
-                  textAlign: 'center',
-                  fontSize: 15,
+                  borderRadius: 10,
                 },
                 sharedStyle.shadow,
               ]}>
-              {t('actEarlyWarning')}
-            </Text>
+              <Text
+                style={[
+                  {
+                    textAlign: 'center',
+                    fontSize: 15,
+                  },
+                ]}>
+                {t('actEarlyWarning')}
+              </Text>
+            </View>
           </View>
         }
         data={concerns?.concerns || []}
