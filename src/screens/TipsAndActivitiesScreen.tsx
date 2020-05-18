@@ -147,7 +147,7 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
             sound: true,
           },
           trigger: notificationIntervals.tips,
-        }).then(console.log);
+        });
       } else if (id && child?.id && !value) {
         Notifications.cancelScheduledNotificationAsync(notificationId).then();
       }
