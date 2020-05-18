@@ -3,7 +3,7 @@ import {differenceInDays, differenceInMonths, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {childAges, missingConcerns, PropType, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
-import {queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
+import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
   Concern,
   MilestoneChecklist,
@@ -16,6 +16,7 @@ import {formatDate, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
+import {TFunction} from 'i18next';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -41,57 +42,105 @@ interface ConcernAnswer {
   note?: string | undefined | null;
 }
 
-export function useGetMilestone(childId?: PropType<ChildResult, 'id'>, options?: QueryOptions<any>) {
+function formattedAge(milestoneAge: number, t: TFunction) {
+  const milestoneAgeFormatted =
+    milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
+  const milestoneAgeFormattedDashes =
+    milestoneAge % 12 === 0 ? t('yearDash', {count: milestoneAge / 12}) : t('monthDash', {count: milestoneAge});
+  return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
+}
+
+type MilestoneQueryResult =
+  | {
+      milestoneAge: number | undefined;
+      childAge: number | undefined;
+      milestoneAgeFormatted: string | undefined;
+      milestoneAgeFormattedDashes: string | undefined;
+      isTooYong: boolean;
+      betweenCheckList: boolean;
+    }
+  | undefined;
+
+type MilestoneQueryKey = [string, {child?: ChildResult}];
+
+function calcChildAge(birthDay: Date | undefined) {
+  let isTooYong = false;
+  let milestoneAge;
+  if (birthDay) {
+    const ageMonth = differenceInMonths(new Date(), birthDay);
+    const minAge = _.min(childAges) || 0;
+    const maxAge = _.max(childAges) || Infinity;
+
+    if (ageMonth <= minAge) {
+      milestoneAge = minAge;
+      const ageDays = differenceInDays(new Date(), birthDay);
+      isTooYong = ageDays < tooYongAgeDays;
+    } else if (ageMonth >= maxAge) {
+      milestoneAge = maxAge;
+    } else {
+      const milestones = childAges.filter((value) => value < ageMonth);
+      milestoneAge = milestones[milestones.length - 1];
+    }
+  }
+  return {milestoneAge, isTooYong};
+}
+
+export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
 
-  return useQuery(['milestone', {child: child || currentChild}], async (key, variables) => {
-    if (!variables.child) {
-      return;
-    }
-    let milestoneAge;
-    let isTooYong = false;
-    const betweenCheckList = false;
-
-    const birthDay =
-      typeof variables.child.birthday === 'string' ? parseISO(variables.child?.birthday) : variables.child?.birthday;
-
-    if (birthDay) {
-      const ageMonth = differenceInMonths(new Date(), birthDay);
-      const minAge = _.min(childAges) || 0;
-      const maxAge = _.max(childAges) || Infinity;
-
-      if (ageMonth <= minAge) {
-        milestoneAge = minAge;
-        const ageDays = differenceInDays(new Date(), birthDay);
-        isTooYong = ageDays < tooYongAgeDays;
-      } else if (ageMonth >= maxAge) {
-        milestoneAge = maxAge;
-      } else {
-        const milestones = childAges.filter((value) => value < ageMonth);
-        milestoneAge = milestones[milestones.length - 1];
+  return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
+    ['milestone', {child: child || currentChild}],
+    async (key, variables) => {
+      if (!variables.child) {
+        return;
       }
-    }
+      const betweenCheckList = false;
 
-    let milestoneAgeFormatted;
-    let milestoneAgeFormattedDashes;
+      const birthDay =
+        typeof variables.child.birthday === 'string' ? parseISO(variables.child?.birthday) : variables.child?.birthday;
 
-    if (milestoneAge) {
-      milestoneAgeFormatted =
-        milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
-      milestoneAgeFormattedDashes =
-        milestoneAge % 12 === 0 ? t('yearDash', {count: milestoneAge / 12}) : t('monthDash', {count: milestoneAge});
-    }
+      const {milestoneAge, isTooYong} = calcChildAge(birthDay);
 
-    return {
-      milestoneAge,
-      milestoneAgeFormatted,
-      milestoneAgeFormattedDashes,
-      isTooYong,
-      betweenCheckList,
-    };
-  });
+      let milestoneAgeFormatted;
+      let milestoneAgeFormattedDashes;
+
+      if (milestoneAge) {
+        const formatted = formattedAge(milestoneAge, t);
+        milestoneAgeFormatted = formatted.milestoneAgeFormatted;
+        milestoneAgeFormattedDashes = formatted.milestoneAgeFormattedDashes;
+      }
+
+      return {
+        milestoneAge,
+        childAge: milestoneAge,
+        milestoneAgeFormatted,
+        milestoneAgeFormattedDashes,
+        isTooYong,
+        betweenCheckList,
+      };
+    },
+  );
+}
+
+export function useSetMilestoneAge() {
+  const {t} = useTranslation('common');
+  const {data: child} = useGetCurrentChild();
+  return [
+    (age: typeof childAges[number]) => {
+      const {milestoneAge: childAge} = calcChildAge(child?.birthday);
+      const formatted = formattedAge(age, t);
+      const data: MilestoneQueryResult = {
+        milestoneAge: age,
+        ...formatted,
+        childAge,
+        isTooYong: false,
+        betweenCheckList: false,
+      };
+      queryCache.setQueryData(['milestone', {child}], data);
+    },
+  ];
 }
 
 async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnswer[] | undefined> {

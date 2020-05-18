@@ -5,29 +5,35 @@ import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {childAges, colors, PropType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {useGetMonthProgress} from '../../hooks/checklistHooks';
+import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import _ from 'lodash';
 
-interface Props {
-  currentAgeIndex: number;
+interface ItemProps {
   childAge: number;
+  milestone: number;
+  childId?: number;
+  month: number;
+  onSelect?: (age: number) => void;
 }
 
-const Item: React.FC<{childAge: number; childId?: number; month: number}> = ({month, childAge, childId}) => {
+const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, milestone}) => {
   const {t} = useTranslation('dashboard');
-  const isCurrent = childAge === month;
-  const suffix = isCurrent ? '' : 'Short';
+  const isCurrentMilestone = milestone === month;
+  const suffix = isCurrentMilestone ? '' : 'Short';
   const unit =
     month % 12 === 0 ? t(`common:year${suffix}`, {count: month / 12}) : t(`common:month${suffix}`, {count: month});
 
   const {data: progress = 0} = useGetMonthProgress({childId, milestone: month});
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        onSelect && onSelect(month);
+      }}>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>
         <AnimatedCircularProgress
           rotation={0}
-          size={isCurrent ? 68 : 44}
+          size={isCurrentMilestone ? 68 : 44}
           width={2}
           fill={progress}
           tintColor={colors.iceCold}
@@ -44,7 +50,7 @@ const Item: React.FC<{childAge: number; childId?: number; month: number}> = ({mo
               <Text
                 style={{
                   fontSize: 12,
-                  fontFamily: month === childAge ? 'Avenir-Heavy' : 'Avenir-light',
+                  fontFamily: month === milestone ? 'Avenir-Heavy' : 'Avenir-light',
                 }}>
                 {unit}
               </Text>
@@ -58,9 +64,15 @@ const Item: React.FC<{childAge: number; childId?: number; month: number}> = ({mo
 
 type onViewableItemsChanged = NonNullable<PropType<Required<FlatListProps<any>>, 'onViewableItemsChanged'>>;
 
-const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
+interface Props {
+  currentAgeIndex: number;
+}
+
+const MonthCarousel: React.FC<Props> = ({currentAgeIndex}) => {
   const flatListRef = useRef<FlatList | null>(null);
   const visible = useRef<{last?: number | null; first?: number | null} | undefined>(undefined);
+  const {data: {childAge = 2, milestoneAge = 2} = {}} = useGetMilestone();
+  const [setAge] = useSetMilestoneAge();
 
   const {data: child} = useGetCurrentChild();
 
@@ -117,7 +129,17 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
         data={childAges}
         extraData={{childId: child?.id, milstone: childAge}}
         horizontal
-        renderItem={({item}) => <Item month={item} childId={child?.id} childAge={childAge} />}
+        renderItem={({item}) => (
+          <Item
+            onSelect={(age) => {
+              setAge(age);
+            }}
+            month={item}
+            childId={child?.id}
+            childAge={childAge}
+            milestone={milestoneAge}
+          />
+        )}
         keyExtractor={(item) => `${item}`}
       />
       <TouchableOpacity
