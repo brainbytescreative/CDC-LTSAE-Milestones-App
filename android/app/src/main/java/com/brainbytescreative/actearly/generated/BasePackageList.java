@@ -7,7 +7,9 @@ import org.unimodules.core.interfaces.Package;
 public class BasePackageList {
   public List<Package> getPackageList() {
     return Arrays.<Package>asList(
-        new expo.modules.mailcomposer.MailComposerPackage()
+        new expo.modules.application.ApplicationPackage(),
+        new expo.modules.mailcomposer.MailComposerPackage(),
+        new expo.modules.notifications.NotificationsPackage()
     );
   }
 }

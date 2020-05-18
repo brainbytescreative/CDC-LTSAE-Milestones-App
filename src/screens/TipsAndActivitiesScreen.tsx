@@ -102,19 +102,10 @@ type TipType = typeof tipFilters[number];
 
 const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {t} = useTranslation('tipsAndActivities');
-  const navigation = useNavigation();
   const [tipType, setTipType] = useState<TipType>('all');
   const {data: child} = useGetCurrentChild();
   const {data: tips} = useGetTips();
   const [setTip] = useSetTip();
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: colors.iceCold,
-      },
-    });
-  }, [navigation]);
 
   let sortedTips;
 
