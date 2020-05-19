@@ -1,4 +1,4 @@
-import React, {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
 import {FlatList, FlatListProps, Text, TouchableOpacity, View} from 'react-native';
 import {ChevronLeft, ChevronRight} from '../../resources/svg';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
@@ -7,7 +7,6 @@ import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMonthProgress} from '../../hooks/checklistHooks';
 import _ from 'lodash';
-import {number} from 'yup';
 
 interface Props {
   currentAgeIndex: number;
@@ -116,6 +115,7 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
         }}
         onViewableItemsChanged={onViewableItemsChanged}
         data={childAges}
+        extraData={{childId: child?.id, milstone: childAge}}
         horizontal
         renderItem={({item}) => <Item month={item} childId={child?.id} childAge={childAge} />}
         keyExtractor={(item) => `${item}`}

@@ -1,4 +1,4 @@
-import {queryCache, useMutation, useQuery} from 'react-query';
+import {queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
 import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
@@ -123,7 +123,7 @@ export function useGetAppointmentById(id: string | number | undefined) {
   );
 }
 
-export function useGetChildAppointments(childId: number | string | undefined) {
+export function useGetChildAppointments(childId: number | string | undefined, options?: QueryOptions<Appointment[]>) {
   return useQuery<Appointment[], [string, {childId: typeof childId}]>(
     ['appointment', {childId: childId}],
     async (key, variables) => {
@@ -144,5 +144,6 @@ export function useGetChildAppointments(childId: number | string | undefined) {
         date: parseISO(value.date),
       })) as Appointment[];
     },
+    options,
   );
 }

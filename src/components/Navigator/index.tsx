@@ -46,9 +46,9 @@ const Navigator: React.FC<{}> = () => {
     <Stack.Navigator headerMode={'none'}>
       {!isOnboarded && (
         <>
-          <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
-          <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
-          <Stack.Screen name={'AddChild'} component={AddChildScreen} />
+          {/*<Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />*/}
+          {/*<Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />*/}
+          {/*<Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />*/}
           <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
         </>
       )}

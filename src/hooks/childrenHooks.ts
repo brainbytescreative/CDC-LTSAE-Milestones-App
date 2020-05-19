@@ -3,7 +3,6 @@ import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
-import {PropType} from '../resources/constants';
 
 interface Record {
   id: number;
@@ -29,7 +28,7 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
   return useQuery<ChildResult, Key>(
     'selectedChild',
     async () => {
-      await new Promise((resolve, reject) => setTimeout(resolve, 3 * 1000));
+      // await new Promise((resolve, reject) => setTimeout(resolve, 10 * 1000));
 
       let selectedChild: string | null = await Storage.getItem('selectedChild');
 
@@ -38,7 +37,8 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
         selectedChild = res && res[0].rows.item(0)?.id;
 
         if (!selectedChild) {
-          throw new Error('There are no children');
+          // throw new Error('There are no children');
+          return;
         }
 
         await Storage.setItem('selectedChild', `${selectedChild}`);
@@ -67,6 +67,7 @@ export function useSetSelectedChild() {
     await queryCache.refetchQueries('selectedChild', {force: true});
     await queryCache.refetchQueries('questions', {force: true});
     await queryCache.refetchQueries('concerns', {force: true});
+    await queryCache.refetchQueries('monthProgress', {force: true});
   });
 }
 
@@ -129,15 +130,19 @@ export function useGetChild(options: {id: number | string | undefined}) {
   });
 }
 
-export function useGetChildren() {
-  return useQuery<ChildResult[], Key>('children', async () => {
-    const result = await sqLiteClient.dB?.executeSql('select * from children');
-    const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
-    return records.map((value) => ({
-      ...value,
-      birthday: parseISO(value.birthday),
-    }));
-  });
+export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
+  return useQuery<ChildResult[], Key>(
+    'children',
+    async () => {
+      const result = await sqLiteClient.dB?.executeSql('select * from children');
+      const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
+      return records.map((value) => ({
+        ...value,
+        birthday: parseISO(value.birthday),
+      }));
+    },
+    options,
+  );
 }
 
 type AddChildResult = number | undefined;

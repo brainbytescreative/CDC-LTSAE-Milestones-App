@@ -3,7 +3,7 @@ import {differenceInDays, differenceInMonths, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {childAges, missingConcerns, PropType, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
-import {queryCache, useMutation, useQuery} from 'react-query';
+import {queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
   Concern,
   MilestoneChecklist,
@@ -41,7 +41,7 @@ interface ConcernAnswer {
   note?: string | undefined | null;
 }
 
-export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
+export function useGetMilestone(childId?: PropType<ChildResult, 'id'>, options?: QueryOptions<any>) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
@@ -491,7 +491,10 @@ export function useGetMonthProgress(predicate: {childId?: number; milestone?: nu
       (value) => value.id,
     );
     const result = await sqLiteClient.dB?.executeSql(
-      `SELECT count(questionId) cnt from milestones_answers where questionId in (${molestoneQuestionsIds.join(',')})`,
+      `SELECT count(questionId) cnt from milestones_answers where questionId in (${molestoneQuestionsIds.join(
+        ',',
+      )}) and childId=?`,
+      [variables.childId],
     );
 
     const answeredQuestionsCount = (result && result[0].rows.item(0).cnt) || 0;

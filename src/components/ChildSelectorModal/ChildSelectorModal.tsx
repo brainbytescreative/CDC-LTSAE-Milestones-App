@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import React, {useState, Suspense} from 'react';
+import {ActivityIndicator, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
@@ -18,29 +18,59 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
-// const ChildName: React.FC<{}> = () => {
-//   const {data: selectedChild} = useGetCurrentChild({suspense: true});
-//   return (
-//     <Text
-//       numberOfLines={1}
-//       style={{
-//         fontSize: 22,
-//         textAlign: 'center',
-//         fontFamily: 'Montserrat-Bold',
-//       }}>
-//       {selectedChild?.name}
-//     </Text>
-//   );
-// };
+const ChildName: React.FC<{}> = () => {
+  const {data: selectedChild} = useGetCurrentChild({suspense: true});
+  return (
+    <Text
+      numberOfLines={1}
+      style={{
+        fontSize: 22,
+        textAlign: 'center',
+        fontFamily: 'Montserrat-Bold',
+      }}>
+      {selectedChild?.name}
+    </Text>
+  );
+};
+
+const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: number) => void}> = ({
+  onSelect,
+  onEdit,
+}) => {
+  const {data: children} = useGetChildren({suspense: true});
+  const [deleteChild] = useDeleteChild();
+
+  return (
+    <FlatList
+      data={children}
+      renderItem={({item}) => (
+        <ChildSelectorsItem
+          {...item}
+          onSelect={onSelect}
+          onEdit={onEdit}
+          onDelete={(id) => {
+            deleteChild({id});
+          }}
+        />
+      )}
+      keyExtractor={(item) => `${item.id}`}
+      ListFooterComponent={
+        <ChildSectorFooter
+          onPress={() => {
+            onEdit();
+          }}
+        />
+      }
+    />
+  );
+};
 
 const ChildSelectorModal: React.FC<{}> = () => {
   const {top} = useSafeArea();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
-  const {data: selectedChild} = useGetCurrentChild();
-  const {data: children} = useGetChildren();
+
   const navigation = useNavigation<DashboardScreenNavigationProp>();
   const [selectChild] = useSetSelectedChild();
-  const [deleteChild] = useDeleteChild();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -55,21 +85,15 @@ const ChildSelectorModal: React.FC<{}> = () => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: 22,
-                textAlign: 'center',
-                fontFamily: 'Montserrat-Bold',
-              }}>
-              {selectedChild?.name}
-            </Text>
+            <Suspense fallback={<ActivityIndicator size={'small'} />}>
+              <ChildName />
+            </Suspense>
             <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         );
       },
     });
-  }, [navigation, setChildSelectorVisible, childSelectorVisible, selectedChild]);
+  }, [navigation, setChildSelectorVisible, childSelectorVisible]);
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
@@ -104,27 +128,9 @@ const ChildSelectorModal: React.FC<{}> = () => {
                 },
                 sharedStyle.shadow,
               ]}>
-              <FlatList
-                data={children}
-                renderItem={({item}) => (
-                  <ChildSelectorsItem
-                    {...item}
-                    onSelect={onSelect}
-                    onEdit={onEdit}
-                    onDelete={(id) => {
-                      deleteChild({id});
-                    }}
-                  />
-                )}
-                keyExtractor={(item) => `${item.id}`}
-                ListFooterComponent={
-                  <ChildSectorFooter
-                    onPress={() => {
-                      onEdit();
-                    }}
-                  />
-                }
-              />
+              <Suspense fallback={<ActivityIndicator style={{margin: 32}} size={'large'} />}>
+                <ChildrenList onEdit={onEdit} onSelect={onSelect} />
+              </Suspense>
             </View>
           </View>
         </TouchableWithoutFeedback>
