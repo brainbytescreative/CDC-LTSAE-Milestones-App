@@ -79,12 +79,14 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
               },
               sharedStyle.shadow,
             ]}
-            labelStyle={{
-              marginHorizontal: 8,
-              fontSize: 18,
-              fontFamily: 'Montserrat-Regular',
-              fontWeight: 'normal',
-            }}
+            labelStyle={[
+              sharedStyle.regularText,
+              {
+                marginHorizontal: 8,
+                fontSize: 18,
+                fontWeight: 'normal',
+              },
+            ]}
             {...props}
           />
         </View>

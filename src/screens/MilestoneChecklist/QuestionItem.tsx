@@ -11,6 +11,7 @@ import _ from 'lodash';
 import {Text} from 'react-native-paper';
 import PhotoChevronLeft from '../../resources/svg/PhotoChevronLeft';
 import PhotoChevronRight from '../../resources/svg/PhotoChevronRight';
+import {WebView} from 'react-native-webview';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data, isFetching} = useGetQuestion({
@@ -44,17 +45,13 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const video = videos?.map((item, index) => {
     const code = item.name && t(item?.name);
     return (
-      <YouTube
-        key={`video-${index}`}
-        videoId={code} // The YouTube video ID
-        play={false} // control playback of video with true/false
-        fullscreen={false} // control whether the video should play in fullscreen or inline
-        loop={false} // control whether the video should loop when ended
-        // onReady={(e) => this.setState({isReady: true})}
-        // onChangeState={(e) => this.setState({status: e.state})}
-        // onChangeQuality={(e) => this.setState({quality: e.quality})}
-        // onError={(e) => this.setState({error: e.error})}
+      <WebView
+        key={`video-${item.name}`}
         style={{alignSelf: 'stretch', height}}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        scrollEnabled={false}
+        source={{uri: `https://www.youtube.com/embed/${code}`}}
       />
     );
   });

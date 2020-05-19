@@ -507,7 +507,7 @@ export function useGetMilestoneGotStarted(predicate: {childId?: number; mileston
         return false;
       }
       const result = await sqLiteClient.dB?.executeSql(
-        'SELECT * from milestone_got_started where childId=? and milestoneId=?',
+        'SELECT * from milestone_got_started where childId=? and milestoneId=? limit 1',
         [childId, milestoneId],
       );
 
@@ -522,6 +522,8 @@ export function useSetMilestoneGotStarted() {
     if (!childId || !milestoneId) {
       return;
     }
+
+    queryCache.setQueryData(['milestoneGotStarted', {childId, milestoneId}], true);
 
     await sqLiteClient.dB?.executeSql(
       'insert or replace into milestone_got_started (childId, milestoneId) values (?,?)',

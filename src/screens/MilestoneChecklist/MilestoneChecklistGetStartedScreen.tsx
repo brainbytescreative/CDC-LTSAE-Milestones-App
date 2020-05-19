@@ -10,7 +10,7 @@ import {FlatList, View} from 'react-native';
 import {checklistSections, colors} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import SectionItem from './SectionItem';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -30,11 +30,19 @@ const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
 
   const [setGetStarted] = useSetMilestoneGotStarted();
 
-  useEffect(() => {
-    if (gotStartedStatus === 'success' && gotStarted) {
-      navigation.replace('MilestoneChecklist');
-    }
-  }, [gotStarted, gotStartedStatus, navigation]);
+  // useEffect(() => {
+  //   if (gotStartedStatus === 'success' && gotStarted) {
+  //     navigation.replace('MilestoneChecklist');
+  //   }
+  // }, [gotStarted, gotStartedStatus, navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (gotStartedStatus === 'success' && gotStarted) {
+        navigation.replace('MilestoneChecklist');
+      }
+    }, [gotStarted, gotStartedStatus, navigation]),
+  );
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -50,9 +58,8 @@ const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
       <FrontPage
         milestoneAgeFormatted={milestoneAgeFormatted}
         onGetStarted={() => {
-          setGetStarted({milestoneId: milestoneAge, childId}).then(() =>
-            navigation.navigate('MilestoneChecklistQuickView'),
-          );
+          navigation.navigate('MilestoneChecklistQuickView');
+          setGetStarted({milestoneId: milestoneAge, childId});
         }}
       />
     </View>
