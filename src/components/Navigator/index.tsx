@@ -1,17 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
-import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import {useTranslation} from 'react-i18next';
-import AddChildScreen from '../../screens/AddChildScreen';
 import {RootStackParamList} from './types';
 import RootDrawer from './RootDrawer';
 import {useGetOnboarding} from '../../hooks/onboardingHooks';
 import {initialize} from '../../db';
 import {DowngradeError} from '../../db/SQLiteClient';
-import {object} from 'yup';
-import {useNavigation} from '@react-navigation/native';
+import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
+import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
+import AddChildScreen from '../../screens/AddChildScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 

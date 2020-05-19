@@ -18,6 +18,21 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
+// const ChildName: React.FC<{}> = () => {
+//   const {data: selectedChild} = useGetCurrentChild({suspense: true});
+//   return (
+//     <Text
+//       numberOfLines={1}
+//       style={{
+//         fontSize: 22,
+//         textAlign: 'center',
+//         fontFamily: 'Montserrat-Bold',
+//       }}>
+//       {selectedChild?.name}
+//     </Text>
+//   );
+// };
+
 const ChildSelectorModal: React.FC<{}> = () => {
   const {top} = useSafeArea();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);

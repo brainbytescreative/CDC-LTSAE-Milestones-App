@@ -25,34 +25,40 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 
 type Key = 'children' | 'selectedChild';
 
-export function useGetCurrentChild() {
-  return useQuery<ChildResult, Key>('selectedChild', async () => {
-    let selectedChild: string | null = await Storage.getItem('selectedChild');
+export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
+  return useQuery<ChildResult, Key>(
+    'selectedChild',
+    async () => {
+      await new Promise((resolve, reject) => setTimeout(resolve, 3 * 1000));
 
-    if (!selectedChild) {
-      const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
-      selectedChild = res && res[0].rows.item(0)?.id;
+      let selectedChild: string | null = await Storage.getItem('selectedChild');
 
       if (!selectedChild) {
-        throw new Error('There are no children');
+        const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
+        selectedChild = res && res[0].rows.item(0)?.id;
+
+        if (!selectedChild) {
+          throw new Error('There are no children');
+        }
+
+        await Storage.setItem('selectedChild', `${selectedChild}`);
       }
 
-      await Storage.setItem('selectedChild', `${selectedChild}`);
-    }
+      const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
 
-    const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
+      if (!result || result[0].rows.length === 0) {
+        throw Error('Not found');
+      }
 
-    if (!result || result[0].rows.length === 0) {
-      throw Error('Not found');
-    }
+      const child = (result && result[0].rows.item(0)) || {};
 
-    const child = (result && result[0].rows.item(0)) || {};
-
-    return {
-      ...child,
-      birthday: parseISO(child.birthday),
-    };
-  });
+      return {
+        ...child,
+        birthday: parseISO(child.birthday),
+      };
+    },
+    options,
+  );
 }
 
 export function useSetSelectedChild() {

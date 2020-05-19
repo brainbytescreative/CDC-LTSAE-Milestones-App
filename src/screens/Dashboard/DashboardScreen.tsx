@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {childAges, colors, sharedStyle} from '../../resources/constants';
 import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';

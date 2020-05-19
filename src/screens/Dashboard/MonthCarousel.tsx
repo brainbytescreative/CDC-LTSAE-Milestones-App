@@ -89,6 +89,9 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex, childAge}) => {
 
   return (
     <View
+      // onLayout={(event) => {
+      //   console.log(event.nativeEvent.layout.height, event.nativeEvent.layout.width);
+      // }}
       style={{
         flexDirection: 'row',
         alignItems: 'center',

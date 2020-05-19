@@ -33,10 +33,10 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
         </View>
         <CancelDoneTopControl
           onCancel={() => {
-            navigation.replace(NextScreen);
+            navigation.navigate(NextScreen);
           }}
           onDone={() => {
-            navigation.replace('Dashboard');
+            navigation.navigate('Dashboard');
           }}
         />
         <Text
