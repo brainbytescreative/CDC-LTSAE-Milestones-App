@@ -23,7 +23,6 @@ interface Props {
   navigation: StackNavigationProp<any>;
 }
 
-type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
 export type DashboardStackNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
   StackNavigationProp<DashboardStackParamList>

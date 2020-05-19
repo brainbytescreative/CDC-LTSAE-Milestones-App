@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Text, Title} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import ViewPager from '@react-native-community/viewpager';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -12,6 +12,7 @@ import {PurpleArc} from '../../resources/svg';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
+
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 
 const NextScreen: keyof RootStackParamList = 'Dashboard';
@@ -32,19 +33,21 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
         </View>
         <CancelDoneTopControl
           onCancel={() => {
-            navigation.navigate(NextScreen);
+            navigation.replace(NextScreen);
           }}
           onDone={() => {
-            navigation.navigate('Dashboard');
+            navigation.replace('Dashboard');
           }}
         />
         <Text
-          style={{
-            fontSize: 20,
-            textAlign: 'center',
-            margin: 20,
-            fontFamily: 'Montserrat-Bold',
-          }}>
+          style={[
+            {
+              fontSize: 20,
+              textAlign: 'center',
+              margin: 20,
+            },
+            sharedStyle.boldText,
+          ]}>
           {t('howToUseApp')}
         </Text>
         <ViewPager
@@ -53,9 +56,11 @@ const OnboardingHowToUseScreen: React.FC<{}> = () => {
           }}
           style={styles.viewPager}
           initialPage={0}>
-          {stubArray.map((value, index) => (
-            <Image resizeMode={'contain'} source={require('../../resources/images/howToUseSlide.png')} />
-          ))}
+          {
+            stubArray.map(() => (
+              <Image resizeMode={'contain'} source={require('../../resources/images/howToUseSlide.png')} />
+            )) as any
+          }
         </ViewPager>
       </View>
 

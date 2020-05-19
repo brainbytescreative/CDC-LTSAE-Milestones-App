@@ -80,27 +80,6 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 };
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    initialize()
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((err) => {
-        // todo implement error handling
-        if (err instanceof DowngradeError) {
-          // setErrorMessage('Downgrade error');
-        } else {
-          // setErrorMessage('Unexpected error');
-        }
-        // setError(true);
-        // setLoading(false);
-        console.warn(err);
-        setLoading(false);
-      });
-  });
-
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
@@ -142,7 +121,9 @@ const App = () => {
               // Save the current route name for later comparision
               routeNameRef.current = currentRouteName;
             }}>
-            <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
+            <I18nextProvider i18n={i18next}>
+              <Navigator />
+            </I18nextProvider>
           </NavigationContainer>
         </PaperProvider>
       </ReactQueryConfigProvider>
