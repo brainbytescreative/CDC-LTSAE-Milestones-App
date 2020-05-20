@@ -45,6 +45,16 @@ const DashboardContainer: React.FC<{}> = () => {
   const childName = child?.name;
   const currentAgeIndex = childAges.findIndex((value) => value === childAge);
 
+  const [setOnboarding] = useSetOnboarding();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setTimeout(() => {
+        setOnboarding(true);
+      }, 300);
+    }, [setOnboarding]),
+  );
+
   return (
     <View>
       <ChildPhoto photo={child?.photo} />
@@ -143,13 +153,6 @@ const DashboardContainer: React.FC<{}> = () => {
 const DashboardScreen: React.FC<Props> = () => {
   // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
   // const {refetch} = useGetChecklistQuestions();
-  const [setOnboarding] = useSetOnboarding();
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setOnboarding(true);
-    }, [setOnboarding]),
-  );
 
   return (
     <>
