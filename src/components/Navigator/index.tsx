@@ -37,10 +37,7 @@ const Navigator: React.FC<{}> = () => {
       });
   });
 
-  const isOnboarded = data;
-  const isLoading = isFetching || loading;
-
-  // console.log('isLoading', data);
+  const isOnboarded = true; //data;
 
   return (
     <Stack.Navigator headerMode={'none'}>

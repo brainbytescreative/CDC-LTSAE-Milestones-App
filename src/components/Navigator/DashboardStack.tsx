@@ -9,7 +9,9 @@ import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
-import {sharedScreenOptions} from '../../resources/constants';
+import {colors, sharedScreenOptions} from '../../resources/constants';
+import RevisitScreen from '../../screens/RevisitScreen';
+import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
@@ -56,19 +58,41 @@ const DashboardStack: FC<{}> = () => {
       {/*    headerBackTitle: ' ',*/}
       {/*  }}*/}
       {/*/>*/}
-      <Stack.Screen
-        name={'ChildSummary'}
-        component={ChildSummaryScreen}
-        options={() => ({
-          title: t('childSummary:title'),
-          headerBackTitle: ' ',
-        })}
-      />
+
       <Stack.Screen
         name={'TipsAndActivities'}
         component={TipsAndActivitiesScreen}
         options={() => ({
           title: t('tipsAndActivities:title'),
+          headerBackTitle: ' ',
+        })}
+      />
+
+      <Stack.Screen
+        name={'WhenActEarly'}
+        component={WhenActEarlyScreen}
+        options={() => ({
+          headerBackTitle: ' ',
+        })}
+      />
+
+      <Stack.Screen
+        name={'ChildSummary'}
+        component={ChildSummaryScreen}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
+          headerBackTitle: ' ',
+        })}
+      />
+      <Stack.Screen
+        name={'Revisit'}
+        component={RevisitScreen}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
           headerBackTitle: ' ',
         })}
       />

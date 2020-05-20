@@ -23,6 +23,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
 
   return (
     <TouchableOpacity
+      disabled={!setSection}
       onPress={() => {
         setSection && setSection(section);
       }}

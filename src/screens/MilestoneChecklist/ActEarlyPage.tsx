@@ -187,7 +187,7 @@ const ActEarlyPage: React.FC<{}> = () => {
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigation.navigate('ChildSummaryStack');
+                  navigation.navigate('ChildSummary');
                 }}>
                 <View
                   style={[

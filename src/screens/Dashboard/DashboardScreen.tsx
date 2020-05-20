@@ -85,17 +85,21 @@ const DashboardContainer: React.FC<{}> = () => {
           </Text>
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={styles.actionItem}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('WhenActEarly');
+              }}
+              style={styles.actionItem}>
               <ActEarlySign />
               <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
                 {t('whenToActEarly')}
               </Text>
-            </View>
+            </TouchableOpacity>
             <View style={[styles.actionItem, {marginHorizontal: 10}]}>
               <TouchableOpacity
                 style={[{alignItems: 'center'}]}
                 onPress={() => {
-                  navigation.navigate('ChildSummaryStack');
+                  navigation.navigate('ChildSummary');
                 }}>
                 <MilestoneSummarySign />
                 <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
