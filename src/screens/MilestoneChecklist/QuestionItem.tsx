@@ -12,6 +12,7 @@ import {Text} from 'react-native-paper';
 import PhotoChevronLeft from '../../resources/svg/PhotoChevronLeft';
 import PhotoChevronRight from '../../resources/svg/PhotoChevronRight';
 import {WebView} from 'react-native-webview';
+import i18next from 'i18next';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data, isFetching} = useGetQuestion({
@@ -50,8 +51,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         style={{alignSelf: 'stretch', height}}
         javaScriptEnabled={true}
         domStorageEnabled={true}
+        startInLoadingState
         scrollEnabled={false}
-        source={{uri: `https://www.youtube.com/embed/${code}`}}
+        source={{uri: `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`}}
       />
     );
   });
