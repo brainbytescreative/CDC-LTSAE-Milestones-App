@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
-import {differenceInDays, differenceInMonths, parseISO} from 'date-fns';
+import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {childAges, missingConcerns, PropType, SkillType, skillTypes, tooYongAgeDays} from '../resources/constants';
+import {childAges, missingConcerns, PropType, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
@@ -12,7 +12,7 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {formatDate, tOpt} from '../utils/helpers';
+import {calcChildAge, formatDate, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
@@ -62,28 +62,6 @@ type MilestoneQueryResult =
   | undefined;
 
 type MilestoneQueryKey = [string, {childBirthday?: Date}];
-
-function calcChildAge(birthDay: Date | undefined) {
-  let isTooYong = false;
-  let milestoneAge;
-  if (birthDay) {
-    const ageMonth = differenceInMonths(new Date(), birthDay);
-    const minAge = _.min(childAges) || 0;
-    const maxAge = _.max(childAges) || Infinity;
-
-    if (ageMonth <= minAge) {
-      milestoneAge = minAge;
-      const ageDays = differenceInDays(new Date(), birthDay);
-      isTooYong = ageDays < tooYongAgeDays;
-    } else if (ageMonth >= maxAge) {
-      milestoneAge = maxAge;
-    } else {
-      const milestones = childAges.filter((value) => value < ageMonth);
-      milestoneAge = milestones[milestones.length - 1];
-    }
-  }
-  return {milestoneAge, isTooYong};
-}
 
 export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
@@ -138,6 +116,7 @@ export function useSetMilestoneAge() {
         isTooYong: false,
         betweenCheckList: false,
       };
+
       const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday}];
       queryCache.setQueryData(key, data);
     },

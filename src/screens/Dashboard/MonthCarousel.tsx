@@ -64,17 +64,15 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
 
 type onViewableItemsChanged = NonNullable<PropType<Required<FlatListProps<any>>, 'onViewableItemsChanged'>>;
 
-interface Props {
-  currentAgeIndex: number;
-}
-
-const MonthCarousel: React.FC<Props> = ({currentAgeIndex}) => {
+const MonthCarousel: React.FC<{}> = () => {
   const flatListRef = useRef<FlatList | null>(null);
   const visible = useRef<{last?: number | null; first?: number | null} | undefined>(undefined);
   const {data: {childAge = 2, milestoneAge = 2} = {}} = useGetMilestone();
   const [setAge] = useSetMilestoneAge();
 
   const {data: child} = useGetCurrentChild();
+
+  const currentAgeIndex = childAges.findIndex((value) => value === childAge);
 
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -100,9 +98,6 @@ const MonthCarousel: React.FC<Props> = ({currentAgeIndex}) => {
 
   return (
     <View
-      // onLayout={(event) => {
-      //   console.log(event.nativeEvent.layout.height, event.nativeEvent.layout.width);
-      // }}
       style={{
         flexDirection: 'row',
         alignItems: 'center',

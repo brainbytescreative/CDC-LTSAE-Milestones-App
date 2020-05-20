@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {childAges, colors, sharedStyle} from '../../resources/constants';
@@ -10,7 +10,7 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
+import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatAge, formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
@@ -20,6 +20,7 @@ import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider} from 'react-query';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import {useTransition} from 'react-native-redash';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -30,39 +31,64 @@ export type DashboardStackNavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
-const DashboardContainer: React.FC<{}> = () => {
-  const {t} = useTranslation('dashboard');
-  const navigation = useNavigation<DashboardStackNavigationProp>();
+interface SkeletonProps {
+  childPhotoComponent?: any;
+  childNameComponent?: any;
+  monthSelectorComponent?: any;
+  milestoneChecklistWidgetComponent?: any;
+  milestoneAgeFormatted?: string;
+  appointments?: Appointment[];
+}
 
-  const {data: child} = useGetCurrentChild();
-  const {data: appointments} = useGetChildAppointments(child?.id);
-  const {data: {milestoneAge: childAge, milestoneAgeFormatted} = {}} = useGetMilestone(undefined);
-  // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
-  // const {refetch} = useGetChecklistQuestions();
-
-  const childAgeText = formatAge(child?.birthday);
-
-  const childName = child?.name;
-  const currentAgeIndex = childAges.findIndex((value) => value === childAge);
-
-  const [setOnboarding] = useSetOnboarding();
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setTimeout(() => {
-        setOnboarding(true);
-      }, 300);
-    }, [setOnboarding]),
+/*function wrapPromise<T>(promise: Promise<T>) {
+  let status = 'pending';
+  let result: any;
+  const suspender: Promise<void> = promise.then(
+    (r) => {
+      // status = 'success';
+      // result = r;
+      console.log('r', r);
+    },
+    (e) => {
+      console.log('e', e);
+      // status = 'error';
+      // result = e;
+    },
   );
+  return {
+    read(): T | undefined {
+      if (status === 'pending') {
+        console.log('wrapPromise');
+        // throw suspender;
+      } else if (status === 'error') {
+        throw result;
+      } else if (status === 'success') {
+        return result;
+      }
+    },
+  };
+}*/
 
+const DashboardSkeleton: React.FC<SkeletonProps> = ({
+  childPhotoComponent,
+  childNameComponent,
+  monthSelectorComponent,
+  milestoneChecklistWidgetComponent,
+  milestoneAgeFormatted = 0,
+  appointments = [],
+}) => {
+  const navigation = useNavigation<DashboardStackNavigationProp>();
+  const {t} = useTranslation('dashboard');
   return (
     <View>
-      <ChildPhoto photo={child?.photo} />
-      <View style={{alignItems: 'center'}}>
-        <Text style={styles.childNameText}>{childName}</Text>
-        <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
-      </View>
-      <MonthCarousel childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
+      {childPhotoComponent}
+      {childNameComponent}
+      {/*<View style={{alignItems: 'center'}}>*/}
+      {/*  <Text style={styles.childNameText}>{childName}</Text>*/}
+      {/*  <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>*/}
+      {/*</View>*/}
+      {monthSelectorComponent}
+      {/*<MonthCarousel />*/}
       <View style={styles.yellowTipContainer}>
         <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
       </View>
@@ -73,14 +99,14 @@ const DashboardContainer: React.FC<{}> = () => {
           paddingHorizontal: 32,
           backgroundColor: colors.purple,
         }}>
-        <MilestoneChecklistWidget />
+        {milestoneChecklistWidgetComponent}
         <View
           style={{
             marginVertical: 20,
           }}>
           <Text style={styles.actionItemsTitle}>
             {t('actionItemsTitle', {
-              age: `${milestoneAgeFormatted}`,
+              age: `${milestoneAgeFormatted || '  '}`,
             })}
           </Text>
 
@@ -154,6 +180,48 @@ const DashboardContainer: React.FC<{}> = () => {
   );
 };
 
+const DashboardContainer: React.FC<{}> = () => {
+  const {data: child} = useGetCurrentChild();
+  const {data: appointments} = useGetChildAppointments(child?.id);
+  const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
+  useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
+  // const {refetch} = useGetChecklistQuestions();
+  const {t} = useTranslation('dashboard');
+  const childAgeText = formatAge(child?.birthday);
+
+  const childName = child?.name;
+
+  const [setOnboarding] = useSetOnboarding();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setTimeout(() => {
+        setOnboarding(true);
+      }, 300);
+    }, [setOnboarding]),
+  );
+
+  // useEffect(() => {
+  //   wrapPromise(new Promise((resolve) => setTimeout(resolve, 10 * 1000))).read();
+  // }, [child]);
+
+  return (
+    <DashboardSkeleton
+      childNameComponent={
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.childNameText}>{childName}</Text>
+          <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
+        </View>
+      }
+      appointments={appointments}
+      milestoneAgeFormatted={milestoneAgeFormatted}
+      milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
+      monthSelectorComponent={<MonthCarousel />}
+      childPhotoComponent={<ChildPhoto photo={child?.photo} />}
+    />
+  );
+};
+
 const DashboardScreen: React.FC<Props> = () => {
   // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
   // const {refetch} = useGetChecklistQuestions();
@@ -177,9 +245,12 @@ const DashboardScreen: React.FC<Props> = () => {
           </View>
           <Suspense
             fallback={
-              <View style={{flexGrow: 1, justifyContent: 'center'}}>
-                <ActivityIndicator size={'large'} />
-              </View>
+              <DashboardSkeleton
+                childNameComponent={<View style={{height: 54}} />}
+                milestoneChecklistWidgetComponent={<View style={{height: 114}} />}
+                monthSelectorComponent={<View style={{height: 172}} />}
+                childPhotoComponent={<ChildPhoto />}
+              />
             }>
             <DashboardContainer />
           </Suspense>
