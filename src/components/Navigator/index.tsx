@@ -15,7 +15,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const Navigator: React.FC<{}> = () => {
   const {t} = useTranslation();
-  const {data, isFetching} = useGetOnboarding();
+  const {data: isOnboarded, isFetching} = useGetOnboarding();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Navigator: React.FC<{}> = () => {
       });
   });
 
-  const isOnboarded = true; //data;
+  // const isOnboarded = data; //data;
 
   return (
     <Stack.Navigator headerMode={'none'}>

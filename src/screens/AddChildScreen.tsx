@@ -29,6 +29,7 @@ import NavBarBackground from '../resources/svg/NavBarBackground';
 import {TFunction} from 'i18next';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import _ from 'lodash';
+import AERadioButton from '../components/AERadioButton';
 
 const options = {
   quality: 1.0,
@@ -124,24 +125,18 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
               alignItems: 'center',
               marginVertical: 10,
             }}>
-            <RadioButton.Android
-              value="boy"
-              status={field.value === 0 ? 'checked' : 'unchecked'}
-              onPress={() => {
-                form.setFieldValue(field.name, 0);
-              }}
+            <AERadioButton
+              onChange={() => form.setFieldValue(field.name, 0)}
+              value={field.value === 0}
+              title={t('boy')}
+              titleStyle={{marginRight: 32}}
             />
-            <Text style={{marginRight: 32}}>{t('boy')}</Text>
-            <RadioButton.Android
-              value="girl"
-              status={field.value === 1 ? 'checked' : 'unchecked'}
-              onPress={() => {
-                form.setFieldValue(field.name, 1);
-              }}
+            <AERadioButton
+              onChange={() => form.setFieldValue(field.name, 1)}
+              value={field.value === 1}
+              title={`${t('girl')}`}
+              titleStyle={{marginRight: 32}}
             />
-            <Text>
-              {t('girl')} {'*'}
-            </Text>
           </View>
           <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
         </View>
