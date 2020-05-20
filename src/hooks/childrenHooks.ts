@@ -68,6 +68,7 @@ export function useSetSelectedChild() {
     await queryCache.refetchQueries('questions', {force: true});
     await queryCache.refetchQueries('concerns', {force: true});
     await queryCache.refetchQueries('monthProgress', {force: true});
+    await queryCache.refetchQueries('milestone', {force: true});
   });
 }
 

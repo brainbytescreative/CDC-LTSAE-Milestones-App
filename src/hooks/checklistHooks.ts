@@ -61,7 +61,7 @@ type MilestoneQueryResult =
     }
   | undefined;
 
-type MilestoneQueryKey = [string, {child?: ChildResult}];
+type MilestoneQueryKey = [string, {childBirthday?: Date}];
 
 function calcChildAge(birthDay: Date | undefined) {
   let isTooYong = false;
@@ -91,15 +91,15 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {t} = useTranslation('common');
 
   return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
-    ['milestone', {child: child || currentChild}],
+    ['milestone', {childBirthday: child?.birthday || currentChild?.birthday}],
     async (key, variables) => {
-      if (!variables.child) {
+      if (!variables.childBirthday) {
         return;
       }
       const betweenCheckList = false;
 
       const birthDay =
-        typeof variables.child.birthday === 'string' ? parseISO(variables.child?.birthday) : variables.child?.birthday;
+        typeof variables.childBirthday === 'string' ? parseISO(variables.childBirthday) : variables.childBirthday;
 
       const {milestoneAge, isTooYong} = calcChildAge(birthDay);
 
@@ -138,7 +138,8 @@ export function useSetMilestoneAge() {
         isTooYong: false,
         betweenCheckList: false,
       };
-      queryCache.setQueryData(['milestone', {child}], data);
+      const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday}];
+      queryCache.setQueryData(key, data);
     },
   ];
 }
