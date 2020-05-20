@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import {RadioButton, Text} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
@@ -23,13 +23,13 @@ import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {PlusIcon, PurpleArc} from '../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../components/AEScrollView';
 import NavBarBackground from '../resources/svg/NavBarBackground';
 import {TFunction} from 'i18next';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import _ from 'lodash';
 import AERadioButton from '../components/AERadioButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const options = {
   quality: 1.0,
@@ -163,7 +163,7 @@ const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps
 
 const AddChildScreen: React.FC<{}> = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
-  const {top, bottom} = useSafeArea();
+  const {top, bottom} = useSafeAreaInsets();
   const {t} = useTranslation('addChild');
 
   const [addChild, {status: addStatus}] = useAddChild();

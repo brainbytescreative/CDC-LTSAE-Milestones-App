@@ -24,7 +24,7 @@ import {
 import {Text} from 'react-native-paper';
 import LanguageSelector from '../components/LanguageSelector';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, missingConcerns, PropType, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
@@ -175,7 +175,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
   const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
   const {data: child} = useGetCurrentChild();
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
   const [answerQuestion] = useSetQuestionAnswer();
   const [setConcern] = useSetConcern();
   const {compose: composeMail, loading} = useGetComposeSummaryMail();

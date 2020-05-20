@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {colors, sharedStyle} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
 import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
@@ -15,7 +15,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
   const [visible, setVisible] = useState(true);
   const {t} = useTranslation('onboardingInfo');
   const navigation = useNavigation<OnboardingNavigationProp>();
-  const {bottom, top} = useSafeArea();
+  const {bottom, top} = useSafeAreaInsets();
 
   return (
     <AEScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>

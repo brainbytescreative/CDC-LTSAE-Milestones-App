@@ -3,7 +3,7 @@ import {FlatList, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback,
 import {Text} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
 import CloseCross from '../resources/svg/CloseCross';
 import {ChevronLeft} from '../resources/svg';
@@ -12,10 +12,10 @@ import {useTranslation} from 'react-i18next';
 const notifications = Array(45);
 
 const NotificationsBadge: React.FC<{}> = () => {
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
-  const {top} = useSafeArea();
+  const {top} = useSafeAreaInsets();
   const {t} = useTranslation('common');
 
   React.useLayoutEffect(() => {

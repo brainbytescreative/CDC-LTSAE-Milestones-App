@@ -6,12 +6,12 @@ import {Trans, useTranslation} from 'react-i18next';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
 import AEScrollView from '../components/AEScrollView';
 import {CDClogo} from '../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import NotificationsBadge from '../components/NotificationsBadge';
 
 const InfoScreen: React.FC<{}> = () => {
   const {t} = useTranslation('info');
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <View

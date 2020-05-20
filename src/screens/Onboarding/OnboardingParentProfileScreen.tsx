@@ -7,7 +7,7 @@ import LanguageSelector from '../../components/LanguageSelector';
 import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {PurpleArc} from '../../resources/svg';
 import {Text} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
@@ -24,7 +24,7 @@ const OnboardingParentProfileScreen: React.FC<{}> = () => {
   const navigation = useNavigation<ParentProfileNavigationProp>();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();
   const [saveProfile] = useSetParentProfile();
-  const {top} = useSafeArea();
+  const {top} = useSafeAreaInsets();
   return (
     <AEScrollView>
       <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top, overflow: 'visible'}}>

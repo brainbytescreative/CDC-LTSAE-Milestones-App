@@ -7,7 +7,7 @@ import ViewPager from '@react-native-community/viewpager';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {colors, sharedStyle} from '../../resources/constants';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {PurpleArc} from '../../resources/svg';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
@@ -21,7 +21,7 @@ const stubArray = Array.from(new Array(5));
 const OnboardingHowToUseScreen: React.FC<{}> = () => {
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
-  const {top, bottom} = useSafeArea();
+  const {top, bottom} = useSafeAreaInsets();
   const [position, setPosition] = useState(0);
 
   return (

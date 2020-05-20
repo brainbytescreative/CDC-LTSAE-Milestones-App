@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {colors, sharedStyle} from '../../resources/constants';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
   const {t} = useTranslation('milestoneChecklist');
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
   return (
     <AEScrollView>
       <View style={{flexGrow: 1}}>

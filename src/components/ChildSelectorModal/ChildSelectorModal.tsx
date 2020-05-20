@@ -8,7 +8,7 @@ import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/t
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import NotificationsBadge from '../NotificationsBadge';
 import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
@@ -66,7 +66,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
 };
 
 const ChildSelectorModal: React.FC<{}> = () => {
-  const {top} = useSafeArea();
+  const {top} = useSafeAreaInsets();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 
   const navigation = useNavigation<DashboardScreenNavigationProp>();

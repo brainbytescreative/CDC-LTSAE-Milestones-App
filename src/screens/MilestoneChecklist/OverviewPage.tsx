@@ -8,7 +8,7 @@ import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {PurpleArc} from '../../resources/svg';
 import {colors} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface Props {
   onNext: () => void;
@@ -20,7 +20,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
   const {t} = useTranslation('milestoneChecklist');
   const {data, error} = useGetChecklistQuestions();
   const questions = data?.questions || [];
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
 
   return (
     <AEScrollView>
