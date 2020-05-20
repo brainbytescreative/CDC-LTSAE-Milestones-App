@@ -18,7 +18,7 @@ import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
-import {ReactQueryConfigProvider} from 'react-query';
+import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {useTransition} from 'react-native-redash';
 
@@ -185,7 +185,7 @@ const DashboardContainer: React.FC<{}> = () => {
   const {data: appointments} = useGetChildAppointments(child?.id);
   const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
   useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
-  // const {refetch} = useGetChecklistQuestions();
+  const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
   const childAgeText = formatAge(child?.birthday);
 
@@ -197,13 +197,18 @@ const DashboardContainer: React.FC<{}> = () => {
     React.useCallback(() => {
       setTimeout(() => {
         setOnboarding(true);
+        refetch({force: true});
       }, 300);
-    }, [setOnboarding]),
+    }, [setOnboarding, refetch]),
   );
 
-  // useEffect(() => {
-  //   wrapPromise(new Promise((resolve) => setTimeout(resolve, 10 * 1000))).read();
-  // }, [child]);
+  useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(null);
+      }, 200),
+    );
+  });
 
   return (
     <DashboardSkeleton
@@ -246,9 +251,21 @@ const DashboardScreen: React.FC<Props> = () => {
           <Suspense
             fallback={
               <DashboardSkeleton
-                childNameComponent={<View style={{height: 54}} />}
-                milestoneChecklistWidgetComponent={<View style={{height: 114}} />}
-                monthSelectorComponent={<View style={{height: 172}} />}
+                childNameComponent={
+                  <View style={[{height: 54}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'small'} />
+                  </View>
+                }
+                milestoneChecklistWidgetComponent={
+                  <View style={[{height: 114}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'large'} />
+                  </View>
+                }
+                monthSelectorComponent={
+                  <View style={[{height: 172}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'large'} />
+                  </View>
+                }
                 childPhotoComponent={<ChildPhoto />}
               />
             }>
@@ -261,6 +278,10 @@ const DashboardScreen: React.FC<Props> = () => {
 };
 
 const styles = StyleSheet.create({
+  spinnerContainer: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   appointmentsHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
