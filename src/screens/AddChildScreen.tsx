@@ -131,7 +131,7 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
                 form.setFieldValue(field.name, 0);
               }}
             />
-            <Text>{t('boy')}</Text>
+            <Text style={{marginRight: 32}}>{t('boy')}</Text>
             <RadioButton.Android
               value="girl"
               status={field.value === 1 ? 'checked' : 'unchecked'}
