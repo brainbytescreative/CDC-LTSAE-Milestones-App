@@ -11,7 +11,13 @@ import {
   View,
 } from 'react-native';
 import {Concern} from '../../resources/milestoneChecklist';
-import {useGetConcern, useGetConcerns, useGetMilestone, useSetConcern} from '../../hooks/checklistHooks';
+import {
+  useGetConcern,
+  useGetConcerns,
+  useGetIsMissingMilestone,
+  useGetMilestone,
+  useSetConcern,
+} from '../../hooks/checklistHooks';
 import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
@@ -23,23 +29,31 @@ import ChevronRightBig from '../../resources/svg/ChevronRightBig';
 import {Text} from 'react-native-paper';
 import {PurpleArc} from '../../resources/svg';
 import _ from 'lodash';
+import AEYellowBox from '../../components/AEYellowBox';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();
-  const {data: concern, isFetching} = useGetConcern({concernId: id, childId});
   const {t} = useTranslation('milestoneChecklist');
   const [note, setNote] = useState('');
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
 
   const isMissingAnswerConcern = missingConcerns.includes(id || 0);
   const onPress = isMissingAnswerConcern
     ? undefined
     : () => {
-        id && childId && setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note});
+        id &&
+          childId &&
+          milestoneId &&
+          setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
       };
 
   const saveNote = useCallback(
     _.debounce((text: string) => {
-      id && childId && setConcern({concernId: id, childId, note: text, answer: !!concern?.answer});
+      id &&
+        childId &&
+        milestoneId &&
+        setConcern({concernId: id, childId, note: text, answer: !!concern?.answer, milestoneId});
     }, 500),
     [id, childId, concern?.answer],
   );
@@ -135,16 +149,17 @@ const itemStyles = StyleSheet.create({
 
 const ActEarlyPage: React.FC<{}> = () => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
-  const {data: concerns} = useGetConcerns();
+  const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
+  const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
 
   const {t} = useTranslation('milestoneChecklist');
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>
       <FlatList
         ListHeaderComponent={
-          <View>
+          <View style={{marginBottom: 50}}>
             <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
             <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
@@ -154,31 +169,12 @@ const ActEarlyPage: React.FC<{}> = () => {
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
               {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
             </Text>
-            <View
-              style={[
-                {
-                  backgroundColor: colors.yellow,
-                  padding: 5,
-                  marginHorizontal: 32,
-                  marginTop: 20,
-                  marginBottom: 50,
-                  borderRadius: 10,
-                },
-                sharedStyle.shadow,
-              ]}>
-              <Text
-                style={[
-                  {
-                    textAlign: 'center',
-                    fontSize: 15,
-                  },
-                ]}>
-                {t('actEarlyWarning')}
-              </Text>
-            </View>
+            {(isMissingConcern || isNotYet) && (
+              <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>
+            )}
           </View>
         }
-        data={concerns?.concerns || []}
+        data={concerns || []}
         renderItem={({item}) => <Item {...item} childId={childId} />}
         keyExtractor={(item) => `concern-${item.id}`}
         ListFooterComponent={() => (
@@ -203,7 +199,7 @@ const ActEarlyPage: React.FC<{}> = () => {
                     sharedStyle.shadow,
                   ]}>
                   <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
-                    My Child’s Summary
+                    {t('myChildSummary')}
                   </Text>
                   <ChevronRightBig width={10} height={20} />
                 </View>

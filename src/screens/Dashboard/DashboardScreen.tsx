@@ -19,6 +19,7 @@ import {Text} from 'react-native-paper';
 import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
+import AEYellowBox from '../../components/AEYellowBox';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -81,15 +82,8 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
     <View>
       {childPhotoComponent}
       {childNameComponent}
-      {/*<View style={{alignItems: 'center'}}>*/}
-      {/*  <Text style={styles.childNameText}>{childName}</Text>*/}
-      {/*  <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>*/}
-      {/*</View>*/}
       {monthSelectorComponent}
-      {/*<MonthCarousel />*/}
-      <View style={styles.yellowTipContainer}>
-        <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
-      </View>
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>{t('yellowTip')}</AEYellowBox>
       <PurpleArc width={'100%'} />
       <View
         style={{
@@ -321,19 +315,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
   childAgeText: {fontSize: 22},
-  yellowTipText: {
-    fontSize: 15,
-    textAlign: 'center',
-  },
   yellowTipContainer: {
     paddingHorizontal: 25,
     paddingVertical: 10,
     marginBottom: 50,
+    marginTop: 0,
     marginHorizontal: 32,
     alignItems: 'center',
-    backgroundColor: colors.yellow,
     borderRadius: 20,
-    ...sharedStyle.shadow,
   },
   imageContainer: {
     flexDirection: 'row',

@@ -4,7 +4,6 @@
 import {StyleSheet} from 'react-native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
-import {add} from 'date-fns';
 
 export const states = [
   'AL',

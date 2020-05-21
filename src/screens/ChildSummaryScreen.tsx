@@ -172,7 +172,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
   const {t} = useTranslation('childSummary');
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
   const {data, refetch} = useGetChecklistQuestions();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
   const {data: child} = useGetCurrentChild();
   const {bottom} = useSafeAreaInsets();
@@ -212,13 +212,16 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         (index) => {
           Object.values(Answer).includes(index) &&
             child?.id &&
-            answerQuestion({answer: index, childId: child?.id, note, questionId: id}).then(() => {
-              refetch({force: true});
-            });
+            milestoneAge &&
+            answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
+              () => {
+                refetch({force: true});
+              },
+            );
         },
       );
     },
-    [refetch, t, answerQuestion, child, showActionSheetWithOptions],
+    [refetch, t, answerQuestion, child, showActionSheetWithOptions, milestoneAge],
   );
 
   const onEditConcernPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(
@@ -242,31 +245,46 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         (index) => {
           [0, 1].includes(index) &&
             child?.id &&
-            setConcern({concernId: id, answer: !index, childId: child?.id, note: note}).then(() =>
-              refetchConcerns({force: true}),
-            );
+            milestoneAge &&
+            setConcern({
+              concernId: id,
+              answer: !index,
+              childId: child?.id,
+              note: note,
+              milestoneId: milestoneAge,
+            }).then(() => refetchConcerns({force: true}));
         },
       );
     },
-    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern],
+    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern, milestoneAge],
   );
 
   const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
     (id, note, answer) => {
       child?.id &&
-        answerQuestion({questionId: id, childId: child?.id, note, answer}).then(() => refetch({force: true}));
+        milestoneAge &&
+        answerQuestion({questionId: id, childId: child?.id, note, answer, milestoneId: milestoneAge}).then(() =>
+          refetch({force: true}),
+        );
     },
-    [child, answerQuestion, refetch],
+    [child, answerQuestion, refetch, milestoneAge],
   );
 
   const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
     (id, note, answer) => {
       child?.id &&
-        setConcern({concernId: id, answer, childId: child?.id, note}).then(() => {
+        milestoneAge &&
+        setConcern({
+          concernId: id,
+          answer,
+          childId: child?.id,
+          note,
+          milestoneId: milestoneAge,
+        }).then(() => {
           refetchConcerns({force: true});
         });
     },
-    [child, refetchConcerns, setConcern],
+    [child, refetchConcerns, setConcern, milestoneAge],
   );
 
   return (

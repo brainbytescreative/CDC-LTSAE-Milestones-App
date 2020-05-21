@@ -207,7 +207,8 @@
     "section-cognitive": "$t(skillTypes:cognitive)",
     "section-movement": "$t(skillTypes:movement)",
     "section-actEarly": "When to\nact early",
-    "answered": "answered"
+    "answered": "answered",
+    "myChildSummary": "My Child’s Summary"
   },
   "email": {
     "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"

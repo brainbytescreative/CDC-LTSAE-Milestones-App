@@ -5,7 +5,7 @@ import {colors, images, sharedStyle} from '../../resources/constants';
 import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import YouTube from 'react-native-youtube';
 import ViewPager from '@react-native-community/viewpager';
-import {Answer, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import {Answer, useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import NoteIcon from '../../resources/svg/NoteIcon';
 import _ from 'lodash';
 import {Text} from 'react-native-paper';
@@ -19,7 +19,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     childId: childId,
     questionId: id,
   });
-
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const [answerQuestion] = useSetQuestionAnswer();
   const [note, setNote] = useState('');
   const [page, setPage] = useState(0);
@@ -59,12 +59,18 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   });
 
   const doAnswer = (answerValue: Answer) => () => {
-    id && childId && answerQuestion({questionId: id, childId, answer: answerValue, note: note});
+    id &&
+      childId &&
+      milestoneId &&
+      answerQuestion({questionId: id, childId, answer: answerValue, note: note, milestoneId});
   };
 
   const saveNote = useCallback(
     _.debounce((text: string) => {
-      id && childId && answerQuestion({questionId: id, answer: data?.answer, childId, note: text});
+      id &&
+        childId &&
+        milestoneId &&
+        answerQuestion({questionId: id, answer: data?.answer, childId, note: text, milestoneId});
     }, 500),
     [id, childId, data?.answer],
   );

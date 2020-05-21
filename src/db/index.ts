@@ -51,22 +51,24 @@ const DB_MIGRATIONS = [
                 references children (id)
                     on update cascade on delete cascade,
             questionId INTEGER not null,
+            milestoneId integer not null,
             answer     INTEGER,
             note       TEXT,
-            PRIMARY KEY (childId, questionId)
+            PRIMARY KEY (childId, questionId, milestoneId)
         );
     `);
 
     await dB.executeSql(`
         create table concern_answers
         (
-            concernId INTEGER not null,
             answer    BOOLEAN not null,
             note      TEXT,
+            concernId INTEGER not null,
+            milestoneId integer not null,
             childId   INTEGER not null
                 references Children (id)
                     on update cascade on delete cascade,
-            primary key (concernId, childId)
+            primary key (concernId, childId, milestoneId)
         );
     `);
 

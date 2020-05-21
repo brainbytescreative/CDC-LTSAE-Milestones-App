@@ -35,9 +35,7 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
-  const {data: {missingId, answers: concernsAnswers} = {}} = useGetConcerns();
-  const {progress: sectionsProgress, hasNotYet} = useGetSectionsProgress(childId);
-  const [setConcern] = useSetConcern();
+  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
   const questions = section && questionsGrouped?.get(section);
   const {t} = useTranslation('milestoneChecklist');
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
@@ -49,12 +47,6 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   }, [gotStarted, gotStartedStatus, navigation]);
 
   const flatListRef = useRef<FlatList>(null);
-  useEffect(() => {
-    if (hasNotYet !== undefined && childId && missingId) {
-      // const note = concernsAnswers?.filter((val) => val.concernId === missingId)[0]?.note;
-      setConcern({answer: hasNotYet, childId, concernId: missingId}).then();
-    }
-  }, [childId, setConcern, hasNotYet, missingId, concernsAnswers]);
 
   useEffect(() => {
     if (section) {
