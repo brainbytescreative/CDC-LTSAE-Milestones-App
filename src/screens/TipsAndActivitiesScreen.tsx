@@ -6,16 +6,16 @@ import {Text} from 'react-native-paper';
 import {colors, notificationIntervals, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
-import {useNavigation} from '@react-navigation/native';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
 import {ChevronDown} from '../resources/svg';
 import LikeHeart from '../resources/svg/LikeHeart';
-import {Tip, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
+import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
 import * as Notifications from 'expo-notifications';
+import {useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
 
 type ItemProps = {
   title: string | undefined;
@@ -106,6 +106,8 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const {data: child} = useGetCurrentChild();
   const {data: tips} = useGetTips();
   const [setTip] = useSetTip();
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const [setNotification] = useSetTipsAndActivitiesNotification();
 
   let sortedTips;
 
@@ -138,21 +140,13 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       const selectedTip = tips?.filter(({id: tipId}) => id === tipId)[0];
       const notificationId = `tips-${id}-${child?.id}`;
 
-      if (id && selectedTip?.value && child?.id && value) {
-        Notifications.scheduleNotificationAsync({
-          identifier: notificationId,
-          content: {
-            title: 'Tips & activities',
-            body: selectedTip.value,
-            sound: true,
-          },
-          trigger: notificationIntervals.tips,
-        });
+      if (id && selectedTip?.key && child?.id && value) {
+        milestoneId && setNotification({notificationId, bodyKey: selectedTip.key, milestoneId, childId: child.id});
       } else if (id && child?.id && !value) {
         Notifications.cancelScheduledNotificationAsync(notificationId).then();
       }
     },
-    [setTip, child, tips],
+    [tips, setTip, setNotification, child, milestoneId],
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
@@ -206,7 +200,7 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
 
         {sortedTips?.map((item) => (
           <Item
-            key={item.id}
+            key={`${item.id}`}
             onLikePress={onLikePress}
             onRemindMePress={onRemindMePress}
             t={t}

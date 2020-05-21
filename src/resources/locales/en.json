@@ -168,7 +168,7 @@
     "milestoneNotifications": "Milestone notifications",
     "appointmentNotifications": "Appointment notifications",
     "recommendationNotifications": "Recommendation notifications",
-    "tipsAndActivitiesNotification": "Tips & Activities notification",
+    "tipsAndActivitiesNotification": "Tips & Activities notifications",
     "apptTypePlaceholder": "Appointment type / description",
     "datePlaceholder": "Date",
     "timePlaceholder": "Time",
@@ -212,6 +212,9 @@
   },
   "email": {
     "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
+  },
+  "notifications": {
+    "tipsAndActivitiesTitle": "Tips & Activities"
   },
   "states": {
     "AL": "Alabama (AL)",

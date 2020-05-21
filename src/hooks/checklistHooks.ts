@@ -426,22 +426,13 @@ export interface Tip {
   like?: number;
   remindMe?: number;
   value?: string;
+  key?: string;
 }
 
 export function useGetTips() {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {t} = useTranslation('milestones');
   const {data: child} = useGetCurrentChild();
-  useMemo(
-    () =>
-      milestoneChecklist
-        .filter((value) => value.id === milestoneAge)[0]
-        ?.helpful_hints?.map((item) => ({
-          ...item,
-          value: item.value && t(`${item.value}`, tOpt({t, gender: child?.gender})),
-        })),
-    [milestoneAge, t, child],
-  );
 
   return useQuery<Tip[], [string, {milestoneAge?: number; childId?: number}]>(
     ['tips', {milestoneAge, childId: child?.id}],
@@ -454,11 +445,11 @@ export function useGetTips() {
         .filter((value) => value.id === milestoneAge)[0]
         ?.helpful_hints?.map((item) => ({
           ...item,
+          key: item.value,
           value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
         }));
 
       const tipsIds = tips?.map((value) => value.id) || [0].join(',');
-
       const result = await sqLiteClient.dB?.executeSql(
         `select * from tips_status where childId=? and hintId in (${tipsIds})`,
         [variables.childId],

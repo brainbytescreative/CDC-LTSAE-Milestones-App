@@ -1,15 +1,33 @@
 import React, {useState} from 'react';
-import {FlatList, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  FlatList,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
+import {colors, PropType, sharedScreenOptions, sharedStyle} from '../resources/constants';
 import CloseCross from '../resources/svg/CloseCross';
 import {ChevronLeft} from '../resources/svg';
 import {useTranslation} from 'react-i18next';
+import {useGetUnreadNotifications} from '../hooks/notificationsHooks';
 
-const notifications = Array(45);
+// const notifications = Array(45);
+
+const NotificationsBadgeCounter: React.FC<Pick<TouchableOpacityProps, 'onPress'>> = ({onPress}) => {
+  const {data: notifications} = useGetUnreadNotifications();
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.badgeContainer}>
+      <Text style={styles.badgeText}>{notifications?.length || 0}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const NotificationsBadge: React.FC<{}> = () => {
   const {bottom} = useSafeAreaInsets();
@@ -17,6 +35,7 @@ const NotificationsBadge: React.FC<{}> = () => {
   const [visible, setIsVisible] = useState(false);
   const {top} = useSafeAreaInsets();
   const {t} = useTranslation('common');
+  const {data: notifications} = useGetUnreadNotifications();
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -25,11 +44,7 @@ const NotificationsBadge: React.FC<{}> = () => {
     navigation.setOptions({
       ...sharedScreenOptions,
       headerRight: () => {
-        return (
-          <TouchableOpacity onPress={onPress} style={styles.badgeContainer}>
-            <Text style={styles.badgeText}>4</Text>
-          </TouchableOpacity>
-        );
+        return <NotificationsBadgeCounter onPress={onPress} />;
       },
     });
   }, [navigation, visible]);
@@ -74,11 +89,11 @@ const NotificationsBadge: React.FC<{}> = () => {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={notifications}
+              data={notifications || []}
               style={{flex: 1}}
               keyExtractor={(item, index) => `${index}`}
               ListFooterComponent={() => <View style={{height: bottom}} />}
-              renderItem={({index}) => (
+              renderItem={({index, item}) => (
                 <>
                   <View
                     style={[
@@ -101,9 +116,9 @@ const NotificationsBadge: React.FC<{}> = () => {
                           fontSize: 15,
                           fontFamily: 'Montserrat-Bold',
                         }}>
-                        Milestone
+                        {item.titleLocalizedKey && t(item.titleLocalizedKey)}
                       </Text>
-                      <Text>Lorem ipsum dolar sit amet, consectetur adispiscing elt.</Text>
+                      <Text>{item.bodyLocalizedKey && t(item.bodyLocalizedKey)}</Text>
                     </View>
 
                     <TouchableOpacity>

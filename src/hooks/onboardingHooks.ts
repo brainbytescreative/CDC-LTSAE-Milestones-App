@@ -3,7 +3,7 @@ import Storage from '../utils/Storage';
 
 export function useGetOnboarding() {
   return useQuery<boolean, string>('onboarding', () => {
-    return Promise.resolve(false); //Storage.getItem('onboarding').then((value) => JSON.parse(value || 'false'));
+    return Promise.resolve(true); //Storage.getItem('onboarding').then((value) => JSON.parse(value || 'false'));
   });
 }
 export function useSetOnboarding() {

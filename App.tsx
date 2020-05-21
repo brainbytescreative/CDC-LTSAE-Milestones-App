@@ -15,7 +15,7 @@ import Navigator from './src/components/Navigator';
 import {I18nextProvider} from 'react-i18next';
 import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
-import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+import {queryCache, ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors, PropType} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {ACPCore} from '@adobe/react-native-acpcore';
@@ -86,7 +86,8 @@ const App = () => {
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((notification) => {
-      console.log(notification);
+      console.log('addNotificationReceivedListener', notification);
+      queryCache.refetchQueries('unreadNotifications', {force: true});
     });
     return () => subscription.remove();
   }, []);
@@ -94,10 +95,14 @@ const App = () => {
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const url = response.notification.request; //.content.data.url;
-      console.log(url);
+      console.log('addNotificationResponseReceivedListener', url);
     });
     return () => subscription.remove();
   }, []);
+
+  React.useEffect(() => {
+    Notifications.requestPermissionsAsync();
+  });
 
   const routeNameRef = React.useRef<string | undefined>(undefined);
   const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);

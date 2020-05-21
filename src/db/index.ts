@@ -77,7 +77,7 @@ const DB_MIGRATIONS = [
         (
             hintId   INTEGER not null,
             childId  INTEGER not null
-                references Children (id)
+                references children (id)
                     on update cascade on delete cascade,
             like     BOOLEAN,
             remindMe BOOLEAN,
@@ -90,6 +90,25 @@ const DB_MIGRATIONS = [
         (
             childId     int,
             milestoneId int
+        );
+    `);
+    await dB.executeSql(`
+        create table notifications
+        (
+            notificationId           TEXT     not null
+                primary key,
+            fireDateTimestamp        DATETIME not null,
+            notificationRead         BOOLEAN not null default false,
+--             notificationTitle        TEXT,
+--             notificationBody         TEXT,
+--             notificationCategory     TEXT,
+            notificationCategoryType INTEGER not null,
+            childId                  INTEGER,
+            milestoneId              INTEGER,
+            appointmentId            INTEGER,
+            bodyArguments            TEXT,
+            bodyLocalizedKey         TEXT,
+            titleLocalizedKey        TEXT
         );
     `);
   },
