@@ -86,12 +86,14 @@
     "heSheUpperTag_0": "He",
     "heSheUpperTag_1": "She",
     "year": "{{count}} year",
+    "yearSingular": "{{count}} year",
     "year_plural": "{{count}} years",
     "yearDash": "{{count}}-Year-old",
     "yearDash_plural": "{{count}}-Years-old",
     "yearShort": "{{count}} yr",
     "yearShort_plural": "{{count}} yrs",
     "month": "{{count}} month",
+    "monthSingular": "{{count}} month",
     "month_plural": "{{count}} months",
     "monthDash": "{{count}}-Month-old",
     "monthDash_plural": "{{count}}-Months-old",
@@ -214,7 +216,9 @@
     "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
   },
   "notifications": {
-    "tipsAndActivitiesTitle": "Tips & Activities"
+    "tipsAndActivitiesTitle": "Tips & Activities",
+    "milestoneNotificationTitle": "Milestone Notification",
+    "nextMilestoneNotificationBody": "{{name}} is turning {{childAgeFormatted}} old! It’s time to complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist."
   },
   "states": {
     "AL": "Alabama (AL)",

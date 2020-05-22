@@ -10,6 +10,7 @@
 
 import React, {Ref, useEffect} from 'react';
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import {NavigationContainer, NavigationContainerProps} from '@react-navigation/native';
 import Navigator from './src/components/Navigator';
 import {I18nextProvider} from 'react-i18next';
@@ -87,7 +88,9 @@ const App = () => {
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((notification) => {
       console.log('addNotificationReceivedListener', notification);
-      queryCache.refetchQueries('unreadNotifications', {force: true});
+      setTimeout(() => {
+        queryCache.refetchQueries('unreadNotifications', {force: true});
+      }, 2000);
     });
     return () => subscription.remove();
   }, []);
@@ -102,7 +105,7 @@ const App = () => {
 
   React.useEffect(() => {
     Notifications.requestPermissionsAsync();
-  });
+  }, []);
 
   const routeNameRef = React.useRef<string | undefined>(undefined);
   const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);

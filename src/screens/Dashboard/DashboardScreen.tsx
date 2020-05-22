@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -20,6 +20,7 @@ import NavBarBackground from '../../resources/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
+import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -38,35 +39,6 @@ interface SkeletonProps {
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
 }
-
-/*function wrapPromise<T>(promise: Promise<T>) {
-  let status = 'pending';
-  let result: any;
-  const suspender: Promise<void> = promise.then(
-    (r) => {
-      // status = 'success';
-      // result = r;
-      console.log('r', r);
-    },
-    (e) => {
-      console.log('e', e);
-      // status = 'error';
-      // result = e;
-    },
-  );
-  return {
-    read(): T | undefined {
-      if (status === 'pending') {
-        console.log('wrapPromise');
-        // throw suspender;
-      } else if (status === 'error') {
-        throw result;
-      } else if (status === 'success') {
-        return result;
-      }
-    },
-  };
-}*/
 
 const DashboardSkeleton: React.FC<SkeletonProps> = ({
   childPhotoComponent,
@@ -180,10 +152,17 @@ const DashboardContainer: React.FC<{}> = () => {
   const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
   const childAgeText = formatAge(child?.birthday);
-
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
+  const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
-
   const [setOnboarding] = useSetOnboarding();
+
+  // useEffect(() => {
+  //   child && setMilestoneNotifications({child});
+  // }, [child, setMilestoneNotifications]);
+  useEffect(() => {
+    sheduleNotifications();
+  }, [sheduleNotifications]);
 
   useFocusEffect(
     React.useCallback(() => {

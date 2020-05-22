@@ -12,7 +12,7 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {calcChildAge, formatDate, tOpt} from '../utils/helpers';
+import {calcChildAge, formatDate, formattedAge, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
@@ -42,14 +42,6 @@ interface ConcernAnswer {
   childId: number;
   answer: boolean;
   note?: string | undefined | null;
-}
-
-function formattedAge(milestoneAge: number, t: TFunction) {
-  const milestoneAgeFormatted =
-    milestoneAge % 12 === 0 ? t('year', {count: milestoneAge / 12}) : t('month', {count: milestoneAge});
-  const milestoneAgeFormattedDashes =
-    milestoneAge % 12 === 0 ? t('yearDash', {count: milestoneAge / 12}) : t('monthDash', {count: milestoneAge});
-  return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
 }
 
 type MilestoneQueryResult =
@@ -482,17 +474,18 @@ export function useGetTipValue(variables: {childId?: number; hintId?: number}) {
 }
 
 export function useSetTip() {
-  return useMutation<void, {childId: number; hintId: number; like?: boolean; remindMe?: boolean}>(async (variables) => {
-    const key: any = ['tip', {childId: variables.childId, hintId: variables.hintId}];
-    const cache = queryCache.getQueryData(key) as Tip | undefined;
+  return useMutation<void, {childId: number; hintId: number; like?: boolean; remindMe?: boolean}>(
+    async (variables) => {
+      const key: any = ['tip', {childId: variables.childId, hintId: variables.hintId}];
+      const cache = queryCache.getQueryData(key) as Tip | undefined;
 
-    const data = _.pick({...cache, ...variables}, ['hintId', 'childId', 'like', 'remindMe']);
+      const data = _.pick({...cache, ...variables}, ['hintId', 'childId', 'like', 'remindMe']);
 
-    if (cache) {
-      queryCache.setQueryData(key, {...cache, like: data.like, remindMe: data.remindMe});
-    }
+      if (cache) {
+        queryCache.setQueryData(key, {...cache, like: data.like, remindMe: data.remindMe});
+      }
 
-    const query = `
+      const query = `
                 INSERT OR
                 REPLACE
                 INTO tips_status (${Object.keys(data).join(',')})
@@ -501,11 +494,17 @@ export function useSetTip() {
                   .join(',')})
       `;
 
-    const result = await sqLiteClient.dB?.executeSql(query, Object.values(data));
-    if (!result || result[0].rowsAffected === 0) {
-      throw new Error('Update failed');
-    }
-  });
+      const result = await sqLiteClient.dB?.executeSql(query, Object.values(data));
+      if (!result || result[0].rowsAffected === 0) {
+        throw new Error('Update failed');
+      }
+    },
+    {
+      onSuccess: () => {
+        queryCache.refetchQueries('tips', {force: true});
+      },
+    },
+  );
 }
 
 export function useGetMonthProgress(predicate: {childId?: number; milestone?: number}) {

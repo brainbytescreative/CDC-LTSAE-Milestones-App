@@ -47,8 +47,9 @@ export const formatAge = (childBirth: Date | undefined): string => {
 export function calcChildAge(birthDay: Date | undefined) {
   let isTooYong = false;
   let milestoneAge;
+  let ageMonth: number;
   if (birthDay) {
-    const ageMonth = differenceInMonths(new Date(), birthDay);
+    ageMonth = differenceInMonths(new Date(), birthDay);
     const minAge = _.min(childAges) || 0;
     const maxAge = _.max(childAges) || Infinity;
 
@@ -62,8 +63,9 @@ export function calcChildAge(birthDay: Date | undefined) {
       const milestones = childAges.filter((value) => value <= ageMonth);
       milestoneAge = _.last(milestones);
     }
+    return {milestoneAge, isTooYong, ageMonth};
   }
-  return {milestoneAge, isTooYong};
+  return {};
 }
 
 type TableNames = 'children' | 'appointments';
@@ -92,6 +94,19 @@ export function objectToQuery(object: any, tableName: TableNames, queryType: Que
       throw new Error('unsupported type');
     }
   }
+}
+
+export function formattedAge(milestoneAge: number, t: TFunction, singular = false) {
+  const singularSuffix = singular ? 'Singular' : '';
+  const milestoneAgeFormatted =
+    milestoneAge % 12 === 0
+      ? t(`common:year${singularSuffix}`, {count: milestoneAge / 12})
+      : t(`common:month${singularSuffix}`, {count: milestoneAge});
+  const milestoneAgeFormattedDashes =
+    milestoneAge % 12 === 0
+      ? t('common:yearDash', {count: milestoneAge / 12})
+      : t('common:monthDash', {count: milestoneAge});
+  return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
 }
 
 export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({

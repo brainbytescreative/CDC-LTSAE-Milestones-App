@@ -1,22 +1,13 @@
 import React, {useState} from 'react';
-import {
-  FlatList,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {FlatList, Modal, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {useHeaderHeight} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, PropType, sharedScreenOptions, sharedStyle} from '../resources/constants';
+import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
 import CloseCross from '../resources/svg/CloseCross';
 import {ChevronLeft} from '../resources/svg';
 import {useTranslation} from 'react-i18next';
-import {useGetUnreadNotifications} from '../hooks/notificationsHooks';
+import {useCancelNotificationById, useGetUnreadNotifications} from '../hooks/notificationsHooks';
 
 // const notifications = Array(45);
 
@@ -36,6 +27,7 @@ const NotificationsBadge: React.FC<{}> = () => {
   const {top} = useSafeAreaInsets();
   const {t} = useTranslation('common');
   const {data: notifications} = useGetUnreadNotifications();
+  const [cancelNotification] = useCancelNotificationById();
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -48,6 +40,10 @@ const NotificationsBadge: React.FC<{}> = () => {
       },
     });
   }, [navigation, visible]);
+
+  const onCrossPress = (notificationId: string) => {
+    cancelNotification({notificationId});
+  };
 
   return (
     <>
@@ -121,7 +117,10 @@ const NotificationsBadge: React.FC<{}> = () => {
                       <Text>{item.bodyLocalizedKey && t(item.bodyLocalizedKey)}</Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        onCrossPress(item.notificationId);
+                      }}>
                       <CloseCross />
                     </TouchableOpacity>
                   </View>

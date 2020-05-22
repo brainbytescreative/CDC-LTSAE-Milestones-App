@@ -15,7 +15,7 @@ import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../ho
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
 import * as Notifications from 'expo-notifications';
-import {useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
+import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
 
 type ItemProps = {
   title: string | undefined;
@@ -108,17 +108,20 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
   const [setTip] = useSetTip();
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const [setNotification] = useSetTipsAndActivitiesNotification();
+  const [cancelNotification] = useCancelNotificationById();
 
   let sortedTips;
 
   switch (tipType) {
     case 'like':
-      sortedTips = tips?.slice().sort((a, b) => {
-        if (a?.like && !b.like) {
-          return -1;
-        }
-        return 0;
-      });
+      sortedTips =
+        tips &&
+        [...tips].sort((a, b) => {
+          if (a?.like && !b.like) {
+            return -1;
+          }
+          return 0;
+        });
       break;
     case 'remindMe':
       sortedTips = tips?.slice().sort((a, b) => {
@@ -138,15 +141,15 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = tips?.filter(({id: tipId}) => id === tipId)[0];
-      const notificationId = `tips-${id}-${child?.id}`;
+      const notificationId = `tips-${id}-${child?.id}-${milestoneId}`;
 
       if (id && selectedTip?.key && child?.id && value) {
         milestoneId && setNotification({notificationId, bodyKey: selectedTip.key, milestoneId, childId: child.id});
       } else if (id && child?.id && !value) {
-        Notifications.cancelScheduledNotificationAsync(notificationId).then();
+        notificationId && cancelNotification({notificationId});
       }
     },
-    [tips, setTip, setNotification, child, milestoneId],
+    [tips, setTip, setNotification, child, milestoneId, cancelNotification],
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
@@ -198,9 +201,9 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
           onChangeItem={(item) => setTipType(item.value as TipType)}
         />
 
-        {sortedTips?.map((item) => (
+        {sortedTips?.map((item, index) => (
           <Item
-            key={`${item.id}`}
+            key={`${item.id}-${index}`}
             onLikePress={onLikePress}
             onRemindMePress={onRemindMePress}
             t={t}
