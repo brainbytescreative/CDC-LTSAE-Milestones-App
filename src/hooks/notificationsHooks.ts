@@ -1,7 +1,7 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
 import * as Notifications from 'expo-notifications';
 import {NotificationRequestInput} from 'expo-notifications';
-import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay} from 'date-fns';
+import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay, sub} from 'date-fns';
 import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
@@ -56,7 +56,8 @@ export function useSetMilestoneNotifications() {
 
       const queriesParams = remainingMilestones.map((value) => {
         const milestoneId = Math.abs(value);
-        const at8am = setHours(startOfDay(add(variables.child.birthday, {months: value})), 8);
+        const before2weeks = sub(add(variables.child.birthday, {months: value}), {weeks: 2});
+        const at8am = setHours(startOfDay(before2weeks), 8);
         return {
           notificationId: `milestone_age_${milestoneId}_child_${variables.child.id}`,
           fireDateTimestamp: formatISO(at8am),
