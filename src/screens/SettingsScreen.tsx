@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
@@ -15,12 +15,13 @@ import NotificationsBadge from '../components/NotificationsBadge';
 import AESwitch from '../components/AESwitch';
 import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
-import {useNavigation} from '@react-navigation/native';
 import {PurpleArc} from '../resources/svg';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
-import DropDownPicker from 'react-native-dropdown-picker';
+import {useScheduleNotifications} from '../hooks/notificationsHooks';
+import _ from 'lodash';
+
 // import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
@@ -81,12 +82,20 @@ const SettingsScreen: React.FC<{}> = () => {
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
   const [height, setHeight] = useState<number | undefined>();
+  const [scheduleNotifications] = useScheduleNotifications();
 
   useEffect(() => {
     if (settings) {
       formikRef.current?.setValues(settings);
     }
   }, [settings]);
+
+  const rescheduleNotifications = useCallback(
+    _.debounce(() => {
+      scheduleNotifications();
+    }, 3000),
+    [scheduleNotifications],
+  );
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -105,6 +114,7 @@ const SettingsScreen: React.FC<{}> = () => {
           <View style={{flexGrow: 1}}>
             <Text style={[sharedStyle.screenTitle]}>{t('notificationSettings')}</Text>
             <Formik
+              innerRef={(ref) => (formikRef.current = ref)}
               initialValues={{
                 milestoneNotifications: true,
                 appointmentNotifications: true,
@@ -112,13 +122,12 @@ const SettingsScreen: React.FC<{}> = () => {
                 tipsAndActivitiesNotification: true,
               }}
               validate={(values) => {
-                setSettings(values);
+                setSettings(values).then(() => rescheduleNotifications());
               }}
               onSubmit={() => {
                 return;
               }}>
-              {(formik) => {
-                formikRef.current = formik;
+              {() => {
                 return (
                   <View style={{marginHorizontal: 32}}>
                     {notificationPreferences.map((value, index) => (
@@ -140,14 +149,15 @@ const SettingsScreen: React.FC<{}> = () => {
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
               <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: 'Montserrat-Bold',
-                  textTransform: 'capitalize',
-                }}>
+                style={[
+                  {
+                    textTransform: 'capitalize',
+                  },
+                  sharedStyle.largeBoldText,
+                ]}>
                 {t('userProfile')}
               </Text>
-              <Text style={{fontSize: 15, marginVertical: 26}}>{'{State-privacy language}'}</Text>
+              <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage')}</Text>
 
               <ParentProfileSelector
                 value={profile}
@@ -155,14 +165,15 @@ const SettingsScreen: React.FC<{}> = () => {
                   setProfile(values);
                 }}
               />
-              <Text style={{textAlign: 'right', marginTop: 10}}>*required for state</Text>
+              <Text style={{textAlign: 'right', marginTop: 10}}>{t('requiredForState')}</Text>
               <Text
-                style={{
-                  fontSize: 22,
-                  marginBottom: 16,
-                  textTransform: 'capitalize',
-                  fontFamily: 'Montserrat-Bold',
-                }}>
+                style={[
+                  {
+                    marginBottom: 16,
+                    textTransform: 'capitalize',
+                  },
+                  sharedStyle.largeBoldText,
+                ]}>
                 {t('common:appLanguage')}
               </Text>
               <LanguageSelector style={{marginBottom: 40}} />

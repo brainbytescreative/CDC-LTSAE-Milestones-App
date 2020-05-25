@@ -95,7 +95,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
             style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
             placeholder={t('addANote')}
           />
-          {Dimensions.get('window').width > 375 && <NoteIcon style={{marginLeft: 10}} />}
+          {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}
         </View>
       </View>
     </View>

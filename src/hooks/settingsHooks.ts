@@ -10,23 +10,33 @@ export type SettingName =
 
 export type NotificationSettings = Record<SettingName, boolean>;
 
-export function useGetNotificationSettings() {
-  return useQuery<NotificationSettings, string>('notificationSettings', () => {
-    return Storage.getItem('notificationSettings').then((value) => {
-      let parsed;
-      try {
-        parsed = JSON.parse(value || '{}');
-      } catch (e) {
-        console.log(e);
-      }
-      return _.defaults(parsed, {
-        appointmentNotifications: true,
-        milestoneNotifications: false,
-        recommendationNotifications: true,
-        tipsAndActivitiesNotification: true,
-      });
-    });
+export type NotificationsSettingType = {
+  appointmentNotifications: boolean;
+  milestoneNotifications: boolean;
+  recommendationNotifications: boolean;
+  tipsAndActivitiesNotification: boolean;
+};
+
+export const getNotificationSettings: () => Promise<NotificationsSettingType> = () => {
+  return Storage.getItem('notificationSettings').then((value) => {
+    let parsed;
+    try {
+      parsed = JSON.parse(value || '{}');
+    } catch (e) {
+      console.log(e);
+    }
+    const defaults = {
+      appointmentNotifications: true,
+      milestoneNotifications: true,
+      recommendationNotifications: true,
+      tipsAndActivitiesNotification: true,
+    };
+    return _.defaults<NotificationsSettingType, any>(parsed, defaults);
   });
+};
+
+export function useGetNotificationSettings() {
+  return useQuery<NotificationSettings, string>('notificationSettings', getNotificationSettings);
 }
 
 export function useSetNotificationSettings() {

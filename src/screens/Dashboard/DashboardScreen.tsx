@@ -157,9 +157,9 @@ const DashboardContainer: React.FC<{}> = () => {
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
 
-  // useEffect(() => {
-  //   child && setMilestoneNotifications({child});
-  // }, [child, setMilestoneNotifications]);
+  useEffect(() => {
+    child && setMilestoneNotifications({child});
+  }, [child, setMilestoneNotifications]);
   useEffect(() => {
     sheduleNotifications();
   }, [sheduleNotifications]);

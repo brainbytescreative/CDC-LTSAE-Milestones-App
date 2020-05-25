@@ -1,14 +1,16 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
 import * as Notifications from 'expo-notifications';
-import {add, differenceInDays, differenceInMonths, formatISO, parseISO} from 'date-fns';
+import {NotificationRequestInput} from 'expo-notifications';
+import {add, differenceInMonths, formatISO, parseISO} from 'date-fns';
 import {useTranslation} from 'react-i18next';
-import {v4, v4 as uuid} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
 import {ChildResult} from './childrenHooks';
-import {calcChildAge, formatAge, formattedAge, tOpt} from '../utils/helpers';
+import {formattedAge, tOpt} from '../utils/helpers';
 import {childAges} from '../resources/constants';
-import {NotificationRequestInput} from 'expo-notifications';
 import {TFunction} from 'i18next';
+import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
+import {InteractionManager} from 'react-native';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -17,7 +19,7 @@ interface TipsAndActivitiesNotification {
   milestoneId: number;
 }
 
-interface NotificationDB {
+export interface NotificationDB {
   notificationId: string;
   fireDateTimestamp: string;
   notificationRead: boolean;
@@ -46,10 +48,9 @@ export enum NotificationCategory {
 }
 
 export function useSetMilestoneNotifications() {
-  const {t} = useTranslation();
   return useMutation<void, MilestoneNotificationsPayload>(async (variables) => {
     const ageMonth = differenceInMonths(new Date(), variables.child.birthday);
-    const remainingMilestones = childAges.filter((value) => value > (ageMonth || 0));
+    const remainingMilestones = childAges.map((value) => (value > (ageMonth || 0) ? value : -value));
 
     const queriesParams = remainingMilestones.map((value) => {
       return {
@@ -100,70 +101,104 @@ export function useSetMilestoneNotifications() {
   });
 }
 
+export function notificationDbToRequest(value: NotificationDB, t: TFunction): NotificationRequestInput | undefined {
+  try {
+    switch (value.notificationCategoryType) {
+      case NotificationCategory.Recommendation:
+        return undefined;
+      case NotificationCategory.Milestone:
+        const params: Record<string, string | number | undefined> =
+          value.bodyArguments && JSON.parse(value.bodyArguments);
+        const options = {
+          name: params.name,
+          childAgeFormatted: value.milestoneId && formattedAge(Math.abs(value.milestoneId), t).milestoneAgeFormatted,
+          milestoneAgeFormatted:
+            value.milestoneId && formattedAge(Math.abs(value.milestoneId), t, true).milestoneAgeFormatted,
+          ...tOpt({t, gender: Number(params.gender)}),
+        };
+        return {
+          identifier: value.notificationId,
+          content: {
+            body: value.bodyLocalizedKey && t(value.bodyLocalizedKey, options),
+            title: value.titleLocalizedKey && t(value.titleLocalizedKey),
+            sound: true,
+          },
+          trigger: parseISO(value.fireDateTimestamp),
+        } as NotificationRequestInput;
+      case NotificationCategory.Appointment:
+        return undefined;
+      case NotificationCategory.TipsAndActivities:
+        return {
+          identifier: value.notificationId,
+          content: {
+            body: value.bodyLocalizedKey && t(value.bodyLocalizedKey),
+            title: value.titleLocalizedKey && t(value.titleLocalizedKey),
+            sound: true,
+          },
+          trigger: parseISO(value.fireDateTimestamp),
+        } as NotificationRequestInput;
+      default: {
+        return undefined;
+      }
+    }
+  } catch (e) {
+    return undefined;
+  }
+}
+
 const sheduleNotifications = async (t: TFunction) => {
-  const result = await sqLiteClient.dB?.executeSql(
-    `select *
+  InteractionManager.runAfterInteractions(async () => {
+    const notificationSettings = await getNotificationSettings();
+
+    const keys = Object.keys(notificationSettings) as (keyof NotificationsSettingType)[];
+    const activeNotifications = keys.reduce((previousValue, currentValue) => {
+      switch (currentValue) {
+        case 'appointmentNotifications':
+          if (notificationSettings[currentValue]) {
+            return [...previousValue, NotificationCategory.Appointment];
+          }
+          break;
+        case 'milestoneNotifications':
+          if (notificationSettings[currentValue]) {
+            return [...previousValue, NotificationCategory.Milestone];
+          }
+          break;
+        case 'recommendationNotifications':
+          if (notificationSettings[currentValue]) {
+            return [...previousValue, NotificationCategory.Recommendation];
+          }
+          break;
+        case 'tipsAndActivitiesNotification':
+          if (notificationSettings[currentValue]) {
+            return [...previousValue, NotificationCategory.TipsAndActivities];
+          }
+          break;
+      }
+      return previousValue;
+    }, [] as NotificationCategory[]);
+
+    const result = await sqLiteClient.dB?.executeSql(
+      `select *
        from notifications
        where fireDateTimestamp > ?1
          and notificationRead = false
+         and notificationCategoryType in (${activeNotifications.join(',')})
        order by fireDateTimestamp
        limit 60`,
-    [formatISO(new Date())],
-  );
+      [formatISO(new Date())],
+    );
 
-  const records: NotificationDB[] = (result && result[0].rows.raw()) || [];
+    const records: NotificationDB[] = (result && result[0].rows.raw()) || [];
 
-  const requests: (NotificationRequestInput | undefined)[] = records
-    .map((value) => {
-      try {
-        switch (value.notificationCategoryType) {
-          case NotificationCategory.Recommendation:
-            return undefined;
-          case NotificationCategory.Milestone:
-            const params: Record<string, string | number | undefined> =
-              value.bodyArguments && JSON.parse(value.bodyArguments);
-            const options = {
-              name: params.name,
-              childAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t).milestoneAgeFormatted,
-              milestoneAgeFormatted:
-                value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormatted,
-              ...tOpt({t, gender: Number(params.gender)}),
-            };
-            return {
-              identifier: value.notificationId,
-              content: {
-                body: value.bodyLocalizedKey && t(value.bodyLocalizedKey, options),
-                title: value.titleLocalizedKey && t(value.titleLocalizedKey),
-                sound: true,
-              },
-              trigger: parseISO(value.fireDateTimestamp),
-            } as NotificationRequestInput;
-          case NotificationCategory.Appointment:
-            return undefined;
-          case NotificationCategory.TipsAndActivities:
-            return {
-              identifier: value.notificationId,
-              content: {
-                body: value.bodyLocalizedKey && t(value.bodyLocalizedKey),
-                title: value.titleLocalizedKey && t(value.titleLocalizedKey),
-                sound: true,
-              },
-              trigger: parseISO(value.fireDateTimestamp),
-            } as NotificationRequestInput;
-          default: {
-            return undefined;
-          }
-        }
-      } catch (e) {
-        return undefined;
-      }
-    })
-    .filter((value) => value !== undefined);
+    const requests = records
+      .map((value) => {
+        return notificationDbToRequest(value, t);
+      })
+      .filter((value) => value !== undefined);
 
-  await Notifications.cancelAllScheduledNotificationsAsync();
-  await Promise.all(requests.map((value) => value && Notifications.scheduleNotificationAsync(value)));
-
-  return;
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    await Promise.all(requests.map((value) => value && Notifications.scheduleNotificationAsync(value)));
+  });
 };
 
 export function useScheduleNotifications() {
@@ -232,6 +267,21 @@ export function useCancelNotificationById() {
   );
 }
 
+export function useSetNotificationRead() {
+  return useMutation<void, {notificationId: string}>(
+    async ({notificationId}) => {
+      await sqLiteClient.dB?.executeSql('update notifications set notificationRead = true where notificationId =?1', [
+        notificationId,
+      ]);
+    },
+    {
+      onSuccess: () => {
+        queryCache.refetchQueries('unreadNotifications', {force: true});
+      },
+    },
+  );
+}
+
 export function useGetUnreadNotifications() {
   return useQuery(
     'unreadNotifications',
@@ -240,23 +290,22 @@ export function useGetUnreadNotifications() {
         `
                   select *
                   from notifications
-                  where fireDateTimestamp < ?1
+                  where fireDateTimestamp <= ?1
                     and notificationRead = false
         `,
         [formatISO(new Date())],
       );
-      const unreadNotifications: NotificationResult[] | undefined =
-        result &&
-        result[0].rows.raw().map((value: NotificationDB) => ({
-          ...value,
-          fireDateTimestamp: parseISO(value.fireDateTimestamp),
-        }));
+      const unreadNotifications: NotificationDB[] | undefined = result && result[0].rows.raw();
+      //   .map((value: NotificationDB) => ({
+      //   ...value,
+      //   fireDateTimestamp: parseISO(value.fireDateTimestamp),
+      // }));
       return unreadNotifications;
     },
     {
       suspense: false,
       staleTime: 0,
-      refetchInterval: 60 * 1000,
+      refetchInterval: 30 * 1000,
     },
   );
 }

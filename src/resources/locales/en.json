@@ -40,7 +40,9 @@
     "title": "Settings",
     "drawerLabel": "Notifications & Settings",
     "notificationSettings": "Notification settings",
-    "userProfile": "User profile"
+    "userProfile": "User profile",
+    "requiredForState": "*required for state",
+    "statePrivacyLanguage": "{State-privacy language}"
   },
   "childSelector": {
     "edit": "Edit",
