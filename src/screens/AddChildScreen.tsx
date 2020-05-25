@@ -256,7 +256,6 @@ const AddChildScreen: React.FC<{}> = () => {
           );
         }}>
         {(formikProps) => (
-          // <>{console.log(formikProps.values.firstChild)}</>
           <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
             <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
               <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>

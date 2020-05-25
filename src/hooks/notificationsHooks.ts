@@ -1,7 +1,7 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
 import * as Notifications from 'expo-notifications';
 import {NotificationRequestInput} from 'expo-notifications';
-import {add, differenceInMonths, formatISO, parseISO} from 'date-fns';
+import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay} from 'date-fns';
 import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
@@ -46,59 +46,70 @@ export enum NotificationCategory {
   Appointment,
   TipsAndActivities,
 }
-
+// setHours(startOfDay(new Date()), 8)
 export function useSetMilestoneNotifications() {
-  return useMutation<void, MilestoneNotificationsPayload>(async (variables) => {
-    const ageMonth = differenceInMonths(new Date(), variables.child.birthday);
-    const remainingMilestones = childAges.map((value) => (value > (ageMonth || 0) ? value : -value));
+  const [reschedule] = useScheduleNotifications();
+  return useMutation<void, MilestoneNotificationsPayload>(
+    async (variables) => {
+      const ageMonth = differenceInMonths(new Date(), variables.child.birthday);
+      const remainingMilestones = childAges.map((value) => (value > (ageMonth || 0) ? value : -value));
 
-    const queriesParams = remainingMilestones.map((value) => {
-      return {
-        notificationId: `milestone_age_${value}_child_${variables.child.id}`,
-        fireDateTimestamp: formatISO(add(variables.child.birthday, {months: value})),
-        notificationCategoryType: NotificationCategory.Milestone,
-        childId: variables.child.id,
-        milestoneId: value,
-        bodyLocalizedKey: 'notifications:nextMilestoneNotificationBody',
-        titleLocalizedKey: 'notifications:milestoneNotificationTitle',
-        bodyArguments: {
-          name: variables.child.name,
-          gender: variables.child.gender,
-        },
-      };
-    });
-
-    await sqLiteClient.dB?.transaction((tx) => {
-      queriesParams.forEach((value) => {
-        tx.executeSql(
-          ` insert or
-              replace
-              into notifications
-              (notificationId,
-               fireDateTimestamp,
-               notificationCategoryType,
-               childId,
-               milestoneId,
-               bodyLocalizedKey,
-               titleLocalizedKey,
-               bodyArguments,
-               notificationRead)
-              values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
-                      coalesce(?9, (select notificationRead from main.notifications where notificationId = ?1)))`,
-          [
-            value.notificationId,
-            value.fireDateTimestamp,
-            value.notificationCategoryType,
-            value.childId,
-            value.milestoneId,
-            value.bodyLocalizedKey,
-            value.titleLocalizedKey,
-            JSON.stringify(value.bodyArguments),
-          ],
-        );
+      const queriesParams = remainingMilestones.map((value) => {
+        const milestoneId = Math.abs(value);
+        const at8am = setHours(startOfDay(add(variables.child.birthday, {months: value})), 8);
+        return {
+          notificationId: `milestone_age_${milestoneId}_child_${variables.child.id}`,
+          fireDateTimestamp: formatISO(at8am),
+          notificationCategoryType: NotificationCategory.Milestone,
+          childId: variables.child.id,
+          milestoneId,
+          bodyLocalizedKey: 'notifications:nextMilestoneNotificationBody',
+          titleLocalizedKey: 'notifications:milestoneNotificationTitle',
+          bodyArguments: {
+            name: variables.child.name,
+            gender: variables.child.gender,
+          },
+        };
       });
-    });
-  });
+
+      await sqLiteClient.dB?.transaction((tx) => {
+        queriesParams.forEach((value) => {
+          tx.executeSql(
+            ` insert or
+                replace
+                into notifications
+                (notificationId,
+                 fireDateTimestamp,
+                 notificationCategoryType,
+                 childId,
+                 milestoneId,
+                 bodyLocalizedKey,
+                 titleLocalizedKey,
+                 bodyArguments,
+                 notificationRead)
+                values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+                        coalesce(?9, (select notificationRead from main.notifications where notificationId = ?1)))`,
+            [
+              value.notificationId,
+              value.fireDateTimestamp,
+              value.notificationCategoryType,
+              value.childId,
+              value.milestoneId,
+              value.bodyLocalizedKey,
+              value.titleLocalizedKey,
+              JSON.stringify(value.bodyArguments),
+            ],
+          );
+        });
+      });
+    },
+    {
+      onSuccess: () => {
+        queryCache.refetchQueries('unreadNotifications', {force: true});
+        reschedule();
+      },
+    },
+  );
 }
 
 export function notificationDbToRequest(value: NotificationDB, t: TFunction): NotificationRequestInput | undefined {
@@ -111,9 +122,8 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
           value.bodyArguments && JSON.parse(value.bodyArguments);
         const options = {
           name: params.name,
-          childAgeFormatted: value.milestoneId && formattedAge(Math.abs(value.milestoneId), t).milestoneAgeFormatted,
-          milestoneAgeFormatted:
-            value.milestoneId && formattedAge(Math.abs(value.milestoneId), t, true).milestoneAgeFormatted,
+          childAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t).milestoneAgeFormatted,
+          milestoneAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormatted,
           ...tOpt({t, gender: Number(params.gender)}),
         };
         return {
@@ -210,7 +220,7 @@ export function useScheduleNotifications() {
 }
 
 export function useSetTipsAndActivitiesNotification() {
-  const {t} = useTranslation();
+  const [reschedule] = useScheduleNotifications();
 
   return useMutation<void, TipsAndActivitiesNotification>(
     async ({notificationId, bodyKey, childId, milestoneId}) => {
@@ -246,7 +256,7 @@ export function useSetTipsAndActivitiesNotification() {
     },
     {
       onSuccess: () => {
-        sheduleNotifications(t);
+        reschedule();
       },
     },
   );
@@ -282,6 +292,21 @@ export function useSetNotificationRead() {
   );
 }
 
+export function useRemoveNotificationsByChildId() {
+  const [reschedule] = useScheduleNotifications();
+  return useMutation<void, {childId: number}>(
+    async ({childId}) => {
+      await sqLiteClient.dB?.executeSql('delete from notifications where notifications.childId=?1', [childId]);
+    },
+    {
+      onSuccess: () => {
+        queryCache.refetchQueries('unreadNotifications', {force: true});
+        reschedule();
+      },
+    },
+  );
+}
+
 export function useGetUnreadNotifications() {
   return useQuery(
     'unreadNotifications',
@@ -306,6 +331,9 @@ export function useGetUnreadNotifications() {
       suspense: false,
       staleTime: 0,
       refetchInterval: 30 * 1000,
+      onSuccess: (data) => {
+        Notifications.setBadgeCountAsync(data?.length || 0);
+      },
     },
   );
 }

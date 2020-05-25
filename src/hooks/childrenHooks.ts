@@ -3,6 +3,7 @@ import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
+import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
 
 interface Record {
   id: number;
@@ -73,6 +74,7 @@ export function useSetSelectedChild() {
 }
 
 export function useUpdateChild() {
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
       const [query, values] = objectToQuery(
@@ -92,12 +94,14 @@ export function useUpdateChild() {
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries('children', {force: true});
         queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
+        setMilestoneNotifications({child: variables});
       },
     },
   );
 }
 
 export function useDeleteChild() {
+  const [removeNotificationsByChildId] = useRemoveNotificationsByChildId();
   return useMutation<void, {id: number}>(
     async (variables) => {
       const selectedChild = await Storage.getItem('selectedChild');
@@ -107,10 +111,10 @@ export function useDeleteChild() {
       await sqLiteClient.dB?.executeSql('delete from children where id = ?', [variables.id]);
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries('children', {force: true});
-        // queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
+        removeNotificationsByChildId({childId: variables.id});
       },
     },
   );
@@ -150,6 +154,7 @@ type AddChildResult = number | undefined;
 type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean};
 
 export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
       const [query, values] = objectToQuery(
@@ -179,6 +184,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries(['children'], {force: true});
         options?.onSuccess && options.onSuccess(data, variables);
+        data && setMilestoneNotifications({child: {id: data, ...variables.data}});
       },
     },
   );

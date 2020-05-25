@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect} from 'react';
+import React, {Suspense} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -21,6 +21,7 @@ import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
+import {formatISO, setHours, setMinutes, startOfDay} from 'date-fns';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -157,12 +158,12 @@ const DashboardContainer: React.FC<{}> = () => {
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
 
-  useEffect(() => {
-    child && setMilestoneNotifications({child});
-  }, [child, setMilestoneNotifications]);
-  useEffect(() => {
-    sheduleNotifications();
-  }, [sheduleNotifications]);
+  // useEffect(() => {
+  //   child && setMilestoneNotifications({child});
+  // }, [child, setMilestoneNotifications]);
+  // useEffect(() => {
+  //   sheduleNotifications();
+  // }, [sheduleNotifications]);
 
   useFocusEffect(
     React.useCallback(() => {

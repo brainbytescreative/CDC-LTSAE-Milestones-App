@@ -24,6 +24,7 @@ import {YellowBox} from 'react-native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import * as Notifications from 'expo-notifications';
 import {NavigationContainerRef} from '@react-navigation/core';
+import AppStateManager from './src/components/AppStateManager';
 
 // First, set the handler that will cause the notification
 // to show the alert
@@ -111,29 +112,32 @@ const App = () => {
   const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);
 
   return (
-    <ActionSheetProvider>
-      <ReactQueryConfigProvider config={queryConfig}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer
-            ref={navigationRef as any}
-            onStateChange={(state) => {
-              const previousRouteName = routeNameRef.current;
-              const currentRouteName = getActiveRouteName(state);
+    <>
+      <AppStateManager />
+      <ActionSheetProvider>
+        <ReactQueryConfigProvider config={queryConfig}>
+          <PaperProvider theme={theme}>
+            <NavigationContainer
+              ref={navigationRef as any}
+              onStateChange={(state) => {
+                const previousRouteName = routeNameRef.current;
+                const currentRouteName = getActiveRouteName(state);
 
-              if (previousRouteName !== currentRouteName && currentRouteName) {
-                ACPCore.trackState(currentRouteName, {'gov.cdc.appname': 'CDC Health IQ'});
-              }
+                if (previousRouteName !== currentRouteName && currentRouteName) {
+                  ACPCore.trackState(currentRouteName, {'gov.cdc.appname': 'CDC Health IQ'});
+                }
 
-              // Save the current route name for later comparision
-              routeNameRef.current = currentRouteName;
-            }}>
-            <I18nextProvider i18n={i18next}>
-              <Navigator />
-            </I18nextProvider>
-          </NavigationContainer>
-        </PaperProvider>
-      </ReactQueryConfigProvider>
-    </ActionSheetProvider>
+                // Save the current route name for later comparision
+                routeNameRef.current = currentRouteName;
+              }}>
+              <I18nextProvider i18n={i18next}>
+                <Navigator />
+              </I18nextProvider>
+            </NavigationContainer>
+          </PaperProvider>
+        </ReactQueryConfigProvider>
+      </ActionSheetProvider>
+    </>
   );
 };
 
