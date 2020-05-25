@@ -16,7 +16,6 @@ import {calcChildAge, formatDate, formattedAge, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
-import {TFunction} from 'i18next';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 

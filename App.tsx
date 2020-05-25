@@ -106,6 +106,7 @@ const App = () => {
 
   React.useEffect(() => {
     Notifications.requestPermissionsAsync();
+    Notifications.getPermissionsAsync().then(console.log);
   }, []);
 
   const routeNameRef = React.useRef<string | undefined>(undefined);

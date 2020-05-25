@@ -89,7 +89,7 @@ export function useSetMilestoneNotifications() {
                  bodyArguments,
                  notificationRead)
                 values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
-                        coalesce(?9, (select notificationRead from main.notifications where notificationId = ?1)))`,
+                        coalesce(?9, (select notificationRead from notifications where notificationId = ?1)))`,
             [
               value.notificationId,
               value.fireDateTimestamp,
@@ -192,7 +192,7 @@ const sheduleNotifications = async (t: TFunction) => {
       `select *
        from notifications
        where fireDateTimestamp > ?1
-         and notificationRead = false
+         and notificationRead <> 1   
          and notificationCategoryType in (${activeNotifications.join(',')})
        order by fireDateTimestamp
        limit 60`,
@@ -281,7 +281,7 @@ export function useCancelNotificationById() {
 export function useSetNotificationRead() {
   return useMutation<void, {notificationId: string}>(
     async ({notificationId}) => {
-      await sqLiteClient.dB?.executeSql('update notifications set notificationRead = true where notificationId =?1', [
+      await sqLiteClient.dB?.executeSql('update notifications set notificationRead = 1 where notificationId =?1', [
         notificationId,
       ]);
     },
@@ -317,7 +317,7 @@ export function useGetUnreadNotifications() {
                   select *
                   from notifications
                   where fireDateTimestamp <= ?1
-                    and notificationRead = false
+                    and notificationRead <> 1
         `,
         [formatISO(new Date())],
       );

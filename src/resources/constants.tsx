@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {StackNavigationOptions} from '@react-navigation/stack';
+import {HeaderBackButton, StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
-import {Answer} from '../hooks/checklistHooks';
 
 export const states = [
   'AL',
@@ -147,6 +147,7 @@ export const sharedScreenOptions: StackNavigationOptions = {
     shadowOpacity: 0, // remove shadow on iOS
     backgroundColor: colors.iceCold,
   },
+  headerTintColor: 'black',
   headerTitleAlign: 'center',
 };
 

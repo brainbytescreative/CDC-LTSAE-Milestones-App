@@ -10,7 +10,6 @@ import {useTranslation} from 'react-i18next';
 import {
   NotificationDB,
   notificationDbToRequest,
-  useCancelNotificationById,
   useGetUnreadNotifications,
   useSetNotificationRead,
 } from '../hooks/notificationsHooks';

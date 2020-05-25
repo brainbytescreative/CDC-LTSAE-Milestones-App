@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Platform, StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle} from 'react-native';
 import {colors, sharedStyle} from '../resources/constants';
-import _ from 'lodash';
 import TouchableArea from './TouchableArea/TouchableArea';
 
 interface Props extends TextInputProps {
@@ -61,6 +51,7 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     height: '100%',
+    color: 'black',
     ...sharedStyle.regularText,
     ...Platform.select({
       android: {
