@@ -18,6 +18,7 @@ import {PurpleArc} from '../resources/svg';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
+import {act} from 'react-test-renderer';
 
 interface FormValues {
   apptType: string;
@@ -48,21 +49,24 @@ const AddAppointmentScreen: React.FC<{}> = () => {
       const time = values.time && format(values.time, 'HH:mm:ss');
       const dateTime = parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
 
-      const action = apptId
-        ? updateAppointment({
-            ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
-            childId: `${child?.id}` || '-1',
-            date: values.date || new Date(),
-            id: `${apptId}`,
-          })
-        : addAppointment({
-            childId: `${child?.id}` || '-1',
-            doctorName: values.doctorName,
-            notes: values.notes,
-            questions: values.questions,
-            date: dateTime,
-            apptType: values.apptType,
-          });
+      let action;
+      if (apptId) {
+        action = updateAppointment({
+          ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
+          childId: child?.id || 0,
+          date: values.date || new Date(),
+          id: apptId,
+        });
+      } else {
+        action = addAppointment({
+          childId: child?.id || 0,
+          doctorName: values.doctorName,
+          notes: values.notes,
+          questions: values.questions,
+          date: dateTime,
+          apptType: values.apptType,
+        });
+      }
 
       action.then(() => {
         if (apptId) {
@@ -150,7 +154,6 @@ const AddAppointmentScreen: React.FC<{}> = () => {
             <AETextInput
               multiline={true}
               autoCorrect={false}
-              numberOfLines={3}
               style={{marginTop: 11}}
               value={formik.values.notes}
               onChangeText={formik.handleChange('notes') as any}
@@ -159,7 +162,6 @@ const AddAppointmentScreen: React.FC<{}> = () => {
             <AETextInput
               multiline={true}
               autoCorrect={false}
-              numberOfLines={3}
               style={{maxHeight: 100, marginTop: 11}}
               value={formik.values.questions}
               onChangeText={formik.handleChange('questions') as any}

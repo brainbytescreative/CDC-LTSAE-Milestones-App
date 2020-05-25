@@ -82,7 +82,7 @@ const AppointmentScreen: React.FC<{}> = () => {
             <AEButtonRounded
               onPress={() => {
                 navigation.navigate('AddAppointment', {
-                  appointmentId: route.params?.appointmentId,
+                  appointmentId: Number(route.params?.appointmentId),
                 });
               }}
               style={{marginBottom: 0}}>
@@ -90,7 +90,7 @@ const AppointmentScreen: React.FC<{}> = () => {
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {
-                navigation.navigate('ChildSummaryStack');
+                navigation.navigate('ChildSummary');
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 0}}>

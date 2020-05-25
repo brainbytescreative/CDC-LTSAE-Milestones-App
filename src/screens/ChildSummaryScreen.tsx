@@ -301,7 +301,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <ScrollView
           bounces={false}
           contentContainerStyle={{
-            paddingBottom: bottom + 76,
+            paddingBottom: bottom ? bottom + 76 : 100,
           }}>
           <ChildSelectorModal />
           <ChildPhoto photo={child?.photo} />

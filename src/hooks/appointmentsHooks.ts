@@ -6,7 +6,7 @@ import {PropType} from '../resources/constants';
 import {ChildResult} from './childrenHooks';
 
 export interface AppointmentDb {
-  id: string;
+  id: number;
   childId: PropType<ChildResult, 'id'>;
   childName: PropType<ChildResult, 'name'>;
   childGender: PropType<ChildResult, 'gender'>;
@@ -18,10 +18,11 @@ export interface AppointmentDb {
 }
 
 export type Appointment = Omit<AppointmentDb, 'date'> & {date: Date};
-export type NewAppointment = Omit<Appointment, 'id'>;
+type UpdateAppointment = Omit<Appointment, 'childName' | 'childGender'>;
+export type NewAppointment = Omit<UpdateAppointment, 'id'>;
 
 export function useUpdateAppointment() {
-  return useMutation<number, Appointment>(
+  return useMutation<number, UpdateAppointment>(
     async (variables) => {
       const [query, values] = objectToQuery(
         {
@@ -95,11 +96,12 @@ export function useDeleteAppointment() {
 }
 
 export function useGetAppointmentById(id: string | number | undefined) {
-  return useQuery<Appointment & {childName?: string}, [string, {id: typeof id}]>(
+  return useQuery<(Appointment & {childName?: string}) | undefined, [string, {id: typeof id}]>(
     ['appointment', {id}],
     async (key, variables) => {
       if (!variables.id) {
-        throw new Error('Id is not defined');
+        // throw new Error('Id is not defined');
+        return;
       }
 
       // language=SQLite
@@ -110,7 +112,8 @@ export function useGetAppointmentById(id: string | number | undefined) {
       const res = await sqLiteClient.dB?.executeSql(query, [variables.id]);
 
       if (!res) {
-        throw new Error('fetch failed');
+        // throw new Error('fetch failed');
+        return;
       }
 
       const dbRes: AppointmentDb = res && res[0].rows.item(0);
