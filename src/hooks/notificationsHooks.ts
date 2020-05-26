@@ -5,12 +5,14 @@ import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay, sub}
 import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
-import {ChildResult} from './childrenHooks';
-import {formattedAge, tOpt} from '../utils/helpers';
+import {ChildDbRecord, ChildResult} from './childrenHooks';
+import {checkMissingMilestones, formattedAge, tOpt} from '../utils/helpers';
 import {childAges} from '../resources/constants';
 import {TFunction} from 'i18next';
 import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
 import {InteractionManager} from 'react-native';
+import {Answer, MilestoneAnswer} from './checklistHooks';
+import _ from 'lodash';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -109,6 +111,76 @@ export function useSetMilestoneNotifications() {
         queryCache.refetchQueries('unreadNotifications', {force: true});
         reschedule();
       },
+    },
+  );
+}
+
+export function useSetCompleteMilestoneReminder() {
+  const [reschedule] = useScheduleNotifications();
+  return useMutation<void, NonNullable<Omit<MilestoneAnswer, 'note'>> & {prevAnswer?: Answer}>(
+    async ({prevAnswer, answer, childId, milestoneId}) => {
+      InteractionManager.runAfterInteractions(async () => {
+        const notificationId = `milestone_reminder_${childId}_${milestoneId}`;
+
+        if (answer === Answer.YES && (prevAnswer === Answer.NOT_YET || prevAnswer === Answer.UNSURE)) {
+          const {isNotSure, isNotYet} = await checkMissingMilestones(milestoneId, childId);
+          if (!isNotSure && !isNotYet) {
+            await sqLiteClient.dB?.executeSql(
+              `
+                DELETE
+                FROM notifications
+                WHERE notificationId = ?1
+            `,
+              [notificationId],
+            );
+            return reschedule();
+          }
+        } else if (
+          (prevAnswer === Answer.YES || prevAnswer === undefined) &&
+          (answer === Answer.NOT_YET || answer === Answer.UNSURE)
+        ) {
+          const twoWeeksLater = formatISO(add(new Date(), {weeks: 2}));
+          const childResult = await sqLiteClient.dB?.executeSql('SELECT name, gender FROM children WHERE id=?1', [
+            childId,
+          ]);
+          const child: Pick<ChildDbRecord, 'name' | 'gender'> | undefined = _.first(childResult)?.rows.item(0);
+          const bodyArguments = JSON.stringify({
+            name: child?.name,
+            gender: child?.gender,
+          });
+          const titleLocalizedKey = 'notifications:milestoneNotificationTitle';
+          const bodyLocalizedKey = 'notifications:milestoneCompleteReminder';
+          await sqLiteClient.dB?.executeSql(
+            `
+                      INSERT OR
+                      REPLACE
+                      INTO notifications (notificationId,
+                                          fireDateTimestamp,
+                                          notificationCategoryType,
+                                          childId,
+                                          milestoneId,
+                                          bodyLocalizedKey,
+                                          titleLocalizedKey,
+                                          bodyArguments,
+                                          notificationRead)
+                      VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
+            `,
+            [
+              notificationId,
+              twoWeeksLater,
+              NotificationCategory.Milestone,
+              childId,
+              milestoneId,
+              bodyLocalizedKey,
+              titleLocalizedKey,
+              bodyArguments,
+              false,
+            ],
+          );
+
+          return reschedule();
+        }
+      });
     },
   );
 }

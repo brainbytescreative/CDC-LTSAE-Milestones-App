@@ -8,7 +8,9 @@ import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
 import {ChildResult} from '../hooks/childrenHooks';
-import {childAges, tooYongAgeDays} from '../resources/constants';
+import {childAges, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {sqLiteClient} from '../db';
+import {Answer} from '../hooks/checklistHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -65,7 +67,30 @@ export function calcChildAge(birthDay: Date | undefined) {
     }
     return {milestoneAge, isTooYong, ageMonth};
   }
-  return {};
+  return {isTooYong: false};
+}
+
+export async function checkMissingMilestones(milestoneId: number, childId: number) {
+  const notYetRes = await sqLiteClient.dB?.executeSql(
+    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
+    [milestoneId, childId, Answer.NOT_YET],
+  );
+  const unsureRes = await sqLiteClient.dB?.executeSql(
+    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
+    [milestoneId, childId, Answer.UNSURE],
+  );
+
+  const concernsRes = await sqLiteClient.dB?.executeSql(
+    `SELECT concernId FROM concern_answers WHERE concernId NOT IN (${missingConcerns.join(
+      ',',
+    )}) AND milestoneId=? AND childId=? AND answer=? LIMIT 1`,
+    [milestoneId, childId, 1],
+  );
+
+  const isMissingConcern = (concernsRes && concernsRes[0].rows.length > 0) || false;
+  const isNotYet = (notYetRes && notYetRes[0].rows.length > 0) || false;
+  const isNotSure = (unsureRes && unsureRes[0].rows.length > 0) || false;
+  return {isMissingConcern, isNotYet, isNotSure};
 }
 
 type TableNames = 'children' | 'appointments';

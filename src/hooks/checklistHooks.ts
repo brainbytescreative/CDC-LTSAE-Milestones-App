@@ -12,10 +12,11 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {calcChildAge, formatDate, formattedAge, tOpt} from '../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
+import {useSetCompleteMilestoneReminder} from './notificationsHooks';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -263,16 +264,30 @@ export function useGetQuestion(data: QuestionAnswerKey) {
 export function useSetQuestionAnswer() {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const [checkMissing] = useCheckMissingMilestones();
+  const [setReminder] = useSetCompleteMilestoneReminder();
 
-  return useMutation<void, MilestoneAnswer>(
+  return useMutation<Answer | undefined, MilestoneAnswer>(
     async ({answer, childId, note, questionId, milestoneId}) => {
+      const prevAnswerRes = await sqLiteClient.dB?.executeSql(
+        `
+          SELECT answer
+          FROM milestones_answers
+          WHERE childId = ?1
+            AND milestoneId = ?2
+            AND questionId = ?3
+          LIMIT 1
+      `,
+        [childId, milestoneId, questionId],
+      );
+      const prevAnswer = prevAnswerRes && prevAnswerRes[0].rows.item(0)?.answer;
+
       const result = await sqLiteClient.dB?.executeSql(
         `
                   INSERT OR
                   REPLACE
                   INTO milestones_answers (childId, questionId, answer, milestoneId, note)
                   VALUES (?1, ?2, ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM milestones_answers WHERE questionId = ?2 and childId = ?1)))
+                          COALESCE(?5, (SELECT note FROM milestones_answers WHERE questionId = ?2 AND childId = ?1)))
         `,
         [childId, questionId, answer, milestoneId, note],
       );
@@ -281,11 +296,11 @@ export function useSetQuestionAnswer() {
         throw new Error('Update failed');
       }
 
-      return;
+      return prevAnswer;
     },
     {
       throwOnError: false,
-      onSuccess: (data, {childId, questionId, milestoneId}) => {
+      onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
         queryCache.refetchQueries(['question', {childId, questionId}], {force: true}).then();
         queryCache.refetchQueries('answers', {force: true, exact: false}).then();
@@ -294,6 +309,8 @@ export function useSetQuestionAnswer() {
         } else {
           queryCache.refetchQueries('monthProgress', {force: true}).then();
         }
+
+        prevAnswer !== answer && setReminder({childId, questionId, milestoneId, answer, prevAnswer});
       },
     },
   );
@@ -590,24 +607,6 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
   };
 }
 
-async function checkMissingMilestones(milestoneId: number, childId: number) {
-  const notYetRes = await sqLiteClient.dB?.executeSql(
-    'select questionId from milestones_answers where milestoneId=? and childId=? and answer=? limit 1',
-    [milestoneId, childId, Answer.NOT_YET],
-  );
-
-  const concernsRes = await sqLiteClient.dB?.executeSql(
-    `select concernId from concern_answers where concernId not in (${missingConcerns.join(
-      ',',
-    )}) and milestoneId=? and childId=? and answer=? limit 1`,
-    [milestoneId, childId, 1],
-  );
-
-  const isMissingConcern = (concernsRes && concernsRes[0].rows.length > 0) || false;
-  const isNotYet = (notYetRes && notYetRes[0].rows.length > 0) || false;
-  return {isMissingConcern, isNotYet};
-}
-
 export function useGetIsMissingMilestone({milestoneId, childId}: {milestoneId?: number; childId?: number}) {
   return useQuery(['isMissingMilestones', {milestoneId, childId}], async (key, variables) => {
     if (variables.milestoneId && variables.childId) {
@@ -620,29 +619,35 @@ export function useGetIsMissingMilestone({milestoneId, childId}: {milestoneId?: 
 export function useCheckMissingMilestones() {
   return useMutation(
     async ({childId, milestoneId}: {childId: number; milestoneId: number}) => {
-      const {isMissingConcern, isNotYet} = await checkMissingMilestones(milestoneId, childId);
+      const {isMissingConcern, isNotYet, isNotSure} = await checkMissingMilestones(milestoneId, childId);
       const concernId = missingConcerns[childAges.indexOf(milestoneId)];
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
-            insert or
-            replace into concern_answers (answer, concernId, milestoneId, childId, note)
-            VALUES (1, ?1, ?2, ?3, (SELECT note FROM concern_answers WHERE concernId = ?1 and childId = ?3 and milestoneId=?2))
-        `,
+                    INSERT OR
+                    REPLACE
+                    INTO concern_answers (answer, concernId, milestoneId, childId, note)
+                    VALUES (1, ?1, ?2, ?3, (SELECT note
+                                            FROM concern_answers
+                                            WHERE concernId = ?1 AND childId = ?3 AND milestoneId = ?2))
+          `,
           [concernId, milestoneId, childId],
         );
       } else if (concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
-            insert or
-            replace into concern_answers (answer, concernId, milestoneId, childId, note)
-            VALUES (0, ?1, ?2, ?3, (SELECT note FROM concern_answers WHERE concernId = ?1 and childId = ?3 and milestoneId=?2))
-        `,
+                    INSERT OR
+                    REPLACE
+                    INTO concern_answers (answer, concernId, milestoneId, childId, note)
+                    VALUES (0, ?1, ?2, ?3, (SELECT note
+                                            FROM concern_answers
+                                            WHERE concernId = ?1 AND childId = ?3 AND milestoneId = ?2))
+          `,
           [concernId, milestoneId, childId],
         );
       }
 
-      return;
+      return {isMissingConcern, isNotYet, isNotSure};
     },
     {
       onSuccess: async (data, {milestoneId, childId}) => {

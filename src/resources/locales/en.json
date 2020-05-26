@@ -220,7 +220,8 @@
   "notifications": {
     "tipsAndActivitiesTitle": "Tips & Activities",
     "milestoneNotificationTitle": "Milestone Notification",
-    "nextMilestoneNotificationBody": "{{name}} is turning {{childAgeFormatted}} old! It’s time to complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist."
+    "nextMilestoneNotificationBody": "{{name}} is turning {{childAgeFormatted}} old! It’s time to complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist.",
+    "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked Not Yet or Not Sure. Would you like to recheck those milestones?"
   },
   "states": {
     "AL": "Alabama (AL)",
