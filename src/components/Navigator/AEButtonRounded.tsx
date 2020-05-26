@@ -17,6 +17,7 @@ const AEButtonRounded: React.FC<Created & Props> = ({children, style, ...rest}) 
           height: 60,
           backgroundColor: 'white',
           borderRadius: 10,
+          overflow: 'hidden',
         },
       ]}
       labelStyle={{
@@ -24,7 +25,15 @@ const AEButtonRounded: React.FC<Created & Props> = ({children, style, ...rest}) 
         fontFamily: 'Montserrat-Bold',
         fontSize: 18,
       }}
-      style={[{marginHorizontal: 32, marginVertical: 16}, style, sharedStyle.shadow]}
+      style={[
+        {
+          borderRadius: 10,
+          marginHorizontal: 32,
+          marginVertical: 16,
+        },
+        style,
+        sharedStyle.shadow,
+      ]}
       {...rest}>
       {children}
     </Button>
