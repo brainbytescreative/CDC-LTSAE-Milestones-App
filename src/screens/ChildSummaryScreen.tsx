@@ -366,7 +366,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 note={item.note}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
               <Text style={styles.blockText}>{t('concerns')}</Text>
             </View>
             {concerns?.concerned?.map((item) => (
@@ -381,7 +381,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 id={item.id}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
               <Text style={styles.blockText}>{t('notSure')}</Text>
             </View>
             {data?.groupedByAnswer['1']?.map((item) => (
@@ -395,7 +395,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 id={item.id}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
               <Text style={styles.blockText}>{t('notYet')}</Text>
             </View>
             {data?.groupedByAnswer['2']?.map((item) => (

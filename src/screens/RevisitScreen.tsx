@@ -93,13 +93,13 @@ const RevisitScreen: React.FC<{}> = () => {
           </Trans>
         </Text>
         <View style={{marginHorizontal: 32}}>
-          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item, index) => (
             <Item value={item.value} index={index + 1} note={item.note} id={item.id} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>
               {t('notYet', {
                 milestoneAge: milestoneAgeFormattedDashes,
@@ -136,7 +136,7 @@ const RevisitScreen: React.FC<{}> = () => {
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
             <Item index={index + 1} value={item.value} id={item.id} note={item.note} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>
               {t('notSure', {
                 milestoneAge: milestoneAgeFormattedDashes,
