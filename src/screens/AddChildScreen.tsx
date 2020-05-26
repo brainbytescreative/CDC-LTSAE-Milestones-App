@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {
   Image,
   ScrollView,
@@ -222,6 +222,10 @@ const AddChildScreen: React.FC<{}> = () => {
     }
   };
 
+  const onPrematureTipPress = useCallback(() => {
+    scrollViewRef.current?.scrollToEnd();
+  }, [scrollViewRef]);
+
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <Formik
@@ -274,12 +278,7 @@ const AddChildScreen: React.FC<{}> = () => {
               <NameField t={t} name={'firstChild.name'} />
               <View style={{height: 11}} />
               <BirthdayField name={'firstChild.birthday'} t={t} />
-              <PrematureTip
-                t={t}
-                onPress={() => {
-                  scrollViewRef.current?.scrollToEnd();
-                }}
-              />
+              <PrematureTip t={t} onPress={onPrematureTipPress} />
               <GenderField t={t} name={'firstChild.gender'} />
             </View>
 
@@ -293,7 +292,7 @@ const AddChildScreen: React.FC<{}> = () => {
                         <NameField t={t} name={`anotherChildren.${index}.name`} />
                         <View style={{height: 11}} />
                         <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
-                        <PrematureTip t={t} />
+                        <PrematureTip t={t} onPress={onPrematureTipPress} />
                         <GenderField t={t} name={`anotherChildren.${index}.gender`} />
                       </>
                     ))}
@@ -306,16 +305,8 @@ const AddChildScreen: React.FC<{}> = () => {
                           disabled={isLoading || !formikProps.isValid}
                           style={{marginVertical: 0}}
                           onPress={() => {
-                            const anotherChildren = formikProps.values.anotherChildren;
-                            const prevChild =
-                              anotherChildren && anotherChildren?.length > 0
-                                ? _.last(anotherChildren)
-                                : formikProps.values.firstChild;
-
                             arrayHelpers.push({
-                              name: prevChild?.name || '',
-                              birthday: prevChild?.birthday,
-                              gender: prevChild?.gender,
+                              name: '',
                             });
                           }}>
                           {t('addAnotherChild').toUpperCase()}

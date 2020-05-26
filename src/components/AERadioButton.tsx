@@ -25,7 +25,12 @@ const AERadioButton: React.FC<SvgProps & Props> = ({title, titleStyle, onChange,
       style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
       <>
         <View>
-          <Svg style={[sharedStyle.shadow]} width="19px" height="19px" viewBox="0 0 19 19" {...props}>
+          <Svg
+            style={[sharedStyle.shadow, {borderRadius: 50}]}
+            width="19px"
+            height="19px"
+            viewBox="0 0 19 19"
+            {...props}>
             {value ? (
               <G transform="translate(1 1)" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
                 <Circle fill="#FFF" fillRule="nonzero" cx={9.5} cy={9.5} r={9.5} />

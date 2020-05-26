@@ -69,6 +69,7 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
       <View style={{flex: 0, overflow: 'visible'}}>
         <FlatList
           extraData={sectionsProgress}
+          showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
           renderItem={({item}) => (

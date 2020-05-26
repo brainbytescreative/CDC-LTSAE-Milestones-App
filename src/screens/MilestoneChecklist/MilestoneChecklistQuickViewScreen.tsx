@@ -5,7 +5,7 @@ import {useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHook
 import {checklistSections, colors} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import SectionItem from './SectionItem';
-import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -31,6 +31,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
           renderItem={({item}) => <SectionItem progress={sectionsProgress?.get(item)} section={item} />}

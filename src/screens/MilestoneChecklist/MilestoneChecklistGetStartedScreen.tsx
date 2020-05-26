@@ -49,6 +49,7 @@ const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
           renderItem={({item}) => <SectionItem progress={sectionsProgress?.get(item)} section={item} />}

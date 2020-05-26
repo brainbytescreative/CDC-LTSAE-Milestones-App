@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useRef} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
@@ -9,6 +9,7 @@ import {PurpleArc} from '../../resources/svg';
 import {colors} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Props {
   onNext: () => void;
@@ -21,9 +22,16 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
   const {data, error} = useGetChecklistQuestions();
   const questions = data?.questions || [];
   const {bottom} = useSafeAreaInsets();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({y: 0, animated: false});
+    }, []),
+  );
 
   return (
-    <AEScrollView>
+    <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
         <View style={{flexGrow: 1}}>
           <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>

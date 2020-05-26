@@ -79,6 +79,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
               },
               sharedStyle.shadow,
             ]}
+            activeTintColor={colors.purple}
             labelStyle={[
               sharedStyle.regularText,
               {
