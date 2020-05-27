@@ -3,7 +3,7 @@ import {View, ViewStyle} from 'react-native';
 import {sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import DropDownPicker from './DropDownPicker';
-import ChevronDown from './Svg/ChevronDown';
+import Chevron from './Svg/Chevron';
 
 export interface ParentProfileSelectorValues {
   territory: string | undefined | null;
@@ -30,8 +30,8 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
           label: t(`guardianTypes:${val}`),
           value: val,
         }))}
-        customArrowDown={<ChevronDown direction={'up'} />}
-        customArrowUp={<ChevronDown />}
+        customArrowDown={<Chevron direction={'up'} />}
+        customArrowUp={<Chevron direction={'down'} />}
         defaultNull
         value={value?.guardian}
         zIndex={110000}
@@ -42,8 +42,8 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
       />
       <View style={{height: 10}} />
       <DropDownPicker
-        customArrowDown={<ChevronDown direction={'up'} />}
-        customArrowUp={<ChevronDown />}
+        customArrowDown={<Chevron direction={'up'} />}
+        customArrowUp={<Chevron direction={'down'} />}
         labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
         style={[sharedStyle.shadow, sharedStyle.border]}
         placeholder={t('fields:territoryPlaceholder')}

@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, {Path, SvgProps} from 'react-native-svg';
 
-const ChevronDown: React.FC<SvgProps & {direction?: 'up' | 'down' | 'left' | 'right'}> = ({
+const Chevron: React.FC<SvgProps & {direction: 'up' | 'down' | 'left' | 'right'}> = ({
   direction = 'down',
   ...props
 }) => {
@@ -43,4 +43,4 @@ const ChevronDown: React.FC<SvgProps & {direction?: 'up' | 'down' | 'left' | 'ri
   );
 };
 
-export default ChevronDown;
+export default Chevron;

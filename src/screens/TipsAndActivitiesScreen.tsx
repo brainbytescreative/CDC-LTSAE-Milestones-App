@@ -14,7 +14,7 @@ import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../ho
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
 import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
-import ChevronDown from '../components/Svg/ChevronDown';
+import Chevron from '../components/Svg/Chevron';
 
 type ItemProps = {
   title: string | undefined;
@@ -176,8 +176,8 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
         </Text>
 
         <DropDownPicker
-          customArrowDown={<ChevronDown direction={'up'} />}
-          customArrowUp={<ChevronDown />}
+          customArrowDown={<Chevron direction={'up'} />}
+          customArrowUp={<Chevron direction={'down'} />}
           containerStyle={{
             marginTop: 30,
             marginHorizontal: 32,
