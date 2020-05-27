@@ -74,7 +74,7 @@ const notificationPreferences = Array.from<SettingName>([
   'tipsAndActivitiesNotification',
 ]);
 
-const SettingsScreen: React.FC<{}> = () => {
+const SettingsScreen: React.FC = () => {
   const {t} = useTranslation('settings');
   const formikRef = useRef<FormikProps<NotificationSettings> | undefined>();
   const {data: settings} = useGetNotificationSettings();

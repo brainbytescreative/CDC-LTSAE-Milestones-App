@@ -161,7 +161,7 @@ const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps
   </TouchableWithoutFeedback>
 );
 
-const AddChildScreen: React.FC<{}> = () => {
+const AddChildScreen: React.FC = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();
   const {t} = useTranslation('addChild');

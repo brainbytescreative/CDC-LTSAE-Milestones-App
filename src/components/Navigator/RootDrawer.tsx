@@ -96,7 +96,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
   );
 };
 
-const RootDrawer: React.FC<{}> = () => {
+const RootDrawer: React.FC = () => {
   const {t} = useTranslation();
   return (
     <Drawer.Navigator

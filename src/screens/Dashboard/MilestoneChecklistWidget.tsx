@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from './DashboardScreen';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 
-const MilestoneChecklistWidget: React.FC<{}> = () => {
+const MilestoneChecklistWidget: React.FC = () => {
   const {t} = useTranslation('dashboard');
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data} = useGetChecklistQuestions();

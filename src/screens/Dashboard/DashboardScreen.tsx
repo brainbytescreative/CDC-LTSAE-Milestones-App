@@ -147,7 +147,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-const DashboardContainer: React.FC<{}> = () => {
+const DashboardContainer: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
   const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();

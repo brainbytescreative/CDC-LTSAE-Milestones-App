@@ -18,7 +18,7 @@ type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Onb
 const NextScreen: keyof RootStackParamList = 'Dashboard';
 const stubArray = Array.from(new Array(5));
 
-const OnboardingHowToUseScreen: React.FC<{}> = () => {
+const OnboardingHowToUseScreen: React.FC = () => {
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();

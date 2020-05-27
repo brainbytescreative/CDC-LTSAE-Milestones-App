@@ -7,7 +7,7 @@ import ActEarlyPage from '../MilestoneChecklist/ActEarlyPage';
 import {useGetSectionsProgress} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
-const WhenActEarlyScreen: React.FC<{}> = () => {
+const WhenActEarlyScreen: React.FC = () => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
 

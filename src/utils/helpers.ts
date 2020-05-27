@@ -4,13 +4,9 @@ import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
-import * as MailComposer from 'expo-mail-composer';
-import nunjucks from 'nunjucks';
-import emailSummaryContent from '../resources/EmailChildSummary';
-import {ChildResult} from '../hooks/childrenHooks';
 import {childAges, missingConcerns, tooYongAgeDays} from '../resources/constants';
 import {sqLiteClient} from '../db';
-import {Answer} from '../hooks/checklistHooks';
+import {Answer} from '../hooks/types';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -141,3 +137,9 @@ export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
   himselfHerselfTag: t('common:himselfHerselfTag', {context: `${gender}`}),
   heSheUpperTag: t('common:heSheUpperTag', {context: `${gender}`}),
 });
+
+export function slowdown<T>(promise: Promise<T> | T, timeOut = 300): Promise<T> {
+  return Promise.all([new Promise((resolve) => setTimeout(resolve, timeOut)), Promise.resolve(promise)]).then(
+    ([, res]) => res,
+  );
+}

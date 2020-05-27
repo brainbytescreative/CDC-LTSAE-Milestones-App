@@ -99,7 +99,7 @@ const itemStyle = StyleSheet.create({
 const tipFilters = ['all', 'like', 'remindMe'];
 type TipType = typeof tipFilters[number];
 
-const TipsAndActivitiesScreen: React.FC<{}> = () => {
+const TipsAndActivitiesScreen: React.FC = () => {
   const {t} = useTranslation('tipsAndActivities');
   const [tipType, setTipType] = useState<TipType>('all');
   const {data: child} = useGetCurrentChild();

@@ -31,7 +31,7 @@ interface FormValues {
 
 type AddAppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'AddAppointment'>;
 
-const AddAppointmentScreen: React.FC<{}> = () => {
+const AddAppointmentScreen: React.FC = () => {
   const [addAppointment, {status: addStatus}] = useAddAppointment();
   const [updateAppointment, {status: updateStatus}] = useUpdateAppointment();
   const {data: child} = useGetCurrentChild();

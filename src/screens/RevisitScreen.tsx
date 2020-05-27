@@ -41,7 +41,7 @@ const Item: React.FC<ItemProps> = ({value, id, note, index}) => {
   );
 };
 
-const RevisitScreen: React.FC<{}> = () => {
+const RevisitScreen: React.FC = () => {
   const {data, refetch} = useGetChecklistQuestions();
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');

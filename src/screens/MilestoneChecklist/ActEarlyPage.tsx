@@ -147,7 +147,7 @@ const itemStyles = StyleSheet.create({
   },
 });
 
-const ActEarlyPage: React.FC<{}> = () => {
+const ActEarlyPage: React.FC = () => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();

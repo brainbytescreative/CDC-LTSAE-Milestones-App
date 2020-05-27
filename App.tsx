@@ -62,7 +62,7 @@ const theme: Theme = {
 const queryConfig: ReactQueryProviderConfig = {
   suspense: false,
   staleTime: Infinity,
-  onError: console.warn,
+  retry: false,
 };
 
 type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];

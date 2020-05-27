@@ -4,7 +4,7 @@ import {PropType} from '../resources/constants';
 
 type StateChangeListener = Parameters<PropType<AppState, 'addEventListener'>>[1];
 
-const AppStateManager: React.FC<{}> = () => {
+const AppStateManager: React.FC = () => {
   const [appState, setAppState] = useState<AppStateStatus | undefined>();
 
   const _handleAppStateChange: StateChangeListener = (nextAppState) => {

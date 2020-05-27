@@ -11,8 +11,8 @@ import {childAges} from '../resources/constants';
 import {TFunction} from 'i18next';
 import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
 import {InteractionManager} from 'react-native';
-import {Answer, MilestoneAnswer} from './checklistHooks';
 import _ from 'lodash';
+import {Answer, MilestoneAnswer} from './types';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;

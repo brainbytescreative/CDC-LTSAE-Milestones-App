@@ -17,22 +17,9 @@ import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
 import {useSetCompleteMilestoneReminder} from './notificationsHooks';
+import {Answer, MilestoneAnswer} from './types';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
-
-export enum Answer {
-  YES,
-  UNSURE,
-  NOT_YET,
-}
-
-export interface MilestoneAnswer {
-  childId: number;
-  questionId: number;
-  milestoneId: number;
-  answer?: Answer;
-  note?: string | undefined | null;
-}
 
 type QuestionAnswerKey = Partial<Pick<MilestoneAnswer, 'childId' | 'questionId'>>;
 

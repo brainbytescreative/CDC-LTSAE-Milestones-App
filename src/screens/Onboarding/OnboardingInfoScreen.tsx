@@ -13,7 +13,7 @@ import CDCLogo from '../../components/Svg/CDCLogo';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import IceColdArc from '../../components/Svg/IceColdArc';
 
-const OnboardingInfoScreen: React.FC<{}> = () => {
+const OnboardingInfoScreen: React.FC = () => {
   const [visible, setVisible] = useState(true);
   const {t} = useTranslation('onboardingInfo');
   const navigation = useNavigation<OnboardingNavigationProp>();

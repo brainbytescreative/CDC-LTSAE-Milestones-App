@@ -19,7 +19,7 @@ import PurpleArc from '../../components/Svg/PurpleArc';
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
 
-const OnboardingParentProfileScreen: React.FC<{}> = () => {
+const OnboardingParentProfileScreen: React.FC = () => {
   const {t} = useTranslation('onboardingParentProfile');
   const navigation = useNavigation<ParentProfileNavigationProp>();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();

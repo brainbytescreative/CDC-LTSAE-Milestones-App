@@ -21,7 +21,7 @@ type NavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
-const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
+const MilestoneChecklistGetStartedScreen: React.FC = () => {
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);

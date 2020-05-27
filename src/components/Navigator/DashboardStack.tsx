@@ -15,7 +15,7 @@ import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 
-const DashboardStack: FC<{}> = () => {
+const DashboardStack: FC = () => {
   const {t} = useTranslation();
   return (
     <Stack.Navigator screenOptions={sharedScreenOptions}>

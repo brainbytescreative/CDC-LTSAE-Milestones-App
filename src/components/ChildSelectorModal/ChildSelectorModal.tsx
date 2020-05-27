@@ -18,7 +18,7 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
-const ChildName: React.FC<{}> = () => {
+const ChildName: React.FC = () => {
   const {data: selectedChild} = useGetCurrentChild({suspense: true});
   return (
     <Text
@@ -65,7 +65,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
   );
 };
 
-const ChildSelectorModal: React.FC<{}> = () => {
+const ChildSelectorModal: React.FC = () => {
   const {top} = useSafeAreaInsets();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 

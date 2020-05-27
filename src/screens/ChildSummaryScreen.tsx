@@ -164,7 +164,7 @@ export type ChildSummaryStackNavigationProp = CompositeNavigationProp<
   StackNavigationProp<ChildSummaryParamList>
 >;
 
-const ChildSummaryScreen: React.FC<{}> = () => {
+const ChildSummaryScreen: React.FC = () => {
   const {t} = useTranslation('childSummary');
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
   const {data, refetch} = useGetChecklistQuestions();

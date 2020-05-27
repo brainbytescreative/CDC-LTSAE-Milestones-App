@@ -10,10 +10,11 @@ import {DowngradeError} from '../../db/SQLiteClient';
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
 import AddChildScreen from '../../screens/AddChildScreen';
+import withSuspense from '../withSuspense';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const Navigator: React.FC<{}> = () => {
+const Navigator: React.FC = () => {
   const {t} = useTranslation();
   const {data: isOnboarded, isFetching} = useGetOnboarding();
   const [loading, setLoading] = useState(true);
@@ -54,4 +55,4 @@ const Navigator: React.FC<{}> = () => {
   );
 };
 
-export default Navigator;
+export default withSuspense(Navigator);

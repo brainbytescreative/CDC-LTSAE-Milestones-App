@@ -9,7 +9,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import NotificationsBadge from '../components/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
 
-const InfoScreen: React.FC<{}> = () => {
+const InfoScreen: React.FC = () => {
   const {t} = useTranslation('info');
   const {bottom} = useSafeAreaInsets();
   return (

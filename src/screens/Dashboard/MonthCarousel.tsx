@@ -65,7 +65,7 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
 
 type onViewableItemsChanged = NonNullable<PropType<Required<FlatListProps<any>>, 'onViewableItemsChanged'>>;
 
-const MonthCarousel: React.FC<{}> = () => {
+const MonthCarousel: React.FC = () => {
   const flatListRef = useRef<FlatList | null>(null);
   const visible = useRef<{last?: number | null; first?: number | null} | undefined>(undefined);
   const {data: {childAge = 2, milestoneAge = 2} = {}} = useGetMilestone();

@@ -73,7 +73,7 @@ const NotificationItem: React.FC<{
   );
 };
 
-const NotificationsBadge: React.FC<{}> = () => {
+const NotificationsBadge: React.FC = () => {
   const {bottom} = useSafeAreaInsets();
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);

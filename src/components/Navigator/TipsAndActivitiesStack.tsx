@@ -7,7 +7,7 @@ import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
 
 const Stack = createStackNavigator<TipsAndActivitiesParamList>();
 
-const TipsAndActivitiesStack: React.FC<{}> = () => {
+const TipsAndActivitiesStack: React.FC = () => {
   const {t} = useTranslation();
   return (
     <Stack.Navigator>

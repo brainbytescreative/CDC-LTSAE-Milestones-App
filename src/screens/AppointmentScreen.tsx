@@ -17,7 +17,7 @@ import PurpleArc from '../components/Svg/PurpleArc';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 
-const AppointmentScreen: React.FC<{}> = () => {
+const AppointmentScreen: React.FC = () => {
   const {t} = useTranslation('appointment');
   const route = useRoute<AppointmentScreenRouteProp>();
   const navigation = useNavigation<DashboardDrawerNavigationProp>();

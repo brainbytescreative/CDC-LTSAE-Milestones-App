@@ -8,7 +8,7 @@ import {colors} from '../../resources/constants';
 
 const Stack = createStackNavigator<InfoParamList>();
 
-const InfoStack: React.FC<{}> = () => {
+const InfoStack: React.FC = () => {
   const {t} = useTranslation('info');
   return (
     <Stack.Navigator>
