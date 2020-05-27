@@ -68,12 +68,8 @@ const AddAppointmentScreen: React.FC<{}> = () => {
         });
       }
 
-      action.then(() => {
-        if (apptId) {
-          navigation.goBack();
-        } else {
-          navigation.navigate('Dashboard');
-        }
+      action.then((id) => {
+        navigation.replace('Appointment', {appointmentId: apptId || id});
       });
     },
     initialValues: {

@@ -287,6 +287,11 @@ const ChildSummaryScreen: React.FC<{}> = () => {
     [child, refetchConcerns, setConcern, milestoneAge],
   );
 
+  const unanswered = data?.groupedByAnswer['undefined'] || [];
+  const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
+  const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
+  const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
+
   return (
     <View style={{backgroundColor: colors.white}}>
       <View
@@ -355,7 +360,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
               <Text style={styles.blockText}>{t('unanswered')}</Text>
             </View>
-            {data?.groupedByAnswer['undefined']?.map((item) => (
+            {unanswered.map((item) => (
               <Item
                 answer={null}
                 key={`answer-${item.id}`}
@@ -384,7 +389,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
               <Text style={styles.blockText}>{t('notSure')}</Text>
             </View>
-            {data?.groupedByAnswer['1']?.map((item) => (
+            {unsure.map((item) => (
               <Item
                 answer={Answer.UNSURE}
                 key={`answer-${item.id}`}
@@ -398,7 +403,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
               <Text style={styles.blockText}>{t('notYet')}</Text>
             </View>
-            {data?.groupedByAnswer['2']?.map((item) => (
+            {notYet.map((item) => (
               <Item
                 answer={Answer.NOT_YET}
                 key={`answer-${item.id}`}
@@ -412,7 +417,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
               <Text style={styles.blockText}>{t('yes')}</Text>
             </View>
-            {data?.groupedByAnswer['0']?.map((item) => (
+            {yes.map((item) => (
               <Item
                 key={`answer-${item.id}`}
                 answer={Answer.YES}

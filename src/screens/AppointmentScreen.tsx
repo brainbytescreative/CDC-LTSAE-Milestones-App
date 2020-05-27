@@ -81,7 +81,7 @@ const AppointmentScreen: React.FC<{}> = () => {
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
             <AEButtonRounded
               onPress={() => {
-                navigation.navigate('AddAppointment', {
+                navigation.replace('AddAppointment', {
                   appointmentId: Number(route.params?.appointmentId),
                 });
               }}

@@ -16,7 +16,7 @@ export type DashboardStackParamList = {
   AddChild: AddChildScreenParams;
   Dashboard: undefined;
   AddAppointment: {appointmentId: number | undefined} | undefined;
-  Appointment: {appointmentId: number | string};
+  Appointment: {appointmentId: number | string; toDashboard?: boolean};
   MilestoneChecklist: undefined;
   ChildSummary: undefined;
   TipsAndActivities: undefined;
