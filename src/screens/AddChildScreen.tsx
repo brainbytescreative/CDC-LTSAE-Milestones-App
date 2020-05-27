@@ -23,13 +23,13 @@ import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
-import NavBarBackground from '../components/svg/NavBarBackground';
+import NavBarBackground from '../components/Svg/NavBarBackground';
 import {TFunction} from 'i18next';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import AERadioButton from '../components/AERadioButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import PurpleArc from '../components/svg/PurpleArc';
-import PlusIcon from '../components/svg/PlusIcon';
+import PurpleArc from '../components/Svg/PurpleArc';
+import PlusIcon from '../components/Svg/PlusIcon';
 
 const options = {
   quality: 1.0,

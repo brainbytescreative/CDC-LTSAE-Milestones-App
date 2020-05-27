@@ -3,7 +3,7 @@ import {View, ViewStyle} from 'react-native';
 import {sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import DropDownPicker from './DropDownPicker';
-import ChevronDown from './svg/ChevronDown';
+import ChevronDown from './Svg/ChevronDown';
 
 export interface ParentProfileSelectorValues {
   territory: string | undefined | null;

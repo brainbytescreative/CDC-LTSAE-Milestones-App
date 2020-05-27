@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {colors, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../components/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import LanguageSelector from '../components/LanguageSelector';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {Text} from 'react-native-paper';
@@ -11,7 +11,7 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import AEScrollView from '../components/AEScrollView';
 import {tOpt} from '../utils/helpers';
 import {useFocusEffect} from '@react-navigation/native';
-import CDCLogo from '../components/svg/CDCLogo';
+import CDCLogo from '../components/Svg/CDCLogo';
 
 interface ItemProps {
   value?: string;

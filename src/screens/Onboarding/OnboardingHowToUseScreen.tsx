@@ -10,8 +10,8 @@ import {colors, sharedStyle} from '../../resources/constants';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
-import NavBarBackground from '../../components/svg/NavBarBackground';
-import PurpleArc from '../../components/svg/PurpleArc';
+import NavBarBackground from '../../components/Svg/NavBarBackground';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 

@@ -6,8 +6,8 @@ import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import _ from 'lodash';
-import ChevronLeft from '../../components/svg/ChevronLeft';
-import ChevronRight from '../../components/svg/ChevronRight';
+import ChevronLeft from '../../components/Svg/ChevronLeft';
+import ChevronRight from '../../components/Svg/ChevronRight';
 
 interface ItemProps {
   childAge: number;

@@ -9,7 +9,7 @@ import {colors} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
-import PurpleArc from '../../components/svg/PurpleArc';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 interface Props {
   onNext: () => void;

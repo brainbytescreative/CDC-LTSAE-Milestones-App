@@ -5,16 +5,16 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {colors, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
-import ShortHeaderArc from '../components/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
-import LikeHeart from '../components/svg/LikeHeart';
+import LikeHeart from '../components/Svg/LikeHeart';
 import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
 import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
-import ChevronDown from '../components/svg/ChevronDown';
+import ChevronDown from '../components/Svg/ChevronDown';
 
 type ItemProps = {
   title: string | undefined;

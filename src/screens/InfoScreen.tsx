@@ -3,11 +3,11 @@ import {colors, sharedStyle} from '../resources/constants';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {Trans, useTranslation} from 'react-i18next';
-import ShortHeaderArc from '../components/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import AEScrollView from '../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import NotificationsBadge from '../components/NotificationsBadge';
-import CDCLogo from '../components/svg/CDCLogo';
+import CDCLogo from '../components/Svg/CDCLogo';
 
 const InfoScreen: React.FC<{}> = () => {
   const {t} = useTranslation('info');

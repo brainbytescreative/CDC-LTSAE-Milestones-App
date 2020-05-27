@@ -14,13 +14,13 @@ import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHo
 import NotificationsBadge from '../components/NotificationsBadge';
 import AESwitch from '../components/AESwitch';
 import {colors, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../components/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import LanguageSelector from '../components/LanguageSelector';
 import AEScrollView from '../components/AEScrollView';
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
 import _ from 'lodash';
-import PurpleArc from '../components/svg/PurpleArc';
+import PurpleArc from '../components/Svg/PurpleArc';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 

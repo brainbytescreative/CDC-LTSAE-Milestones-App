@@ -9,9 +9,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
-import CDCLogo from '../../components/svg/CDCLogo';
-import PurpleArc from '../../components/svg/PurpleArc';
-import IceColdArc from '../../components/svg/IceColdArc';
+import CDCLogo from '../../components/Svg/CDCLogo';
+import PurpleArc from '../../components/Svg/PurpleArc';
+import IceColdArc from '../../components/Svg/IceColdArc';
 
 const OnboardingInfoScreen: React.FC<{}> = () => {
   const [visible, setVisible] = useState(true);

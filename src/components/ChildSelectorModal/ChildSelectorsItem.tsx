@@ -5,7 +5,7 @@ import {colors, sharedStyle} from '../../resources/constants';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {formatAge} from '../../utils/helpers';
-import BabyPlaceholder from '../svg/BabyPlaceholder';
+import BabyPlaceholder from '../Svg/BabyPlaceholder';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: number) => void;

@@ -26,7 +26,7 @@ import LanguageSelector from '../components/LanguageSelector';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, missingConcerns, PropType, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../components/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import ChildPhoto from '../components/ChildPhoto';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
@@ -35,8 +35,8 @@ import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Na
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import _ from 'lodash';
-import NoteIcon from '../components/svg/NoteIcon';
-import PurpleArc from '../components/svg/PurpleArc';
+import NoteIcon from '../components/Svg/NoteIcon';
+import PurpleArc from '../components/Svg/PurpleArc';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;

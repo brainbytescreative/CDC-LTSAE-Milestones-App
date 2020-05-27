@@ -15,15 +15,15 @@ import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} fr
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
-import NavBarBackground from '../../components/svg/NavBarBackground';
+import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
-import ActEarlySign from '../../components/svg/ActEarlySign';
-import MilestoneSummarySign from '../../components/svg/MilestoneSummarySign';
-import TipsAndActivitiesSign from '../../components/svg/TipsAndActivitiesSign';
-import PurpleArc from '../../components/svg/PurpleArc';
+import ActEarlySign from '../../components/Svg/ActEarlySign';
+import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
+import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 interface Props {
   navigation: StackNavigationProp<any>;

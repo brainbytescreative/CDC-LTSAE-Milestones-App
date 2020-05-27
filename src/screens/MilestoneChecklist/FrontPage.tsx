@@ -6,7 +6,7 @@ import {colors, sharedStyle} from '../../resources/constants';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
-import PurpleArc from '../../components/svg/PurpleArc';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 interface Props {
   onGetStarted: () => void;

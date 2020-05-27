@@ -13,8 +13,8 @@ import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import NavBarBackground from '../../components/svg/NavBarBackground';
-import PurpleArc from '../../components/svg/PurpleArc';
+import NavBarBackground from '../../components/Svg/NavBarBackground';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;

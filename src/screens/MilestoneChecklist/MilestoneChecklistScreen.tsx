@@ -19,7 +19,7 @@ import {CompositeNavigationProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import PurpleArc from '../../components/svg/PurpleArc';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 const sections = [...skillTypes, 'actEarly'];
 

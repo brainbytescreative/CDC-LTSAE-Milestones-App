@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import BurgerIcon from './svg/BurgerIcon';
+import BurgerIcon from './Svg/BurgerIcon';
 
 const BurgerButton: React.FC<{}> = () => {
   const navigation = useNavigation();
