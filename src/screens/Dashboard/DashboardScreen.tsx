@@ -2,7 +2,6 @@ import React, {Suspense} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
-import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import MonthCarousel from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
@@ -16,11 +15,15 @@ import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} fr
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
-import NavBarBackground from '../../resources/svg/NavBarBackground';
+import NavBarBackground from '../../components/svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
+import ActEarlySign from '../../components/svg/ActEarlySign';
+import MilestoneSummarySign from '../../components/svg/MilestoneSummarySign';
+import TipsAndActivitiesSign from '../../components/svg/TipsAndActivitiesSign';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 interface Props {
   navigation: StackNavigationProp<any>;

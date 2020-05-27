@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {BabyPlaceholder} from '../resources/svg';
+import BabyPlaceholder from './svg/BabyPlaceholder';
 
 const ChildPhoto: React.FC<{photo?: string; style?: StyleProp<ViewStyle>}> = ({photo, style}) => {
   return (

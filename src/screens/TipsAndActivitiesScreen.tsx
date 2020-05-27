@@ -3,19 +3,18 @@ import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {colors, notificationIntervals, PropType, sharedStyle} from '../resources/constants';
+import {colors, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/svg/ShortHeaderArc';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
-import {ChevronDown} from '../resources/svg';
-import LikeHeart from '../resources/svg/LikeHeart';
+import LikeHeart from '../components/svg/LikeHeart';
 import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
-import * as Notifications from 'expo-notifications';
 import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
+import ChevronDown from '../components/svg/ChevronDown';
 
 type ItemProps = {
   title: string | undefined;

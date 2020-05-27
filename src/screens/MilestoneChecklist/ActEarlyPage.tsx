@@ -23,13 +23,13 @@ import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useTranslation} from 'react-i18next';
-import CheckMark from '../../resources/svg/CheckMark';
-import NoteIcon from '../../resources/svg/NoteIcon';
-import ChevronRightBig from '../../resources/svg/ChevronRightBig';
+import CheckMark from '../../components/svg/CheckMark';
+import NoteIcon from '../../components/svg/NoteIcon';
+import ChevronRightBig from '../../components/svg/ChevronRightBig';
 import {Text} from 'react-native-paper';
-import {PurpleArc} from '../../resources/svg';
 import _ from 'lodash';
 import AEYellowBox from '../../components/AEYellowBox';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();

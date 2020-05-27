@@ -3,9 +3,9 @@ import {useTranslation} from 'react-i18next';
 import {ChildResult, useGetCurrentChild} from '../../hooks/childrenHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {BabyPlaceholder} from '../../resources/svg';
 import {Text} from 'react-native-paper';
 import {formatAge} from '../../utils/helpers';
+import BabyPlaceholder from '../svg/BabyPlaceholder';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: number) => void;

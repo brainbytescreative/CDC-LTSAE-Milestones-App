@@ -12,13 +12,13 @@ import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../compone
 import _ from 'lodash';
 import {addAppointmentSchema} from '../resources/validationSchemas';
 import {colors} from '../resources/constants';
-import NavBarBackground from '../resources/svg/NavBarBackground';
+import NavBarBackground from '../components/svg/NavBarBackground';
 import AETextInput from '../components/AETextInput';
-import {PurpleArc} from '../resources/svg';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
 import {act} from 'react-test-renderer';
+import PurpleArc from '../components/svg/PurpleArc';
 
 interface FormValues {
   apptType: string;

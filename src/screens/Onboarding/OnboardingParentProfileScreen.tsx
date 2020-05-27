@@ -8,13 +8,13 @@ import ParentProfileSelector, {ParentProfileSelectorValues} from '../../componen
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {PurpleArc} from '../../resources/svg';
 import {Text} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import NavBarBackground from '../../resources/svg/NavBarBackground';
+import NavBarBackground from '../../components/svg/NavBarBackground';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;

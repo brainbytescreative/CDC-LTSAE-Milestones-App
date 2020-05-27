@@ -4,8 +4,7 @@ import {Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
-import CloseCross from '../resources/svg/CloseCross';
-import {ChevronLeft} from '../resources/svg';
+import CloseCross from './svg/CloseCross';
 import {useTranslation} from 'react-i18next';
 import {
   NotificationDB,
@@ -14,6 +13,7 @@ import {
   useSetNotificationRead,
 } from '../hooks/notificationsHooks';
 import {TFunction} from 'i18next';
+import ChevronLeft from './svg/ChevronLeft';
 
 // const notifications = Array(45);
 

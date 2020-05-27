@@ -4,9 +4,9 @@ import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {colors, sharedStyle} from '../../resources/constants';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {PurpleArc} from '../../resources/svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 interface Props {
   onGetStarted: () => void;

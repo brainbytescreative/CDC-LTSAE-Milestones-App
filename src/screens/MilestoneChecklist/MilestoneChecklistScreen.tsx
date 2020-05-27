@@ -8,20 +8,18 @@ import SectionItem, {Section} from './SectionItem';
 import ActEarlyPage from './ActEarlyPage';
 import {
   useGetChecklistQuestions,
-  useGetConcerns,
   useGetMilestone,
   useGetMilestoneGotStarted,
   useGetSectionsProgress,
-  useSetConcern,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {PurpleArc} from '../../resources/svg';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 const sections = [...skillTypes, 'actEarly'];
 

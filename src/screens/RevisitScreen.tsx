@@ -2,16 +2,16 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {colors, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/svg/ShortHeaderArc';
 import LanguageSelector from '../components/LanguageSelector';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {Text} from 'react-native-paper';
 import {Trans, useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {CDClogo} from '../resources/svg';
 import AEScrollView from '../components/AEScrollView';
 import {tOpt} from '../utils/helpers';
 import {useFocusEffect} from '@react-navigation/native';
+import CDCLogo from '../components/svg/CDCLogo';
 
 interface ItemProps {
   value?: string;
@@ -84,7 +84,7 @@ const RevisitScreen: React.FC<{}> = () => {
           {t('thankYouText', {childName: child?.name})}
         </Text>
         <View style={styles.logosRow}>
-          <CDClogo />
+          <CDCLogo />
           <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>

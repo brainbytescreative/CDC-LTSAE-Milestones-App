@@ -5,11 +5,11 @@ import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {PurpleArc} from '../../resources/svg';
 import {colors} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
+import PurpleArc from '../../components/svg/PurpleArc';
 
 interface Props {
   onNext: () => void;

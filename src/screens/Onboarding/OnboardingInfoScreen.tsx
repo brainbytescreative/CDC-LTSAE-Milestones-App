@@ -5,11 +5,13 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {colors, sharedStyle} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
-import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
+import CDCLogo from '../../components/svg/CDCLogo';
+import PurpleArc from '../../components/svg/PurpleArc';
+import IceColdArc from '../../components/svg/IceColdArc';
 
 const OnboardingInfoScreen: React.FC<{}> = () => {
   const [visible, setVisible] = useState(true);
@@ -25,7 +27,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
             <View style={{alignItems: 'center', marginTop: 16 + top}}>
               <Text style={{fontSize: 10, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
-                <CDClogo />
+                <CDCLogo />
                 <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
               </View>
             </View>

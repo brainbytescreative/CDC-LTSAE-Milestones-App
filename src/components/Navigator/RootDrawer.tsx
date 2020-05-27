@@ -16,7 +16,7 @@ import {SafeAreaView, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
-import CloseCross from '../../resources/svg/CloseCross';
+import CloseCross from '../svg/CloseCross';
 import i18next from 'i18next';
 import {DrawerContentOptions} from '@react-navigation/drawer';
 

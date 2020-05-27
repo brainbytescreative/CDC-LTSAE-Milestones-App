@@ -9,11 +9,11 @@ import {Alert, StyleSheet, View} from 'react-native';
 import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
 import {colors} from '../resources/constants';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
-import {PurpleArc} from '../resources/svg';
+import ShortHeaderArc from '../components/svg/ShortHeaderArc';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
+import PurpleArc from '../components/svg/PurpleArc';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 

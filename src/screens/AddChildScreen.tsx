@@ -22,14 +22,14 @@ import {colors, sharedStyle} from '../resources/constants';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import {PlusIcon, PurpleArc} from '../resources/svg';
 import AEScrollView from '../components/AEScrollView';
-import NavBarBackground from '../resources/svg/NavBarBackground';
+import NavBarBackground from '../components/svg/NavBarBackground';
 import {TFunction} from 'i18next';
 import {addEditChildSchema} from '../resources/validationSchemas';
-import _ from 'lodash';
 import AERadioButton from '../components/AERadioButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import PurpleArc from '../components/svg/PurpleArc';
+import PlusIcon from '../components/svg/PlusIcon';
 
 const options = {
   quality: 1.0,

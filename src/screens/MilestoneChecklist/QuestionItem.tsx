@@ -6,11 +6,11 @@ import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from '
 import YouTube from 'react-native-youtube';
 import ViewPager from '@react-native-community/viewpager';
 import {Answer, useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
-import NoteIcon from '../../resources/svg/NoteIcon';
+import NoteIcon from '../../components/svg/NoteIcon';
 import _ from 'lodash';
 import {Text} from 'react-native-paper';
-import PhotoChevronLeft from '../../resources/svg/PhotoChevronLeft';
-import PhotoChevronRight from '../../resources/svg/PhotoChevronRight';
+import PhotoChevronLeft from '../../components/svg/PhotoChevronLeft';
+import PhotoChevronRight from '../../components/svg/PhotoChevronRight';
 import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
 
