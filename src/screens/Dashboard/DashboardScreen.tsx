@@ -21,7 +21,6 @@ import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
-import {formatISO, setHours, setMinutes, startOfDay} from 'date-fns';
 
 interface Props {
   navigation: StackNavigationProp<any>;
