@@ -17,7 +17,6 @@ import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
-import {act} from 'react-test-renderer';
 import PurpleArc from '../components/Svg/PurpleArc';
 
 interface FormValues {

@@ -60,7 +60,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
                 justifyContent: 'center',
               }}
               onPress={() => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 props.navigation.closeDrawer();
               }}>

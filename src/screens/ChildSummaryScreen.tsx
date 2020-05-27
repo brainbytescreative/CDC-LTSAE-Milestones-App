@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -12,8 +13,6 @@ import {
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {
-  Answer,
-  MilestoneAnswer,
   useGetChecklistQuestions,
   useGetComposeSummaryMail,
   useGetConcerns,
@@ -37,6 +36,7 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import _ from 'lodash';
 import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
+import {Answer, MilestoneAnswer} from '../hooks/types';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -182,8 +182,6 @@ const ChildSummaryScreen: React.FC = () => {
       refetchConcerns({force: true}).then();
     }, [refetch, refetchConcerns]),
   );
-  const link1 = t('link1Text');
-  const link2 = t('link2Text');
 
   const {showActionSheetWithOptions} = useActionSheet();
 
@@ -322,8 +320,8 @@ const ChildSummaryScreen: React.FC = () => {
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
               <Trans t={t} i18nKey={'message1'}>
-                <Text style={{textDecorationLine: 'underline'}}>{{link1}}</Text>
-                <Text style={{textDecorationLine: 'underline'}}>{{link2}}</Text>
+                <Text onPress={() => Linking.openURL(t('findElLink'))} style={{textDecorationLine: 'underline'}} />
+                <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
               </Trans>
             </Text>
             {/*<Text>Show your doctor or email summary</Text>*/}

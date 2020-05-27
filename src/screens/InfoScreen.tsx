@@ -1,6 +1,6 @@
 import React from 'react';
 import {colors, sharedStyle} from '../resources/constants';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {Trans, useTranslation} from 'react-i18next';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
@@ -27,9 +27,9 @@ const InfoScreen: React.FC = () => {
         <Text style={[sharedStyle.screenTitle]}>{t('aboutThisApp')}</Text>
         <Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>
           <Trans t={t} i18nKey={'aboutThisAppText'}>
-            <Text style={{textDecorationLine: 'underline'}} />
+            <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
             <Text style={sharedStyle.boldText} />
-            <Text style={{textDecorationLine: 'underline'}} />
+            <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
           </Trans>
         </Text>
         <View style={styles.logosRow}>

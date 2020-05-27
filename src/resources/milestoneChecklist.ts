@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export interface Concern {
   id?: number;
   value?: string;

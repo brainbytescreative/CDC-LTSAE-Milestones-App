@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   StyleSheet,
   TextInput,
@@ -22,7 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import CheckMark from '../../components/Svg/CheckMark';
 import NoteIcon from '../../components/Svg/NoteIcon';
 import ChevronRightBig from '../../components/Svg/ChevronRightBig';
@@ -167,7 +168,14 @@ const ActEarlyPage: React.FC = () => {
             </Text>
             <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
-              {t('actEarlyMessage1')} <Text style={{textDecorationLine: 'underline'}}>{t('actEarlyLinkText')}</Text>
+              <Trans t={t} i18nKey={'actEarlyMessage1'}>
+                <Text
+                  onPress={() => {
+                    Linking.openURL(t('actEarlyMessageLink'));
+                  }}
+                  style={{textDecorationLine: 'underline'}}
+                />
+              </Trans>
             </Text>
             {(isMissingConcern || isNotYet) && (
               <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>

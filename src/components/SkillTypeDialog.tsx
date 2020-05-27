@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
-import {SkillType, skillTypes} from '../resources/constants';
+import {SkillType} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 
 interface Props {

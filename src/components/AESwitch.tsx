@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Svg, {G, Rect} from 'react-native-svg';
 import {StyleProp, TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';

@@ -10,7 +10,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Portal} from 'react-native-paper';
 
 interface Item {
   label: string;

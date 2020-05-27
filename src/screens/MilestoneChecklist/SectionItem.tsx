@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import React from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle, SkillType} from '../../resources/constants';
@@ -29,6 +28,7 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
       }}
       style={{flex: 1, paddingBottom: 5}}>
       <View
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         opacity={opacity}
         style={[

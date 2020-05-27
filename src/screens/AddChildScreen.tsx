@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {
   Image,
+  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -199,8 +200,6 @@ const AddChildScreen: React.FC = () => {
   }, [title, navigation, route.params]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     child && formikRef.current?.setValues({firstChild: child, anotherChildren: []});
   }, [child]);
 
@@ -324,7 +323,9 @@ const AddChildScreen: React.FC = () => {
                           sharedStyle.shadow,
                         ]}>
                         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
-                        <Text style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
+                        <Text
+                          onPress={() => Linking.openURL(t('correctedAgeLink'))}
+                          style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
                           {t('noteClick')}
                         </Text>
                       </View>

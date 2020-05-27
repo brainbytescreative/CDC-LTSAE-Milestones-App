@@ -7,7 +7,6 @@ type QueryKey = 'parentProfile';
 export function useSetParentProfile() {
   return useMutation<void, ParentProfileSelectorValues | undefined>(
     async (variables) => {
-      console.log('variables', variables)
       if (variables) {
         await Storage.setItem('parentProfile', JSON.stringify(variables));
       }

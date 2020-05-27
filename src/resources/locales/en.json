@@ -112,7 +112,8 @@
     "note": "If your child was born prematurely, enter their actual birth date, but use the checklist based on your child’s corrected age. If the corrected age is between checklists, use the checklist for the younger age.",
     "noteClick": "Click here to calculate corrected age.",
     "prematureQuestion": "Was your child born premature?",
-    "selectOne": "Select One*"
+    "selectOne": "Select One*",
+    "correctedAgeLink": "http://bit.ly/2RUpEu1"
   },
   "addAppointment": {
     "title": "Add appointment",
@@ -131,6 +132,7 @@
     "privacyPolicy": "Privacy Policy",
     "privacyPolicyText": "CDC does not collect or share any personal information that can be used to identify you or your child.",
     "aboutThisAppText": "This app was developed by the Centers for Disease Control and Prevention’s “Learn the Signs. Act Early.” program (<0>www.cdc.gov/ActEarly</0>) with contribution from Dr. Rosa Arriaga and students from the Computing for Good program at \nthe Georgia Institute of Technology, Atlanta, GA.\n\nThis app includes the following features to make tracking your child’s important developmental milestones easy and fun: \n\n<1>Add A Child</1> - enter personalized information about your child or multiple children\n\n<1>Milestone Tracker</1> - track your child’s developmenal progress by looking for important milestones using an interactive, illustrated checklist\nMilestone Photos and Videos - know what each milestone looks like so that you can better identify them in your own child\n\n<1>Tips and Activities</1> - support your child’s development at every age\nWhen to Act Early - know when it’s time to “act early” and talk with your child’s doctor about developmental concerns\nAppointments - keep track of your child’s doctors’ appointments and get reminders about recommended developmental screenings\n\n<1>Milestone Results</1> - get a summary of your child’s milestones to view, and share with or email to your child’s doctor and other important care providers\nThe use of this app is NOT a substitute for the use of validated, standardized devleopmental screening tools as recommended by the American Academy of Pediatrics. \n\nFor more information and free tools to help you track your child’s milestones, visit <2>www.cdc.gov/ActEarly</2>",
+    "actEarlyLink": "https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_info2",
     "drawerLabel": "Privacy Policy & App Info"
   },
   "revisit": {
@@ -140,6 +142,8 @@
     "notYet": "{{milestoneAge}} Milestones You\nMarked as “Not Yet”",
     "notSure": "{{milestoneAge}} Milestones You\nMarked as “Not Sure”",
     "unanswered": "{{milestoneAge}} Milestones\nYou Skipped",
+    "concernedLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_doc1",
+    "actEarlyLink": "https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_doc2",
     "notYetText": "Ask the doctor for developmental screening and about services that can help. Remember, acting early on concerns and missed milestones can make a big difference for Mina. Don’t wait. Learn more about how to help your child at: <0>cdc.gov/Concerned</0>",
     "timeToCelebrate": "Take time to CELEBRATE Covey having reached these important milestones:",
     "yellowTip": "You know {{childName}} best. If {{heSheTag}} is missing milestones or you ever become concerned about {{hisHersTag}} development, talk with the doctor, share your concerns, and ask for developmental screening.",
@@ -160,9 +164,9 @@
     "changeYourAnswerTitle": "Change your answer to this milestone to",
     "drawerLabel": "Child Summary",
     "showDoctor": "Show Doctor",
-    "link1Text": "cdc.gov/FindEl",
-    "link2Text": "cdc.gov/Concerned",
-    "message1": "Below are the responses you entered for Mina.\n\n Click the “email” or “show doctor” buttons below for a summary of your child’s milestones to share with your child’s doctor and other care providers.\n\nIf you have noted any concerns or selected “not yet” or “not sure” for any milestones, talk to your child’s doctor, share the summary, ask for developmental screening, and go to <0>{{link1}}</0> to learn more about services that can help. Forr more information, visit <1>{{link2}}<1>."
+    "findElLink": "https://www.cdc.gov/ncbddd/actearly/parents/states.html?s_cid=ncbddd_act_mt_app_sum2_state",
+    "concernedLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_sum",
+    "message1": "Below are the responses you entered for Mina.\n\n Click the “email” or “show doctor” buttons below for a summary of your child’s milestones to share with your child’s doctor and other care providers.\n\nIf you have noted any concerns or selected “not yet” or “not sure” for any milestones, talk to your child’s doctor, share the summary, ask for developmental screening, and go to <0>cdc.gov/FindEl</0> to learn more about services that can help. For more information, visit <1>cdc.gov/Concerned</1>."
   },
   "fields": {
     "territoryPlaceholder": "State or Territory *",
@@ -199,8 +203,8 @@
     "addANote": "Add a note",
     "addANoteLong": "Notes will save automatically, \nenter them here.",
     "actEarlyWarning": "You may need to act early!",
-    "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit",
-    "actEarlyLinkText": "www.cdc.gov/Concerned",
+    "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit <0>www.cdc.gov/Concerned</0>",
+    "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_when",
     "quickViewMessage": "Here’s a quick look at all of the milestones most children reach by {{milestone}}.",
     "message1": "Please note: if your child is between milestones, you will answer questions for the younger milestone.",
     "message2": "\"Unsure\" items will trigger reminder every xx weeks until answered.",

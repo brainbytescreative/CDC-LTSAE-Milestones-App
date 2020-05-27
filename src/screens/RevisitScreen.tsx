@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Linking, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
@@ -111,7 +111,7 @@ const RevisitScreen: React.FC = () => {
           ))}
           <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
             <Trans t={t} i18nKey={'notYetText'}>
-              <Text style={{textDecorationLine: 'underline'}} />
+              <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
             </Trans>
           </Text>
           <Text
@@ -163,7 +163,7 @@ const RevisitScreen: React.FC = () => {
               fontSize: 15,
             }}>
             <Trans t={t} i18nKey={'thankYouText2'}>
-              <Text style={{textDecorationLine: 'underline'}} />
+              <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
             </Trans>
           </Text>
         </View>

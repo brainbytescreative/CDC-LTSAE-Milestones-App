@@ -3,9 +3,8 @@ import {SkillSection} from '../../resources/milestoneChecklist';
 import {useTranslation} from 'react-i18next';
 import {colors, images, sharedStyle} from '../../resources/constants';
 import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
-import YouTube from 'react-native-youtube';
 import ViewPager from '@react-native-community/viewpager';
-import {Answer, useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import NoteIcon from '../../components/Svg/NoteIcon';
 import _ from 'lodash';
 import {Text} from 'react-native-paper';
@@ -13,6 +12,7 @@ import PhotoChevronLeft from '../../components/Svg/PhotoChevronLeft';
 import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
+import {Answer} from '../../hooks/types';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data, isFetching} = useGetQuestion({

@@ -8,7 +8,6 @@ import BurgerButton from '../BurgerButton';
 const Stack = createStackNavigator<SettingsStackParamList>();
 
 const SettingsStack: React.FC = () => {
-  const {t} = useTranslation();
   return (
     <Stack.Navigator>
       <Stack.Screen

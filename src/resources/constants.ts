@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/camelcase */
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
-import React from 'react';
 import {StyleSheet} from 'react-native';
-import {HeaderBackButton, StackNavigationOptions} from '@react-navigation/stack';
+import {StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
 
 export const states = [

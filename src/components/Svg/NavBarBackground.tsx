@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Defs, Rect, G, Mask, Use, Path, SvgProps} from 'react-native-svg';
+import Svg, {Defs, G, Mask, Path, SvgProps, Use} from 'react-native-svg';
 
 const NavBarBackground: React.FC<SvgProps> = (props) => {
   return (

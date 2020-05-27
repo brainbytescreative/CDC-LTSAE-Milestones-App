@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Modal, Portal, Title, Text} from 'react-native-paper';
+import {Modal, Portal, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {colors, sharedStyle} from '../../resources/constants';
