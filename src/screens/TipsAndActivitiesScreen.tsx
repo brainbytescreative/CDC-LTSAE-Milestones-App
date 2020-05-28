@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {colors, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
@@ -175,36 +175,42 @@ const TipsAndActivitiesScreen: React.FC = () => {
           })}
         </Text>
 
-        <DropDownPicker
-          customArrowDown={<Chevron direction={'up'} />}
-          customArrowUp={<Chevron direction={'down'} />}
-          containerStyle={{
+        <View
+          style={{
             marginTop: 30,
             marginHorizontal: 32,
-          }}
-          style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
-          itemsContainerStyle={{backgroundColor: colors.iceCold}}
-          labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
-          zIndex={20000}
-          defaultNull
-          placeholder={t('all')}
-          items={tipFilters.map((value) => ({label: t(value), value}))}
-          onChangeItem={(item) => setTipType(item.value as TipType)}
-        />
+            ...Platform.select({
+              ios: {
+                zIndex: 200,
+              },
+            }),
+          }}>
+          <DropDownPicker
+            customArrowDown={<Chevron direction={'up'} />}
+            customArrowUp={<Chevron direction={'down'} />}
+            style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
+            itemsContainerStyle={{backgroundColor: colors.iceCold}}
+            labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
+            defaultNull
+            placeholder={t('all')}
+            items={tipFilters.map((value) => ({label: t(value), value}))}
+            onChangeItem={(item) => setTipType(item.value as TipType)}
+          />
+        </View>
 
         {sortedTips?.map((item, index) => (
-          <View>
-            <Item
-              key={`${item.id}-${index}`}
-              onLikePress={onLikePress}
-              onRemindMePress={onRemindMePress}
-              t={t}
-              like={item.like}
-              itemId={item.id}
-              title={item.value}
-              childId={child?.id}
-            />
-          </View>
+          // <View>
+          <Item
+            key={`${item.id}-${index}`}
+            onLikePress={onLikePress}
+            onRemindMePress={onRemindMePress}
+            t={t}
+            like={item.like}
+            itemId={item.id}
+            title={item.value}
+            childId={child?.id}
+          />
+          // </View>
         ))}
         <View style={{height: 40}}>
           {/*<PurpleArc width={'100%'} />*/}

@@ -107,23 +107,9 @@ const SettingsScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <ScrollView>
+      <AEScrollView>
         <View style={{flex: 1}}>
           <NotificationsBadge />
-          <ScrollView style={{height: 40}} nestedScrollEnabled contentContainerStyle={{flex: 1}}>
-            <View>
-              <Text>Hello</Text>
-            </View>
-            <View>
-              <Text>Hello</Text>
-            </View>
-            <View>
-              <Text>Hello</Text>
-            </View>
-            <View>
-              <Text>Hello5</Text>
-            </View>
-          </ScrollView>
           <View style={{flexGrow: 1}}>
             <Text style={[sharedStyle.screenTitle]}>{t('notificationSettings')}</Text>
             <Formik
@@ -193,7 +179,7 @@ const SettingsScreen: React.FC = () => {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </AEScrollView>
     </View>
   );
 };

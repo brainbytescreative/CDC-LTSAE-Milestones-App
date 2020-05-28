@@ -168,77 +168,76 @@ const DropDownPicker: React.FC<Props> = ({
   // });
 
   return (
-    <>
+    <View
+      style={[
+        containerStyle,
+        {
+          ...Platform.select<ViewStyle>({
+            ios: {
+              zIndex: zIndex,
+            },
+          }),
+        },
+      ]}>
+      <View style={[styles.dropDownContainer, state.visible && styles.noBottomRadius, style]}>
+        <TouchableOpacity
+          ref={tochableRef}
+          onLayout={(event) => {
+            // console.log(event.nativeEvent.layout);
+            setState({
+              top: event.nativeEvent.layout.height,
+            });
+          }}
+          disabled={disabled}
+          onPress={toggle}>
+          <View style={[styles.dropDown, {flexDirection: 'row', flex: 1}]}>
+            <View style={[styles.dropDownDisplay]}>
+              <Text style={[labelStyle, {opacity}]}>{label}</Text>
+            </View>
+            {!!(customArrowDown || customArrowUp) && (
+              <View style={[styles.arrow]}>
+                <View style={[arrowStyle, {opacity}]}>{!state.visible ? customArrowUp : customArrowDown}</View>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      </View>
+      {/*<Portal>*/}
       <View
         style={[
-          containerStyle,
+          styles.dropDown,
+          styles.dropDownBox,
+          !state.visible && styles.hidden,
           {
+            top: state.top,
+            backgroundColor: '#fff',
+            // backgroundColor: 'black',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            maxHeight: dropDownMaxHeight,
             ...Platform.select<ViewStyle>({
-              default: {
+              default: {zIndex},
+              android: {
+                elevation: zIndex,
                 zIndex,
               },
             }),
           },
+          itemsContainerStyle,
         ]}>
-        <View style={[styles.dropDownContainer, state.visible && styles.noBottomRadius, style]}>
-          <TouchableOpacity
-            ref={tochableRef}
-            onLayout={(event) => {
-              // console.log(event.nativeEvent.layout);
-              setState({
-                top: event.nativeEvent.layout.height,
-              });
-            }}
-            disabled={disabled}
-            onPress={toggle}>
-            <View style={[styles.dropDown, {flexDirection: 'row', flex: 1}]}>
-              <View style={[styles.dropDownDisplay]}>
-                <Text style={[labelStyle, {opacity}]}>{label}</Text>
-              </View>
-              {!!(customArrowDown || customArrowUp) && (
-                <View style={[styles.arrow]}>
-                  <View style={[arrowStyle, {opacity}]}>{!state.visible ? customArrowUp : customArrowDown}</View>
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
-        </View>
-        {/*<Portal>*/}
-        <View
-          style={[
-            styles.dropDown,
-            styles.dropDownBox,
-            !state.visible && styles.hidden,
-            {
-              top: state.top,
-              backgroundColor: '#fff',
-              borderBottomRightRadius: 10,
-              borderBottomLeftRadius: 10,
-              maxHeight: dropDownMaxHeight,
-              ...Platform.select<ViewStyle>({
-                ios: {zIndex},
-                android: {
-                  elevation: zIndex,
-                  zIndex,
-                },
-              }),
-            },
-            itemsContainerStyle,
-          ]}>
-          <ScrollView nestedScrollEnabled bounces={false} style={[{width: '100%', zIndex}]}>
-            {items.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => select(item, index)}
-                style={[styles.dropDownItem, itemStyle, state.choice?.value === item.value && activeItemStyle]}>
-                <Text style={[labelStyle, state.choice?.value === item.value && activeLabelStyle]}>{item.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-        {/*</Portal>*/}
+        <ScrollView nestedScrollEnabled bounces={false} style={[{width: '100%', zIndex}]}>
+          {items.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => select(item, index)}
+              style={[styles.dropDownItem, itemStyle, state.choice?.value === item.value && activeItemStyle]}>
+              <Text style={[labelStyle, state.choice?.value === item.value && activeLabelStyle]}>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
-    </>
+      {/*</Portal>*/}
+    </View>
   );
 };
 
