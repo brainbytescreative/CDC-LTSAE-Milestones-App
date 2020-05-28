@@ -193,7 +193,7 @@ const TipsAndActivitiesScreen: React.FC = () => {
           ]}
           itemsContainerStyle={{backgroundColor: colors.iceCold}}
           labelStyle={[sharedStyle.boldText, {flexGrow: 1, fontSize: 18, paddingHorizontal: 5}]}
-          zIndex={20000}
+          zIndex={200000}
           defaultNull
           placeholder={t('all')}
           items={tipFilters.map((value) => ({label: t(value), value}))}

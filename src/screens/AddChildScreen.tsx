@@ -16,7 +16,6 @@ import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik
 import ImagePicker from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
-
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
 import {colors, sharedStyle} from '../resources/constants';
