@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
+import {LayoutChangeEvent, ScrollView, StyleProp, TextStyle, View} from 'react-native';
 import {Formik, useField} from 'formik';
 import {
   NotificationSettings,
@@ -107,10 +107,23 @@ const SettingsScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <AEScrollView>
+      <ScrollView>
         <View style={{flex: 1}}>
           <NotificationsBadge />
-
+          <ScrollView style={{height: 40}} nestedScrollEnabled contentContainerStyle={{flex: 1}}>
+            <View>
+              <Text>Hello</Text>
+            </View>
+            <View>
+              <Text>Hello</Text>
+            </View>
+            <View>
+              <Text>Hello</Text>
+            </View>
+            <View>
+              <Text>Hello5</Text>
+            </View>
+          </ScrollView>
           <View style={{flexGrow: 1}}>
             <Text style={[sharedStyle.screenTitle]}>{t('notificationSettings')}</Text>
             <Formik
@@ -180,7 +193,7 @@ const SettingsScreen: React.FC = () => {
             </View>
           </View>
         </View>
-      </AEScrollView>
+      </ScrollView>
     </View>
   );
 };

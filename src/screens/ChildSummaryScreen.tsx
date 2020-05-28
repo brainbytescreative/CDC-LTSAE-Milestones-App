@@ -305,14 +305,15 @@ const ChildSummaryScreen: React.FC = () => {
           <ChildSelectorModal />
           <ChildPhoto photo={child?.photo} />
           <Text
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-              fontSize: 22,
-              textTransform: 'capitalize',
-              marginHorizontal: 32,
-              fontFamily: 'Montserrat-Bold',
-            }}>
+            style={[
+              {
+                textAlign: 'center',
+                marginTop: 20,
+                textTransform: 'capitalize',
+                marginHorizontal: 32,
+              },
+              sharedStyle.largeBoldText,
+            ]}>
             {`${child?.name}${t('childSummary:title')}`}
             {'\n'}
             {milestoneAgeFormatted}

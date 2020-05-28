@@ -168,8 +168,8 @@ const TipsAndActivitiesScreen: React.FC = () => {
       <AEScrollView>
         <ChildSelectorModal />
         <ChildPhoto photo={child?.photo} />
-        <Text style={{textAlign: 'center', fontSize: 22, fontFamily: 'Montserrat-Bold'}}>{t('title')}</Text>
-        <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>
+        <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
+        <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
           {t('subtitle', {
             childAge: formatAge(child?.birthday),
           })}
@@ -181,19 +181,11 @@ const TipsAndActivitiesScreen: React.FC = () => {
           containerStyle={{
             marginTop: 30,
             marginHorizontal: 32,
-            height: 45,
           }}
-          style={[
-            sharedStyle.shadow,
-            sharedStyle.border,
-            {
-              height: 100,
-              backgroundColor: colors.iceCold,
-            },
-          ]}
+          style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
           itemsContainerStyle={{backgroundColor: colors.iceCold}}
-          labelStyle={[sharedStyle.boldText, {flexGrow: 1, fontSize: 18, paddingHorizontal: 5}]}
-          zIndex={200000}
+          labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
+          zIndex={20000}
           defaultNull
           placeholder={t('all')}
           items={tipFilters.map((value) => ({label: t(value), value}))}
@@ -201,16 +193,18 @@ const TipsAndActivitiesScreen: React.FC = () => {
         />
 
         {sortedTips?.map((item, index) => (
-          <Item
-            key={`${item.id}-${index}`}
-            onLikePress={onLikePress}
-            onRemindMePress={onRemindMePress}
-            t={t}
-            like={item.like}
-            itemId={item.id}
-            title={item.value}
-            childId={child?.id}
-          />
+          <View>
+            <Item
+              key={`${item.id}-${index}`}
+              onLikePress={onLikePress}
+              onRemindMePress={onRemindMePress}
+              t={t}
+              like={item.like}
+              itemId={item.id}
+              title={item.value}
+              childId={child?.id}
+            />
+          </View>
         ))}
         <View style={{height: 40}}>
           {/*<PurpleArc width={'100%'} />*/}

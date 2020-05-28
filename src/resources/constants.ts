@@ -134,6 +134,14 @@ export const sharedStyle = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Montserrat-Regular',
   },
+  midText: {
+    fontSize: 18,
+    fontFamily: 'Montserrat-Regular',
+  },
+  midTextBold: {
+    fontSize: 18,
+    fontFamily: 'Montserrat-Bold',
+  },
 });
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];

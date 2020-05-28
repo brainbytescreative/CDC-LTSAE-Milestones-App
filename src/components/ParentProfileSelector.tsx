@@ -34,8 +34,8 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
         customArrowUp={<Chevron direction={'down'} />}
         defaultNull
         value={value?.guardian}
-        zIndex={110000}
-        style={[sharedStyle.shadow, sharedStyle.border]}
+        zIndex={1100}
+        style={[sharedStyle.shadow]}
         onChangeItem={(item) => {
           onChange({guardian: item.value, territory: value?.territory});
         }}
@@ -45,7 +45,7 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
         customArrowDown={<Chevron direction={'up'} />}
         customArrowUp={<Chevron direction={'down'} />}
         labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
-        style={[sharedStyle.shadow, sharedStyle.border]}
+        style={[sharedStyle.shadow]}
         placeholder={t('fields:territoryPlaceholder')}
         items={states.map((val) => ({
           label: t(`states:${val}`),
@@ -54,7 +54,7 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
         defaultNull
         dropDownMaxHeight={140}
         value={value?.territory}
-        zIndex={100000}
+        zIndex={1000}
         onChangeItem={(item) => onChange({guardian: value?.guardian, territory: item.value})}
       />
     </>
