@@ -107,7 +107,7 @@ const App = () => {
 
   React.useEffect(() => {
     crashlytics().log('App mounted.');
-    crashlytics().crash();
+    // crashlytics().crash();
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync().then(console.log);
   }, []);
