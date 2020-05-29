@@ -33,7 +33,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     const image = images[name];
     return (
       <Image
-        key={`photo-${index}`}
+        key={`photo-${index}-${id}`}
         accessibilityLabel={item.alt && t(item.alt)}
         source={image}
         style={{width: '100%', borderRadius: 10}}

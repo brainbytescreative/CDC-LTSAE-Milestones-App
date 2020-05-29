@@ -93,7 +93,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
               saveNote(e.nativeEvent.text);
             }}
             multiline
-            style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
+            style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
             placeholder={t('addANote')}
           />
           {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}

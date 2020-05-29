@@ -11,6 +11,7 @@ import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen'
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
 import AddChildScreen from '../../screens/AddChildScreen';
 import withSuspense from '../withSuspense';
+import ErrorBoundary from '../ErrorBoundary';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -41,17 +42,19 @@ const Navigator: React.FC = () => {
   // const isOnboarded = data; //data;
 
   return (
-    <Stack.Navigator headerMode={'none'}>
-      {!isOnboarded && (
-        <>
-          <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
-          <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
-          <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
-          <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
-        </>
-      )}
-      <Stack.Screen name={'Dashboard'} component={RootDrawer} />
-    </Stack.Navigator>
+    <ErrorBoundary>
+      <Stack.Navigator headerMode={'none'}>
+        {!isOnboarded && (
+          <>
+            <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
+            <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
+            <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
+            <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
+          </>
+        )}
+        <Stack.Screen name={'Dashboard'} component={RootDrawer} />
+      </Stack.Navigator>
+    </ErrorBoundary>
   );
 };
 

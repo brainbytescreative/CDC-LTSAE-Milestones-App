@@ -129,6 +129,7 @@ const App = () => {
 
                 if (previousRouteName !== currentRouteName && currentRouteName) {
                   ACPCore.trackState(currentRouteName, {'gov.cdc.appname': 'CDC Health IQ'});
+                  crashlytics().log(currentRouteName);
                 }
 
                 // Save the current route name for later comparision

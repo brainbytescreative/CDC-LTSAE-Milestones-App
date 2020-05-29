@@ -6,9 +6,9 @@ import {Text} from 'react-native-paper';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 type StateType = {
-  error: Error | undefined;
+  error?: Error | null;
 };
-export default class ErrorBoundary extends React.Component<any, StateType | null> {
+export default class ErrorBoundary extends React.Component<any, StateType> {
   static getDerivedStateFromError(error: Error) {
     crashlytics().recordError(error);
     return {error};

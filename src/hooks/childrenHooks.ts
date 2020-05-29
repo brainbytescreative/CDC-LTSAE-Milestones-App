@@ -4,6 +4,7 @@ import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
+import {InteractionManager} from 'react-native';
 
 interface Record {
   id: number;
@@ -25,26 +26,31 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 
 type Key = 'children' | 'selectedChild';
 
-export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
-  return useQuery<ChildResult, Key>(
-    'selectedChild',
-    async () => {
-      // await new Promise((resolve, reject) => setTimeout(resolve, 10 * 1000));
+export function useGetCurrentChildId() {
+  return useQuery('selectedChildId', async () => {
+    let selectedChild: string | null = await Storage.getItem('selectedChild');
 
-      let selectedChild: string | null = await Storage.getItem('selectedChild');
+    if (!selectedChild) {
+      const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
+      selectedChild = res && res[0].rows.item(0)?.id;
 
       if (!selectedChild) {
-        const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
-        selectedChild = res && res[0].rows.item(0)?.id;
-
-        if (!selectedChild) {
-          // throw new Error('There are no children');
-          return;
-        }
-
-        await Storage.setItem('selectedChild', `${selectedChild}`);
+        // throw new Error('There are no children');
+        return;
       }
 
+      await Storage.setItem('selectedChild', `${selectedChild}`);
+    }
+
+    return selectedChild;
+  });
+}
+
+export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
+  const {data: selectedChild} = useGetCurrentChildId();
+  return useQuery<ChildResult, [string, {id?: string}]>(
+    ['selectedChild', {id: selectedChild}],
+    async () => {
       const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
 
       if (!result || result[0].rows.length === 0) {
@@ -63,14 +69,32 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
 }
 
 export function useSetSelectedChild() {
-  return useMutation<void, {id: number}>(async ({id}) => {
-    await Storage.setItem('selectedChild', `${id}`);
-    await queryCache.refetchQueries('selectedChild', {force: true});
-    await queryCache.refetchQueries('questions', {force: true});
-    await queryCache.refetchQueries('concerns', {force: true});
-    await queryCache.refetchQueries('monthProgress', {force: true});
-    await queryCache.refetchQueries('milestone', {force: true});
-  });
+  return useMutation<void, {id: number; name?: string}>(
+    async ({id}) => {
+      // console.log(Date.now());
+      setTimeout(() => {
+        queryCache.setQueryData('selectedChildId', id);
+        queryCache.refetchQueries('selectedChild', {force: true});
+      }, 0);
+      InteractionManager.runAfterInteractions(async () => {
+        await Storage.setItem('selectedChild', `${id}`);
+      });
+    },
+    {
+      onSuccess: async (data, {id}) => {
+        // await queryCache.setQueryData('selectedChild', id);
+        // console.log(Date.now());
+        // Promise.all([
+        //   queryCache.refetchQueries('selectedChild', {force: true}),
+        //   queryCache.refetchQueries('questions', {force: true}),
+        //   queryCache.refetchQueries('concerns', {force: true}),
+        //   queryCache.refetchQueries('monthProgress', {force: true}),
+        //   queryCache.refetchQueries('milestone', {force: true}),
+        // ]);
+        // queryCache.clear();
+      },
+    },
+  );
 }
 
 export function useUpdateChild() {
