@@ -83,9 +83,9 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
       </View>
       {section && skillTypes.includes(section) && (
         <FlatList
+          key={section}
           ref={flatListRef}
           data={questions || []}
-          extraData={section}
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `${item}-${index}`}
           ListHeaderComponent={() => (

@@ -103,7 +103,7 @@ const RootDrawer: React.FC = () => {
       drawerContent={(contentProps) => <DefaultDrawer {...contentProps} />}
       overlayColor={colors.whiteTransparent}
       drawerStyle={{width: '100%', backgroundColor: 'transparent'}}
-      initialRouteName={'TipsAndActivitiesStack'}>
+      initialRouteName={'DashboardStack'}>
       <Drawer.Screen
         name={'DashboardStack'}
         options={{

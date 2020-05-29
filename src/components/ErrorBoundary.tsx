@@ -3,12 +3,14 @@ import {View} from 'react-native';
 import {colors} from '../resources/constants';
 import AEButtonRounded from './Navigator/AEButtonRounded';
 import {Text} from 'react-native-paper';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 type StateType = {
   error: Error | undefined;
 };
 export default class ErrorBoundary extends React.Component<any, StateType | null> {
   static getDerivedStateFromError(error: Error) {
+    crashlytics().recordError(error);
     return {error};
   }
   // componentDidCatch(error: any, errorInfo: any) {

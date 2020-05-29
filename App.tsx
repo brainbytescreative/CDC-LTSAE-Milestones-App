@@ -25,6 +25,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import * as Notifications from 'expo-notifications';
 import {NavigationContainerRef} from '@react-navigation/core';
 import AppStateManager from './src/components/AppStateManager';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 // First, set the handler that will cause the notification
 // to show the alert
@@ -39,7 +40,7 @@ Notifications.setNotificationHandler({
 
 ACPAnalytics.registerExtension();
 
-console.disableYellowBox = true;
+// console.disableYellowBox = true;
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 const theme: Theme = {
@@ -105,6 +106,8 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
+    crashlytics().log('App mounted.');
+    crashlytics().crash();
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync().then(console.log);
   }, []);
