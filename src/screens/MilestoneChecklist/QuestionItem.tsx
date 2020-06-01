@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SkillSection} from '../../resources/milestoneChecklist';
 import {useTranslation} from 'react-i18next';
 import {colors, images, sharedStyle} from '../../resources/constants';
-import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import NoteIcon from '../../components/Svg/NoteIcon';
@@ -13,13 +13,15 @@ import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
 import {Answer} from '../../hooks/types';
+import withSuspense from '../../components/withSuspense';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
-  const {data, isFetching} = useGetQuestion({
-    childId: childId,
-    questionId: id,
-  });
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const {data, isFetching} = useGetQuestion({
+    childId: childId || 0,
+    questionId: id || 0,
+    milestoneId: milestoneId || 0,
+  });
   const [answerQuestion] = useSetQuestionAnswer();
   const [note, setNote] = useState('');
   const [page, setPage] = useState(0);
@@ -227,4 +229,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionItem;
+export default withSuspense(
+  QuestionItem,
+  {
+    suspense: true,
+  },
+  <View
+    style={{
+      borderRadius: 10,
+      backgroundColor: colors.purple,
+      justifyContent: 'center',
+      height: 300,
+      flex: 1,
+      marginHorizontal: 32,
+      marginTop: 32,
+    }}>
+    <ActivityIndicator color={colors.white} size={'small'} />
+  </View>,
+);

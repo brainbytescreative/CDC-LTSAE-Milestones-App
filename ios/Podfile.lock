@@ -7,6 +7,9 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (2.1.1):
     - UMCore
+  - EXFileSystem (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
   - EXMailComposer (8.1.0):
     - UMCore
     - UMFileSystemInterface
@@ -440,6 +443,7 @@ PODS:
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
@@ -538,6 +542,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
+  EXFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
   EXMailComposer:
     :path: "../node_modules/expo-mail-composer/ios"
   EXNotifications:
@@ -656,6 +662,7 @@ SPEC CHECKSUMS:
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXApplication: 7cf81de6fafccff42f5d1caa5c24a159db6b9437
+  EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
   EXMailComposer: 8efe254989ceace18681b98c049c6c0209d4ae56
   EXNotifications: cc5d647c15b5f00602e1c4f7244d6a3a15dd2eb6
   EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
@@ -734,6 +741,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 944f8a56cc3afb0a243c27dddee7c93dcc71aa69
+PODFILE CHECKSUM: 4d79c678d10dcbf7d879d8560bba2658452d23b8
 
 COCOAPODS: 1.8.4

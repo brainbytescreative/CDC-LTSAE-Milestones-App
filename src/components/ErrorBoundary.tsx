@@ -8,7 +8,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 type StateType = {
   error?: Error | null;
 };
-export default class ErrorBoundary extends React.Component<any, StateType> {
+export default class ErrorBoundary extends React.Component<any> {
+  state: StateType = {};
   static getDerivedStateFromError(error: Error) {
     crashlytics().recordError(error);
     return {error};

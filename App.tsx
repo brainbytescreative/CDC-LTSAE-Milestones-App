@@ -26,6 +26,9 @@ import * as Notifications from 'expo-notifications';
 import {NavigationContainerRef} from '@react-navigation/core';
 import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
+// Before rendering any navigation stack
+import {enableScreens} from 'react-native-screens';
+enableScreens();
 
 // First, set the handler that will cause the notification
 // to show the alert

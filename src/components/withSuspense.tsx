@@ -1,10 +1,13 @@
 import React, {Suspense} from 'react';
 import FullScreenLoading from '../FullScreenLoading';
-import ErrorBoundary from './ErrorBoundary';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
-const withSuspense = (BaseComponent: any, config?: ReactQueryProviderConfig) => (props: any) => (
-  <Suspense fallback={<FullScreenLoading />}>
+const withSuspense = <P extends any>(
+  BaseComponent: React.ComponentType<P>,
+  config?: ReactQueryProviderConfig,
+  fallback?: Element,
+): React.FC<P> => (props: any) => (
+  <Suspense fallback={fallback ? fallback : <FullScreenLoading />}>
     {config ? (
       <ReactQueryConfigProvider config={config}>
         <BaseComponent {...props} />

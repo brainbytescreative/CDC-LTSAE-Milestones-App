@@ -29,6 +29,7 @@
     "browser-pug": "^0.1.0",
     "date-fns": "^2.13.0",
     "expo-constants": "^9.0.0",
+    "expo-file-system": "^8.1.0",
     "expo-mail-composer": "^8.1.0",
     "expo-notifications": "^0.1.7",
     "expo-permissions": "^8.1.0",

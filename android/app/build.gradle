@@ -227,7 +227,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'  //with support libraries
 
     apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
-    addUnimodulesDependencies([exclude: ['expo-face-detector', 'expo-file-system','expo-image-picker', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface']])
+    addUnimodulesDependencies([exclude: ['expo-face-detector','expo-image-picker', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface']])
 }
 
 // Run this once to be able to run the application with BUCK

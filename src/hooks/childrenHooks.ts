@@ -4,7 +4,8 @@ import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
-import {InteractionManager} from 'react-native';
+import {InteractionManager, Platform} from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 interface Record {
   id: number;
@@ -20,6 +21,9 @@ export interface ChildDbRecord extends Record {
   doctorEmail?: string | undefined;
   photo?: string | undefined;
 }
+
+type ChildDbRecordNew = Omit<ChildDbRecord, 'id'>;
+
 export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
   birthday: Date;
 }
@@ -61,6 +65,7 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
 
       return {
         ...child,
+        photo: pathFromDB(child.photo),
         birthday: parseISO(child.birthday),
       };
     },
@@ -101,9 +106,10 @@ export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
-      const [query, values] = objectToQuery(
+      const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
+          photo: pathToDB(variables.photo),
           birthday: formatISO(variables.birthday, {
             representation: 'date',
           }),
@@ -154,6 +160,7 @@ export function useGetChild(options: {id: number | string | undefined}) {
     const record: ChildDbRecord = result && result[0].rows.item(0);
     return {
       ...record,
+      photo: pathFromDB(record.photo),
       birthday: parseISO(record.birthday),
     };
   });
@@ -167,6 +174,7 @@ export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
       const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
       return records.map((value) => ({
         ...value,
+        photo: pathFromDB(value.photo),
         birthday: parseISO(value.birthday),
       }));
     },
@@ -177,13 +185,32 @@ export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
 type AddChildResult = number | undefined;
 type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean};
 
+const pathToDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: path?.replace(FileSystem.documentDirectory || '', ''),
+        default: path,
+      })
+    : path;
+};
+
+const pathFromDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: `${FileSystem.documentDirectory || ''}${path}`,
+        default: path,
+      })
+    : path;
+};
+
 export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
-      const [query, values] = objectToQuery(
+      const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
+          photo: pathToDB(variables.data.photo),
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
           }),

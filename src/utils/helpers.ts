@@ -92,7 +92,11 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
 type TableNames = 'children' | 'appointments';
 type QueryType = 'insert' | 'updateById';
 
-export function objectToQuery(object: any, tableName: TableNames, queryType: QueryType = 'insert'): [string, any[]] {
+export function objectToQuery<T extends Record<string, any>>(
+  object: T,
+  tableName: TableNames,
+  queryType: QueryType = 'insert',
+): [string, any[]] {
   const omited = _.omit(object, ['id']);
   const values = Object.values(omited);
   const variables = Object.keys(omited);

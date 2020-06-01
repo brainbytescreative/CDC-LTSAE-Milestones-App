@@ -13,7 +13,7 @@ import {Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -31,12 +31,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PurpleArc from '../components/Svg/PurpleArc';
 import PlusIcon from '../components/Svg/PlusIcon';
 
-const options = {
+const options: ImagePickerOptions = {
   quality: 1.0,
   maxWidth: 500,
   maxHeight: 500,
+  mediaType: 'photo',
   storageOptions: {
     skipBackup: true,
+    privateDirectory: true,
   },
 };
 

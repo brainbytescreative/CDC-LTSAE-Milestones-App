@@ -12,7 +12,7 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, slowdown, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
@@ -21,7 +21,7 @@ import {Answer, MilestoneAnswer} from './types';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
 
-type QuestionAnswerKey = Partial<Pick<MilestoneAnswer, 'childId' | 'questionId'>>;
+type QuestionAnswerKey = Required<Pick<MilestoneAnswer, 'childId' | 'questionId' | 'milestoneId'>>;
 
 interface ConcernAnswer {
   concernId: number;
@@ -235,7 +235,7 @@ export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | un
 
 export function useGetQuestion(data: QuestionAnswerKey) {
   return useQuery(['question', data], async (key, variables) => {
-    if (!variables.childId || !variables.questionId) {
+    if (!variables.childId || !variables.questionId || !variables.milestoneId) {
       throw new Error('No key');
     }
 
@@ -243,6 +243,8 @@ export function useGetQuestion(data: QuestionAnswerKey) {
       'select * from milestones_answers where childId=? and questionId = ?',
       [variables.childId, variables.questionId],
     );
+
+    // await slowdown(Promise.resolve(), 300);
 
     return result && (result[0].rows.item(0) as MilestoneAnswer);
   });
@@ -254,7 +256,9 @@ export function useSetQuestionAnswer() {
   const [setReminder] = useSetCompleteMilestoneReminder();
 
   return useMutation<Answer | undefined, MilestoneAnswer>(
-    async ({answer, childId, note, questionId, milestoneId}) => {
+    async (variables) => {
+      const {answer, childId, note, questionId, milestoneId} = variables;
+      queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
       const prevAnswerRes = await sqLiteClient.dB?.executeSql(
         `
           SELECT answer
@@ -289,8 +293,8 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
-        queryCache.refetchQueries(['question', {childId, questionId}], {force: true}).then();
-        queryCache.refetchQueries('answers', {force: true, exact: false}).then();
+        // queryCache.refetchQueries(['question', {childId, questionId, milestoneId}], {force: true}).then();
+        // queryCache.refetchQueries('answers', {force: true, exact: false}).then();
         if (milestoneAge) {
           queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
         } else {
