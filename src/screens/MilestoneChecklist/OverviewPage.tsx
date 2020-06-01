@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {colors} from '../../resources/constants';
+import {colors, SkillType, skillTypes} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
@@ -15,12 +15,12 @@ interface Props {
   onNext: () => void;
   milestoneAgeFormatted: string | undefined;
   milestoneAge: number | undefined;
+  section?: SkillType;
 }
 
-const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge}) => {
+const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge, section = skillTypes[0]}) => {
   const {t} = useTranslation('milestoneChecklist');
-  const {data, error} = useGetChecklistQuestions();
-  const questions = data?.questions || [];
+  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {bottom} = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -40,7 +40,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
             {t('quickViewMessage', {milestone: milestoneAgeFormatted})}
           </Text>
 
-          {questions.map((item, index) => (
+          {questionsGrouped?.get(section)?.map((item, index) => (
             <View
               key={`overview-${index}`}
               style={{

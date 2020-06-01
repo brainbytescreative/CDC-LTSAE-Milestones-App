@@ -13,7 +13,7 @@ interface ItemProps {
   section: Section;
   onSectionSet?: (section: string) => void;
   selectedSection?: Section | undefined;
-  progress: {total: number; answered: number} | undefined;
+  progress?: {total: number; answered: number} | undefined;
 }
 
 const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSection, progress}) => {

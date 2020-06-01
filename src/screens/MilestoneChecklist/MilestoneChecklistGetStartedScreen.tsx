@@ -59,8 +59,9 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
       <FrontPage
         milestoneAgeFormatted={milestoneAgeFormatted}
         onGetStarted={() => {
-          navigation.navigate('MilestoneChecklistQuickView');
-          setGetStarted({milestoneId: milestoneAge, childId});
+          setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
+            navigation.navigate('MilestoneChecklist');
+          });
         }}
       />
     </View>
