@@ -4,10 +4,12 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
 import BurgerButton from '../BurgerButton';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklist/MilestoneChecklistScreen';
-import {sharedScreenOptions} from '../../resources/constants';
+import {colors, sharedScreenOptions} from '../../resources/constants';
 import MilestoneChecklistGetStartedScreen from '../../screens/MilestoneChecklist/MilestoneChecklistGetStartedScreen';
 import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/MilestoneChecklistQuickViewScreen';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
+import RevisitScreen from '../../screens/RevisitScreen';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 
@@ -47,6 +49,26 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         component={MilestoneChecklistScreen}
         options={() => ({
           headerLeft: () => <BurgerButton />,
+        })}
+      />
+      <Stack.Screen
+        name={'ChildSummary'}
+        component={ChildSummaryScreen}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
+          headerBackTitle: ' ',
+        })}
+      />
+      <Stack.Screen
+        name={'Revisit'}
+        component={RevisitScreen}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
+          headerBackTitle: ' ',
         })}
       />
     </Stack.Navigator>

@@ -9,15 +9,15 @@ import {Alert, StyleSheet, View} from 'react-native';
 import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
 import {formatDate} from '../utils/helpers';
 import {colors} from '../resources/constants';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
-import {PurpleArc} from '../resources/svg';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
+import PurpleArc from '../components/Svg/PurpleArc';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 
-const AppointmentScreen: React.FC<{}> = () => {
+const AppointmentScreen: React.FC = () => {
   const {t} = useTranslation('appointment');
   const route = useRoute<AppointmentScreenRouteProp>();
   const navigation = useNavigation<DashboardDrawerNavigationProp>();
@@ -81,8 +81,8 @@ const AppointmentScreen: React.FC<{}> = () => {
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
             <AEButtonRounded
               onPress={() => {
-                navigation.navigate('AddAppointment', {
-                  appointmentId: route.params?.appointmentId,
+                navigation.replace('AddAppointment', {
+                  appointmentId: Number(route.params?.appointmentId),
                 });
               }}
               style={{marginBottom: 0}}>
@@ -90,7 +90,7 @@ const AppointmentScreen: React.FC<{}> = () => {
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {
-                navigation.navigate('ChildSummaryStack');
+                navigation.navigate('ChildSummary');
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 0}}>

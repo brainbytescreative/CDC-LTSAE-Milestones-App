@@ -1,17 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Linking, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {colors, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import LanguageSelector from '../components/LanguageSelector';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {Text} from 'react-native-paper';
 import {Trans, useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {CDClogo} from '../resources/svg';
 import AEScrollView from '../components/AEScrollView';
 import {tOpt} from '../utils/helpers';
 import {useFocusEffect} from '@react-navigation/native';
+import CDCLogo from '../components/Svg/CDCLogo';
 
 interface ItemProps {
   value?: string;
@@ -41,7 +41,7 @@ const Item: React.FC<ItemProps> = ({value, id, note, index}) => {
   );
 };
 
-const RevisitScreen: React.FC<{}> = () => {
+const RevisitScreen: React.FC = () => {
   const {data, refetch} = useGetChecklistQuestions();
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
@@ -84,7 +84,7 @@ const RevisitScreen: React.FC<{}> = () => {
           {t('thankYouText', {childName: child?.name})}
         </Text>
         <View style={styles.logosRow}>
-          <CDClogo />
+          <CDCLogo />
           <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
@@ -93,13 +93,13 @@ const RevisitScreen: React.FC<{}> = () => {
           </Trans>
         </Text>
         <View style={{marginHorizontal: 32}}>
-          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item, index) => (
             <Item value={item.value} index={index + 1} note={item.note} id={item.id} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>
               {t('notYet', {
                 milestoneAge: milestoneAgeFormattedDashes,
@@ -111,7 +111,7 @@ const RevisitScreen: React.FC<{}> = () => {
           ))}
           <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
             <Trans t={t} i18nKey={'notYetText'}>
-              <Text style={{textDecorationLine: 'underline'}} />
+              <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
             </Trans>
           </Text>
           <Text
@@ -136,7 +136,7 @@ const RevisitScreen: React.FC<{}> = () => {
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
             <Item index={index + 1} value={item.value} id={item.id} note={item.note} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>
               {t('notSure', {
                 milestoneAge: milestoneAgeFormattedDashes,
@@ -163,7 +163,7 @@ const RevisitScreen: React.FC<{}> = () => {
               fontSize: 15,
             }}>
             <Trans t={t} i18nKey={'thankYouText2'}>
-              <Text style={{textDecorationLine: 'underline'}} />
+              <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
             </Trans>
           </Text>
         </View>

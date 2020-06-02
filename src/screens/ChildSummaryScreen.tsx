@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -12,8 +13,6 @@ import {
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {Trans, useTranslation} from 'react-i18next';
 import {
-  Answer,
-  MilestoneAnswer,
   useGetChecklistQuestions,
   useGetComposeSummaryMail,
   useGetConcerns,
@@ -24,23 +23,20 @@ import {
 import {Text} from 'react-native-paper';
 import LanguageSelector from '../components/LanguageSelector';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, missingConcerns, PropType, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import ChildPhoto from '../components/ChildPhoto';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import {PurpleArc} from '../resources/svg';
-import * as MailComposer from 'expo-mail-composer';
-import emailSummaryContent from '../resources/EmailChildSummary';
-import nunjucks from 'nunjucks';
-import {formatDate, tOpt} from '../utils/helpers';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import _ from 'lodash';
-import NoteIcon from '../resources/svg/NoteIcon';
+import NoteIcon from '../components/Svg/NoteIcon';
+import PurpleArc from '../components/Svg/PurpleArc';
+import {Answer, MilestoneAnswer} from '../hooks/types';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -168,14 +164,14 @@ export type ChildSummaryStackNavigationProp = CompositeNavigationProp<
   StackNavigationProp<ChildSummaryParamList>
 >;
 
-const ChildSummaryScreen: React.FC<{}> = () => {
+const ChildSummaryScreen: React.FC = () => {
   const {t} = useTranslation('childSummary');
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
   const {data, refetch} = useGetChecklistQuestions();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
   const {data: child} = useGetCurrentChild();
-  const {bottom} = useSafeArea();
+  const {bottom} = useSafeAreaInsets();
   const [answerQuestion] = useSetQuestionAnswer();
   const [setConcern] = useSetConcern();
   const {compose: composeMail, loading} = useGetComposeSummaryMail();
@@ -186,8 +182,6 @@ const ChildSummaryScreen: React.FC<{}> = () => {
       refetchConcerns({force: true}).then();
     }, [refetch, refetchConcerns]),
   );
-  const link1 = t('link1Text');
-  const link2 = t('link2Text');
 
   const {showActionSheetWithOptions} = useActionSheet();
 
@@ -212,13 +206,16 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         (index) => {
           Object.values(Answer).includes(index) &&
             child?.id &&
-            answerQuestion({answer: index, childId: child?.id, note, questionId: id}).then(() => {
-              refetch({force: true});
-            });
+            milestoneAge &&
+            answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
+              () => {
+                refetch({force: true});
+              },
+            );
         },
       );
     },
-    [refetch, t, answerQuestion, child, showActionSheetWithOptions],
+    [refetch, t, answerQuestion, child, showActionSheetWithOptions, milestoneAge],
   );
 
   const onEditConcernPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(
@@ -242,32 +239,52 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         (index) => {
           [0, 1].includes(index) &&
             child?.id &&
-            setConcern({concernId: id, answer: !index, childId: child?.id, note: note}).then(() =>
-              refetchConcerns({force: true}),
-            );
+            milestoneAge &&
+            setConcern({
+              concernId: id,
+              answer: !index,
+              childId: child?.id,
+              note: note,
+              milestoneId: milestoneAge,
+            }).then(() => refetchConcerns({force: true}));
         },
       );
     },
-    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern],
+    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern, milestoneAge],
   );
 
   const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
     (id, note, answer) => {
       child?.id &&
-        answerQuestion({questionId: id, childId: child?.id, note, answer}).then(() => refetch({force: true}));
+        milestoneAge &&
+        answerQuestion({questionId: id, childId: child?.id, note, answer, milestoneId: milestoneAge}).then(() =>
+          refetch({force: true}),
+        );
     },
-    [child, answerQuestion, refetch],
+    [child, answerQuestion, refetch, milestoneAge],
   );
 
   const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
     (id, note, answer) => {
       child?.id &&
-        setConcern({concernId: id, answer, childId: child?.id, note}).then(() => {
+        milestoneAge &&
+        setConcern({
+          concernId: id,
+          answer,
+          childId: child?.id,
+          note,
+          milestoneId: milestoneAge,
+        }).then(() => {
           refetchConcerns({force: true});
         });
     },
-    [child, refetchConcerns, setConcern],
+    [child, refetchConcerns, setConcern, milestoneAge],
   );
+
+  const unanswered = data?.groupedByAnswer['undefined'] || [];
+  const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
+  const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
+  const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
 
   return (
     <View style={{backgroundColor: colors.white}}>
@@ -283,19 +300,20 @@ const ChildSummaryScreen: React.FC<{}> = () => {
         <ScrollView
           bounces={false}
           contentContainerStyle={{
-            paddingBottom: bottom + 76,
+            paddingBottom: bottom ? bottom + 76 : 100,
           }}>
           <ChildSelectorModal />
           <ChildPhoto photo={child?.photo} />
           <Text
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-              fontSize: 22,
-              textTransform: 'capitalize',
-              marginHorizontal: 32,
-              fontFamily: 'Montserrat-Bold',
-            }}>
+            style={[
+              {
+                textAlign: 'center',
+                marginTop: 20,
+                textTransform: 'capitalize',
+                marginHorizontal: 32,
+              },
+              sharedStyle.largeBoldText,
+            ]}>
             {`${child?.name}${t('childSummary:title')}`}
             {'\n'}
             {milestoneAgeFormatted}
@@ -303,8 +321,8 @@ const ChildSummaryScreen: React.FC<{}> = () => {
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
               <Trans t={t} i18nKey={'message1'}>
-                <Text style={{textDecorationLine: 'underline'}}>{{link1}}</Text>
-                <Text style={{textDecorationLine: 'underline'}}>{{link2}}</Text>
+                <Text onPress={() => Linking.openURL(t('findElLink'))} style={{textDecorationLine: 'underline'}} />
+                <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
               </Trans>
             </Text>
             {/*<Text>Show your doctor or email summary</Text>*/}
@@ -337,7 +355,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
               <Text style={styles.blockText}>{t('unanswered')}</Text>
             </View>
-            {data?.groupedByAnswer['undefined']?.map((item) => (
+            {unanswered.map((item) => (
               <Item
                 answer={null}
                 key={`answer-${item.id}`}
@@ -348,7 +366,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 note={item.note}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
               <Text style={styles.blockText}>{t('concerns')}</Text>
             </View>
             {concerns?.concerned?.map((item) => (
@@ -363,10 +381,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 id={item.id}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
               <Text style={styles.blockText}>{t('notSure')}</Text>
             </View>
-            {data?.groupedByAnswer['1']?.map((item) => (
+            {unsure.map((item) => (
               <Item
                 answer={Answer.UNSURE}
                 key={`answer-${item.id}`}
@@ -377,10 +395,10 @@ const ChildSummaryScreen: React.FC<{}> = () => {
                 id={item.id}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
               <Text style={styles.blockText}>{t('notYet')}</Text>
             </View>
-            {data?.groupedByAnswer['2']?.map((item) => (
+            {notYet.map((item) => (
               <Item
                 answer={Answer.NOT_YET}
                 key={`answer-${item.id}`}
@@ -394,7 +412,7 @@ const ChildSummaryScreen: React.FC<{}> = () => {
             <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
               <Text style={styles.blockText}>{t('yes')}</Text>
             </View>
-            {data?.groupedByAnswer['0']?.map((item) => (
+            {yes.map((item) => (
               <Item
                 key={`answer-${item.id}`}
                 answer={Answer.YES}

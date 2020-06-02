@@ -7,24 +7,24 @@ import LanguageSelector from '../../components/LanguageSelector';
 import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {useSafeArea} from 'react-native-safe-area-context';
-import {PurpleArc} from '../../resources/svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Text} from 'react-native-paper';
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import NavBarBackground from '../../resources/svg/NavBarBackground';
+import NavBarBackground from '../../components/Svg/NavBarBackground';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
 
-const OnboardingParentProfileScreen: React.FC<{}> = () => {
+const OnboardingParentProfileScreen: React.FC = () => {
   const {t} = useTranslation('onboardingParentProfile');
   const navigation = useNavigation<ParentProfileNavigationProp>();
   const [profile, setProfile] = useState<undefined | ParentProfileSelectorValues>();
   const [saveProfile] = useSetParentProfile();
-  const {top} = useSafeArea();
+  const {top} = useSafeAreaInsets();
   return (
     <AEScrollView>
       <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top, overflow: 'visible'}}>

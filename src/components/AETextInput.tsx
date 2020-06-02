@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Platform, StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle} from 'react-native';
 import {colors, sharedStyle} from '../resources/constants';
-import _ from 'lodash';
 import TouchableArea from './TouchableArea/TouchableArea';
 
 interface Props extends TextInputProps {
@@ -23,8 +13,7 @@ const TouchableWrapper: React.FC<{onPress?: () => void}> = ({children, onPress})
   return onPress ? <TouchableArea onPress={onPress}>{children}</TouchableArea> : <>{children}</>;
 };
 
-const AETextInput: React.FC<Props> = (props) => {
-  const inputProps = _.omit(props, ['rightIcon']);
+const AETextInput: React.FC<Props> = ({rightIcon, ...props}) => {
   return (
     <View
       style={[
@@ -36,8 +25,8 @@ const AETextInput: React.FC<Props> = (props) => {
       ]}>
       <TouchableWrapper onPress={props.onPress}>
         <View style={[styles.container, sharedStyle.shadow]}>
-          <TextInput allowFontScaling={true} {...inputProps} style={styles.input} />
-          {props.rightIcon}
+          <TextInput allowFontScaling={true} {...props} style={[styles.input]} />
+          {rightIcon}
         </View>
       </TouchableWrapper>
     </View>
@@ -62,8 +51,13 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     height: '100%',
-    fontSize: 15,
-    fontFamily: 'Montserrat-Regular',
+    color: 'black',
+    ...sharedStyle.regularText,
+    ...Platform.select({
+      android: {
+        padding: 0,
+      },
+    }),
     // borderWidth: 1,
   },
 });

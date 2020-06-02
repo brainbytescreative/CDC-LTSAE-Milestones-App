@@ -8,7 +8,7 @@ import RevisitScreen from '../../screens/RevisitScreen';
 
 const Stack = createStackNavigator<ChildSummaryParamList>();
 
-const ChildSummaryStack: React.FC<{}> = () => {
+const ChildSummaryStack: React.FC = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen

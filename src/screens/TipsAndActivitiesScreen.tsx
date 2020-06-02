@@ -1,21 +1,20 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {colors, notificationIntervals, PropType, sharedStyle} from '../resources/constants';
+import {colors, PropType, sharedStyle} from '../resources/constants';
 import {TFunction} from 'i18next';
-import ShortHeaderArc from '../resources/svg/ShortHeaderArc';
-import {useNavigation} from '@react-navigation/native';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import ChildPhoto from '../components/ChildPhoto';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {formatAge} from '../utils/helpers';
-import {ChevronDown} from '../resources/svg';
-import LikeHeart from '../resources/svg/LikeHeart';
-import {Tip, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
+import LikeHeart from '../components/Svg/LikeHeart';
+import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
 import DropDownPicker from '../components/DropDownPicker';
 import AEScrollView from '../components/AEScrollView';
-import * as Notifications from 'expo-notifications';
+import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
+import Chevron from '../components/Svg/Chevron';
 
 type ItemProps = {
   title: string | undefined;
@@ -100,23 +99,28 @@ const itemStyle = StyleSheet.create({
 const tipFilters = ['all', 'like', 'remindMe'];
 type TipType = typeof tipFilters[number];
 
-const TipsAndActivitiesScreen: React.FC<{}> = () => {
+const TipsAndActivitiesScreen: React.FC = () => {
   const {t} = useTranslation('tipsAndActivities');
   const [tipType, setTipType] = useState<TipType>('all');
   const {data: child} = useGetCurrentChild();
   const {data: tips} = useGetTips();
   const [setTip] = useSetTip();
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const [setNotification] = useSetTipsAndActivitiesNotification();
+  const [cancelNotification] = useCancelNotificationById();
 
   let sortedTips;
 
   switch (tipType) {
     case 'like':
-      sortedTips = tips?.slice().sort((a, b) => {
-        if (a?.like && !b.like) {
-          return -1;
-        }
-        return 0;
-      });
+      sortedTips =
+        tips &&
+        [...tips].sort((a, b) => {
+          if (a?.like && !b.like) {
+            return -1;
+          }
+          return 0;
+        });
       break;
     case 'remindMe':
       sortedTips = tips?.slice().sort((a, b) => {
@@ -136,23 +140,15 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = tips?.filter(({id: tipId}) => id === tipId)[0];
-      const notificationId = `tips-${id}-${child?.id}`;
+      const notificationId = `tips-${id}-${child?.id}-${milestoneId}`;
 
-      if (id && selectedTip?.value && child?.id && value) {
-        Notifications.scheduleNotificationAsync({
-          identifier: notificationId,
-          content: {
-            title: 'Tips & activities',
-            body: selectedTip.value,
-            sound: true,
-          },
-          trigger: notificationIntervals.tips,
-        });
+      if (id && selectedTip?.key && child?.id && value) {
+        milestoneId && setNotification({notificationId, bodyKey: selectedTip.key, milestoneId, childId: child.id});
       } else if (id && child?.id && !value) {
-        Notifications.cancelScheduledNotificationAsync(notificationId).then();
+        notificationId && cancelNotification({notificationId});
       }
     },
-    [setTip, child, tips],
+    [tips, setTip, setNotification, child, milestoneId, cancelNotification],
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
@@ -172,41 +168,40 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
       <AEScrollView>
         <ChildSelectorModal />
         <ChildPhoto photo={child?.photo} />
-        <Text style={{textAlign: 'center', fontSize: 22, fontFamily: 'Montserrat-Bold'}}>{t('title')}</Text>
-        <Text style={{textAlign: 'center', fontSize: 15, marginTop: 20, marginHorizontal: 50}}>
+        <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
+        <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
           {t('subtitle', {
             childAge: formatAge(child?.birthday),
           })}
         </Text>
 
-        <DropDownPicker
-          customArrowDown={<ChevronDown direction={'up'} />}
-          customArrowUp={<ChevronDown />}
-          containerStyle={{
+        <View
+          style={{
             marginTop: 30,
             marginHorizontal: 32,
-            height: 45,
-          }}
-          style={[
-            sharedStyle.shadow,
-            sharedStyle.border,
-            {
-              height: 100,
-              backgroundColor: colors.iceCold,
-            },
-          ]}
-          itemsContainerStyle={{backgroundColor: colors.iceCold}}
-          labelStyle={[sharedStyle.boldText, {flexGrow: 1, fontSize: 18, paddingHorizontal: 5}]}
-          zIndex={20000}
-          defaultNull
-          placeholder={t('all')}
-          items={tipFilters.map((value) => ({label: t(value), value}))}
-          onChangeItem={(item) => setTipType(item.value as TipType)}
-        />
+            ...Platform.select({
+              ios: {
+                zIndex: 200,
+              },
+            }),
+          }}>
+          <DropDownPicker
+            customArrowDown={<Chevron direction={'up'} />}
+            customArrowUp={<Chevron direction={'down'} />}
+            style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
+            itemsContainerStyle={{backgroundColor: colors.iceCold}}
+            labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
+            defaultNull
+            placeholder={t('all')}
+            items={tipFilters.map((value) => ({label: t(value), value}))}
+            onChangeItem={(item) => setTipType(item.value as TipType)}
+          />
+        </View>
 
-        {sortedTips?.map((item) => (
+        {sortedTips?.map((item, index) => (
+          // <View>
           <Item
-            key={item.id}
+            key={`${item.id}-${index}`}
             onLikePress={onLikePress}
             onRemindMePress={onRemindMePress}
             t={t}
@@ -215,6 +210,7 @@ const TipsAndActivitiesScreen: React.FC<{}> = () => {
             title={item.value}
             childId={child?.id}
           />
+          // </View>
         ))}
         <View style={{height: 40}}>
           {/*<PurpleArc width={'100%'} />*/}

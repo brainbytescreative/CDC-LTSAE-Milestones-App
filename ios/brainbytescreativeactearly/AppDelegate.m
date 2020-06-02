@@ -7,6 +7,9 @@
 #import "ACPCore.h"
 #import "ACPAnalytics.h"
 #import "ACPIdentity.h"
+@import Firebase;
+#import <UMReactNativeAdapter/UMNativeModulesProxy.h>
+#import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -15,8 +18,6 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-#import <UMReactNativeAdapter/UMNativeModulesProxy.h>
-#import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -60,7 +61,10 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
+  
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+  
+  [FIRApp configure];
   
   return YES;
 }

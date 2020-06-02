@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import FrontPage from './FrontPage';
 import {
   useGetMilestone,
@@ -21,7 +21,7 @@ type NavigationProp = CompositeNavigationProp<
   StackNavigationProp<DashboardStackParamList>
 >;
 
-const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
+const MilestoneChecklistGetStartedScreen: React.FC = () => {
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
@@ -49,6 +49,7 @@ const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
           renderItem={({item}) => <SectionItem progress={sectionsProgress?.get(item)} section={item} />}
@@ -58,8 +59,9 @@ const MilestoneChecklistGetStartedScreen: React.FC<{}> = () => {
       <FrontPage
         milestoneAgeFormatted={milestoneAgeFormatted}
         onGetStarted={() => {
-          navigation.navigate('MilestoneChecklistQuickView');
-          setGetStarted({milestoneId: milestoneAge, childId});
+          setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
+            navigation.navigate('MilestoneChecklist');
+          });
         }}
       />
     </View>

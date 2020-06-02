@@ -1,21 +1,22 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import React from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle, SkillType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import _ from 'lodash';
+import {useGetSectionsProgress} from '../../hooks/checklistHooks';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 export type Section = SkillType | 'actEarly';
 
 interface ItemProps {
   section: Section;
-  setSection?: React.Dispatch<React.SetStateAction<Section>>;
+  onSectionSet?: (section: string) => void;
   selectedSection?: Section | undefined;
-  progress: {total: number; answered: number} | undefined;
+  progress?: {total: number; answered: number} | undefined;
 }
 
-const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection, progress}) => {
+const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSection, progress}) => {
   const {t} = useTranslation('milestoneChecklist');
   const toGo = progress?.total && progress?.total && progress.total - progress.answered;
 
@@ -23,11 +24,13 @@ const SectionItem: React.FC<ItemProps> = ({section, setSection, selectedSection,
 
   return (
     <TouchableOpacity
+      disabled={!onSectionSet}
       onPress={() => {
-        setSection && setSection(section);
+        onSectionSet && onSectionSet(section);
       }}
       style={{flex: 1, paddingBottom: 5}}>
       <View
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         opacity={opacity}
         style={[

@@ -12,12 +12,12 @@ import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../compone
 import _ from 'lodash';
 import {addAppointmentSchema} from '../resources/validationSchemas';
 import {colors} from '../resources/constants';
-import NavBarBackground from '../resources/svg/NavBarBackground';
+import NavBarBackground from '../components/Svg/NavBarBackground';
 import AETextInput from '../components/AETextInput';
-import {PurpleArc} from '../resources/svg';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
+import PurpleArc from '../components/Svg/PurpleArc';
 
 interface FormValues {
   apptType: string;
@@ -30,7 +30,7 @@ interface FormValues {
 
 type AddAppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'AddAppointment'>;
 
-const AddAppointmentScreen: React.FC<{}> = () => {
+const AddAppointmentScreen: React.FC = () => {
   const [addAppointment, {status: addStatus}] = useAddAppointment();
   const [updateAppointment, {status: updateStatus}] = useUpdateAppointment();
   const {data: child} = useGetCurrentChild();
@@ -48,28 +48,27 @@ const AddAppointmentScreen: React.FC<{}> = () => {
       const time = values.time && format(values.time, 'HH:mm:ss');
       const dateTime = parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
 
-      const action = apptId
-        ? updateAppointment({
-            ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
-            childId: `${child?.id}` || '-1',
-            date: values.date || new Date(),
-            id: `${apptId}`,
-          })
-        : addAppointment({
-            childId: `${child?.id}` || '-1',
-            doctorName: values.doctorName,
-            notes: values.notes,
-            questions: values.questions,
-            date: dateTime,
-            apptType: values.apptType,
-          });
+      let action;
+      if (apptId) {
+        action = updateAppointment({
+          ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
+          childId: child?.id || 0,
+          date: values.date || new Date(),
+          id: apptId,
+        });
+      } else {
+        action = addAppointment({
+          childId: child?.id || 0,
+          doctorName: values.doctorName,
+          notes: values.notes,
+          questions: values.questions,
+          date: dateTime,
+          apptType: values.apptType,
+        });
+      }
 
-      action.then(() => {
-        if (apptId) {
-          navigation.goBack();
-        } else {
-          navigation.navigate('Dashboard');
-        }
+      action.then((id) => {
+        navigation.replace('Appointment', {appointmentId: apptId || id});
       });
     },
     initialValues: {
@@ -150,7 +149,6 @@ const AddAppointmentScreen: React.FC<{}> = () => {
             <AETextInput
               multiline={true}
               autoCorrect={false}
-              numberOfLines={3}
               style={{marginTop: 11}}
               value={formik.values.notes}
               onChangeText={formik.handleChange('notes') as any}
@@ -159,7 +157,6 @@ const AddAppointmentScreen: React.FC<{}> = () => {
             <AETextInput
               multiline={true}
               autoCorrect={false}
-              numberOfLines={3}
               style={{maxHeight: 100, marginTop: 11}}
               value={formik.values.questions}
               onChangeText={formik.handleChange('questions') as any}

@@ -2,23 +2,26 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SkillSection} from '../../resources/milestoneChecklist';
 import {useTranslation} from 'react-i18next';
 import {colors, images, sharedStyle} from '../../resources/constants';
-import {Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
-import YouTube from 'react-native-youtube';
+import {ActivityIndicator, Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
-import {Answer, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
-import NoteIcon from '../../resources/svg/NoteIcon';
+import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import NoteIcon from '../../components/Svg/NoteIcon';
 import _ from 'lodash';
 import {Text} from 'react-native-paper';
-import PhotoChevronLeft from '../../resources/svg/PhotoChevronLeft';
-import PhotoChevronRight from '../../resources/svg/PhotoChevronRight';
+import PhotoChevronLeft from '../../components/Svg/PhotoChevronLeft';
+import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import {WebView} from 'react-native-webview';
+import i18next from 'i18next';
+import {Answer} from '../../hooks/types';
+import withSuspense from '../../components/withSuspense';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data, isFetching} = useGetQuestion({
-    childId: childId,
-    questionId: id,
+    childId: childId || 0,
+    questionId: id || 0,
+    milestoneId: milestoneId || 0,
   });
-
   const [answerQuestion] = useSetQuestionAnswer();
   const [note, setNote] = useState('');
   const [page, setPage] = useState(0);
@@ -32,7 +35,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     const image = images[name];
     return (
       <Image
-        key={`photo-${index}`}
+        key={`photo-${index}-${id}`}
         accessibilityLabel={item.alt && t(item.alt)}
         source={image}
         style={{width: '100%', borderRadius: 10}}
@@ -50,19 +53,26 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         style={{alignSelf: 'stretch', height}}
         javaScriptEnabled={true}
         domStorageEnabled={true}
+        startInLoadingState
         scrollEnabled={false}
-        source={{uri: `https://www.youtube.com/embed/${code}`}}
+        source={{uri: `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`}}
       />
     );
   });
 
   const doAnswer = (answerValue: Answer) => () => {
-    id && childId && answerQuestion({questionId: id, childId, answer: answerValue, note: note});
+    id &&
+      childId &&
+      milestoneId &&
+      answerQuestion({questionId: id, childId, answer: answerValue, note: note, milestoneId});
   };
 
   const saveNote = useCallback(
     _.debounce((text: string) => {
-      id && childId && answerQuestion({questionId: id, answer: data?.answer, childId, note: text});
+      id &&
+        childId &&
+        milestoneId &&
+        answerQuestion({questionId: id, answer: data?.answer, childId, note: text, milestoneId});
     }, 500),
     [id, childId, data?.answer],
   );
@@ -143,7 +153,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             styles.answerButton,
             sharedStyle.shadow,
             {marginHorizontal: 8},
-            answer === Answer.UNSURE ? {backgroundColor: colors.tanHide} : undefined,
+            answer === Answer.UNSURE ? {backgroundColor: colors.yellow} : undefined,
           ]}>
           <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
             {t('milestoneChecklist:answer_unsure')}
@@ -154,7 +164,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           style={[
             styles.answerButton,
             sharedStyle.shadow,
-            answer === Answer.NOT_YET ? {backgroundColor: colors.apricot} : undefined,
+            answer === Answer.NOT_YET ? {backgroundColor: colors.tanHide} : undefined,
           ]}>
           <Text numberOfLines={1} adjustsFontSizeToFit style={{textTransform: 'uppercase'}}>
             {t('milestoneChecklist:answer_not_yet')}
@@ -219,4 +229,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionItem;
+export default withSuspense(
+  QuestionItem,
+  {
+    suspense: true,
+  },
+  <View
+    style={{
+      borderRadius: 10,
+      backgroundColor: colors.purple,
+      justifyContent: 'center',
+      height: 300,
+      flex: 1,
+      marginHorizontal: 32,
+      marginTop: 32,
+    }}>
+    <ActivityIndicator color={colors.white} size={'small'} />
+  </View>,
+);

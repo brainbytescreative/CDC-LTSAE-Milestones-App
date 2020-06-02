@@ -1,21 +1,23 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Modal, Portal, Title, Text} from 'react-native-paper';
+import {Modal, Portal, Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {colors, sharedStyle} from '../../resources/constants';
 import LanguageSelector from '../../components/LanguageSelector';
-import {CDClogo, IceColdArc, PurpleArc} from '../../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AEScrollView from '../../components/AEScrollView';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
+import CDCLogo from '../../components/Svg/CDCLogo';
+import PurpleArc from '../../components/Svg/PurpleArc';
+import IceColdArc from '../../components/Svg/IceColdArc';
 
-const OnboardingInfoScreen: React.FC<{}> = () => {
+const OnboardingInfoScreen: React.FC = () => {
   const [visible, setVisible] = useState(true);
   const {t} = useTranslation('onboardingInfo');
   const navigation = useNavigation<OnboardingNavigationProp>();
-  const {bottom, top} = useSafeArea();
+  const {bottom, top} = useSafeAreaInsets();
 
   return (
     <AEScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
@@ -25,7 +27,7 @@ const OnboardingInfoScreen: React.FC<{}> = () => {
             <View style={{alignItems: 'center', marginTop: 16 + top}}>
               <Text style={{fontSize: 10, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
-                <CDClogo />
+                <CDCLogo />
                 <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
               </View>
             </View>

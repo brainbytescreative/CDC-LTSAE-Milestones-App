@@ -51,22 +51,24 @@ const DB_MIGRATIONS = [
                 references children (id)
                     on update cascade on delete cascade,
             questionId INTEGER not null,
+            milestoneId integer not null,
             answer     INTEGER,
             note       TEXT,
-            PRIMARY KEY (childId, questionId)
+            PRIMARY KEY (childId, questionId, milestoneId)
         );
     `);
 
     await dB.executeSql(`
         create table concern_answers
         (
-            concernId INTEGER not null,
             answer    BOOLEAN not null,
             note      TEXT,
+            concernId INTEGER not null,
+            milestoneId integer not null,
             childId   INTEGER not null
                 references Children (id)
                     on update cascade on delete cascade,
-            primary key (concernId, childId)
+            primary key (concernId, childId, milestoneId)
         );
     `);
 
@@ -75,7 +77,7 @@ const DB_MIGRATIONS = [
         (
             hintId   INTEGER not null,
             childId  INTEGER not null
-                references Children (id)
+                references children (id)
                     on update cascade on delete cascade,
             like     BOOLEAN,
             remindMe BOOLEAN,
@@ -88,6 +90,22 @@ const DB_MIGRATIONS = [
         (
             childId     int,
             milestoneId int
+        );
+    `);
+    await dB.executeSql(`
+        create table notifications
+        (
+            notificationId           TEXT     not null
+                primary key,
+            fireDateTimestamp        DATETIME not null,
+            notificationRead         BOOLEAN not null default false,
+            notificationCategoryType INTEGER not null,
+            childId                  INTEGER,
+            milestoneId              INTEGER,
+            appointmentId            INTEGER,
+            bodyArguments            TEXT,
+            bodyLocalizedKey         TEXT,
+            titleLocalizedKey        TEXT
         );
     `);
   },

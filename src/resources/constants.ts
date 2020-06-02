@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/camelcase */
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
 import {StyleSheet} from 'react-native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
-import {add} from 'date-fns';
 
 export const states = [
   'AL',
@@ -136,6 +134,14 @@ export const sharedStyle = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Montserrat-Regular',
   },
+  midText: {
+    fontSize: 18,
+    fontFamily: 'Montserrat-Regular',
+  },
+  midTextBold: {
+    fontSize: 18,
+    fontFamily: 'Montserrat-Bold',
+  },
 });
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
@@ -147,6 +153,7 @@ export const sharedScreenOptions: StackNavigationOptions = {
     shadowOpacity: 0, // remove shadow on iOS
     backgroundColor: colors.iceCold,
   },
+  headerTintColor: 'black',
   headerTitleAlign: 'center',
 };
 

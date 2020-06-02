@@ -1,16 +1,6 @@
 import React, {useReducer, useRef} from 'react';
-import {
-  Platform,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
-import {Portal} from 'react-native-paper';
+import {Platform, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 interface Item {
   label: string;
@@ -182,34 +172,36 @@ const DropDownPicker: React.FC<Props> = ({
       style={[
         containerStyle,
         {
-          ...Platform.select({
-            default: {
-              zIndex,
+          ...Platform.select<ViewStyle>({
+            ios: {
+              zIndex: zIndex,
             },
           }),
         },
       ]}>
-      <TouchableOpacity
-        ref={tochableRef}
-        onLayout={(event) => {
-          // console.log(event.nativeEvent.layout);
-          setState({
-            top: event.nativeEvent.layout.height - 1,
-          });
-        }}
-        disabled={disabled}
-        onPress={toggle}
-        activeOpacity={1}
-        style={[styles.dropDown, style, state.visible && styles.noBottomRadius, {flexDirection: 'row', flex: 1}]}>
-        <View style={[styles.dropDownDisplay]}>
-          <Text style={[labelStyle, {opacity}]}>{label}</Text>
-        </View>
-        {!!(customArrowDown || customArrowUp) && (
-          <View style={[styles.arrow]}>
-            <View style={[arrowStyle, {opacity}]}>{!state.visible ? customArrowUp : customArrowDown}</View>
+      <View style={[styles.dropDownContainer, state.visible && styles.noBottomRadius, style]}>
+        <TouchableOpacity
+          ref={tochableRef}
+          onLayout={(event) => {
+            // console.log(event.nativeEvent.layout);
+            setState({
+              top: event.nativeEvent.layout.height,
+            });
+          }}
+          disabled={disabled}
+          onPress={toggle}>
+          <View style={[styles.dropDown, {flexDirection: 'row', flex: 1}]}>
+            <View style={[styles.dropDownDisplay]}>
+              <Text style={[labelStyle, {opacity}]}>{label}</Text>
+            </View>
+            {!!(customArrowDown || customArrowUp) && (
+              <View style={[styles.arrow]}>
+                <View style={[arrowStyle, {opacity}]}>{!state.visible ? customArrowUp : customArrowDown}</View>
+              </View>
+            )}
           </View>
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
       {/*<Portal>*/}
       <View
         style={[
@@ -218,14 +210,22 @@ const DropDownPicker: React.FC<Props> = ({
           !state.visible && styles.hidden,
           {
             top: state.top,
-            // left: state.left,
-            // width: state.width,
+            backgroundColor: '#fff',
+            // backgroundColor: 'black',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
             maxHeight: dropDownMaxHeight,
-            zIndex,
+            ...Platform.select<ViewStyle>({
+              default: {zIndex},
+              android: {
+                elevation: zIndex,
+                zIndex,
+              },
+            }),
           },
           itemsContainerStyle,
         ]}>
-        <ScrollView bounces={false} style={[{width: '100%', zIndex}]} nestedScrollEnabled={true}>
+        <ScrollView nestedScrollEnabled bounces={false} style={[{width: '100%', zIndex}]}>
           {items.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -251,16 +251,18 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
   },
+  dropDownContainer: {
+    backgroundColor: '#fff',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderWidth: 1,
+    borderColor: '#dfdfdf',
+  },
   dropDown: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: '#fff',
-    borderTopRightRadius: 5,
-    borderTopLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    borderBottomLeftRadius: 5,
-    borderWidth: 1,
-    borderColor: '#dfdfdf',
   },
   dropDownDisplay: {
     flexDirection: 'row',

@@ -61,7 +61,7 @@ target 'brainbytescreativeactearly' do
   end
 
   use_native_modules!
-  use_unimodules!(exclude: ['expo-face-detector', 'expo-file-system', 'expo-permissions','expo-image-picker', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface'])
+  use_unimodules!(exclude: ['expo-face-detector','expo-image-picker', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface'])
 
   # Enables Flipper.
   #

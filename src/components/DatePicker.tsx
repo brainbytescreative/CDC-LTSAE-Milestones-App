@@ -1,12 +1,8 @@
 import React, {useEffect, useState} from 'react';
-
-import {TextInput} from 'react-native-paper';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 import {formatDate} from '../utils/helpers';
-import TouchableArea from './TouchableArea/TouchableArea';
 import AETextInput from './AETextInput';
-import {sharedStyle} from '../resources/constants';
 
 interface PageProps {
   onChange?: (date?: Date) => void;

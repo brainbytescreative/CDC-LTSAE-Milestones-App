@@ -1,6 +1,7 @@
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {
   Image,
+  Linking,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -8,34 +9,36 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import {RadioButton, Text} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import DatePicker from '../components/DatePicker';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
-
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
 import {colors, sharedStyle} from '../resources/constants';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import {PlusIcon, PurpleArc} from '../resources/svg';
-import {useSafeArea} from 'react-native-safe-area-context';
 import AEScrollView from '../components/AEScrollView';
-import NavBarBackground from '../resources/svg/NavBarBackground';
+import NavBarBackground from '../components/Svg/NavBarBackground';
 import {TFunction} from 'i18next';
 import {addEditChildSchema} from '../resources/validationSchemas';
-import _ from 'lodash';
+import AERadioButton from '../components/AERadioButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import PurpleArc from '../components/Svg/PurpleArc';
+import PlusIcon from '../components/Svg/PlusIcon';
 
-const options = {
+const options: ImagePickerOptions = {
   quality: 1.0,
   maxWidth: 500,
   maxHeight: 500,
+  mediaType: 'photo',
   storageOptions: {
     skipBackup: true,
+    privateDirectory: true,
   },
 };
 
@@ -124,24 +127,18 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
               alignItems: 'center',
               marginVertical: 10,
             }}>
-            <RadioButton.Android
-              value="boy"
-              status={field.value === 0 ? 'checked' : 'unchecked'}
-              onPress={() => {
-                form.setFieldValue(field.name, 0);
-              }}
+            <AERadioButton
+              onChange={() => form.setFieldValue(field.name, 0)}
+              value={field.value === 0}
+              title={t('boy')}
+              titleStyle={{marginRight: 32}}
             />
-            <Text>{t('boy')}</Text>
-            <RadioButton.Android
-              value="girl"
-              status={field.value === 1 ? 'checked' : 'unchecked'}
-              onPress={() => {
-                form.setFieldValue(field.name, 1);
-              }}
+            <AERadioButton
+              onChange={() => form.setFieldValue(field.name, 1)}
+              value={field.value === 1}
+              title={`${t('girl')}`}
+              titleStyle={{marginRight: 32}}
             />
-            <Text>
-              {t('girl')} {'*'}
-            </Text>
           </View>
           <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
         </View>
@@ -166,9 +163,9 @@ const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps
   </TouchableWithoutFeedback>
 );
 
-const AddChildScreen: React.FC<{}> = () => {
+const AddChildScreen: React.FC = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
-  const {top, bottom} = useSafeArea();
+  const {top, bottom} = useSafeAreaInsets();
   const {t} = useTranslation('addChild');
 
   const [addChild, {status: addStatus}] = useAddChild();
@@ -204,8 +201,6 @@ const AddChildScreen: React.FC<{}> = () => {
   }, [title, navigation, route.params]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     child && formikRef.current?.setValues({firstChild: child, anotherChildren: []});
   }, [child]);
 
@@ -226,6 +221,10 @@ const AddChildScreen: React.FC<{}> = () => {
       navigation.goBack();
     }
   };
+
+  const onPrematureTipPress = useCallback(() => {
+    scrollViewRef.current?.scrollToEnd();
+  }, [scrollViewRef]);
 
   return (
     <AEScrollView innerRef={scrollViewRef}>
@@ -261,7 +260,6 @@ const AddChildScreen: React.FC<{}> = () => {
           );
         }}>
         {(formikProps) => (
-          // <>{console.log(formikProps.values.firstChild)}</>
           <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
             <View style={{backgroundColor: colors.white, flexGrow: 1, justifyContent: 'space-between'}}>
               <View style={{top: 0, position: 'absolute', width: '100%', height: '80%'}}>
@@ -280,12 +278,7 @@ const AddChildScreen: React.FC<{}> = () => {
               <NameField t={t} name={'firstChild.name'} />
               <View style={{height: 11}} />
               <BirthdayField name={'firstChild.birthday'} t={t} />
-              <PrematureTip
-                t={t}
-                onPress={() => {
-                  scrollViewRef.current?.scrollToEnd();
-                }}
-              />
+              <PrematureTip t={t} onPress={onPrematureTipPress} />
               <GenderField t={t} name={'firstChild.gender'} />
             </View>
 
@@ -299,7 +292,7 @@ const AddChildScreen: React.FC<{}> = () => {
                         <NameField t={t} name={`anotherChildren.${index}.name`} />
                         <View style={{height: 11}} />
                         <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
-                        <PrematureTip t={t} />
+                        <PrematureTip t={t} onPress={onPrematureTipPress} />
                         <GenderField t={t} name={`anotherChildren.${index}.gender`} />
                       </>
                     ))}
@@ -312,16 +305,8 @@ const AddChildScreen: React.FC<{}> = () => {
                           disabled={isLoading || !formikProps.isValid}
                           style={{marginVertical: 0}}
                           onPress={() => {
-                            const anotherChildren = formikProps.values.anotherChildren;
-                            const prevChild =
-                              anotherChildren && anotherChildren?.length > 0
-                                ? _.last(anotherChildren)
-                                : formikProps.values.firstChild;
-
                             arrayHelpers.push({
-                              name: prevChild?.name || '',
-                              birthday: prevChild?.birthday,
-                              gender: prevChild?.gender,
+                              name: '',
                             });
                           }}>
                           {t('addAnotherChild').toUpperCase()}
@@ -339,7 +324,9 @@ const AddChildScreen: React.FC<{}> = () => {
                           sharedStyle.shadow,
                         ]}>
                         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
-                        <Text style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
+                        <Text
+                          onPress={() => Linking.openURL(t('correctedAgeLink'))}
+                          style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
                           {t('noteClick')}
                         </Text>
                       </View>

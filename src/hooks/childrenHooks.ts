@@ -3,7 +3,9 @@ import {sqLiteClient} from '../db';
 import {formatISO, parseISO} from 'date-fns';
 import Storage from '../utils/Storage';
 import {objectToQuery} from '../utils/helpers';
-import {PropType} from '../resources/constants';
+import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
+import {InteractionManager, Platform} from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 interface Record {
   id: number;
@@ -19,14 +21,17 @@ export interface ChildDbRecord extends Record {
   doctorEmail?: string | undefined;
   photo?: string | undefined;
 }
+
+type ChildDbRecordNew = Omit<ChildDbRecord, 'id'>;
+
 export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
   birthday: Date;
 }
 
 type Key = 'children' | 'selectedChild';
 
-export function useGetCurrentChild() {
-  return useQuery<ChildResult, Key>('selectedChild', async () => {
+export function useGetCurrentChildId() {
+  return useQuery('selectedChildId', async () => {
     let selectedChild: string | null = await Storage.getItem('selectedChild');
 
     if (!selectedChild) {
@@ -34,42 +39,77 @@ export function useGetCurrentChild() {
       selectedChild = res && res[0].rows.item(0)?.id;
 
       if (!selectedChild) {
-        throw new Error('There are no children');
+        // throw new Error('There are no children');
+        return;
       }
 
       await Storage.setItem('selectedChild', `${selectedChild}`);
     }
 
-    const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
-
-    if (!result || result[0].rows.length === 0) {
-      throw Error('Not found');
-    }
-
-    const child = (result && result[0].rows.item(0)) || {};
-
-    return {
-      ...child,
-      birthday: parseISO(child.birthday),
-    };
+    return selectedChild;
   });
+}
+
+export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
+  const {data: selectedChild} = useGetCurrentChildId();
+  return useQuery<ChildResult, [string, {id?: string}]>(
+    ['selectedChild', {id: selectedChild}],
+    async () => {
+      const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
+
+      if (!result || result[0].rows.length === 0) {
+        throw Error('Not found');
+      }
+
+      const child = (result && result[0].rows.item(0)) || {};
+
+      return {
+        ...child,
+        photo: pathFromDB(child.photo),
+        birthday: parseISO(child.birthday),
+      };
+    },
+    options,
+  );
 }
 
 export function useSetSelectedChild() {
-  return useMutation<void, {id: number}>(async ({id}) => {
-    await Storage.setItem('selectedChild', `${id}`);
-    await queryCache.refetchQueries('selectedChild', {force: true});
-    await queryCache.refetchQueries('questions', {force: true});
-    await queryCache.refetchQueries('concerns', {force: true});
-  });
+  return useMutation<void, {id: number; name?: string}>(
+    async ({id}) => {
+      // console.log(Date.now());
+      setTimeout(() => {
+        queryCache.setQueryData('selectedChildId', id);
+        queryCache.refetchQueries('selectedChild', {force: true});
+      }, 0);
+      InteractionManager.runAfterInteractions(async () => {
+        await Storage.setItem('selectedChild', `${id}`);
+      });
+    },
+    {
+      onSuccess: async (data, {id}) => {
+        // await queryCache.setQueryData('selectedChild', id);
+        // console.log(Date.now());
+        // Promise.all([
+        //   queryCache.refetchQueries('selectedChild', {force: true}),
+        //   queryCache.refetchQueries('questions', {force: true}),
+        //   queryCache.refetchQueries('concerns', {force: true}),
+        //   queryCache.refetchQueries('monthProgress', {force: true}),
+        //   queryCache.refetchQueries('milestone', {force: true}),
+        // ]);
+        // queryCache.clear();
+      },
+    },
+  );
 }
 
 export function useUpdateChild() {
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
-      const [query, values] = objectToQuery(
+      const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
+          photo: pathToDB(variables.photo),
           birthday: formatISO(variables.birthday, {
             representation: 'date',
           }),
@@ -84,12 +124,14 @@ export function useUpdateChild() {
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries('children', {force: true});
         queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
+        setMilestoneNotifications({child: variables});
       },
     },
   );
 }
 
 export function useDeleteChild() {
+  const [removeNotificationsByChildId] = useRemoveNotificationsByChildId();
   return useMutation<void, {id: number}>(
     async (variables) => {
       const selectedChild = await Storage.getItem('selectedChild');
@@ -99,10 +141,10 @@ export function useDeleteChild() {
       await sqLiteClient.dB?.executeSql('delete from children where id = ?', [variables.id]);
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries('children', {force: true});
-        // queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
+        removeNotificationsByChildId({childId: variables.id});
       },
     },
   );
@@ -118,31 +160,57 @@ export function useGetChild(options: {id: number | string | undefined}) {
     const record: ChildDbRecord = result && result[0].rows.item(0);
     return {
       ...record,
+      photo: pathFromDB(record.photo),
       birthday: parseISO(record.birthday),
     };
   });
 }
 
-export function useGetChildren() {
-  return useQuery<ChildResult[], Key>('children', async () => {
-    const result = await sqLiteClient.dB?.executeSql('select * from children');
-    const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
-    return records.map((value) => ({
-      ...value,
-      birthday: parseISO(value.birthday),
-    }));
-  });
+export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
+  return useQuery<ChildResult[], Key>(
+    'children',
+    async () => {
+      const result = await sqLiteClient.dB?.executeSql('select * from children');
+      const records: ChildDbRecord[] = (result && result[0].rows.raw()) || [];
+      return records.map((value) => ({
+        ...value,
+        photo: pathFromDB(value.photo),
+        birthday: parseISO(value.birthday),
+      }));
+    },
+    options,
+  );
 }
 
 type AddChildResult = number | undefined;
 type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean};
 
+const pathToDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: path?.replace(FileSystem.documentDirectory || '', ''),
+        default: path,
+      })
+    : path;
+};
+
+const pathFromDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: `${FileSystem.documentDirectory || ''}${path}`,
+        default: path,
+      })
+    : path;
+};
+
 export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
-      const [query, values] = objectToQuery(
+      const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
+          photo: pathToDB(variables.data.photo),
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
           }),
@@ -167,6 +235,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries(['children'], {force: true});
         options?.onSuccess && options.onSuccess(data, variables);
+        data && setMilestoneNotifications({child: {id: data, ...variables.data}});
       },
     },
   );

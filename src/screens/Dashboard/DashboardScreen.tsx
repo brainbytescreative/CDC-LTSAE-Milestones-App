@@ -1,167 +1,261 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {childAges, colors, sharedStyle} from '../../resources/constants';
-import {ActEarlySign, MilestoneSummarySign, PurpleArc, TipsAndActivitiesSign} from '../../resources/svg';
+import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {colors, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import MonthCarousel from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
+import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatAge, formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
-import NavBarBackground from '../../resources/svg/NavBarBackground';
+import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
+import {ReactQueryConfigProvider, useQuery} from 'react-query';
+import AEYellowBox from '../../components/AEYellowBox';
+import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
+import ActEarlySign from '../../components/Svg/ActEarlySign';
+import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
+import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
+import PurpleArc from '../../components/Svg/PurpleArc';
 
 interface Props {
   navigation: StackNavigationProp<any>;
 }
 
-type DashboardScreenRouteProp = RouteProp<DashboardStackParamList, 'Dashboard'>;
 export type DashboardStackNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
   StackNavigationProp<DashboardStackParamList>
 >;
 
-const DashboardScreen: React.FC<Props> = () => {
-  const {t} = useTranslation('dashboard');
-  const navigation = useNavigation<DashboardStackNavigationProp>();
+interface SkeletonProps {
+  childPhotoComponent?: any;
+  childNameComponent?: any;
+  monthSelectorComponent?: any;
+  milestoneChecklistWidgetComponent?: any;
+  milestoneAgeFormatted?: string;
+  appointments?: Appointment[];
+}
 
+const DashboardSkeleton: React.FC<SkeletonProps> = ({
+  childPhotoComponent,
+  childNameComponent,
+  monthSelectorComponent,
+  milestoneChecklistWidgetComponent,
+  milestoneAgeFormatted = 0,
+  appointments = [],
+}) => {
+  const navigation = useNavigation<DashboardStackNavigationProp>();
+  const {t} = useTranslation('dashboard');
+  return (
+    <View>
+      {childPhotoComponent}
+      {childNameComponent}
+      {monthSelectorComponent}
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>{t('yellowTip')}</AEYellowBox>
+      <PurpleArc width={'100%'} />
+      <View
+        style={{
+          paddingTop: 26,
+          paddingHorizontal: 32,
+          backgroundColor: colors.purple,
+        }}>
+        {milestoneChecklistWidgetComponent}
+        <View
+          style={{
+            marginVertical: 20,
+          }}>
+          <Text style={styles.actionItemsTitle}>
+            {t('actionItemsTitle', {
+              age: `${milestoneAgeFormatted || '  '}`,
+            })}
+          </Text>
+
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('WhenActEarly');
+              }}
+              style={styles.actionItem}>
+              <ActEarlySign />
+              <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                {t('whenToActEarly')}
+              </Text>
+            </TouchableOpacity>
+            <View style={[styles.actionItem, {marginHorizontal: 10}]}>
+              <TouchableOpacity
+                style={[{alignItems: 'center'}]}
+                onPress={() => {
+                  navigation.navigate('ChildSummary');
+                }}>
+                <MilestoneSummarySign />
+                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                  {t('milestoneSummary')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.actionItem}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('TipsAndActivities');
+                }}
+                style={{alignItems: 'center'}}>
+                <TipsAndActivitiesSign />
+                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                  {t('tipsAndActivities')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={[styles.appointmentsHeaderContainer]}>
+          <Text
+            style={{
+              fontSize: 22,
+              fontFamily: 'Montserrat-Bold',
+            }}>
+            {t('appointments')}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AddAppointment');
+            }}>
+            <Text style={{fontSize: 12}}>{t('addApt')}</Text>
+          </TouchableOpacity>
+        </View>
+        {appointments?.map((appt) => (
+          <TouchableOpacity
+            key={`appointment-${appt.id}`}
+            onPress={() => {
+              navigation.navigate('Appointment', {
+                appointmentId: appt.id,
+              });
+            }}
+            style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
+            <Text style={{fontSize: 18}}>{appt.apptType}</Text>
+            <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+const DashboardContainer: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {data: appointments} = useGetChildAppointments(child?.id);
-  const {data: {milestoneAge: childAge, milestoneAgeFormatted} = {}} = useGetMilestone();
-  useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
+  const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
+  useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
   const {refetch} = useGetChecklistQuestions();
-
+  const {t} = useTranslation('dashboard');
   const childAgeText = formatAge(child?.birthday);
-
+  const [setMilestoneNotifications] = useSetMilestoneNotifications();
+  const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
-  const currentAgeIndex = childAges.findIndex((value) => value === childAge);
   const [setOnboarding] = useSetOnboarding();
+
+  // useEffect(() => {
+  //   child && setMilestoneNotifications({child});
+  // }, [child, setMilestoneNotifications]);
+  // useEffect(() => {
+  //   sheduleNotifications();
+  // }, [sheduleNotifications]);
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch({force: true});
-      setOnboarding(true);
-    }, [refetch, setOnboarding]),
+      setTimeout(() => {
+        setOnboarding(true);
+        refetch({force: true});
+      }, 300);
+    }, [setOnboarding, refetch]),
   );
+
+  useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(null);
+      }, 200),
+    );
+  });
+
+  return (
+    <DashboardSkeleton
+      childNameComponent={
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.childNameText}>{childName}</Text>
+          <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
+        </View>
+      }
+      appointments={appointments}
+      milestoneAgeFormatted={milestoneAgeFormatted}
+      milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
+      monthSelectorComponent={<MonthCarousel />}
+      childPhotoComponent={<ChildPhoto photo={child?.photo} />}
+    />
+  );
+};
+
+const DashboardScreen: React.FC<Props> = () => {
+  // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
+  // const {refetch} = useGetChecklistQuestions();
 
   return (
     <>
-      <ChildSelectorModal />
+      <ReactQueryConfigProvider
+        config={{
+          suspense: true,
+        }}>
+        <ChildSelectorModal />
 
-      <ScrollView bounces={false} style={{backgroundColor: '#fff'}}>
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-          }}>
-          <View style={{backgroundColor: colors.iceCold, height: 40}} />
-          <NavBarBackground width={'100%'} />
-        </View>
-        <View>
-          <ChildPhoto photo={child?.photo} />
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.childNameText}>{childName}</Text>
-            <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
-          </View>
-          <MonthCarousel childAge={childAge || 1} currentAgeIndex={currentAgeIndex} />
-          <View style={styles.yellowTipContainer}>
-            <Text style={styles.yellowTipText}>{t('yellowTip')}</Text>
-          </View>
-          <PurpleArc width={'100%'} />
+        <ScrollView bounces={false} style={{backgroundColor: '#fff'}} contentContainerStyle={{flexGrow: 1}}>
           <View
             style={{
-              paddingTop: 26,
-              paddingHorizontal: 32,
-              backgroundColor: colors.purple,
+              position: 'absolute',
+              width: '100%',
             }}>
-            <MilestoneChecklistWidget />
-            <View
-              style={{
-                marginVertical: 20,
-              }}>
-              <Text style={styles.actionItemsTitle}>
-                {t('actionItemsTitle', {
-                  age: `${milestoneAgeFormatted}`,
-                })}
-              </Text>
-
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View style={styles.actionItem}>
-                  <ActEarlySign />
-                  <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                    {t('whenToActEarly')}
-                  </Text>
-                </View>
-                <View style={[styles.actionItem, {marginHorizontal: 10}]}>
-                  <TouchableOpacity
-                    style={[{alignItems: 'center'}]}
-                    onPress={() => {
-                      navigation.navigate('ChildSummaryStack');
-                    }}>
-                    <MilestoneSummarySign />
-                    <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                      {t('milestoneSummary')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.actionItem}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('TipsAndActivities');
-                    }}
-                    style={{alignItems: 'center'}}>
-                    <TipsAndActivitiesSign />
-                    <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                      {t('tipsAndActivities')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.appointmentsHeaderContainer]}>
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: 'Montserrat-Bold',
-                }}>
-                {t('appointments')}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AddAppointment');
-                }}>
-                <Text style={{fontSize: 12}}>{t('addApt')}</Text>
-              </TouchableOpacity>
-            </View>
-            {appointments?.map((appt) => (
-              <TouchableOpacity
-                key={`appointment-${appt.id}`}
-                onPress={() => {
-                  navigation.navigate('Appointment', {
-                    appointmentId: appt.id,
-                  });
-                }}
-                style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
-                <Text style={{fontSize: 18}}>{appt.apptType}</Text>
-                <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
-              </TouchableOpacity>
-            ))}
+            <View style={{backgroundColor: colors.iceCold, height: 40}} />
+            <NavBarBackground width={'100%'} />
           </View>
-        </View>
-      </ScrollView>
+          <Suspense
+            fallback={
+              <DashboardSkeleton
+                childNameComponent={
+                  <View style={[{height: 54}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'small'} />
+                  </View>
+                }
+                milestoneChecklistWidgetComponent={
+                  <View style={[{height: 114}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'large'} />
+                  </View>
+                }
+                monthSelectorComponent={
+                  <View style={[{height: 172}, styles.spinnerContainer]}>
+                    <ActivityIndicator size={'large'} />
+                  </View>
+                }
+                childPhotoComponent={<ChildPhoto />}
+              />
+            }>
+            <DashboardContainer />
+          </Suspense>
+        </ScrollView>
+      </ReactQueryConfigProvider>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  spinnerContainer: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   appointmentsHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -203,19 +297,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
   childAgeText: {fontSize: 22},
-  yellowTipText: {
-    fontSize: 15,
-    textAlign: 'center',
-  },
   yellowTipContainer: {
     paddingHorizontal: 25,
     paddingVertical: 10,
     marginBottom: 50,
+    marginTop: 0,
     marginHorizontal: 32,
     alignItems: 'center',
-    backgroundColor: colors.yellow,
     borderRadius: 20,
-    ...sharedStyle.shadow,
   },
   imageContainer: {
     flexDirection: 'row',

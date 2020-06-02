@@ -16,7 +16,7 @@ import {SafeAreaView, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
-import CloseCross from '../../resources/svg/CloseCross';
+import CloseCross from '../Svg/CloseCross';
 import i18next from 'i18next';
 import {DrawerContentOptions} from '@react-navigation/drawer';
 
@@ -60,7 +60,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
                 justifyContent: 'center',
               }}
               onPress={() => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 props.navigation.closeDrawer();
               }}>
@@ -79,6 +79,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
               },
               sharedStyle.shadow,
             ]}
+            activeTintColor={colors.purple}
             labelStyle={[
               sharedStyle.regularText,
               {
@@ -95,7 +96,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
   );
 };
 
-const RootDrawer: React.FC<{}> = () => {
+const RootDrawer: React.FC = () => {
   const {t} = useTranslation();
   return (
     <Drawer.Navigator

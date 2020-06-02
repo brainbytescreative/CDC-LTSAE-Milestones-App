@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
 import {StateCode, states} from './resources/constants';
 import {useTranslation} from 'react-i18next';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Text} from 'react-native-paper';
 
 interface Props {
@@ -29,7 +29,7 @@ const Item: React.FC<{stateCode: StateCode; value?: StateCode | undefined; onPre
 
 const TerritorySelector: React.FC<Props> = ({children, onChange, value}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const {top} = useSafeArea();
+  const {top} = useSafeAreaInsets();
 
   const showModal = () => {
     setModalVisible(true);

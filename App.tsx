@@ -8,16 +8,15 @@
  * @format
  */
 
-import React, {Ref, RefObject, useEffect, useState} from 'react';
+import React, {Ref, useEffect} from 'react';
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import {NavigationContainer, NavigationContainerProps} from '@react-navigation/native';
 import Navigator from './src/components/Navigator';
 import {I18nextProvider} from 'react-i18next';
 import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
-import {initialize} from './src/db';
-import {DowngradeError} from './src/db/SQLiteClient';
-import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+import {queryCache, ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors, PropType} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {ACPCore} from '@adobe/react-native-acpcore';
@@ -25,6 +24,11 @@ import {YellowBox} from 'react-native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import * as Notifications from 'expo-notifications';
 import {NavigationContainerRef} from '@react-navigation/core';
+import AppStateManager from './src/components/AppStateManager';
+import crashlytics from '@react-native-firebase/crashlytics';
+// Before rendering any navigation stack
+import {enableScreens} from 'react-native-screens';
+enableScreens();
 
 // First, set the handler that will cause the notification
 // to show the alert
@@ -39,7 +43,7 @@ Notifications.setNotificationHandler({
 
 ACPAnalytics.registerExtension();
 
-console.disableYellowBox = true;
+// console.disableYellowBox = true;
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 const theme: Theme = {
@@ -62,7 +66,7 @@ const theme: Theme = {
 const queryConfig: ReactQueryProviderConfig = {
   suspense: false,
   staleTime: Infinity,
-  onError: console.warn,
+  retry: false,
 };
 
 type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];
@@ -80,27 +84,6 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 };
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    initialize()
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((err) => {
-        // todo implement error handling
-        if (err instanceof DowngradeError) {
-          // setErrorMessage('Downgrade error');
-        } else {
-          // setErrorMessage('Unexpected error');
-        }
-        // setError(true);
-        // setLoading(false);
-        console.warn(err);
-        setLoading(false);
-      });
-  });
-
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
@@ -109,7 +92,10 @@ const App = () => {
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((notification) => {
-      console.log(notification);
+      console.log('addNotificationReceivedListener', notification);
+      setTimeout(() => {
+        queryCache.refetchQueries('unreadNotifications', {force: true});
+      }, 2000);
     });
     return () => subscription.remove();
   }, []);
@@ -117,36 +103,49 @@ const App = () => {
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const url = response.notification.request; //.content.data.url;
-      console.log(url);
+      console.log('addNotificationResponseReceivedListener', url);
     });
     return () => subscription.remove();
+  }, []);
+
+  React.useEffect(() => {
+    crashlytics().log('App mounted.');
+    // crashlytics().crash();
+    Notifications.requestPermissionsAsync();
+    Notifications.getPermissionsAsync().then(console.log);
   }, []);
 
   const routeNameRef = React.useRef<string | undefined>(undefined);
   const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);
 
   return (
-    <ActionSheetProvider>
-      <ReactQueryConfigProvider config={queryConfig}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer
-            ref={navigationRef as any}
-            onStateChange={(state) => {
-              const previousRouteName = routeNameRef.current;
-              const currentRouteName = getActiveRouteName(state);
+    <>
+      <AppStateManager />
+      <ActionSheetProvider>
+        <ReactQueryConfigProvider config={queryConfig}>
+          <PaperProvider theme={theme}>
+            <NavigationContainer
+              ref={navigationRef as any}
+              onStateChange={(state) => {
+                const previousRouteName = routeNameRef.current;
+                const currentRouteName = getActiveRouteName(state);
 
-              if (previousRouteName !== currentRouteName && currentRouteName) {
-                ACPCore.trackState(currentRouteName, {'gov.cdc.appname': 'CDC Health IQ'});
-              }
+                if (previousRouteName !== currentRouteName && currentRouteName) {
+                  ACPCore.trackState(currentRouteName, {'gov.cdc.appname': 'CDC Health IQ'});
+                  crashlytics().log(currentRouteName);
+                }
 
-              // Save the current route name for later comparision
-              routeNameRef.current = currentRouteName;
-            }}>
-            <I18nextProvider i18n={i18next}>{!loading && <Navigator />}</I18nextProvider>
-          </NavigationContainer>
-        </PaperProvider>
-      </ReactQueryConfigProvider>
-    </ActionSheetProvider>
+                // Save the current route name for later comparision
+                routeNameRef.current = currentRouteName;
+              }}>
+              <I18nextProvider i18n={i18next}>
+                <Navigator />
+              </I18nextProvider>
+            </NavigationContainer>
+          </PaperProvider>
+        </ReactQueryConfigProvider>
+      </ActionSheetProvider>
+    </>
   );
 };
 
