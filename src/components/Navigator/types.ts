@@ -40,9 +40,10 @@ export type InfoParamList = {
   Info: undefined;
 };
 export type MilestoneCheckListParamList = {
-  MilestoneChecklist: {actEarly: true} | undefined;
+  MilestoneChecklist: {actEarly: boolean} | undefined;
   MilestoneChecklistGetStarted: undefined;
   MilestoneChecklistQuickView: {quickView?: boolean} | undefined;
+  MilestoneChecklistWhenToActEarly: undefined;
   ChildSummary: undefined;
   Revisit: undefined;
 };

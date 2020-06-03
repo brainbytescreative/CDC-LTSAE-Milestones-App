@@ -10,6 +10,7 @@ import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
+import ActEarlyPage from '../../screens/MilestoneChecklist/ActEarlyPage';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 

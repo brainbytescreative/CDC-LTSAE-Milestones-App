@@ -148,7 +148,7 @@ const itemStyles = StyleSheet.create({
   },
 });
 
-const ActEarlyPage: React.FC = () => {
+const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSummaryPress}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();
@@ -191,7 +191,7 @@ const ActEarlyPage: React.FC = () => {
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigation.navigate('ChildSummary');
+                  onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
                 }}>
                 <View
                   style={[

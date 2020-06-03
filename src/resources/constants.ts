@@ -74,6 +74,7 @@ export type SkillType = typeof skillTypes[number];
 
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
+  blueLink: '#0645AD',
   purple: '#CEB9EF',
   iceCold: '#94F5EB',
   aquamarine: '#64FCD4',

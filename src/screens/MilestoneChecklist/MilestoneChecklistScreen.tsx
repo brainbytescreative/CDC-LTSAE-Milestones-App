@@ -15,7 +15,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
-import {CompositeNavigationProp} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -32,7 +32,10 @@ type NavigationProp = CompositeNavigationProp<
   StackNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklist'>
 >;
 
-const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp; route: any}> = ({navigation, route}) => {
+const MilestoneChecklistScreen: React.FC<{
+  navigation: NavigationProp;
+  route: RouteProp<MilestoneCheckListParamList, 'MilestoneChecklist'>;
+}> = ({navigation, route}) => {
   const [section, setSection] = useState<Section>(checklistSections[0]);
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
