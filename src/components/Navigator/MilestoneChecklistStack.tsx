@@ -10,7 +10,7 @@ import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
-import ActEarlyPage from '../../screens/MilestoneChecklist/ActEarlyPage';
+import {useTranslation} from 'react-i18next';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 
@@ -23,7 +23,7 @@ type MilestoneRouteProp = RouteProp<DashboardDrawerParamsList, 'MilestoneQuickVi
 
 const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: NavigationProp}> = (props) => {
   const initialRouteName = props.route.params?.initialRouteName;
-
+  const {t} = useTranslation();
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -34,6 +34,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         name={'MilestoneChecklistGetStarted'}
         component={MilestoneChecklistGetStartedScreen}
         options={() => ({
+          title: t('milestoneChecklist:milestoneChecklist'),
           headerLeft: () => <BurgerButton />,
         })}
       />
@@ -42,6 +43,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         component={MilestoneChecklistQuickViewScreen}
         initialParams={{quickView: props.route.params?.quickView}}
         options={() => ({
+          title: t('milestoneChecklist:milestoneChecklist'),
           headerLeft: () => <BurgerButton />,
         })}
       />
@@ -49,6 +51,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         name={'MilestoneChecklist'}
         component={MilestoneChecklistScreen}
         options={() => ({
+          title: t('milestoneChecklist:milestoneChecklist'),
           headerLeft: () => <BurgerButton />,
         })}
       />
@@ -57,6 +60,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         component={ChildSummaryScreen}
         options={() => ({
           headerStyle: {
+            title: t('milestoneChecklist:milestoneChecklist'),
             backgroundColor: colors.iceCold,
           },
           headerBackTitle: ' ',
@@ -67,6 +71,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         component={RevisitScreen}
         options={() => ({
           headerStyle: {
+            title: t('milestoneChecklist:milestoneChecklist'),
             backgroundColor: colors.iceCold,
           },
           headerBackTitle: ' ',

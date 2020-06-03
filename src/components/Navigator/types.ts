@@ -36,8 +36,9 @@ export type ChildSummaryParamList = {
 export type TipsAndActivitiesParamList = {
   TipsAndActivities: undefined;
 };
-export type InfoParamList = {
+export type InfoStackParamList = {
   Info: undefined;
+  PrivacyPolicy: undefined;
 };
 export type MilestoneCheckListParamList = {
   MilestoneChecklist: {actEarly: boolean} | undefined;

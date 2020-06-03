@@ -156,6 +156,10 @@ export const sharedScreenOptions: StackNavigationOptions = {
   },
   headerTintColor: 'black',
   headerTitleAlign: 'center',
+  headerBackTitle: ' ',
+  headerTitleStyle: {
+    ...sharedStyle.largeBoldText,
+  },
 };
 
 export const childAges = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];

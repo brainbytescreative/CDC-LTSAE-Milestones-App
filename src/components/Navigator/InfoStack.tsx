@@ -1,30 +1,43 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {InfoParamList} from './types';
+import {InfoStackParamList} from './types';
 import React from 'react';
 import BurgerButton from '../BurgerButton';
 import InfoScreen from '../../screens/InfoScreen';
 import {useTranslation} from 'react-i18next';
-import {colors} from '../../resources/constants';
+import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
+import PrivacyPolicyScreen from '../../screens/PrivacyPolicyScreen';
 
-const Stack = createStackNavigator<InfoParamList>();
+const Stack = createStackNavigator<InfoStackParamList>();
 
 const InfoStack: React.FC = () => {
-  const {t} = useTranslation('info');
+  const {t} = useTranslation();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={sharedScreenOptions}>
       <Stack.Screen
         name={'Info'}
         component={InfoScreen}
         options={() => ({
-          title: t('title'),
+          title: t('info:title'),
           headerStyle: {
             backgroundColor: colors.iceCold,
           },
           headerTitleStyle: {
-            fontSize: 22,
-            fontFamily: 'Montserrat-Bold',
+            ...sharedStyle.largeBoldText,
           },
           headerLeft: () => <BurgerButton />,
+        })}
+      />
+      <Stack.Screen
+        name={'PrivacyPolicy'}
+        component={PrivacyPolicyScreen}
+        options={() => ({
+          title: t('privacyPolicy:title'),
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
+          headerTitleStyle: {
+            ...sharedStyle.largeBoldText,
+          },
         })}
       />
     </Stack.Navigator>

@@ -191,6 +191,9 @@
     "cognitive": "Cognitive",
     "movement": "Movement"
   },
+  "privacyPolicy": {
+    "title": "Privacy Policy"
+  },
   "milestoneChecklist": {
     "nextSection": "Next Section",
     "answer_yes": "yes",
