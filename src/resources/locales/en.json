@@ -103,6 +103,7 @@
     "menu": "Menu"
   },
   "addChild": {
+    "drawerLabel": "Children & Add Child",
     "title": "Add a child",
     "edit-title": "Edit child",
     "addAnotherChild": "+ Add another child",

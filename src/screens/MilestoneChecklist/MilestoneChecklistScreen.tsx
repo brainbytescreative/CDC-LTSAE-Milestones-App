@@ -32,7 +32,7 @@ type NavigationProp = CompositeNavigationProp<
   StackNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklist'>
 >;
 
-const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navigation}) => {
+const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp; route: any}> = ({navigation, route}) => {
   const [section, setSection] = useState<Section>(checklistSections[0]);
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();

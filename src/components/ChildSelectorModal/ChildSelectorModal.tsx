@@ -1,4 +1,4 @@
-import React, {useState, Suspense} from 'react';
+import React, {useState, Suspense, useEffect} from 'react';
 import {ActivityIndicator, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -65,12 +65,18 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
   );
 };
 
-const ChildSelectorModal: React.FC = () => {
+const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   const {top} = useSafeAreaInsets();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 
   const navigation = useNavigation<DashboardScreenNavigationProp>();
   const [selectChild] = useSetSelectedChild();
+
+  useEffect(() => {
+    if (visible) {
+      setChildSelectorVisible(true);
+    }
+  }, [visible]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

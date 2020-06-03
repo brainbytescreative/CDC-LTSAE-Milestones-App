@@ -14,7 +14,7 @@ export type AddChildScreenParams =
 
 export type DashboardStackParamList = {
   AddChild: AddChildScreenParams;
-  Dashboard: undefined;
+  Dashboard: {addChild?: boolean} | undefined;
   AddAppointment: {appointmentId: number | undefined} | undefined;
   Appointment: {appointmentId: number | string; toDashboard?: boolean};
   MilestoneChecklist: undefined;
@@ -40,7 +40,7 @@ export type InfoParamList = {
   Info: undefined;
 };
 export type MilestoneCheckListParamList = {
-  MilestoneChecklist: undefined;
+  MilestoneChecklist: {actEarly: true} | undefined;
   MilestoneChecklistGetStarted: undefined;
   MilestoneChecklistQuickView: {quickView?: boolean} | undefined;
   ChildSummary: undefined;
@@ -56,7 +56,9 @@ export type RootStackParamList = {
 };
 
 export type DashboardDrawerParamsList = {
-  DashboardStack: undefined;
+  DashboardStack: {addChild?: boolean} | undefined;
+  AddChildStub: {redirect: [string, any]} | undefined;
+  WhenToActEarly: {redirect: [string, any]} | undefined;
   SettingsStack: undefined;
   MilestoneChecklistStack: undefined;
   MilestoneQuickViewStack: {initialRouteName?: keyof MilestoneCheckListParamList; quickView?: boolean} | undefined;

@@ -8,6 +8,7 @@ import AEScrollView from '../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import NotificationsBadge from '../components/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
+import {useNavigation} from '@react-navigation/native';
 
 const InfoScreen: React.FC = () => {
   const {t} = useTranslation('info');

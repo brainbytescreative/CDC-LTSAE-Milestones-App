@@ -55,10 +55,10 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
   return useQuery<ChildResult, [string, {id?: string}]>(
     ['selectedChild', {id: selectedChild}],
     async () => {
-      const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
+      let result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
 
       if (!result || result[0].rows.length === 0) {
-        throw Error('Not found');
+        result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');
       }
 
       const child = (result && result[0].rows.item(0)) || {};
@@ -66,7 +66,7 @@ export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
       return {
         ...child,
         photo: pathFromDB(child.photo),
-        birthday: parseISO(child.birthday),
+        birthday: child.birthday && parseISO(child.birthday),
       };
     },
     options,

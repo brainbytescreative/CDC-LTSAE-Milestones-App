@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import MonthCarousel from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
@@ -19,7 +19,6 @@ import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
 import {ReactQueryConfigProvider, useQuery} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
-import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
@@ -27,6 +26,7 @@ import PurpleArc from '../../components/Svg/PurpleArc';
 
 interface Props {
   navigation: StackNavigationProp<any>;
+  route: RouteProp<DashboardStackParamList, 'Dashboard'>;
 }
 
 export type DashboardStackNavigationProp = CompositeNavigationProp<
@@ -155,8 +155,8 @@ const DashboardContainer: React.FC = () => {
   const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
   const childAgeText = formatAge(child?.birthday);
-  const [setMilestoneNotifications] = useSetMilestoneNotifications();
-  const [sheduleNotifications] = useScheduleNotifications();
+  // const [setMilestoneNotifications] = useSetMilestoneNotifications();
+  // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
 
@@ -201,9 +201,16 @@ const DashboardContainer: React.FC = () => {
   );
 };
 
-const DashboardScreen: React.FC<Props> = () => {
+const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
   // const {refetch} = useGetChecklistQuestions();
+
+  const addChildParam = route.params?.addChild;
+  useEffect(() => {
+    if (addChildParam) {
+      navigation.setParams({addChild: false});
+    }
+  }, [addChildParam, navigation]);
 
   return (
     <>
@@ -211,7 +218,7 @@ const DashboardScreen: React.FC<Props> = () => {
         config={{
           suspense: true,
         }}>
-        <ChildSelectorModal />
+        <ChildSelectorModal visible={addChildParam} />
 
         <ScrollView bounces={false} style={{backgroundColor: '#fff'}} contentContainerStyle={{flexGrow: 1}}>
           <View
