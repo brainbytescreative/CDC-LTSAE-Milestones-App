@@ -7,12 +7,14 @@ import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
 import {ChildDbRecord, ChildResult} from './childrenHooks';
 import {checkMissingMilestones, formattedAge, tOpt} from '../utils/helpers';
-import {childAges} from '../resources/constants';
+import {childAges, PropType} from '../resources/constants';
 import {TFunction} from 'i18next';
 import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
 import {InteractionManager} from 'react-native';
 import _ from 'lodash';
 import {Answer, MilestoneAnswer} from './types';
+import {Appointment, AppointmentDb} from './appointmentsHooks';
+import {getAppointmentById} from '../db/appoinmetQueries';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -40,6 +42,11 @@ interface NotificationResult extends Omit<NotificationDB, 'fireDateTimestamp'> {
 
 interface MilestoneNotificationsPayload {
   child: ChildResult;
+}
+
+interface AppointmentNotificationsPayload {
+  // child: ChildResult;
+  appointmentId: PropType<Appointment, 'id'>;
 }
 
 export enum NotificationCategory {
@@ -191,12 +198,15 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
       case NotificationCategory.Recommendation:
         return undefined;
       case NotificationCategory.Milestone:
+      case NotificationCategory.Appointment: {
         const params: Record<string, string | number | undefined> =
           value.bodyArguments && JSON.parse(value.bodyArguments);
         const options = {
           name: params.name,
           childAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t).milestoneAgeFormatted,
           milestoneAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormatted,
+          milestoneAgeFormattedDashed:
+            value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormattedDashes,
           ...tOpt({t, gender: Number(params.gender)}),
         };
         return {
@@ -208,8 +218,7 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
           },
           trigger: parseISO(value.fireDateTimestamp),
         } as NotificationRequestInput;
-      case NotificationCategory.Appointment:
-        return undefined;
+      }
       case NotificationCategory.TipsAndActivities:
         return {
           identifier: value.notificationId,
@@ -229,7 +238,7 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
   }
 }
 
-const sheduleNotifications = async (t: TFunction) => {
+const scheduleNotifications = async (t: TFunction) => {
   InteractionManager.runAfterInteractions(async () => {
     const notificationSettings = await getNotificationSettings();
 
@@ -260,6 +269,7 @@ const sheduleNotifications = async (t: TFunction) => {
       return previousValue;
     }, [] as NotificationCategory[]);
 
+    // gets all notifications in future
     const result = await sqLiteClient.dB?.executeSql(
       `select *
        from notifications
@@ -288,7 +298,7 @@ export function useScheduleNotifications() {
   const {t} = useTranslation();
 
   return useMutation(() => {
-    return sheduleNotifications(t);
+    return scheduleNotifications(t);
   });
 }
 
@@ -410,3 +420,72 @@ export function useGetUnreadNotifications() {
     },
   );
 }
+
+export function useSetAppointmentNotifications() {
+  const {t} = useTranslation();
+  return useMutation<void, AppointmentNotificationsPayload>(async (variables) => {
+    const appointmentResult = await getAppointmentById(variables.appointmentId);
+
+    if (!appointmentResult) {
+      return;
+    }
+
+    const appointmentDate = parseISO(appointmentResult.date);
+    const series = [
+      {
+        notificationId: `appointment_2DaysBefore_${appointmentResult.id}`,
+        fireDateTimestamp: add(appointmentDate, {seconds: -40}),
+        body: 'notifications:appointment2DaysBeforeBody',
+      },
+      {
+        notificationId: `appointment_morning_${appointmentResult.id}`,
+        fireDateTimestamp: add(appointmentDate, {seconds: -20}),
+        body: 'notifications:appointmentMorningBody',
+      },
+    ];
+
+    const milestoneId = 0;
+
+    await sqLiteClient.dB?.transaction((tx) => {
+      series.forEach(({notificationId, fireDateTimestamp, body}) => {
+        tx.executeSql(
+          ` insert or
+                replace
+                into notifications
+                (notificationId,
+                 fireDateTimestamp,
+                 notificationCategoryType,
+                 childId,
+                 milestoneId,
+                 bodyLocalizedKey,
+                 titleLocalizedKey,
+                 bodyArguments,
+                 notificationRead)
+                values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+                        coalesce(?9, (select notificationRead from notifications where notificationId = ?1)))`,
+          [
+            notificationId,
+            formatISO(fireDateTimestamp),
+            NotificationCategory.Appointment,
+            appointmentResult.childId,
+            milestoneId,
+            body,
+            'notifications:appointmentNotificationTitle',
+            JSON.stringify({name: appointmentResult.childName}),
+          ],
+        );
+      });
+    });
+
+    await scheduleNotifications(t);
+  });
+}
+
+export function useDeleteNotificationsByAppointmentId() {
+  const {t} = useTranslation();
+  return useMutation<void, Pick<AppointmentDb, 'id'>>(async () => {
+    await scheduleNotifications(t);
+  });
+}
+
+// export function useNavigateNotification();

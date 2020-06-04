@@ -84,6 +84,9 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 };
 
 const App = () => {
+  const routeNameRef = React.useRef<string | undefined>(undefined);
+  const navigationRef = React.useRef<NavigationContainerRef>(null);
+
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
@@ -103,7 +106,8 @@ const App = () => {
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const url = response.notification.request; //.content.data.url;
-      console.log('addNotificationResponseReceivedListener', url);
+      console.log('addNotificationResponseReceivedListener', url.identifier);
+      // navigationRef.current.
     });
     return () => subscription.remove();
   }, []);
@@ -113,10 +117,32 @@ const App = () => {
     // crashlytics().crash();
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync().then(console.log);
+    // Dashboard
+    // setTimeout(() => {
+    //   // navigationRef.current?.reset({
+    //   //   index: 0,
+    //   //   routes: [
+    //   //     {
+    //   //       name: 'DashboardStack',
+    //   //       state: {
+    //   //         index: 1,
+    //   //         routes: [
+    //   //           {
+    //   //             name: 'Dashboard',
+    //   //           },
+    //   //           {
+    //   //             name: 'Appointment',
+    //   //             params: {
+    //   //               appointmentId: 1,
+    //   //             },
+    //   //           },
+    //   //         ],
+    //   //       },
+    //   //     },
+    //   //   ],
+    //   // });
+    // }, 5000);
   }, []);
-
-  const routeNameRef = React.useRef<string | undefined>(undefined);
-  const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);
 
   return (
     <>
