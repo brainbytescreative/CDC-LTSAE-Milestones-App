@@ -15,6 +15,9 @@ import _ from 'lodash';
 import {Answer, MilestoneAnswer} from './types';
 import {Appointment, AppointmentDb} from './appointmentsHooks';
 import {getAppointmentById} from '../db/appoinmetQueries';
+import {getNotificationById} from '../db/notificationQueries';
+import {NavigationContainerRef} from '@react-navigation/core';
+import {Ref, useCallback} from 'react';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -460,9 +463,11 @@ export function useSetAppointmentNotifications() {
                  bodyLocalizedKey,
                  titleLocalizedKey,
                  bodyArguments,
-                 notificationRead)
-                values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
-                        coalesce(?9, (select notificationRead from notifications where notificationId = ?1)))`,
+                 appointmentId,
+                 notificationRead
+                 )
+                values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,
+                        coalesce(?10, (select notificationRead from notifications where notificationId = ?1)))`,
           [
             notificationId,
             formatISO(fireDateTimestamp),
@@ -472,6 +477,7 @@ export function useSetAppointmentNotifications() {
             body,
             'notifications:appointmentNotificationTitle',
             JSON.stringify({name: appointmentResult.childName}),
+            appointmentResult.id,
           ],
         );
       });
@@ -488,4 +494,47 @@ export function useDeleteNotificationsByAppointmentId() {
   });
 }
 
-// export function useNavigateNotification();
+function navStateForAppointmentID(appointmentId: PropType<AppointmentDb, 'id'>) {
+  return {
+    index: 0,
+    routes: [
+      {
+        name: 'DashboardStack',
+        state: {
+          index: 1,
+          routes: [
+            {
+              name: 'Dashboard',
+            },
+            {
+              name: 'Appointment',
+              params: {
+                appointmentId: appointmentId,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+}
+
+export function useNavigateNotification() {
+  const [setNotificationRead] = useSetNotificationRead();
+  const navigateNotification = useCallback(
+    async (notificationId: string, navigator: NavigationContainerRef) => {
+      const notificationData = await getNotificationById(notificationId);
+      switch (notificationData?.notificationCategoryType) {
+        case NotificationCategory.Appointment: {
+          notificationData?.appointmentId &&
+            navigator?.reset(navStateForAppointmentID(notificationData?.appointmentId));
+        }
+      }
+
+      return setNotificationRead({notificationId});
+    },
+    [setNotificationRead],
+  );
+
+  return [navigateNotification];
+}

@@ -28,6 +28,7 @@ import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
+import {useNavigateNotification} from './src/hooks/notificationsHooks';
 enableScreens();
 
 // First, set the handler that will cause the notification
@@ -86,6 +87,7 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 const App = () => {
   const routeNameRef = React.useRef<string | undefined>(undefined);
   const navigationRef = React.useRef<NavigationContainerRef>(null);
+  const [navigateNotification] = useNavigateNotification();
 
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
@@ -106,42 +108,16 @@ const App = () => {
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const url = response.notification.request; //.content.data.url;
-      console.log('addNotificationResponseReceivedListener', url.identifier);
-      // navigationRef.current.
+      navigationRef.current && navigateNotification(response.notification.request.identifier, navigationRef.current);
     });
     return () => subscription.remove();
-  }, []);
+  }, [navigationRef, navigateNotification]);
 
   React.useEffect(() => {
     crashlytics().log('App mounted.');
     // crashlytics().crash();
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync().then(console.log);
-    // Dashboard
-    // setTimeout(() => {
-    //   // navigationRef.current?.reset({
-    //   //   index: 0,
-    //   //   routes: [
-    //   //     {
-    //   //       name: 'DashboardStack',
-    //   //       state: {
-    //   //         index: 1,
-    //   //         routes: [
-    //   //           {
-    //   //             name: 'Dashboard',
-    //   //           },
-    //   //           {
-    //   //             name: 'Appointment',
-    //   //             params: {
-    //   //               appointmentId: 1,
-    //   //             },
-    //   //           },
-    //   //         ],
-    //   //       },
-    //   //     },
-    //   //   ],
-    //   // });
-    // }, 5000);
   }, []);
 
   return (
