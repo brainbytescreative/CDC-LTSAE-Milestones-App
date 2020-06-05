@@ -232,7 +232,10 @@
     "appointment2DaysBeforeBody": "{{name}} has a doctor’s appointment in two days. Take a moment to write down any concerns you might have to share with the doctor. If this is a well-child checkup, also be sure to share {{hisHersTag}} milestone checklist.",
     "appointmentMorningBody": "{{name}} has a doctor’s appointment today. Be sure to share any concerns with the doctor. If this is a well-child checkup, also be sure to share {{hisHersTag}} milestone checklist.",
     "nextMilestoneNotificationBody": "{{name}} is turning {{childAgeFormatted}} old! It’s time to complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist.",
-    "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked Not Yet or Not Sure. Would you like to recheck those milestones?"
+    "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked Not Yet or Not Sure. Would you like to recheck those milestones?",
+    "recommendation1DayPassedBody": "Acting early on missed milestones can make a big difference. While each child develops differently, some differences may indicate a cause for concern. Set a doctor’s appointment to share {{name}}‘s summary and ask for developmental screening. Don’t wait.",
+    "recommendation1weekPassedBody": "Do you have an appointment to talk with the doctor about {{name}}’s milestone summary? Don’t wait. Acting early can make a big difference.",
+    "recommendation4weeksPassedBody": "You marked some of {{name}}’s milestones as Not Yet or Not Sure. Still unsure? Act Early by talking to {{hisHersTag}} doctor."
   },
   "states": {
     "AL": "Alabama (AL)",

@@ -17,7 +17,7 @@ import {Appointment, AppointmentDb} from './appointmentsHooks';
 import {getAppointmentById} from '../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../db/notificationQueries';
 import {NavigationContainerRef} from '@react-navigation/core';
-import {Ref, useCallback} from 'react';
+import {useCallback} from 'react';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -52,12 +52,24 @@ interface AppointmentNotificationsPayload {
   appointmentId: PropType<Appointment, 'id'>;
 }
 
-export enum NotificationCategory {
-  Recommendation,
-  Milestone,
-  Appointment,
-  TipsAndActivities,
+interface RecommendationNotificationsPayload {
+  child: Pick<ChildDbRecord, 'id' | 'name'>;
+  milestoneId: number;
+  reschedule?: boolean;
 }
+
+interface RecommendationNotificationsDeletePayload extends Omit<RecommendationNotificationsPayload, 'child'> {
+  childId: PropType<ChildDbRecord, 'id'>;
+}
+
+export enum NotificationCategory {
+  Recommendation = 0,
+  Milestone = 1,
+  // eslint-disable-next-line no-shadow
+  Appointment = 2,
+  TipsAndActivities = 3,
+}
+
 // setHours(startOfDay(new Date()), 8)
 export function useSetMilestoneNotifications() {
   const [reschedule] = useScheduleNotifications();
@@ -127,6 +139,9 @@ export function useSetMilestoneNotifications() {
 
 export function useSetCompleteMilestoneReminder() {
   const [reschedule] = useScheduleNotifications();
+  const [setRecommendationNotifications] = useSetRecommendationNotifications();
+  const [deleteRecommendationNotifications] = useDeleteRecommendationNotifications();
+
   return useMutation<void, NonNullable<Omit<MilestoneAnswer, 'note'>> & {prevAnswer?: Answer}>(
     async ({prevAnswer, answer, childId, milestoneId}) => {
       InteractionManager.runAfterInteractions(async () => {
@@ -143,6 +158,8 @@ export function useSetCompleteMilestoneReminder() {
             `,
               [notificationId],
             );
+            await deleteRecommendationNotifications({milestoneId, childId, reschedule: false});
+
             return reschedule();
           }
         } else if (
@@ -188,6 +205,12 @@ export function useSetCompleteMilestoneReminder() {
             ],
           );
 
+          await setRecommendationNotifications({
+            reschedule: false,
+            child: {id: childId, name: child?.name || ''},
+            milestoneId,
+          });
+
           return reschedule();
         }
       });
@@ -198,10 +221,9 @@ export function useSetCompleteMilestoneReminder() {
 export function notificationDbToRequest(value: NotificationDB, t: TFunction): NotificationRequestInput | undefined {
   try {
     switch (value.notificationCategoryType) {
-      case NotificationCategory.Recommendation:
-        return undefined;
       case NotificationCategory.Milestone:
-      case NotificationCategory.Appointment: {
+      case NotificationCategory.Appointment:
+      case NotificationCategory.Recommendation: {
         const params: Record<string, string | number | undefined> =
           value.bodyArguments && JSON.parse(value.bodyArguments);
         const options = {
@@ -484,6 +506,81 @@ export function useSetAppointmentNotifications() {
     });
 
     await scheduleNotifications(t);
+  });
+}
+
+export function useSetRecommendationNotifications() {
+  const {t} = useTranslation();
+  return useMutation<void, RecommendationNotificationsPayload>(async ({child, milestoneId, reschedule}) => {
+    const eventDate = new Date();
+    const series = [
+      {
+        notificationId: `recommendation_1day_passed_${child.id}_${milestoneId}`,
+        fireDateTimestamp: add(eventDate, {seconds: 20}),
+        body: 'notifications:recommendation1DayPassedBody',
+      },
+      {
+        notificationId: `recommendation_1week_passed_${child.id}_${milestoneId}`,
+        fireDateTimestamp: add(eventDate, {seconds: 40}),
+        body: 'notifications:recommendation1weekPassedBody',
+      },
+      {
+        notificationId: `recommendation_4weeks_passed_${child.id}_${milestoneId}`,
+        fireDateTimestamp: add(eventDate, {seconds: 60}),
+        body: 'notifications:recommendation4weeksPassedBody',
+      },
+    ];
+
+    await sqLiteClient.dB?.transaction((tx) => {
+      series.forEach(({notificationId, fireDateTimestamp, body}) => {
+        tx.executeSql(
+          ` INSERT OR
+              REPLACE
+              INTO notifications
+              (notificationId,
+               fireDateTimestamp,
+               notificationCategoryType,
+               childId,
+               milestoneId,
+               bodyLocalizedKey,
+               titleLocalizedKey,
+               bodyArguments,
+               notificationRead)
+              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+                      coalesce(?9, (SELECT notificationRead FROM notifications WHERE notificationId = ?1)))`,
+          [
+            notificationId,
+            formatISO(fireDateTimestamp),
+            NotificationCategory.Recommendation,
+            child.id,
+            milestoneId,
+            body,
+            'notifications:appointmentNotificationTitle',
+            JSON.stringify({name: child.name}),
+          ],
+        );
+      });
+    });
+
+    (reschedule === undefined || reschedule) && (await scheduleNotifications(t));
+  });
+}
+
+export function useDeleteRecommendationNotifications() {
+  const {t} = useTranslation();
+  return useMutation<void, RecommendationNotificationsDeletePayload>(async ({childId, milestoneId, reschedule}) => {
+    await sqLiteClient.dB?.executeSql(
+      `
+          DELETE
+          FROM notifications
+          WHERE notificationCategoryType = ?1
+            AND childId = ?2
+            AND milestoneId = ?3
+      `,
+      [NotificationCategory.Recommendation, childId, milestoneId],
+    );
+
+    (reschedule === undefined || reschedule) && (await scheduleNotifications(t));
   });
 }
 
