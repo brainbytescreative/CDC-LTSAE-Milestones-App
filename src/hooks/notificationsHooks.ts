@@ -70,6 +70,43 @@ export enum NotificationCategory {
   TipsAndActivities = 3,
 }
 
+/**
+ * Trigger getter functions
+ */
+
+function milestoneNotificationBefore2Weeks8Am({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
+  const before2weeks = sub(add(birthday, {months: milestoneId}), {weeks: 2});
+  return setHours(startOfDay(before2weeks), 8);
+}
+
+function completeMilestoneReminderTrigger() {
+  return formatISO(add(new Date(), {weeks: 2}));
+}
+
+function tipsAndActivitiesTrigger() {
+  return add(new Date(), {seconds: 5});
+}
+
+function apppointment2daysBeforeTrigger(appointmentDate: Date) {
+  return add(appointmentDate, {seconds: -40});
+}
+
+function appointmentMorningTrigger(appointmentDate: Date) {
+  return add(appointmentDate, {seconds: -20});
+}
+
+function reccomendation1DayPassed() {
+  return add(new Date(), {seconds: 20});
+}
+
+function recommendation1weekPassed() {
+  return add(new Date(), {seconds: 40});
+}
+
+function recommendation4weeksPassed() {
+  return add(new Date(), {seconds: 60});
+}
+
 // setHours(startOfDay(new Date()), 8)
 export function useSetMilestoneNotifications() {
   const [reschedule] = useScheduleNotifications();
@@ -80,8 +117,7 @@ export function useSetMilestoneNotifications() {
 
       const queriesParams = remainingMilestones.map((value) => {
         const milestoneId = Math.abs(value);
-        const before2weeks = sub(add(variables.child.birthday, {months: value}), {weeks: 2});
-        const at8am = setHours(startOfDay(before2weeks), 8);
+        const at8am = milestoneNotificationBefore2Weeks8Am({birthday: variables.child.birthday, milestoneId: value});
         return {
           notificationId: `milestone_age_${milestoneId}_child_${variables.child.id}`,
           fireDateTimestamp: formatISO(at8am),
@@ -166,7 +202,7 @@ export function useSetCompleteMilestoneReminder() {
           (prevAnswer === Answer.YES || prevAnswer === undefined) &&
           (answer === Answer.NOT_YET || answer === Answer.UNSURE)
         ) {
-          const twoWeeksLater = formatISO(add(new Date(), {weeks: 2}));
+          const twoWeeksLater = completeMilestoneReminderTrigger();
           const childResult = await sqLiteClient.dB?.executeSql('SELECT name, gender FROM children WHERE id=?1', [
             childId,
           ]);
@@ -335,7 +371,7 @@ export function useSetTipsAndActivitiesNotification() {
       const identifier = notificationId || uuid();
       const bodyLocalizedKey = `milestones:${bodyKey}`;
       const titleLocalizedKey = 'notifications:tipsAndActivitiesTitle';
-      const trigger = add(new Date(), {seconds: 5});
+      const trigger = tipsAndActivitiesTrigger();
 
       await sqLiteClient.dB
         ?.executeSql(
@@ -459,12 +495,12 @@ export function useSetAppointmentNotifications() {
     const series = [
       {
         notificationId: `appointment_2DaysBefore_${appointmentResult.id}`,
-        fireDateTimestamp: add(appointmentDate, {seconds: -40}),
+        fireDateTimestamp: apppointment2daysBeforeTrigger(appointmentDate),
         body: 'notifications:appointment2DaysBeforeBody',
       },
       {
         notificationId: `appointment_morning_${appointmentResult.id}`,
-        fireDateTimestamp: add(appointmentDate, {seconds: -20}),
+        fireDateTimestamp: appointmentMorningTrigger(appointmentDate),
         body: 'notifications:appointmentMorningBody',
       },
     ];
@@ -512,21 +548,20 @@ export function useSetAppointmentNotifications() {
 export function useSetRecommendationNotifications() {
   const {t} = useTranslation();
   return useMutation<void, RecommendationNotificationsPayload>(async ({child, milestoneId, reschedule}) => {
-    const eventDate = new Date();
     const series = [
       {
         notificationId: `recommendation_1day_passed_${child.id}_${milestoneId}`,
-        fireDateTimestamp: add(eventDate, {seconds: 20}),
+        fireDateTimestamp: reccomendation1DayPassed(),
         body: 'notifications:recommendation1DayPassedBody',
       },
       {
         notificationId: `recommendation_1week_passed_${child.id}_${milestoneId}`,
-        fireDateTimestamp: add(eventDate, {seconds: 40}),
+        fireDateTimestamp: recommendation1weekPassed(),
         body: 'notifications:recommendation1weekPassedBody',
       },
       {
         notificationId: `recommendation_4weeks_passed_${child.id}_${milestoneId}`,
-        fireDateTimestamp: add(eventDate, {seconds: 60}),
+        fireDateTimestamp: recommendation4weeksPassed(),
         body: 'notifications:recommendation4weeksPassedBody',
       },
     ];
@@ -555,7 +590,7 @@ export function useSetRecommendationNotifications() {
             child.id,
             milestoneId,
             body,
-            'notifications:appointmentNotificationTitle',
+            'notifications:recommendationNotificationTitle',
             JSON.stringify({name: child.name}),
           ],
         );

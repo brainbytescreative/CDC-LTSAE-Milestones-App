@@ -229,6 +229,7 @@
     "tipsAndActivitiesTitle": "Tips & Activities",
     "milestoneNotificationTitle": "Milestone Notification",
     "appointmentNotificationTitle": "Appointment Notification",
+    "recommendationNotificationTitle": "Recommendation notification",
     "appointment2DaysBeforeBody": "{{name}} has a doctor’s appointment in two days. Take a moment to write down any concerns you might have to share with the doctor. If this is a well-child checkup, also be sure to share {{hisHersTag}} milestone checklist.",
     "appointmentMorningBody": "{{name}} has a doctor’s appointment today. Be sure to share any concerns with the doctor. If this is a well-child checkup, also be sure to share {{hisHersTag}} milestone checklist.",
     "nextMilestoneNotificationBody": "{{name}} is turning {{childAgeFormatted}} old! It’s time to complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist.",
