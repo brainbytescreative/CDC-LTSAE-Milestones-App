@@ -4,7 +4,7 @@ import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
 import {PropType} from '../resources/constants';
 import {ChildDbRecord, ChildResult} from './childrenHooks';
-import {useSetAppointmentNotifications} from './notificationsHooks';
+import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
 import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
 
 export interface AppointmentDb {
@@ -84,6 +84,7 @@ export function useAddAppointment() {
 }
 
 export function useDeleteAppointment() {
+  const [deleteNotificationsByAppointmentId] = useDeleteNotificationsByAppointmentId();
   return useMutation<void, PropType<AppointmentDb, 'id'>>(
     async (id) => {
       const rowsAffected = await deleteAppointmentById(id);
@@ -94,8 +95,9 @@ export function useDeleteAppointment() {
     },
     {
       throwOnError: false,
-      onSuccess: () => {
+      onSuccess: (data, id) => {
         queryCache.refetchQueries('appointment', {force: true});
+        deleteNotificationsByAppointmentId({id});
       },
     },
   );

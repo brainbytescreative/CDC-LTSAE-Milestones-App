@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
 import {ChildDbRecord, ChildResult} from './childrenHooks';
-import {checkMissingMilestones, formattedAge, tOpt} from '../utils/helpers';
+import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../utils/helpers';
 import {childAges, PropType} from '../resources/constants';
 import {TFunction} from 'i18next';
 import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
@@ -15,7 +15,7 @@ import _ from 'lodash';
 import {Answer, MilestoneAnswer} from './types';
 import {Appointment, AppointmentDb} from './appointmentsHooks';
 import {getAppointmentById} from '../db/appoinmetQueries';
-import {getNotificationById} from '../db/notificationQueries';
+import {deleteNotificationsByAppointmentId, getNotificationById} from '../db/notificationQueries';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {Ref, useCallback} from 'react';
 
@@ -489,34 +489,10 @@ export function useSetAppointmentNotifications() {
 
 export function useDeleteNotificationsByAppointmentId() {
   const {t} = useTranslation();
-  return useMutation<void, Pick<AppointmentDb, 'id'>>(async () => {
+  return useMutation<void, Pick<AppointmentDb, 'id'>>(async (variables) => {
+    await deleteNotificationsByAppointmentId(variables.id);
     await scheduleNotifications(t);
   });
-}
-
-function navStateForAppointmentID(appointmentId: PropType<AppointmentDb, 'id'>) {
-  return {
-    index: 0,
-    routes: [
-      {
-        name: 'DashboardStack',
-        state: {
-          index: 1,
-          routes: [
-            {
-              name: 'Dashboard',
-            },
-            {
-              name: 'Appointment',
-              params: {
-                appointmentId: appointmentId,
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
 }
 
 export function useNavigateNotification() {

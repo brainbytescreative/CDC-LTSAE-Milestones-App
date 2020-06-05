@@ -4,9 +4,10 @@ import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
-import {childAges, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {childAges, missingConcerns, PropType, tooYongAgeDays} from '../resources/constants';
 import {sqLiteClient} from '../db';
 import {Answer} from '../hooks/types';
+import {AppointmentDb} from '../hooks/appointmentsHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -147,3 +148,26 @@ export function slowdown<T>(promise: Promise<T> | T, timeOut = 300): Promise<T> 
     ([, res]) => res,
   );
 }
+
+export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 'id'>) => ({
+  index: 0,
+  routes: [
+    {
+      name: 'DashboardStack',
+      state: {
+        index: 1,
+        routes: [
+          {
+            name: 'Dashboard',
+          },
+          {
+            name: 'Appointment',
+            params: {
+              appointmentId: appointmentId,
+            },
+          },
+        ],
+      },
+    },
+  ],
+});
