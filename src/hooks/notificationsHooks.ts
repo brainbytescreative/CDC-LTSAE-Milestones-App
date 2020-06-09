@@ -7,7 +7,7 @@ import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
 import {ChildDbRecord, ChildResult} from './childrenHooks';
 import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../utils/helpers';
-import {childAges, PropType} from '../resources/constants';
+import {milestonesIds, PropType, WellChildCheckUpAppointmentAgesEnum} from '../resources/constants';
 import {TFunction} from 'i18next';
 import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
 import {InteractionManager} from 'react-native';
@@ -70,13 +70,17 @@ export enum NotificationCategory {
   TipsAndActivities = 3,
 }
 
+function at8AM(date: Date) {
+  return setHours(startOfDay(date), 8);
+}
+
 /**
- * Trigger getter functions
+ * Trigger time getter functions
  */
 
-function milestoneNotificationBefore2Weeks8Am({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
+function milestoneNotificationBefore2Weeks({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
   const before2weeks = sub(add(birthday, {months: milestoneId}), {weeks: 2});
-  return setHours(startOfDay(before2weeks), 8);
+  return at8AM(before2weeks);
 }
 
 function completeMilestoneReminderTrigger() {
@@ -107,17 +111,25 @@ function recommendation4weeksPassed() {
   return add(new Date(), {seconds: 60});
 }
 
+function wellChildCheckup5DaysAfterBirthday(birthday: Date) {
+  return at8AM(add(birthday, {days: 2}));
+}
+
+function wellCheckUpMilestoneReminder(birthday: Date, value: number) {
+  return at8AM(add(birthday, {months: value}));
+}
+
 // setHours(startOfDay(new Date()), 8)
 export function useSetMilestoneNotifications() {
   const [reschedule] = useScheduleNotifications();
   return useMutation<void, MilestoneNotificationsPayload>(
     async (variables) => {
       const ageMonth = differenceInMonths(new Date(), variables.child.birthday);
-      const remainingMilestones = childAges.map((value) => (value > (ageMonth || 0) ? value : -value));
+      const remainingMilestones = futureAges([...milestonesIds], ageMonth);
 
       const queriesParams = remainingMilestones.map((value) => {
         const milestoneId = Math.abs(value);
-        const at8am = milestoneNotificationBefore2Weeks8Am({birthday: variables.child.birthday, milestoneId: value});
+        const at8am = milestoneNotificationBefore2Weeks({birthday: variables.child.birthday, milestoneId: value});
         return {
           notificationId: `milestone_age_${milestoneId}_child_${variables.child.id}`,
           fireDateTimestamp: formatISO(at8am),
@@ -614,6 +626,115 @@ export function useDeleteRecommendationNotifications() {
       `,
       [NotificationCategory.Recommendation, childId, milestoneId],
     );
+
+    (reschedule === undefined || reschedule) && (await scheduleNotifications(t));
+  });
+}
+
+function futureAges(ages: number[], ageMonth: number) {
+  return ages.map((value) => (value > (ageMonth || 0) ? value : -value));
+}
+
+export function useSetWellChildCheckUpAppointments() {
+  const {t} = useTranslation();
+  return useMutation<void, any>(async ({child, reschedule}) => {
+    const ageMonth = differenceInMonths(new Date(), child.birthday);
+    const noChecklistMonths = futureAges(
+      [
+        WellChildCheckUpAppointmentAgesEnum.Age1,
+        WellChildCheckUpAppointmentAgesEnum.Age15,
+        WellChildCheckUpAppointmentAgesEnum.Age30,
+      ],
+      ageMonth,
+    );
+
+    const noCheckListData = noChecklistMonths.map((value) => ({
+      notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+      fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
+      body: 'notifications:wellCheckUpNoChecklist',
+      milestoneId: value,
+    }));
+
+    const screeningReminders1 = futureAges(
+      [WellChildCheckUpAppointmentAgesEnum.Age9, WellChildCheckUpAppointmentAgesEnum.Age30],
+      ageMonth,
+    );
+
+    const screeningReminders1Data = screeningReminders1.map((value) => ({
+      notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+      fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
+      body: 'notifications:wellCheckUpSR1',
+      milestoneId: value,
+    }));
+
+    const screeningReminders2 = futureAges(
+      [WellChildCheckUpAppointmentAgesEnum.Age18, WellChildCheckUpAppointmentAgesEnum.Age24],
+      ageMonth,
+    );
+
+    const screeningReminders2Data = screeningReminders2.map((value) => ({
+      notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+      fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
+      body: 'notifications:wellCheckUpSR2',
+      milestoneId: value,
+    }));
+
+    const years = Array.from(new Array(5));
+
+    const fiveDaysAfterBirthdayData = years.map((value, index) => ({
+      notificationId: `well_child_check_up_appointment_${child.id}_5_days_after_birthday`,
+      fireDateTimestamp: wellChildCheckup5DaysAfterBirthday(add(child.birthday, {years: index})),
+      body: 'notifications:wellCheckUp5DaysAfterBirthday',
+      milestoneId: null,
+    }));
+
+    const remainingMilestones = futureAges([...milestonesIds], ageMonth);
+
+    const before2WeeksData = remainingMilestones.map((value) => ({
+      notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+      fireDateTimestamp: milestoneNotificationBefore2Weeks({milestoneId: value, birthday: child.birthday}),
+      body: 'notifications:wellCheckUp5DaysAfterBirthday',
+      milestoneId: null,
+    }));
+
+    const series = [
+      ...noCheckListData,
+      ...screeningReminders1Data,
+      ...screeningReminders2Data,
+      ...before2WeeksData,
+      ...fiveDaysAfterBirthdayData,
+    ];
+
+    await sqLiteClient.dB?.transaction((tx) => {
+      series.forEach(({notificationId, fireDateTimestamp, body, milestoneId}) => {
+        tx.executeSql(
+          ` INSERT OR
+              REPLACE
+              INTO notifications
+              (notificationId,
+               fireDateTimestamp,
+               notificationCategoryType,
+               childId,
+               milestoneId,
+               bodyLocalizedKey,
+               titleLocalizedKey,
+               bodyArguments,
+               notificationRead)
+              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
+                      coalesce(?9, (SELECT notificationRead FROM notifications WHERE notificationId = ?1)))`,
+          [
+            notificationId,
+            formatISO(fireDateTimestamp),
+            NotificationCategory.Appointment,
+            child.id,
+            milestoneId,
+            body,
+            'notifications:recommendationNotificationTitle',
+            JSON.stringify({name: child.name}),
+          ],
+        );
+      });
+    });
 
     (reschedule === undefined || reschedule) && (await scheduleNotifications(t));
   });

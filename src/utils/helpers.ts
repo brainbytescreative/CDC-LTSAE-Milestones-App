@@ -4,7 +4,7 @@ import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
-import {childAges, missingConcerns, PropType, tooYongAgeDays} from '../resources/constants';
+import {milestonesIds, missingConcerns, PropType, tooYongAgeDays} from '../resources/constants';
 import {sqLiteClient} from '../db';
 import {Answer} from '../hooks/types';
 import {AppointmentDb} from '../hooks/appointmentsHooks';
@@ -49,8 +49,8 @@ export function calcChildAge(birthDay: Date | undefined) {
   let ageMonth: number;
   if (birthDay) {
     ageMonth = differenceInMonths(new Date(), birthDay);
-    const minAge = _.min(childAges) || 0;
-    const maxAge = _.max(childAges) || Infinity;
+    const minAge = _.min(milestonesIds) || 0;
+    const maxAge = _.max(milestonesIds) || Infinity;
 
     if (ageMonth <= minAge) {
       milestoneAge = minAge;
@@ -59,7 +59,7 @@ export function calcChildAge(birthDay: Date | undefined) {
     } else if (ageMonth >= maxAge) {
       milestoneAge = maxAge;
     } else {
-      const milestones = childAges.filter((value) => value <= ageMonth);
+      const milestones = milestonesIds.filter((value) => value <= ageMonth);
       milestoneAge = _.last(milestones);
     }
     return {milestoneAge, isTooYong, ageMonth};

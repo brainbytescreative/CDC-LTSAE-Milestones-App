@@ -65,6 +65,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
           {props.state.routes.map(({name, params, key}: any, index) => {
             return (
               <View
+                key={key}
                 style={[
                   {
                     backgroundColor: colors.white,

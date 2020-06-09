@@ -236,7 +236,11 @@
     "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked Not Yet or Not Sure. Would you like to recheck those milestones?",
     "recommendation1DayPassedBody": "Acting early on missed milestones can make a big difference. While each child develops differently, some differences may indicate a cause for concern. Set a doctor’s appointment to share {{name}}‘s summary and ask for developmental screening. Don’t wait.",
     "recommendation1weekPassedBody": "Do you have an appointment to talk with the doctor about {{name}}’s milestone summary? Don’t wait. Acting early can make a big difference.",
-    "recommendation4weeksPassedBody": "You marked some of {{name}}’s milestones as Not Yet or Not Sure. Still unsure? Act Early by talking to {{hisHersTag}} doctor."
+    "recommendation4weeksPassedBody": "You marked some of {{name}}’s milestones as Not Yet or Not Sure. Still unsure? Act Early by talking to {{hisHersTag}} doctor.",
+    "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Be sure to schedule this appointment and take a moment to write down any developmental concerns you might have to share with the doctor.",
+    "wellCheckUpSR1": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for all children at this age.",
+    "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for all children this age.",
+    "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} newborn checkup. Share any concerns with the doctor."
   },
   "states": {
     "AL": "Alabama (AL)",

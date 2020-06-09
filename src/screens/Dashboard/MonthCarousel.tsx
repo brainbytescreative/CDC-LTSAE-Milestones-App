@@ -1,7 +1,7 @@
 import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
 import {FlatList, FlatListProps, Platform, Text, TouchableOpacity, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {childAges, colors, PropType} from '../../resources/constants';
+import {milestonesIds, colors, PropType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
@@ -73,7 +73,7 @@ const MonthCarousel: React.FC = () => {
 
   const {data: child} = useGetCurrentChild();
 
-  const currentAgeIndex = childAges.findIndex((value) => value === milestoneAge);
+  const currentAgeIndex = milestonesIds.findIndex((value) => value === milestoneAge);
 
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -126,7 +126,7 @@ const MonthCarousel: React.FC = () => {
           }, 1000);
         }}
         onViewableItemsChanged={onViewableItemsChanged}
-        data={childAges}
+        data={milestonesIds}
         extraData={{childId: child?.id, milstone: childAge}}
         horizontal
         renderItem={({item}) => (
@@ -144,7 +144,7 @@ const MonthCarousel: React.FC = () => {
       />
       <TouchableOpacity
         onPress={() => {
-          const last = visible.current?.last || childAges.length - 1;
+          const last = visible.current?.last || milestonesIds.length - 1;
           flatListRef.current?.scrollToIndex({
             index: last,
             viewPosition: 0.5,

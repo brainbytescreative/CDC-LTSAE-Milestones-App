@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {childAges, missingConcerns, PropType, SkillType, skillTypes} from '../resources/constants';
+import {milestonesIds, missingConcerns, PropType, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
@@ -87,7 +87,7 @@ export function useSetMilestoneAge() {
   const {t} = useTranslation('common');
   const {data: child} = useGetCurrentChild();
   return [
-    (age: typeof childAges[number]) => {
+    (age: typeof milestonesIds[number]) => {
       const {milestoneAge: childAge} = calcChildAge(child?.birthday);
       const formatted = formattedAge(age, t);
       const data: MilestoneQueryResult = {
@@ -611,7 +611,7 @@ export function useCheckMissingMilestones() {
   return useMutation(
     async ({childId, milestoneId}: {childId: number; milestoneId: number}) => {
       const {isMissingConcern, isNotYet, isNotSure} = await checkMissingMilestones(milestoneId, childId);
-      const concernId = missingConcerns[childAges.indexOf(milestoneId)];
+      const concernId = missingConcerns[milestonesIds.indexOf(milestoneId)];
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
