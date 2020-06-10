@@ -18,6 +18,7 @@ import {getAppointmentById} from '../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../db/notificationQueries';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {useCallback} from 'react';
+import {useSetMilestoneAge} from './checklistHooks';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -662,7 +663,7 @@ export function useSetWellChildCheckUpAppointments() {
         notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
         fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
         body: 'notifications:wellCheckUpNoChecklist',
-        milestoneId: value,
+        milestoneId: Math.abs(value),
       }));
 
       const screeningReminders1 = futureAges(
@@ -674,7 +675,7 @@ export function useSetWellChildCheckUpAppointments() {
         notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
         fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
         body: 'notifications:wellCheckUpSR1',
-        milestoneId: value,
+        milestoneId: Math.abs(value),
       }));
 
       const screeningReminders2 = futureAges(
@@ -686,7 +687,7 @@ export function useSetWellChildCheckUpAppointments() {
         notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
         fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
         body: 'notifications:wellCheckUpSR2',
-        milestoneId: value,
+        milestoneId: Math.abs(value),
       }));
 
       const years = Array.from(new Array(5));
@@ -767,18 +768,32 @@ export function useDeleteNotificationsByAppointmentId() {
 export function useNavigateNotification() {
   const [setNotificationRead] = useSetNotificationRead();
   const [setSelectedChild] = useSetSelectedChild();
+  const [setMilestoneAge] = useSetMilestoneAge();
   const navigateNotification = useCallback(
     async (notificationId: string, navigator: Pick<NavigationContainerRef, 'navigate' | 'reset'>) => {
       const notificationData = await getNotificationById(notificationId);
       switch (notificationData?.notificationCategoryType) {
         case NotificationCategory.Appointment: {
-          notificationData?.appointmentId &&
+          if (notificationData?.appointmentId) {
             navigator?.reset(navStateForAppointmentID(notificationData?.appointmentId));
+          } else {
+            notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
+            notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+            navigator.navigate('MilestoneChecklistStack');
+          }
           break;
         }
         case NotificationCategory.TipsAndActivities: {
+          notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
+          notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
           navigator.navigate('TipsAndActivitiesStack');
-          notificationData?.childId && setSelectedChild({id: notificationData?.childId});
+          break;
+        }
+        case NotificationCategory.Milestone:
+        case NotificationCategory.Recommendation: {
+          notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
+          notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+          navigator.navigate('MilestoneChecklistStack');
           break;
         }
       }
