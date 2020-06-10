@@ -800,7 +800,7 @@ export function useNavigateNotification() {
 
       return setNotificationRead({notificationId});
     },
-    [setNotificationRead, setSelectedChild],
+    [setNotificationRead, setSelectedChild, setMilestoneAge],
   );
 
   return [navigateNotification];
