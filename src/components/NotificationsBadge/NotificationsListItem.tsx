@@ -11,11 +11,12 @@ import _ from 'lodash';
 const NotificationsListItem: React.FC<{
   index: number;
   onCrossPress: (id: string) => void;
+  onNotificationPress: (id: string) => void;
   item: NotificationDB;
   t: TFunction;
-}> = ({index, onCrossPress, item, t}) => {
+}> = ({index, onCrossPress, item, t, onNotificationPress}) => {
   const request = notificationDbToRequest(item, t);
-  console.log(_.isDate(request?.trigger));
+
   return (
     <>
       <View
@@ -34,17 +35,22 @@ const NotificationsListItem: React.FC<{
             width: 0,
             flexGrow: 1,
           }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: 'Montserrat-Bold',
+          <TouchableOpacity
+            onPress={() => {
+              onNotificationPress(item.notificationId);
             }}>
-            {request?.content.title}
-          </Text>
-          <Text>{request?.content.body}</Text>
-          <Text style={{marginTop: 10, color: colors.gray, fontSize: 13}}>
-            {_.isDate(request?.trigger) && formatDate(request?.trigger, 'datetime')}
-          </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontFamily: 'Montserrat-Bold',
+              }}>
+              {request?.content.title}
+            </Text>
+            <Text>{request?.content.body}</Text>
+            <Text style={{marginTop: 10, color: colors.gray, fontSize: 13}}>
+              {_.isDate(request?.trigger) && formatDate(request?.trigger, 'datetime')}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity

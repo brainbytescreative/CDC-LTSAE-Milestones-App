@@ -12,7 +12,7 @@ import milestoneChecklist, {
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, slowdown, tOpt} from '../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';

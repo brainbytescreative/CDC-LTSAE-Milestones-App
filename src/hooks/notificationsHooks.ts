@@ -5,7 +5,7 @@ import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay, sub}
 import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
 import {sqLiteClient} from '../db';
-import {ChildDbRecord, ChildResult} from './childrenHooks';
+import {ChildDbRecord, ChildResult, useSetSelectedChild} from './childrenHooks';
 import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../utils/helpers';
 import {milestonesIds, PropType, WellChildCheckUpAppointmentAgesEnum} from '../resources/constants';
 import {TFunction} from 'i18next';
@@ -477,10 +477,11 @@ export function useGetUnreadNotifications() {
     async () => {
       const result = await sqLiteClient.dB?.executeSql(
         `
-                  select *
-                  from notifications
-                  where fireDateTimestamp <= ?1
-                    and notificationRead <> 1
+                  SELECT *
+                  FROM notifications
+                  WHERE fireDateTimestamp <= ?1
+                    AND notificationRead <> 1
+                  ORDER BY fireDateTimestamp DESC
         `,
         [formatISO(new Date())],
       );
@@ -765,19 +766,26 @@ export function useDeleteNotificationsByAppointmentId() {
 
 export function useNavigateNotification() {
   const [setNotificationRead] = useSetNotificationRead();
+  const [setSelectedChild] = useSetSelectedChild();
   const navigateNotification = useCallback(
-    async (notificationId: string, navigator: NavigationContainerRef) => {
+    async (notificationId: string, navigator: Pick<NavigationContainerRef, 'navigate' | 'reset'>) => {
       const notificationData = await getNotificationById(notificationId);
       switch (notificationData?.notificationCategoryType) {
         case NotificationCategory.Appointment: {
           notificationData?.appointmentId &&
             navigator?.reset(navStateForAppointmentID(notificationData?.appointmentId));
+          break;
+        }
+        case NotificationCategory.TipsAndActivities: {
+          navigator.navigate('TipsAndActivitiesStack');
+          notificationData?.childId && setSelectedChild({id: notificationData?.childId});
+          break;
         }
       }
 
       return setNotificationRead({notificationId});
     },
-    [setNotificationRead],
+    [setNotificationRead, setSelectedChild],
   );
 
   return [navigateNotification];

@@ -5,7 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
-import {useGetUnreadNotifications, useSetNotificationRead} from '../../hooks/notificationsHooks';
+import {
+  useGetUnreadNotifications,
+  useNavigateNotification,
+  useSetNotificationRead,
+} from '../../hooks/notificationsHooks';
 import ChevronLeft from '../Svg/ChevronLeft';
 import NotificationsListItem from './NotificationsListItem';
 import NotificationsBadgeCounter from './NotificationsBadgeCounter';
@@ -18,6 +22,8 @@ const NotificationsBadge: React.FC = () => {
   const {t} = useTranslation('common');
   const {data: notifications} = useGetUnreadNotifications();
   const [setNotificationRead] = useSetNotificationRead();
+  const [navigateNotification] = useNavigateNotification();
+  const navigate = useNavigation();
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -33,6 +39,11 @@ const NotificationsBadge: React.FC = () => {
 
   const onCrossPress = (notificationId: string) => {
     setNotificationRead({notificationId});
+  };
+
+  const onNavigatePress = (notificationId: string) => {
+    setIsVisible(false);
+    navigateNotification(notificationId, navigate);
   };
 
   return (
@@ -80,7 +91,13 @@ const NotificationsBadge: React.FC = () => {
               keyExtractor={(item, index) => `${index}`}
               ListFooterComponent={() => <View style={{height: bottom}} />}
               renderItem={({index, item}) => (
-                <NotificationsListItem index={index} t={t} item={item} onCrossPress={onCrossPress} />
+                <NotificationsListItem
+                  onNotificationPress={onNavigatePress}
+                  index={index}
+                  t={t}
+                  item={item}
+                  onCrossPress={onCrossPress}
+                />
               )}
             />
           </View>
