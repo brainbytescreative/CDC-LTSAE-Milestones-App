@@ -18,7 +18,7 @@ interface Props {
   section?: SkillType;
 }
 
-const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge, section = skillTypes[0]}) => {
+const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0]}) => {
   const {t} = useTranslation('milestoneChecklist');
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {bottom} = useSafeAreaInsets();
@@ -82,13 +82,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15,
-  },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

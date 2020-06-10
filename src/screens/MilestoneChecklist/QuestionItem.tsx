@@ -45,7 +45,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
 
   const height = (Dimensions.get('window').width - 64) * 0.595;
 
-  const video = videos?.map((item, index) => {
+  const video = videos?.map((item) => {
     const code = item.name && t(item?.name);
     return (
       <WebView
@@ -204,12 +204,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 14,
-  },
-  selected: {
-    backgroundColor: 'gray',
-  },
-  selectedText: {
-    color: 'white',
   },
   addNoteContainer: {
     marginTop: 15,

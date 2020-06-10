@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
-import {useTranslation} from 'react-i18next';
 import {RootStackParamList} from './types';
 import RootDrawer from './RootDrawer';
 import {useGetOnboarding} from '../../hooks/onboardingHooks';
@@ -12,18 +11,18 @@ import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingPa
 import AddChildScreen from '../../screens/AddChildScreen';
 import withSuspense from '../withSuspense';
 import ErrorBoundary from '../ErrorBoundary';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Navigator: React.FC = () => {
-  const {t} = useTranslation();
-  const {data: isOnboarded, isFetching} = useGetOnboarding();
-  const [loading, setLoading] = useState(true);
+  const {data: isOnboarded} = useGetOnboarding();
+  // const [, setLoading] = useState(true);
 
   useEffect(() => {
     initialize()
       .then(() => {
-        setLoading(false);
+        // setLoading(false);
       })
       .catch((err) => {
         // todo implement error handling
@@ -34,8 +33,9 @@ const Navigator: React.FC = () => {
         }
         // setError(true);
         // setLoading(false);
-        console.warn(err);
-        setLoading(false);
+        // console.warn(err);
+        crashlytics().recordError(err);
+        // setLoading(false);
       });
   });
 

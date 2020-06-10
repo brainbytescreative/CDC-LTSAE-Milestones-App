@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {G, Circle, Path, SvgProps} from 'react-native-svg';
+import Svg, {Circle, G, Path, SvgProps} from 'react-native-svg';
 
 const PhotoChevronRight: React.FC<SvgProps> = (props) => {
   return (

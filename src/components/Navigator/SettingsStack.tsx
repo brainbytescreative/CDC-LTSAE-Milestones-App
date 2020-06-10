@@ -1,6 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
 import {SettingsStackParamList} from './types';
 import SettingsScreen from '../../screens/SettingsScreen';
 import BurgerButton from '../BurgerButton';

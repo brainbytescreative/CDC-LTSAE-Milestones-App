@@ -4,8 +4,6 @@ import {colors, sharedStyle, SkillType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import _ from 'lodash';
-import {useGetSectionsProgress} from '../../hooks/checklistHooks';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 export type Section = SkillType | 'actEarly';
 

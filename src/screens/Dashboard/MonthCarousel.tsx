@@ -1,7 +1,7 @@
 import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
 import {FlatList, FlatListProps, Platform, Text, TouchableOpacity, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {milestonesIds, colors, PropType} from '../../resources/constants';
+import {colors, milestonesIds, PropType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';

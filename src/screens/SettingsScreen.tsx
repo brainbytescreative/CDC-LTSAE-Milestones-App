@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {LayoutChangeEvent, ScrollView, StyleProp, TextStyle, View} from 'react-native';
+import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
 import {Formik, useField} from 'formik';
 import {
   NotificationSettings,

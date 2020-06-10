@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
 import OverviewPage from './OverviewPage';
-import {useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHooks';
+import {useGetMilestone} from '../../hooks/checklistHooks';
 import {checklistSections, colors, skillTypes} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import SectionItem, {Section} from './SectionItem';
@@ -9,7 +9,6 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import _ from 'lodash';
 
 type NavigationProp = CompositeNavigationProp<

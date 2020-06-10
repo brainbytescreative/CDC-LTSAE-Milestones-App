@@ -1,4 +1,4 @@
-import React, {useState, Suspense, useEffect} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
