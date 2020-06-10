@@ -353,13 +353,15 @@ const scheduleNotifications = async (t: TFunction) => {
 
     // gets all notifications in future
     const result = await sqLiteClient.dB?.executeSql(
-      `select *
-       from notifications
-       where fireDateTimestamp > ?1
-         and notificationRead <> 1   
-         and notificationCategoryType in (${activeNotifications.join(',')})
-       order by fireDateTimestamp
-       limit 60`,
+      `
+      SELECT *
+       FROM notifications
+       WHERE fireDateTimestamp > ?1
+         AND notificationRead <> 1   
+         AND notificationCategoryType IN (${activeNotifications.join(',')})
+       ORDER BY fireDateTimestamp
+       LIMIT 60
+       `,
       [formatISO(new Date())],
     );
 
@@ -396,17 +398,19 @@ export function useSetTipsAndActivitiesNotification() {
 
       await sqLiteClient.dB
         ?.executeSql(
-          ` insert or
-              replace
-              into notifications
-              (notificationId,
-               fireDateTimestamp,
-               notificationCategoryType,
-               childId,
-               milestoneId,
-               bodyLocalizedKey,
-               titleLocalizedKey)
-              values (?1, ?2, ?3, ?4, ?5, ?6, ?7)`,
+          `
+                    INSERT OR
+                    REPLACE
+                    INTO notifications
+                    (notificationId,
+                     fireDateTimestamp,
+                     notificationCategoryType,
+                     childId,
+                     milestoneId,
+                     bodyLocalizedKey,
+                     titleLocalizedKey)
+                    VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+          `,
           [
             identifier,
             formatISO(trigger),
@@ -461,7 +465,14 @@ export function useRemoveNotificationsByChildId() {
   const [reschedule] = useScheduleNotifications();
   return useMutation<void, {childId: number}>(
     async ({childId}) => {
-      await sqLiteClient.dB?.executeSql('delete from notifications where notifications.childId=?1', [childId]);
+      await sqLiteClient.dB?.executeSql(
+        `
+                  DELETE
+                  FROM notifications
+                  WHERE notifications.childId = ?1
+        `,
+        [childId],
+      );
     },
     {
       onSuccess: () => {
