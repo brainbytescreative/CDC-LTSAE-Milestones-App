@@ -79,6 +79,7 @@ export enum WellChildCheckUpAppointmentAgesEnum {
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
 export type SkillType = typeof skillTypes[number];
+export type Section = SkillType | 'actEarly';
 
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
@@ -105,7 +106,7 @@ export const colors = Object.freeze({
   },
 });
 
-export const checklistSections = [...skillTypes, 'actEarly'];
+export const checklistSections: Readonly<(SkillType | 'actEarly')[]> = [...skillTypes, 'actEarly'];
 
 export const sharedStyle = StyleSheet.create({
   shadow: {

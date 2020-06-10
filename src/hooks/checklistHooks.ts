@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {milestonesIds, missingConcerns, PropType, SkillType, skillTypes} from '../resources/constants';
+import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
@@ -152,7 +152,7 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       const answersIds = data.map((value) => value.questionId || 0);
 
       const groupedBySection = _.groupBy(questionsData, 'section');
-      const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
+      const questionsGrouped: Map<Section, SkillSection[]> = skillTypes.reduce((prev, section) => {
         prev.set(
           section,
           groupedBySection[section]
@@ -218,7 +218,7 @@ export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | un
 
   const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
-  const progress: Map<SkillType, {total: number; answered: number}> | undefined = useMemo(() => {
+  const progress: Map<Section, {total: number; answered: number}> | undefined = useMemo(() => {
     if (questions?.length) {
       return skillTypes.reduce((previousValue, section) => {
         const sectionsQuestions = questions.filter((value) => value.section === section);

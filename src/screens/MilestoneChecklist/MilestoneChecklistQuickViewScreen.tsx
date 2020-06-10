@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
 import OverviewPage from './OverviewPage';
 import {useGetMilestone} from '../../hooks/checklistHooks';
-import {checklistSections, colors, skillTypes} from '../../resources/constants';
+import {checklistSections, colors, Section, skillTypes} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import SectionItem, {Section} from './SectionItem';
+import SectionItem from './SectionItem';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
@@ -51,7 +51,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           if (section === _.last(skillTypes)) {
             setSection(skillTypes[0]);
           } else {
-            setSection(skillTypes[skillTypes.indexOf(section) + 1]);
+            setSection(checklistSections[checklistSections.indexOf(section) + 1]);
             // navigation.navigate('MilestoneChecklistStack');
           }
         }}

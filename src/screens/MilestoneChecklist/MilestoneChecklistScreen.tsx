@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors, skillTypes} from '../../resources/constants';
+import {checklistSections, colors, Section} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
-import SectionItem, {Section} from './SectionItem';
+import SectionItem from './SectionItem';
 import ActEarlyPage from './ActEarlyPage';
 import {
   useGetChecklistQuestions,
@@ -24,8 +24,6 @@ import ViewPager from '@react-native-community/viewpager';
 import withSuspense from '../../components/withSuspense';
 import {useQuery} from 'react-query';
 import {slowdown} from '../../utils/helpers';
-
-const sections = [...skillTypes, 'actEarly'];
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -62,21 +60,21 @@ const MilestoneChecklistScreen: React.FC<{
   //   }
   // }, [section]);
 
-  const onSectionSet = (val: string) => {
+  const onSectionSet = (val: Section) => {
     setSection(val);
-    viewPagerRef.current?.setPageWithoutAnimation(sections.indexOf(val));
+    viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
     flatListRef.current?.scrollToOffset({animated: false, offset: 0});
   };
 
   const onPressNextSection = () => {
-    const currentSection = section?.length && sections.indexOf(section);
-    let nextSection;
-    if (currentSection !== undefined && currentSection < sections.length - 1) {
+    const currentSection = section?.length && checklistSections.indexOf(section);
+    let nextSection: Section;
+    if (currentSection !== undefined && currentSection < checklistSections.length - 1) {
       // setSection(sections[currentSection + 1]);
-      nextSection = sections[currentSection + 1];
+      nextSection = checklistSections[currentSection + 1];
     } else {
       // setSection(sections[0]);
-      nextSection = sections[0];
+      nextSection = checklistSections[0];
     }
     onSectionSet(nextSection);
   };
@@ -146,7 +144,7 @@ const MilestoneChecklistScreen: React.FC<{
       {/*    ) as any*/}
       {/*  }*/}
       {/*</ViewPager>*/}
-      {section && skillTypes.includes(section) && (
+      {section && section !== 'actEarly' && (
         <FlatList
           ref={flatListRef}
           bounces={false}

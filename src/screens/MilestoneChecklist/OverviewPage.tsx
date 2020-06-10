@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {colors, SkillType, skillTypes} from '../../resources/constants';
+import {colors, Section, SkillType, skillTypes} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
@@ -15,7 +15,7 @@ interface Props {
   onNext: () => void;
   milestoneAgeFormatted: string | undefined;
   milestoneAge: number | undefined;
-  section?: SkillType;
+  section?: Section;
 }
 
 const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0]}) => {

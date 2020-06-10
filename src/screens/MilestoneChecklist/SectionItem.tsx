@@ -1,15 +1,13 @@
 import React from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
-import {colors, sharedStyle, SkillType} from '../../resources/constants';
+import {colors, Section, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import _ from 'lodash';
 
-export type Section = SkillType | 'actEarly';
-
 interface ItemProps {
   section: Section;
-  onSectionSet?: (section: string) => void;
+  onSectionSet?: (section: Section) => void;
   selectedSection?: Section | undefined;
   progress?: {total: number; answered: number} | undefined;
 }

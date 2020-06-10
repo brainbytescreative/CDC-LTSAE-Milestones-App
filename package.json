@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "pods": "npx pod-install",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "tsc && eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@adobe/react-native-acpanalytics": "^1.1.5",
