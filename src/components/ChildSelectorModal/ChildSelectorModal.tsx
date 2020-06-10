@@ -6,7 +6,7 @@ import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import NotificationsBadge from '../NotificationsBadge';
+import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
 import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';

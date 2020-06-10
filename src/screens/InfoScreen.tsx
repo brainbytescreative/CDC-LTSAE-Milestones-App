@@ -6,7 +6,7 @@ import {Trans, useTranslation} from 'react-i18next';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import AEScrollView from '../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import NotificationsBadge from '../components/NotificationsBadge';
+import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
 import {NavigationProp} from '@react-navigation/native';
 import {InfoStackParamList} from '../components/Navigator/types';

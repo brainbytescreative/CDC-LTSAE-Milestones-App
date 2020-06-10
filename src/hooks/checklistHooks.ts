@@ -42,7 +42,7 @@ type MilestoneQueryResult =
     }
   | undefined;
 
-type MilestoneQueryKey = [string, {childBirthday?: Date}];
+type MilestoneQueryKey = [string, {childBirthday?: Date | string}];
 
 export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();

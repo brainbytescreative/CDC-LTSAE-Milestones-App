@@ -1,77 +1,14 @@
 import React, {useState} from 'react';
-import {FlatList, Modal, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
+import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, sharedScreenOptions, sharedStyle} from '../resources/constants';
-import CloseCross from './Svg/CloseCross';
+import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
-import {
-  NotificationDB,
-  notificationDbToRequest,
-  useGetUnreadNotifications,
-  useSetNotificationRead,
-} from '../hooks/notificationsHooks';
-import {TFunction} from 'i18next';
-import ChevronLeft from './Svg/ChevronLeft';
-
-// const notifications = Array(45);
-
-const NotificationsBadgeCounter: React.FC<Pick<TouchableOpacityProps, 'onPress'>> = ({onPress}) => {
-  const {data: notifications} = useGetUnreadNotifications();
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.badgeContainer}>
-      <Text style={styles.badgeText}>{notifications?.length || 0}</Text>
-    </TouchableOpacity>
-  );
-};
-
-const NotificationItem: React.FC<{
-  index: number;
-  onCrossPress: (id: string) => void;
-  item: NotificationDB;
-  t: TFunction;
-}> = ({index, onCrossPress, item, t}) => {
-  const request = notificationDbToRequest(item, t);
-
-  return (
-    <>
-      <View
-        style={[
-          {
-            borderBottomWidth: 0.5,
-            borderBottomColor: colors.gray,
-            marginBottom: 20,
-          },
-          index > 0 && {marginTop: 20},
-        ]}
-      />
-      <View style={{flexDirection: 'row', marginHorizontal: 16, alignItems: 'center'}}>
-        <View
-          style={{
-            width: 0,
-            flexGrow: 1,
-          }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: 'Montserrat-Bold',
-            }}>
-            {request?.content.title}
-          </Text>
-          <Text>{request?.content.body}</Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => {
-            onCrossPress(item.notificationId);
-          }}>
-          <CloseCross />
-        </TouchableOpacity>
-      </View>
-    </>
-  );
-};
+import {useGetUnreadNotifications, useSetNotificationRead} from '../../hooks/notificationsHooks';
+import ChevronLeft from '../Svg/ChevronLeft';
+import NotificationsListItem from './NotificationsListItem';
+import NotificationsBadgeCounter from './NotificationsBadgeCounter';
 
 const NotificationsBadge: React.FC = () => {
   const {bottom} = useSafeAreaInsets();
@@ -143,7 +80,7 @@ const NotificationsBadge: React.FC = () => {
               keyExtractor={(item, index) => `${index}`}
               ListFooterComponent={() => <View style={{height: bottom}} />}
               renderItem={({index, item}) => (
-                <NotificationItem index={index} t={t} item={item} onCrossPress={onCrossPress} />
+                <NotificationsListItem index={index} t={t} item={item} onCrossPress={onCrossPress} />
               )}
             />
           </View>
@@ -152,24 +89,5 @@ const NotificationsBadge: React.FC = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  badgeContainer: {
-    backgroundColor: '#fff',
-    width: 23,
-    height: 23,
-    borderRadius: 23,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 32,
-  },
-  crossContainer: {
-    marginHorizontal: 28,
-  },
-  badgeText: {
-    fontSize: 15,
-    fontFamily: 'Montserrat-Bold',
-  },
-});
 
 export default NotificationsBadge;

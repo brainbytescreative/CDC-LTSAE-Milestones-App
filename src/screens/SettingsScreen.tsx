@@ -11,7 +11,7 @@ import {
 } from '../hooks/settingsHooks';
 import {FormikProps} from 'formik/dist/types';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
-import NotificationsBadge from '../components/NotificationsBadge';
+import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import AESwitch from '../components/AESwitch';
 import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
