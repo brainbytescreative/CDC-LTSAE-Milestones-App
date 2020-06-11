@@ -82,69 +82,109 @@ function at8AM(date: Date) {
 
 /**
  * Trigger time getter functions
+ * Reference: https://drive.google.com/file/d/1tuJZnAKl6izwD_qnVcan4leP_ZXmWkAx/view
  */
 
-function milestoneNotificationBefore2Weeks({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
+/**
+ * №1. Fires on the child’s birthday 8am
+ * @param years
+ * @param birthday
+ */
+function getMilestoneOnBirthDayTrigger({years, birthday}: {birthday: Date; years: number}) {
+  return at8AM(add(birthday, {years}));
+}
+
+/**
+ * №2. Fires 2 weeks prior to the age for which a well-child check is recommended
+ * 2, 4, 6, 9, 12, 18 months
+ * 2, 3, 4, 5 years
+ * @param milestoneId
+ * @param birthday
+ */
+function getWellCheckUpTrigger({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
   const before2weeks = sub(add(birthday, {months: milestoneId}), {weeks: 2});
   return at8AM(before2weeks);
 }
 
+/**
+ * №7. If Not Yet or Not Sure is checked, fires 1 week later to revisit the milestones
+ */
 function completeMilestoneReminderTrigger() {
-  return formatISO(add(new Date(), {weeks: 2}));
+  return formatISO(add(new Date(), {weeks: 1}));
 }
 
+/**
+ * №10. Fires off a week after any “Remind Me” is selected on Tips page
+ */
 function tipsAndActivitiesTrigger() {
   return add(new Date(), {seconds: 5});
 }
 
-function apppointment2daysBeforeTrigger(appointmentDate: Date) {
-  return add(appointmentDate, {seconds: -40});
+/**
+ * №5. Fires the day before the appointment
+ * @param appointmentDate
+ */
+function appointment1daysBeforeTrigger(appointmentDate: Date) {
+  return add(appointmentDate, {days: 1});
 }
 
-function appointmentMorningTrigger(appointmentDate: Date) {
-  return add(appointmentDate, {seconds: -20});
+/**
+ * №6. Fires if more than 24 hours have passed after a not yet or Act Early item has been selected
+ */
+function recommendation24HoursPassed() {
+  return add(new Date(), {hours: 24});
 }
 
-function reccomendation1DayPassed() {
-  return add(new Date(), {seconds: 20});
+/**
+ * №8. Fires if more than 2 weeks has passed after a not yet/ Act Early item has been selected
+ */
+function recommendation2weekPassed() {
+  return add(new Date(), {weeks: 2});
 }
 
-function recommendation1weekPassed() {
-  return add(new Date(), {seconds: 40});
-}
-
+/**
+ * №9. Fires if more than 4 weeks have passed after a not yet/not sure/Act Early item has been selected
+ */
 function recommendation4weeksPassed() {
-  return add(new Date(), {seconds: 60});
+  return add(new Date(), {weeks: 4});
 }
 
-function wellChildCheckup5DaysAfterBirthday(birthday: Date) {
-  return at8AM(add(birthday, {days: 2}));
-}
-
+/**
+ * №2-4
+ *
+ *
+ * №2. Fires 2 weeks prior to the age for which a well-child check is recommended
+ * 1, 15, 30 months
+ *
+ * №3. Fires for well-child check up with developmental screening
+ * 9, 30 months
+ *
+ * №4. 18, 24 months
+ *
+ * @param birthday
+ * @param value
+ */
 function wellCheckUpMilestoneReminder(birthday: Date, value: number) {
   return at8AM(add(birthday, {months: value}));
 }
 
-// setHours(startOfDay(new Date()), 8)
 export function useSetMilestoneNotifications() {
   const [reschedule] = useScheduleNotifications();
   const [setWellChildCheckUpAppointments] = useSetWellChildCheckUpAppointments();
 
   return useMutation<void, MilestoneNotificationsPayload>(
     async (variables) => {
-      const ageMonth = differenceInMonths(new Date(), variables.child.birthday);
-      const remainingMilestones = futureAges([...milestonesIds], ageMonth);
-
-      const queriesParams = remainingMilestones.map((value) => {
-        const milestoneId = Math.abs(value);
-        const at8am = milestoneNotificationBefore2Weeks({birthday: variables.child.birthday, milestoneId: value});
+      const years = Array.from(new Array(5)).map((value, index) => index);
+      const queriesParams = years.map((value) => {
+        const milestoneId = value ? value * 12 : milestonesIds[0];
+        const at8am = getMilestoneOnBirthDayTrigger({birthday: variables.child.birthday, years: value});
         return {
-          notificationId: `milestone_age_${milestoneId}_child_${variables.child.id}`,
+          notificationId: `milestone_birthday_${value}_years_child_${variables.child.id}`,
           fireDateTimestamp: formatISO(at8am),
           notificationCategoryType: NotificationCategory.Milestone,
           childId: variables.child.id,
           milestoneId,
-          bodyLocalizedKey: 'notifications:nextMilestoneNotificationBody',
+          bodyLocalizedKey: 'notifications:nextMilestoneBirthdayNotificationBody',
           titleLocalizedKey: 'notifications:milestoneNotificationTitle',
           bodyArguments: {
             name: variables.child.name,
@@ -392,7 +432,7 @@ export function useSetTipsAndActivitiesNotification() {
   return useMutation<void, TipsAndActivitiesNotification>(
     async ({notificationId, bodyKey, childId, milestoneId}) => {
       const identifier = notificationId || uuid();
-      const bodyLocalizedKey = `milestones:${bodyKey}`;
+      const bodyLocalizedKey = 'notifications:tipsAndActivitiesBody';
       const titleLocalizedKey = 'notifications:tipsAndActivitiesTitle';
       const trigger = tipsAndActivitiesTrigger();
 
@@ -528,14 +568,14 @@ export function useSetAppointmentNotifications() {
     const series = [
       {
         notificationId: `appointment_2DaysBefore_${appointmentResult.id}`,
-        fireDateTimestamp: apppointment2daysBeforeTrigger(appointmentDate),
-        body: 'notifications:appointment2DaysBeforeBody',
+        fireDateTimestamp: appointment1daysBeforeTrigger(appointmentDate),
+        body: 'notifications:appointment1DayBeforeBody',
       },
-      {
-        notificationId: `appointment_morning_${appointmentResult.id}`,
-        fireDateTimestamp: appointmentMorningTrigger(appointmentDate),
-        body: 'notifications:appointmentMorningBody',
-      },
+      // {
+      //   notificationId: `appointment_morning_${appointmentResult.id}`,
+      //   fireDateTimestamp: appointmentMorningTrigger(appointmentDate),
+      //   body: 'notifications:appointmentMorningBody',
+      // },
     ];
 
     const milestoneId = 0;
@@ -584,12 +624,12 @@ export function useSetRecommendationNotifications() {
     const series = [
       {
         notificationId: `recommendation_1day_passed_${child.id}_${milestoneId}`,
-        fireDateTimestamp: reccomendation1DayPassed(),
+        fireDateTimestamp: recommendation24HoursPassed(),
         body: 'notifications:recommendation1DayPassedBody',
       },
       {
         notificationId: `recommendation_1week_passed_${child.id}_${milestoneId}`,
-        fireDateTimestamp: recommendation1weekPassed(),
+        fireDateTimestamp: recommendation2weekPassed(),
         body: 'notifications:recommendation1weekPassedBody',
       },
       {
@@ -701,31 +741,16 @@ export function useSetWellChildCheckUpAppointments() {
         milestoneId: Math.abs(value),
       }));
 
-      const years = Array.from(new Array(5));
-
-      const fiveDaysAfterBirthdayData = years.map((value, index) => ({
-        notificationId: `well_child_check_up_appointment_${child.id}_5_days_after_birthday`,
-        fireDateTimestamp: wellChildCheckup5DaysAfterBirthday(add(child.birthday, {years: index})),
-        body: 'notifications:wellCheckUp5DaysAfterBirthday',
-        milestoneId: null,
-      }));
-
       const remainingMilestones = futureAges([...milestonesIds], ageMonth);
 
       const before2WeeksData = remainingMilestones.map((value) => ({
         notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
-        fireDateTimestamp: milestoneNotificationBefore2Weeks({milestoneId: value, birthday: child.birthday}),
+        fireDateTimestamp: getWellCheckUpTrigger({milestoneId: value, birthday: child.birthday}),
         body: 'notifications:wellCheckUp5DaysAfterBirthday',
         milestoneId: null,
       }));
 
-      const series = [
-        ...noCheckListData,
-        ...screeningReminders1Data,
-        ...screeningReminders2Data,
-        ...before2WeeksData,
-        ...fiveDaysAfterBirthdayData,
-      ];
+      const series = [...noCheckListData, ...screeningReminders1Data, ...screeningReminders2Data, ...before2WeeksData];
 
       await sqLiteClient.dB?.transaction((tx) => {
         series.forEach(({notificationId, fireDateTimestamp, body, milestoneId}) => {

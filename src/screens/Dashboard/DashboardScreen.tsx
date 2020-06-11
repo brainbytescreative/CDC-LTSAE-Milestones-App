@@ -202,7 +202,7 @@ const DashboardContainer: React.FC = () => {
 };
 
 const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
-  // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
+  // useGetMilestoneGotStarted({childId: child?.id, year: childAge});
   // const {refetch} = useGetChecklistQuestions();
 
   const addChildParam = route.params?.addChild;

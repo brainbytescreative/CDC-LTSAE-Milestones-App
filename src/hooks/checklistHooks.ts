@@ -293,7 +293,7 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
-        // queryCache.refetchQueries(['question', {childId, questionId, milestoneId}], {force: true}).then();
+        // queryCache.refetchQueries(['question', {childId, questionId, year}], {force: true}).then();
         // queryCache.refetchQueries('answers', {force: true, exact: false}).then();
         if (milestoneAge) {
           queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
@@ -545,7 +545,7 @@ export function useGetMilestoneGotStarted(predicate: {childId?: number; mileston
         return false;
       }
       const result = await sqLiteClient.dB?.executeSql(
-        'SELECT * from milestone_got_started where childId=? and milestoneId=? limit 1',
+        'SELECT * from milestone_got_started where childId=? and year=? limit 1',
         [childId, milestoneId],
       );
 
@@ -564,7 +564,7 @@ export function useSetMilestoneGotStarted() {
     queryCache.setQueryData(['milestoneGotStarted', {childId, milestoneId}], true);
 
     await sqLiteClient.dB?.executeSql(
-      'insert or replace into milestone_got_started (childId, milestoneId) values (?,?)',
+      'insert or replace into milestone_got_started (childId, year) values (?,?)',
       [childId, milestoneId],
     );
   });

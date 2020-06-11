@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {colors, Section, SkillType, skillTypes} from '../../resources/constants';
+import {colors, Section, sharedStyle, skillTypes} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
@@ -48,7 +48,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 marginHorizontal: 48,
                 marginTop: 15,
               }}>
-              <Text style={{fontSize: 15, marginRight: 15, fontFamily: 'Montserrat-Bold'}}>{'+'}</Text>
+              <Text style={{fontSize: 15, marginRight: 15}}>{'+'}</Text>
               <View
                 style={{
                   flexGrow: 1,
@@ -74,11 +74,10 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    fontSize: 22,
     textTransform: 'capitalize',
     marginTop: 5,
     marginHorizontal: 48,
-    fontFamily: 'Montserrat-Bold',
+    ...sharedStyle.largeBoldText,
   },
   text: {
     fontSize: 15,
