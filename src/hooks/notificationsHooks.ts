@@ -38,6 +38,8 @@ export interface NotificationDB {
   bodyArguments?: string;
   bodyLocalizedKey?: string;
   titleLocalizedKey?: string;
+  childGender: string | null;
+  childName: string | null;
 }
 
 interface NotificationResult extends Omit<NotificationDB, 'fireDateTimestamp'> {
@@ -54,7 +56,7 @@ interface AppointmentNotificationsPayload {
 }
 
 interface RecommendationNotificationsPayload {
-  child: Pick<ChildDbRecord, 'id' | 'name'>;
+  child: Pick<ChildDbRecord, 'id'>;
   milestoneId: number;
   reschedule?: boolean;
 }
@@ -304,7 +306,7 @@ export function useSetCompleteMilestoneReminder() {
 
           await setRecommendationNotifications({
             reschedule: false,
-            child: {id: childId, name: child?.name || ''},
+            child: {id: childId},
             milestoneId,
           });
 
@@ -321,15 +323,13 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
       case NotificationCategory.Milestone:
       case NotificationCategory.Appointment:
       case NotificationCategory.Recommendation: {
-        const params: Record<string, string | number | undefined> =
-          value.bodyArguments && JSON.parse(value.bodyArguments);
         const options = {
-          name: params.name,
+          name: value.childName,
           childAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t).milestoneAgeFormatted,
           milestoneAgeFormatted: value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormatted,
           milestoneAgeFormattedDashed:
             value.milestoneId && formattedAge(value.milestoneId, t, true).milestoneAgeFormattedDashes,
-          ...tOpt({t, gender: Number(params.gender)}),
+          ...tOpt({t, gender: Number(value.childGender)}),
         };
         return {
           identifier: value.notificationId,
@@ -394,8 +394,9 @@ const scheduleNotifications = async (t: TFunction) => {
     // gets all notifications in future
     const result = await sqLiteClient.dB?.executeSql(
       `
-      SELECT *
+      SELECT *, ch.gender 'childGender', ch.name 'childName'
        FROM notifications
+      LEFT JOIN children ch ON ch.id = notifications.childId
        WHERE fireDateTimestamp > ?1
          AND notificationRead <> 1   
          AND notificationCategoryType IN (${activeNotifications.join(',')})
@@ -652,10 +653,9 @@ export function useSetRecommendationNotifications() {
                milestoneId,
                bodyLocalizedKey,
                titleLocalizedKey,
-               bodyArguments,
                notificationRead)
-              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
-                      coalesce(?9, (SELECT notificationRead FROM notifications WHERE notificationId = ?1)))`,
+              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7,
+                      coalesce(?8, (SELECT notificationRead FROM notifications WHERE notificationId = ?1)))`,
           [
             notificationId,
             formatISO(fireDateTimestamp),
@@ -664,7 +664,6 @@ export function useSetRecommendationNotifications() {
             milestoneId,
             body,
             'notifications:recommendationNotificationTitle',
-            JSON.stringify({name: child.name}),
           ],
         );
       });

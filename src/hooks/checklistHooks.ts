@@ -16,7 +16,11 @@ import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} fr
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
-import {useSetCompleteMilestoneReminder} from './notificationsHooks';
+import {
+  useDeleteRecommendationNotifications,
+  useSetCompleteMilestoneReminder,
+  useSetRecommendationNotifications,
+} from './notificationsHooks';
 import {Answer, MilestoneAnswer} from './types';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
@@ -389,6 +393,8 @@ export function useGetConcern(predicate: ConcernPredicate) {
 
 export function useSetConcern() {
   const [checkMissing] = useCheckMissingMilestones();
+  const [setRecommendationNotifications] = useSetRecommendationNotifications();
+  const [deleteRecommendationNotifications] = useDeleteRecommendationNotifications();
 
   return useMutation<void, ConcernAnswer>(
     async ({answer = false, childId, concernId, milestoneId, note}) => {
@@ -408,10 +414,15 @@ export function useSetConcern() {
       }
     },
     {
-      onSuccess: (data, {childId, concernId, milestoneId}) => {
+      onSuccess: async (data, {childId, concernId, milestoneId}) => {
         // const predicate = {childId, concernId};
         // console.log(predicate, answer);
-        checkMissing({childId, milestoneId});
+        const {isMissingConcern} = await checkMissing({childId, milestoneId});
+        if (isMissingConcern) {
+          setRecommendationNotifications({milestoneId, child: {id: childId}});
+        } else {
+          deleteRecommendationNotifications({milestoneId, childId});
+        }
         queryCache.refetchQueries(['concern', {childId, concernId}], {force: true});
       },
     },
