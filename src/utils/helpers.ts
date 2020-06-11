@@ -69,11 +69,11 @@ export function calcChildAge(birthDay: Date | undefined) {
 
 export async function checkMissingMilestones(milestoneId: number, childId: number) {
   const notYetRes = await sqLiteClient.dB?.executeSql(
-    'SELECT questionId FROM milestones_answers WHERE year=? AND childId=? AND answer=? LIMIT 1',
+    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
     [milestoneId, childId, Answer.NOT_YET],
   );
   const unsureRes = await sqLiteClient.dB?.executeSql(
-    'SELECT questionId FROM milestones_answers WHERE year=? AND childId=? AND answer=? LIMIT 1',
+    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
     [milestoneId, childId, Answer.UNSURE],
   );
 

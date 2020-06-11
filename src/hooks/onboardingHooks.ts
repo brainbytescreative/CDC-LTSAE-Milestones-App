@@ -6,7 +6,8 @@ export function useGetOnboarding() {
   return useQuery<boolean, string>(
     'onboarding',
     () => {
-      return slowdown(Storage.getItem('onboarding').then((value) => !!value && JSON.parse(value)));
+      const promise = Storage.getItem('onboarding').then((value) => !!value && JSON.parse(value));
+      return slowdown(promise);
     },
     {
       suspense: true,

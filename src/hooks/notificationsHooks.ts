@@ -430,7 +430,7 @@ export function useSetTipsAndActivitiesNotification() {
   const [reschedule] = useScheduleNotifications();
 
   return useMutation<void, TipsAndActivitiesNotification>(
-    async ({notificationId, bodyKey, childId, milestoneId}) => {
+    async ({notificationId, childId, milestoneId}) => {
       const identifier = notificationId || uuid();
       const bodyLocalizedKey = 'notifications:tipsAndActivitiesBody';
       const titleLocalizedKey = 'notifications:tipsAndActivitiesTitle';

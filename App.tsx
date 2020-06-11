@@ -87,31 +87,12 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 const App = () => {
   const routeNameRef = React.useRef<string | undefined>(undefined);
   const navigationRef = React.useRef<NavigationContainerRef>(null);
-  const [navigateNotification] = useNavigateNotification();
 
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
     );
   }, []);
-
-  React.useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('addNotificationReceivedListener', notification);
-      setTimeout(() => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
-      }, 2000);
-    });
-    return () => subscription.remove();
-  }, []);
-
-  React.useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const url = response.notification.request; //.content.data.url;
-      navigationRef.current && navigateNotification(response.notification.request.identifier, navigationRef.current);
-    });
-    return () => subscription.remove();
-  }, [navigationRef, navigateNotification]);
 
   React.useEffect(() => {
     crashlytics().log('App mounted.');
@@ -141,7 +122,7 @@ const App = () => {
                 routeNameRef.current = currentRouteName;
               }}>
               <I18nextProvider i18n={i18next}>
-                <Navigator />
+                <Navigator navigation={navigationRef.current} />
               </I18nextProvider>
             </NavigationContainer>
           </PaperProvider>
