@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import {RootStackParamList} from './types';
@@ -13,7 +13,6 @@ import withSuspense from '../withSuspense';
 import ErrorBoundary from '../ErrorBoundary';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {queryCache, useQuery} from 'react-query';
-import {slowdown} from '../../utils/helpers';
 import * as Notifications from 'expo-notifications';
 import {useNavigateNotification} from '../../hooks/notificationsHooks';
 import {NavigationContainerRef} from '@react-navigation/core';

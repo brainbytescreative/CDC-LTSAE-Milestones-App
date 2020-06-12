@@ -55,7 +55,7 @@ interface CommonFieldProps {
 
 const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
   <FastField name={name}>
-    {({field, form, meta}: FastFieldProps<string | undefined>) => (
+    {({field, form}: FastFieldProps<string | undefined>) => (
       <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
         <View style={[sharedStyle.shadow]}>
           <TouchableOpacity
@@ -89,7 +89,7 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
 const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form, meta}: FastFieldProps<string>) => (
+      {({field, form}: FastFieldProps<string>) => (
         <AETextInput
           autoCorrect={false}
           value={field.value}
@@ -104,7 +104,7 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
 const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
   return (
     <FastField name={name}>
-      {({field, form, meta}: FastFieldProps<Date | undefined>) => (
+      {({field, form}: FastFieldProps<Date | undefined>) => (
         <DatePicker
           value={field.value}
           label={t('fields:dateOfBirthPlaceholder')}
@@ -118,7 +118,7 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
 const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
+      {({field, form}: FastFieldProps<0 | 1 | undefined>) => (
         <View style={{marginTop: 20, marginBottom: 16}}>
           <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
           <View

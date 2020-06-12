@@ -10,7 +10,7 @@ import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from 
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
-import {formatAge, formatDate} from '../../utils/helpers';
+import {formatAge, formatDate, slowdown} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
@@ -159,7 +159,7 @@ const DashboardContainer: React.FC = () => {
   // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   // useEffect(() => {
   //   child && setMilestoneNotifications({child});
@@ -174,15 +174,11 @@ const DashboardContainer: React.FC = () => {
         setOnboarding(true);
         refetch({force: true});
       }, 3000);
-    }, [navigation, setOnboarding, refetch]),
+    }, [setOnboarding, refetch]),
   );
 
   useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
-    return new Promise((resolve) =>
-      setTimeout(() => {
-        resolve(null);
-      }, 200),
-    );
+    return slowdown(Promise.resolve(), 200);
   });
 
   return (
@@ -313,43 +309,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 32,
     alignItems: 'center',
     borderRadius: 20,
-  },
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 30,
-  },
-  image: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    width: 190,
-    height: 190,
-    borderRadius: 190,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
-
-  container: {
-    flex: 1,
-    marginTop: 10,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
   },
 });
 

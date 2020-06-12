@@ -228,20 +228,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },
-  text: {
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    marginTop: 20,
-    fontSize: 16,
-  },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkMarkSelected: {},
 });
 
 export default ActEarlyPage;

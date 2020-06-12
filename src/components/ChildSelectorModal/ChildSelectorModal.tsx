@@ -19,7 +19,7 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
 >;
 
 const ChildName: React.FC = () => {
-  const {data: selectedChild} = useGetCurrentChild({suspense: true});
+  const {data: selectedChild} = useGetCurrentChild();
   return (
     <Text
       numberOfLines={1}

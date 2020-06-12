@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {Ref, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import {NavigationContainer, NavigationContainerProps} from '@react-navigation/native';
@@ -16,7 +16,7 @@ import Navigator from './src/components/Navigator';
 import {I18nextProvider} from 'react-i18next';
 import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
-import {queryCache, ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors, PropType} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {ACPCore} from '@adobe/react-native-acpcore';
@@ -28,7 +28,7 @@ import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
-import {useNavigateNotification} from './src/hooks/notificationsHooks';
+
 enableScreens();
 
 // First, set the handler that will cause the notification

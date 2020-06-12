@@ -50,7 +50,7 @@ export function useGetCurrentChildId() {
   });
 }
 
-export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
+export function useGetCurrentChild() {
   const {data: selectedChildId} = useGetCurrentChildId();
   return useQuery<ChildResult, [string, {id?: string}]>(['selectedChild', {id: selectedChildId}], async () => {
     let result = await sqLiteClient.dB?.executeSql('select * from children where id=?1', [selectedChildId]);
@@ -82,7 +82,7 @@ export function useSetSelectedChild() {
       });
     },
     {
-      onSuccess: async (data, {id}) => {
+      onSuccess: async () => {
         // await queryCache.setQueryData('selectedChild', id);
         // console.log(Date.now());
         // Promise.all([

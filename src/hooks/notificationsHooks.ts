@@ -76,6 +76,7 @@ export enum NotificationCategory {
   // eslint-disable-next-line no-shadow
   Appointment = 2,
   TipsAndActivities = 3,
+  WellCheckUp,
 }
 
 function at8AM(date: Date) {
@@ -369,7 +370,7 @@ const scheduleNotifications = async (t: TFunction) => {
       switch (currentValue) {
         case 'appointmentNotifications':
           if (notificationSettings[currentValue]) {
-            return [...previousValue, NotificationCategory.Appointment];
+            return [...previousValue, NotificationCategory.Appointment, NotificationCategory.WellCheckUp];
           }
           break;
         case 'milestoneNotifications':
@@ -771,7 +772,7 @@ export function useSetWellChildCheckUpAppointments() {
             [
               notificationId,
               formatISO(fireDateTimestamp),
-              NotificationCategory.Appointment,
+              NotificationCategory.WellCheckUp,
               child.id,
               milestoneId,
               body,
@@ -811,11 +812,13 @@ export function useNavigateNotification() {
         case NotificationCategory.Appointment: {
           if (notificationData?.appointmentId) {
             navigator?.reset(navStateForAppointmentID(notificationData?.appointmentId));
-          } else {
-            notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
-            notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-            navigator.navigate('ChildSummaryStack');
           }
+          break;
+        }
+        case NotificationCategory.WellCheckUp: {
+          notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
+          notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+          navigator.navigate('ChildSummaryStack');
           break;
         }
         case NotificationCategory.TipsAndActivities: {

@@ -62,13 +62,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
   },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default FrontPage;

@@ -124,9 +124,6 @@ const AppointmentScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  label: {
-    fontFamily: 'Montserrat-Bold',
-  },
   item: {
     marginBottom: 3,
     fontSize: 15,
