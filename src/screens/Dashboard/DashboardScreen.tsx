@@ -159,6 +159,7 @@ const DashboardContainer: React.FC = () => {
   // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
+  const navigation = useNavigation();
 
   // useEffect(() => {
   //   child && setMilestoneNotifications({child});
@@ -172,8 +173,8 @@ const DashboardContainer: React.FC = () => {
       setTimeout(() => {
         setOnboarding(true);
         refetch({force: true});
-      }, 300);
-    }, [setOnboarding, refetch]),
+      }, 3000);
+    }, [navigation, setOnboarding, refetch]),
   );
 
   useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {

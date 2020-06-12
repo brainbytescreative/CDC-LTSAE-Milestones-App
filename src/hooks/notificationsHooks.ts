@@ -814,7 +814,7 @@ export function useNavigateNotification() {
           } else {
             notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
             notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-            navigator.navigate('MilestoneChecklistStack');
+            navigator.navigate('ChildSummaryStack');
           }
           break;
         }
@@ -828,7 +828,7 @@ export function useNavigateNotification() {
         case NotificationCategory.Recommendation: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          navigator.navigate('MilestoneChecklistStack');
+          navigator.navigate('ChildSummaryStack');
           break;
         }
       }
