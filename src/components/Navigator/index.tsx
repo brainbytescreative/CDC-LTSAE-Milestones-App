@@ -16,6 +16,8 @@ import {queryCache, useQuery} from 'react-query';
 import * as Notifications from 'expo-notifications';
 import {useNavigateNotification} from '../../hooks/notificationsHooks';
 import {NavigationContainerRef} from '@react-navigation/core';
+import i18next from '../../resources/l18n';
+import {I18nextProvider} from 'react-i18next';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -62,19 +64,21 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
 
   // const isOnboarded = data; //data;
   return (
-    <ErrorBoundary>
-      <Stack.Navigator headerMode={'none'}>
-        {!isOnboarded && (
-          <>
-            <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
-            <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
-            <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
-            <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
-          </>
-        )}
-        <Stack.Screen name={'Dashboard'} component={RootDrawer} />
-      </Stack.Navigator>
-    </ErrorBoundary>
+    <I18nextProvider i18n={i18next}>
+      <ErrorBoundary>
+        <Stack.Navigator headerMode={'none'}>
+          {!isOnboarded && (
+            <>
+              <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
+              <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
+              <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
+              <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
+            </>
+          )}
+          <Stack.Screen name={'Dashboard'} component={RootDrawer} />
+        </Stack.Navigator>
+      </ErrorBoundary>
+    </I18nextProvider>
   );
 };
 

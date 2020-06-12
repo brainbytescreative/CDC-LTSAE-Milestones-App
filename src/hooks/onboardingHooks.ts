@@ -7,7 +7,8 @@ export function useGetOnboarding() {
     'onboarding',
     () => {
       const promise = Storage.getItem('onboarding').then((value) => !!value && JSON.parse(value));
-      return slowdown(promise);
+      // return slowdown(promise);
+      return slowdown(Promise.resolve(true));
     },
     {
       suspense: true,

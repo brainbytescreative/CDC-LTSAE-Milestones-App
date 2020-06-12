@@ -7,9 +7,11 @@ interface Props {
   value?: boolean;
   onValueChange?: (value: boolean) => void;
   style?: StyleProp<ViewStyle>;
+  onText?: string;
+  offText?: string;
 }
 
-const AESwitch: React.FC<Props> = ({value, onValueChange, style}) => (
+const AESwitch: React.FC<Props> = ({value, onValueChange, style, onText, offText}) => (
   <TouchableWithoutFeedback
     onPress={() => {
       onValueChange && onValueChange(!value);
@@ -62,7 +64,7 @@ const AESwitch: React.FC<Props> = ({value, onValueChange, style}) => (
           </G>
         </Svg>
       )}
-      <Text style={{marginLeft: 10, fontSize: 12}}>{value ? 'On' : 'Off'}</Text>
+      {onText && offText && <Text style={{marginLeft: 10, fontSize: 12}}>{value ? onText : offText}</Text>}
     </View>
   </TouchableWithoutFeedback>
 );

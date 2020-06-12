@@ -13,8 +13,6 @@ import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import {NavigationContainer, NavigationContainerProps} from '@react-navigation/native';
 import Navigator from './src/components/Navigator';
-import {I18nextProvider} from 'react-i18next';
-import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors, PropType} from './src/resources/constants';
@@ -121,9 +119,7 @@ const App = () => {
                 // Save the current route name for later comparision
                 routeNameRef.current = currentRouteName;
               }}>
-              <I18nextProvider i18n={i18next}>
-                <Navigator navigation={navigationRef.current} />
-              </I18nextProvider>
+              <Navigator navigation={navigationRef.current} />
             </NavigationContainer>
           </PaperProvider>
         </ReactQueryConfigProvider>

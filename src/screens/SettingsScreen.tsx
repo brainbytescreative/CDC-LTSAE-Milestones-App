@@ -62,6 +62,8 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         onValueChange={(value) => {
           helpers.setValue(value);
         }}
+        onText={t('onLabel')}
+        offText={t('offLabel')}
       />
     </View>
   );
