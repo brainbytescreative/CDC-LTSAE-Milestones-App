@@ -297,8 +297,8 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
-        // queryCache.refetchQueries(['question', {childId, questionId, year}], {force: true}).then();
-        // queryCache.refetchQueries('answers', {force: true, exact: false}).then();
+        // queryCache.refetchQueries(['question', {childId, questionId, milestoneId}], {force: true}).then();
+        queryCache.refetchQueries('answers', {force: true, exact: false}).then();
         if (milestoneAge) {
           queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
         } else {
