@@ -57,8 +57,12 @@ const OnboardingHowToUseScreen: React.FC = () => {
           style={styles.viewPager}
           initialPage={0}>
           {
-            stubArray.map(() => (
-              <Image resizeMode={'contain'} source={require('../../resources/images/howToUseSlide.png')} />
+            stubArray.map((value, index) => (
+              <Image
+                key={`how-to-image-${index}`}
+                resizeMode={'contain'}
+                source={require('../../resources/images/howToUseSlide.png')}
+              />
             )) as any
           }
         </ViewPager>

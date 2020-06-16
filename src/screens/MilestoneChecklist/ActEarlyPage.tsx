@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Concern} from '../../resources/milestoneChecklist';
 import {
+  useGetChecklistQuestions,
   useGetConcern,
   useGetConcerns,
   useGetIsMissingMilestone,
@@ -154,6 +155,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
+  const {data: {totalProgressValue} = {}} = useGetChecklistQuestions();
 
   const {t} = useTranslation('milestoneChecklist');
   return (
@@ -164,7 +166,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
             <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
-              {t('complete')}
+              {totalProgressValue === 1 ? t('complete') : t('incomplete')}
             </Text>
             <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>

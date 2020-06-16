@@ -45,6 +45,12 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
     {suspense: true},
   );
 
+  // useQuery('translations', async (key) => {
+  //   const response = await axios.get(
+  //     `https://localise.biz/api/export/locale/${lng}.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg`,
+  //   );
+  // });
+
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((notification) => {
       console.log('addNotificationReceivedListener', notification);

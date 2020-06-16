@@ -16,7 +16,15 @@ interface Props {
   // style?: ViewStyle;
 }
 
-const guardianTypes = ['guardian', 'healthcareProvider'];
+const guardianTypes = [
+  'guardian',
+  'headStartProvider',
+  'teacher',
+  'WICProvider',
+  'homeVisitor',
+  'healthcareProvider',
+  'other',
+];
 
 const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
   const {t} = useTranslation();

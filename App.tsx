@@ -96,7 +96,7 @@ const App = () => {
     crashlytics().log('App mounted.');
     // crashlytics().crash();
     Notifications.requestPermissionsAsync();
-    Notifications.getPermissionsAsync().then(console.log);
+    Notifications.getPermissionsAsync();
   }, []);
 
   return (

@@ -54,7 +54,6 @@ export function useGetCurrentChild() {
   const {data: selectedChildId} = useGetCurrentChildId();
   return useQuery<ChildResult, [string, {id?: string}]>(['selectedChild', {id: selectedChildId}], async () => {
     let result = await sqLiteClient.dB?.executeSql('select * from children where id=?1', [selectedChildId]);
-    console.log('result', selectedChildId, !!sqLiteClient.dB);
     if (!result || result[0].rows.length === 0) {
       result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');
     }

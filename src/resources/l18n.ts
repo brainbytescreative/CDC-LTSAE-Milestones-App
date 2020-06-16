@@ -1,4 +1,4 @@
-import i18next, {BackendModule, ReadCallback} from 'i18next';
+import i18next, {BackendModule, InitOptions, ReadCallback, Services} from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import translationES from './locales/es.json';
 import translationEN from './locales/en.json';
@@ -6,8 +6,6 @@ import milestonesEN from './milestones/en.json';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useCallback} from 'react';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import BackendAdapter from 'i18next-multiload-backend-adapter';
-import axios from 'axios';
 
 const languageCode = 'Language';
 export type LangCode = 'en' | 'es' | undefined;
@@ -64,7 +62,6 @@ const languageDetector = {
 
 class Backend implements BackendModule {
   type: 'backend' = 'backend';
-  static type = 'backend';
 
   static resources: Record<string, any> = {
     en: {
@@ -74,17 +71,25 @@ class Backend implements BackendModule {
     es: translationES,
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create(languages: string[], namespace: string, key: string, fallbackValue: string): void {
-    console.log(languages, namespace, key, fallbackValue);
+    console.log('create');
   }
 
-  init(): void {
-    console.log('<READ');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  init(services: Services, backendOptions: Record<string, any | undefined>, i18nextOptions: InitOptions) {
+    console.log('init');
   }
 
   async read(language: string, namespace: string, callback: ReadCallback) {
-    console.log(namespace, language);
-    callback(null, Backend.resources[language][namespace]);
+    const resourceElement = Backend.resources[language][namespace];
+    // console.log(!!resourceElement);
+    if (resourceElement) {
+      callback(null, resourceElement);
+    } else {
+      // console.log('<<err');
+      // callback(new Error('Translation error'), false);
+    }
   }
 
   // async readMulti(languages: string[], namespaces: string[], callback: ReadCallback) {
@@ -97,10 +102,12 @@ class Backend implements BackendModule {
   // }
 }
 
+// const backend = new Backend();
+
 i18next
   .use(languageDetector as any)
   .use(initReactI18next)
-  .use(Backend)
+  // .use(backend)
   .init({
     // fallbackLng: 'en',
     debug: false,

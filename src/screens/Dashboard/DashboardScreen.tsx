@@ -217,7 +217,11 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
         }}>
         <ChildSelectorModal visible={addChildParam} />
 
-        <ScrollView bounces={false} style={{backgroundColor: '#fff'}} contentContainerStyle={{flexGrow: 1}}>
+        <ScrollView
+          scrollIndicatorInsets={{right: 0.1}}
+          bounces={false}
+          style={{backgroundColor: '#fff'}}
+          contentContainerStyle={{flexGrow: 1}}>
           <View
             style={{
               position: 'absolute',

@@ -106,24 +106,31 @@
         "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
     },
     "fields": {
-        "appointmentNotifications": "Appointment notifications",
+        "appointmentNotifications": "Notificaciones de citas",
         "apptTypePlaceholder": "Appointment type / description",
         "childNamePlaceholder": "Nombre del niño",
         "dateOfBirthPlaceholder": "Dia de nacimiento",
         "datePlaceholder": "Fecha",
         "doctorPlaceholder": "Nombre del proveedor",
         "guardianPlaceholder": "Guardian / Healthcare Provider",
-        "milestoneNotifications": "Milestone notifications",
+        "milestoneNotifications": "Notificaciones de siguiente lista",
         "notesConcernsPlaceholder": "Notes / Concerns",
+        "offLabel": "Desactivadas",
+        "onLabel": "Activadas",
         "questionsPlaceholder": "Preguntas, inquietudes o notas para el proveedor",
-        "recommendationNotifications": "Recommendation notifications",
+        "recommendationNotifications": "Notificaciones de recomendaciones",
         "territoryPlaceholder": "Estado o territorio",
         "timePlaceholder": "hora",
-        "tipsAndActivitiesNotification": "Tips & Activities notifications"
+        "tipsAndActivitiesNotification": "Notificaciones de consejos y actividades"
     },
     "guardianTypes": {
-        "guardian": "Guardian",
-        "healthcareProvider": "Healthcare Provider"
+        "WICProvider": "Proveedor de WIC ",
+        "guardian": "Padre/tutor legal",
+        "headStartProvider": "Proveedor de Early Head Start/Head Start ",
+        "healthcareProvider": "Proveedor de atención médica",
+        "homeVisitor": "Evaluador a domicilio",
+        "other": "Otro",
+        "teacher": "Educador/maestro de educación temprana"
     },
     "info": {
         "aboutThisApp": "About This App",
@@ -135,9 +142,9 @@
         "title": "Info"
     },
     "milestoneChecklist": {
-        "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit <0>www.cdc.gov/Concerned</0>",
+        "actEarlyMessage1": "Si selecciona cualquiera de las opciones siguientes, es importante que reaccione pronto al hablar con el médico de su hijo y pedirle pruebas del desarrollo. No espere. ¡Reaccionar pronto puede tener un gran impacto! Para obtener más información, visite <0>www.cdc.gov/Concerned</0>",
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_pronto",
-        "actEarlyWarning": "You may need to act early!",
+        "actEarlyWarning": "Puede que sea el momento de reaccionar pronto, hable con el médico.",
         "addANote": "Add a note",
         "addANoteLong": "Notes will save automatically, \nenter them here.",
         "answer_no": "no",
@@ -145,8 +152,9 @@
         "answer_unsure": "unsure",
         "answer_yes": "Sí",
         "answered": "answered",
-        "complete": "Complete",
+        "complete": "Completa",
         "drawerLabel": "Lista de verificación",
+        "incomplete": "incompleta",
         "message1": "La app Sigamos el Desarrollo tiene listas de verificación para las edades de 2, 4, 6, 9, 12 y 18 meses, y de los 2 a los 5 años.",
         "message2": "Si la edad de su hijo está entre dos listas de verificación, complete la lista de la edad menor.",
         "milestoneChecklist": "Lista de indicadores",
@@ -217,11 +225,11 @@
     },
     "settings": {
         "drawerLabel": "Notificaciones y configuraciones del usuario",
-        "notificationSettings": "Notification settings",
+        "notificationSettings": "Configuración de la Notificacion",
         "requiredForState": "*required for state",
         "statePrivacyLanguage": "{State-privacy language}",
         "title": "Settings",
-        "userProfile": "User profile"
+        "userProfile": "Configuraciones de la cuenta"
     },
     "skillTypes": {
         "cognitive": "Movimiento",
