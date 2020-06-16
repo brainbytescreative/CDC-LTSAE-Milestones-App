@@ -113,7 +113,7 @@
         "datePlaceholder": "Date",
         "doctorPlaceholder": "Provider Name",
         "guardianPlaceholder": "Guardian / Healthcare Provider",
-        "milestoneNotifications": "Milestone notifications",
+        "milestoneNotifications": "Next Checklist Notifications",
         "notesConcernsPlaceholder": "Notes / Concerns",
         "offLabel": "Off",
         "onLabel": "On",
@@ -134,7 +134,7 @@
     },
     "info": {
         "aboutThisApp": "About This App",
-        "aboutThisAppText": "This app was developed by the Centers for Disease Control and Prevention’s “Learn the Signs. Act Early.” program (<0>www.cdc.gov/ActEarly</0>) with contribution from Dr. Rosa Arriaga and students from the Computing for Good program at \nthe Georgia Institute of Technology, Atlanta, GA.\n\nThis app includes the following features to make tracking your child’s important developmental milestones easy and fun: \n\n<1>Add A Child</1> - enter personalized information about your child or multiple children\n\n<1>Milestone Tracker</1> - track your child’s developmenal progress by looking for important milestones using an interactive, illustrated checklist\nMilestone Photos and Videos - know what each milestone looks like so that you can better identify them in your own child\n\n<1>Tips and Activities</1> - support your child’s development at every age\nWhen to Act Early - know when it’s time to “act early” and talk with your child’s doctor about developmental concerns\nAppointments - keep track of your child’s doctors’ appointments and get reminders about recommended developmental screenings\n\n<1>Milestone Results</1> - get a summary of your child’s milestones to view, and share with or email to your child’s doctor and other important care providers\nThe use of this app is NOT a substitute for the use of validated, standardized devleopmental screening tools as recommended by the American Academy of Pediatrics. \n\nFor more information and free tools to help you track your child’s milestones, visit <2>www.cdc.gov/ActEarly</2>",
+        "aboutThisAppText": "This app was developed by the Centers for Disease Control and Prevention’s “Learn the Signs. Act Early.” program (<0>www.cdc.gov/ActEarly</0>) with contribution from Dr. Rosa Arriaga and students from the Computing for Good program at \nthe Georgia Institute of Technology, Atlanta, GA.\n\nThis app includes the following features to make tracking your child’s important developmental milestones easy and fun: \n\n<1>Add A Child</1> - enter personalized information about your child or multiple children\n\n<1>Milestone Tracker</1> - track your child’s developmenal progress by looking for important milestones using an interactive, illustrated checklist\n\n<1>Milestone Photos and Videos</1> - know what each milestone looks like so that you can better identify them in your own child\n\n<1>Tips and Activities</1> - support your child’s development at every age\n\n<1>When to Act Early</1> - know when it’s time to “act early” and talk with your child’s doctor about developmental concerns\n\n<1>Appointments</1> - keep track of your child’s doctors’ appointments and get reminders about recommended developmental screenings\n\n<1>Milestone Results</1> - get a summary of your child’s milestones to view, and share with or email to your child’s doctor and other important care providers\n\nThe use of this app is NOT a substitute for the use of validated, standardized devleopmental screening tools as recommended by the American Academy of Pediatrics. \n\nFor more information and free tools to help you track your child’s milestones, visit <2>www.cdc.gov/ActEarly</2>",
         "actEarlyLink": "https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_info2",
         "drawerLabel": "App Info & Privacy Policy ",
         "privacyPolicy": "Privacy Policy",
@@ -144,7 +144,7 @@
     "milestoneChecklist": {
         "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit <0>www.cdc.gov/Concerned</0>",
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_when",
-        "actEarlyWarning": "You may need to act early!",
+        "actEarlyWarning": "It may be time to act early, talk with the doctor.",
         "addANote": "Add a note",
         "addANoteLong": "Notes will save automatically, \nenter them here.",
         "answer_no": "no",
@@ -154,6 +154,7 @@
         "answered": "answered",
         "complete": "Complete",
         "drawerLabel": "Milestone Checklist",
+        "incomplete": "Incomplete",
         "message1": "Milestone Tracker has checklists for  ages 2, 4, 6, 9, 12, 18 months and 2 to 5 years",
         "message2": "If your child is between milestone checklist ages, complete the checklist for the younger age . ",
         "milestoneChecklist": "Milestone checklist",
@@ -183,7 +184,7 @@
         "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Complete {{hisHersTag}} checklist today to share with the doctor. 🩺",
         "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Schedule this appointment and write down any developmental concerns or questions to share with the doctor 📝.",
         "wellCheckUpSR1": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for ALL children at this age.⚕️️",
-        "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. 👨‍⚕"
+        "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
     },
     "onboardingHowToUse": {
         "howToUseApp": "How to use the app"
@@ -227,7 +228,6 @@
         "notificationSettings": "Notification settings",
         "requiredForState": "*required for state",
         "statePrivacyLanguage": "{State-privacy language}",
-        "title": "Settings",
         "userProfile": "User profile"
     },
     "skillTypes": {
