@@ -1,4 +1,13 @@
 {
+  "milestone_4_concern_7": "$t(milestones:milestone_2_concern_1)",
+  "milestone_6_concern_15": "$t(milestones:milestone_2_concern_1)",
+  "milestone_9_concern_25": "$t(milestones:milestone_2_concern_1)",
+  "milestone_12_concern_34": "$t(milestones:milestone_2_concern_1)",
+  "milestone_18_concern_42": "$t(milestones:milestone_2_concern_1)",
+  "milestone_24_concern_51": "$t(milestones:milestone_2_concern_1)",
+  "milestone_36_concern_58": "$t(milestones:milestone_2_concern_1)",
+  "milestone_48_concern_68": "$t(milestones:milestone_2_concern_1)",
+  "milestone_60_concern_80": "$t(milestones:milestone_2_concern_1)",
   "milestone_18_skill_116_photo_377": "",
   "milestone_24_skill_144_photo_1": "en_m24_s144_1",
   "milestone_accessibility_label_1": "%@, button",
