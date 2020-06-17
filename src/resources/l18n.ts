@@ -3,6 +3,7 @@ import {initReactI18next} from 'react-i18next';
 import translationES from './locales/es.json';
 import translationEN from './locales/en.json';
 import milestonesEN from './milestones/en.json';
+import milestonesTextsEN from './milestones/en-texts.json';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useCallback} from 'react';
 import {queryCache, useMutation, useQuery} from 'react-query';
@@ -120,7 +121,7 @@ i18next
     resources: {
       en: {
         ...translationEN,
-        milestones: milestonesEN,
+        milestones: {...milestonesEN, ...milestonesTextsEN},
       },
       es: translationES,
     },
