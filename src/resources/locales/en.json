@@ -18,7 +18,7 @@
         "title": "Add a child"
     },
     "appointment": {
-        "concernsOrNotesForDoctor": "Concerns or notes for doctor:",
+        "concernsOrNotesForDoctor": "Questions/Concerns/Notes",
         "deleteAppointment": "Delete Appointment",
         "emailChildsSummary": "Email child's summary",
         "showChildsSummary": "Show child's summary",
@@ -114,7 +114,7 @@
         "doctorPlaceholder": "Provider Name",
         "guardianPlaceholder": "Guardian / Healthcare Provider",
         "milestoneNotifications": "Next Checklist Notifications",
-        "notesConcernsPlaceholder": "Notes / Concerns",
+        "notesConcernsPlaceholder": "Questions/Concerns/Notes",
         "offLabel": "Off",
         "onLabel": "On",
         "questionsPlaceholder": "Questions, concerns, or notes for provider",
@@ -149,9 +149,8 @@
         "addANoteLong": "Notes will save automatically, \nenter them here.",
         "answer_no": "no",
         "answer_not_yet": "not yet",
-        "answer_unsure": "unsure",
+        "answer_unsure": "Not Sure",
         "answer_yes": "yes",
-        "answered": "answered",
         "complete": "Complete",
         "drawerLabel": "Milestone Checklist",
         "incomplete": "Incomplete",
@@ -171,7 +170,7 @@
     },
     "notifications": {
         "appointment1DayBeforeBody": "{{name}} has a doctor’s appointment tomorrow. Write down any concerns or questions you have and share them with the doctor. If this is a well-child checkup, also share {{hisHersTag}} milestone checklist. 📝",
-        "appointmentNotificationTitle": "Appointment Notification",
+        "appointmentNotificationTitle": "Appointments Notifications",
         "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked ‘Not Yet’ or ‘Not Sure.’ Would you like to recheck those milestones?",
         "milestoneNotificationTitle": "Milestone Notification",
         "nextMilestoneBirthdayNotificationBody": "{{name}} is {{childAgeFormatted}} old 🎂! Complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist today!",
@@ -207,19 +206,19 @@
         "territoryInfo": "Milestone Tracker asks for state and territory to learn where the app is being used. \n\nIt does not collect or share any personal information that could be used to identify you or your child."
     },
     "privacyPolicy": {
-        "title": "Privacy Policy"
+        "title": "$t(info:privacyPolicy)"
     },
     "revisit": {
         "actEarlyLink": "https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_doc2",
         "concernedLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_doc1",
         "concerns": "Items You Marked as\nConcerns",
-        "description": "A summary of your responses and other helpful information are below.\n\nShare this with your child’s doctor and other care providers. Remember, if you ever become concerned about Covey’s development, talk with the doctor and ask for developmental screening and services that can help make a big difference. Don’t wait.\n\n<0>ACT EARLY by talking with Mina’s doctor right away about:</0>",
+        "description": "A summary of your responses and other helpful information are below.\n\nShare this with your child’s doctor and other care providers. Remember, if you ever become concerned about {{name}}’s development, talk with the doctor and ask for developmental screening and services that can help make a big difference. Don’t wait.\n\n<0>ACT EARLY by talking with {{name}}’s doctor right away about:</0>",
         "notSure": "{{milestoneAge}} Milestones You\nMarked as “Not Sure”",
         "notYet": "{{milestoneAge}} Milestones You\nMarked as “Not Yet”",
-        "notYetText": "Ask the doctor for developmental screening and about services that can help. Remember, acting early on concerns and missed milestones can make a big difference for Mina. Don’t wait. Learn more about how to help your child at: <0>cdc.gov/Concerned</0>",
+        "notYetText": "Ask the doctor for developmental screening and about services that can help. Remember, acting early on concerns and missed milestones can make a big difference for {{name}}. Don’t wait. Learn more about how to help your child at: <0>cdc.gov/Concerned</0>",
         "thankYouText": "Thank you for using\nCDC’s Milestone Tracker\nApp for tracking {{childName}}'s\nmilestones.",
         "thankYouText2": "Thank you again for using CDC’s Milestone Tracker App!\n\nLearn more about developmental milestones and acting early on concerns at <0>cdc.gov/ActEarly.</0>",
-        "timeToCelebrate": "Take time to CELEBRATE Covey having reached these important milestones:",
+        "timeToCelebrate": "Take time to CELEBRATE {{name}} having reached these important milestones:",
         "unanswered": "{{milestoneAge}} Milestones\nYou Skipped",
         "yellowTip": "You know {{childName}} best. If {{heSheTag}} is missing milestones or you ever become concerned about {{hisHersTag}} development, talk with the doctor, share your concerns, and ask for developmental screening."
     },

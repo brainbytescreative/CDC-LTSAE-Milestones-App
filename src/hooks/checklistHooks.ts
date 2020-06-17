@@ -184,7 +184,7 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
         'answer',
       ) as any;
 
-      groupedByAnswer.undefined = _.merge(groupedByAnswer.undefined, groupedByAnswer.null);
+      groupedByAnswer.undefined = Array.from(_.merge(groupedByAnswer.undefined, groupedByAnswer.null));
 
       return {
         questions: questionsData as ChecklistData[],

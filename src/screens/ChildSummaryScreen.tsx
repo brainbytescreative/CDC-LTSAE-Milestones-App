@@ -286,6 +286,8 @@ const ChildSummaryScreen: React.FC = () => {
   const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
   const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
 
+  // console.log('<<<<', data?.groupedByAnswer[`${Answer.UNSURE}`]);
+
   return (
     <View style={{backgroundColor: colors.white}}>
       <View

@@ -62,13 +62,6 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
             {`${toGo} to go`}
           </Text>
         )}
-        {/*<Text*/}
-        {/*  style={{*/}
-        {/*    fontSize: 10,*/}
-        {/*    color: textColor,*/}
-        {/*  }}>*/}
-        {/*  {t('answered')}*/}
-        {/*</Text>*/}
       </View>
     </TouchableOpacity>
   );
