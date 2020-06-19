@@ -149,6 +149,7 @@ const MilestoneChecklistScreen: React.FC<{
           ref={flatListRef}
           bounces={false}
           initialNumToRender={2}
+          scrollIndicatorInsets={{right: 0.1}}
           data={questionsGrouped?.get(section) || []}
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
