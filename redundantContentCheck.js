@@ -3670,6 +3670,7 @@ const transKeys = Object.keys({...enTextTrans}).filter((value) => value.startsWi
 // console.log(JSON.stringify(transKeys.length, null, 2));
 const milestonesKeys = keys.flat(2);
 // console.log(JSON.stringify(milestonesKeys.length, null, 2));
-const redundant = transKeys.filter((value) => !milestonesKeys.includes(value));
-console.log(JSON.stringify(_.omit(enTextTrans, redundant), null, 2));
+// const redundant = milestonesKeys.filter((value) => transKeys.includes(value));
+// console.log(JSON.stringify(_.pick(enTextTrans, redundant), null, 2));
 // console.log(JSON.stringify(enTextTrans, null, 2));
+// console.log(_.difference(milestonesKeys, transKeys));

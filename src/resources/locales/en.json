@@ -1,7 +1,7 @@
 {
     "addAppointment": {
         "edit-title": "Edit appointment",
-        "title": "Add appointment"
+        "title": "Add an Appointment"
     },
     "addChild": {
         "addAnotherChild": "+ Add another child",
@@ -78,7 +78,6 @@
         "next": "Next",
         "notifications": "Notifications",
         "required": "* required",
-        "skip": "Skip",
         "timeFormat": "h:mm a",
         "year": "{{count}} year",
         "yearDash": "{{count}}-Year-old",

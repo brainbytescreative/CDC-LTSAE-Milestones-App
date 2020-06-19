@@ -93,7 +93,7 @@ const RevisitScreen: React.FC = () => {
           </Trans>
         </Text>
         <View style={{marginHorizontal: 32}}>
-          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item, index) => (

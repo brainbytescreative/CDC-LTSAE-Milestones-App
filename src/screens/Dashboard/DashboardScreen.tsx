@@ -177,9 +177,9 @@ const DashboardContainer: React.FC = () => {
     }, [setOnboarding, refetch]),
   );
 
-  useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
-    return slowdown(Promise.resolve(), 200);
-  });
+  // useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
+  //   return slowdown(Promise.resolve(), 200);
+  // });
 
   return (
     <DashboardSkeleton

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleProp, TextStyle, TouchableOpacity, View} from 'react-native';
 import Svg, {Circle, G, SvgProps} from 'react-native-svg';
-import {sharedStyle} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import {Text} from 'react-native-paper';
 
 interface Props {
@@ -35,7 +35,7 @@ const AERadioButton: React.FC<SvgProps & Props> = ({title, titleStyle, onChange,
               <G transform="translate(1 1)" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
                 <Circle fill="#FFF" fillRule="nonzero" cx={9.5} cy={9.5} r={9.5} />
                 <Circle stroke="#B9B9B9" strokeWidth={0.5} fill="#FFF" cx={9.25} cy={9.25} r={9.25} />
-                <Circle fill="#B9B9B9" cx={9.3} cy={9.1} r={5} />
+                <Circle fill={colors.purple} cx={9.3} cy={9.1} r={5} />
               </G>
             ) : (
               <G fill="#FFF" stroke="none" strokeWidth={1} fillRule="evenodd">

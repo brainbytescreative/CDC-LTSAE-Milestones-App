@@ -78,7 +78,6 @@
         "next": "Siguiente",
         "notifications": "Notificaciones",
         "required": "* requerido",
-        "skip": "Skip",
         "timeFormat": "h:mm a",
         "year": "{{count}} año",
         "yearDash": "{{count}}-Year-old",
@@ -103,7 +102,7 @@
         "yellowTip": "Si la edad de su hijo está entre dos de las listas de verificación de arriba, recibirá la lista de la edad menor."
     },
     "email": {
-        "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
+        "emailSubject": "Resumen de los indicadores del desarrollo de los {{milestone}} de {{name}}"
     },
     "fields": {
         "appointmentNotifications": "Notificaciones de citas",
@@ -161,7 +160,7 @@
         "myChildSummary": "El resumen de mi hijo",
         "nextSection": "Siguiente sección",
         "quickViewMessage": "A continuación se incluye una descripción breve do todos los indicadores del desarrollo que alcanzan la mayoria de los niños para la edad de {{milestone}} meses.",
-        "section-actEarly": "Cuándo reaccionar pronto",
+        "section-actEarly": "Cuándo\nreaccionar\npronto",
         "section-cognitive": "$t(skillTypes:cognitive)",
         "section-language": "$t(skillTypes:language)",
         "section-movement": "$t(skillTypes:movement)",

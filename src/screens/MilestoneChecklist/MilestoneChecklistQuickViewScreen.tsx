@@ -25,6 +25,11 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   const [section, setSection] = useState<Section>(skillTypes[0]);
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   // const {data: {id: childId} = {}} = useGetCurrentChild();
+  const onSectionSet = (val: Section) => {
+    if (val !== 'actEarly') {
+      setSection(val);
+    }
+  };
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -34,7 +39,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
-          renderItem={({item}) => <SectionItem section={item} selectedSection={section} />}
+          renderItem={({item}) => <SectionItem onSectionSet={onSectionSet} section={item} selectedSection={section} />}
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>

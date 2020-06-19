@@ -42,7 +42,7 @@ const MilestoneChecklistScreen: React.FC<{
   const {t} = useTranslation('milestoneChecklist');
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
 
-  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 300), {staleTime: 0});
+  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
 
   useEffect(() => {
     if (gotStartedStatus === 'success' && !gotStarted) {

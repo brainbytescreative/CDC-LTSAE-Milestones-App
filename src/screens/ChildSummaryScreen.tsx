@@ -250,7 +250,7 @@ const ChildSummaryScreen: React.FC = () => {
         },
       );
     },
-    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern, milestoneAge],
+    [refetchConcerns, t, child?.id, showActionSheetWithOptions, setConcern, milestoneAge],
   );
 
   const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
@@ -261,7 +261,7 @@ const ChildSummaryScreen: React.FC = () => {
           refetch({force: true}),
         );
     },
-    [child, answerQuestion, refetch, milestoneAge],
+    [child?.id, answerQuestion, refetch, milestoneAge],
   );
 
   const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
@@ -278,7 +278,7 @@ const ChildSummaryScreen: React.FC = () => {
           refetchConcerns({force: true});
         });
     },
-    [child, refetchConcerns, setConcern, milestoneAge],
+    [child?.id, refetchConcerns, setConcern, milestoneAge],
   );
 
   const unanswered = data?.groupedByAnswer['undefined'] || [];
@@ -366,7 +366,7 @@ const ChildSummaryScreen: React.FC = () => {
                 note={item.note}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
               <Text style={styles.blockText}>{t('concerns')}</Text>
             </View>
             {concerns?.concerned?.map((item) => (
