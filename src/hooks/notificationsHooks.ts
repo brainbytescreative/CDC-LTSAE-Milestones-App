@@ -323,6 +323,7 @@ export function notificationDbToRequest(value: NotificationDB, t: TFunction): No
     switch (value.notificationCategoryType) {
       case NotificationCategory.Milestone:
       case NotificationCategory.Appointment:
+      case NotificationCategory.WellCheckUp:
       case NotificationCategory.Recommendation: {
         const options = {
           name: value.childName,
@@ -531,8 +532,9 @@ export function useGetUnreadNotifications() {
     async () => {
       const result = await sqLiteClient.dB?.executeSql(
         `
-                  SELECT *
+                  SELECT notifications.*, ch.gender 'childGender', ch.name 'childName'
                   FROM notifications
+                  LEFT JOIN children ch ON ch.id = childId
                   WHERE fireDateTimestamp <= ?1
                     AND notificationRead <> 1
                   ORDER BY fireDateTimestamp DESC
