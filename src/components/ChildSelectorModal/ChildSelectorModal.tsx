@@ -69,7 +69,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   const {top} = useSafeAreaInsets();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 
-  const navigation = useNavigation<DashboardScreenNavigationProp>();
+  const navigation = useNavigation();
   const [selectChild] = useSetSelectedChild();
 
   useEffect(() => {
@@ -103,8 +103,11 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
-    navigation.navigate('AddChild', {
-      childId: id,
+    navigation.navigate('DashboardStack', {
+      screen: 'AddChild',
+      params: {
+        childId: id,
+      },
     });
   };
 

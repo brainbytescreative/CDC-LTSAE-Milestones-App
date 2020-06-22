@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -50,14 +50,10 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
       };
 
-  const saveNote = useCallback(
+  const saveNote = useRef(
     _.debounce((text: string) => {
-      id &&
-        childId &&
-        milestoneId &&
-        setConcern({concernId: id, childId, note: text, answer: !!concern?.answer, milestoneId});
+      id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
     }, 500),
-    [id, childId, concern?.answer],
   );
 
   useEffect(() => {
@@ -91,7 +87,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
             value={note}
             onChange={(e) => {
               setNote(e.nativeEvent.text);
-              saveNote(e.nativeEvent.text);
+              saveNote.current(e.nativeEvent.text);
             }}
             multiline
             style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}

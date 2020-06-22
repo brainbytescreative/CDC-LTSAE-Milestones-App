@@ -31,7 +31,7 @@ interface ConcernAnswer {
   concernId: number;
   milestoneId: number;
   childId: number;
-  answer: boolean;
+  answer?: boolean;
   note?: string | undefined | null;
 }
 
@@ -410,14 +410,14 @@ export function useSetConcern() {
   const [deleteRecommendationNotifications] = useDeleteRecommendationNotifications();
 
   return useMutation<void, ConcernAnswer>(
-    async ({answer = false, childId, concernId, milestoneId, note}) => {
+    async ({answer, childId, concernId, milestoneId, note}) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
                   INSERT OR
                   REPLACE
                   INTO concern_answers (concernId, answer, childId, milestoneId, note)
-                  VALUES (?1, ?2, ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 and childId = ?3)))
+                  VALUES (?1, coalesce(?2, coalesce((SELECT answer FROM concern_answers WHERE concernId=?1 AND childId=?3), 0)), ?3, ?4,
+                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3)))
         `,
         [concernId, answer, childId, milestoneId, note],
       );
