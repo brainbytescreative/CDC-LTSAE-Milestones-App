@@ -10,19 +10,20 @@ import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from 
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
-import {formatAge, formatDate, slowdown} from '../../utils/helpers';
+import {formatAge, formatDate} from '../../utils/helpers';
 import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
-import {ReactQueryConfigProvider, useQuery} from 'react-query';
+import {ReactQueryConfigProvider} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {differenceInWeeks} from 'date-fns';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -41,6 +42,7 @@ interface SkeletonProps {
   milestoneChecklistWidgetComponent?: any;
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
+  ageLessTwoMonth: boolean;
 }
 
 const DashboardSkeleton: React.FC<SkeletonProps> = ({
@@ -48,8 +50,8 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
   childNameComponent,
   monthSelectorComponent,
   milestoneChecklistWidgetComponent,
-  milestoneAgeFormatted = 0,
   appointments = [],
+  ageLessTwoMonth,
 }) => {
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {t} = useTranslation('dashboard');
@@ -58,7 +60,9 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
       {childPhotoComponent}
       {childNameComponent}
       {monthSelectorComponent}
-      <AEYellowBox containerStyle={styles.yellowTipContainer}>{t('yellowTip')}</AEYellowBox>
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>
+        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
+      </AEYellowBox>
       <PurpleArc width={'100%'} />
       <View
         style={{
@@ -71,11 +75,11 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
           style={{
             marginVertical: 20,
           }}>
-          <Text style={styles.actionItemsTitle}>
-            {t('actionItemsTitle', {
-              age: `${milestoneAgeFormatted || '  '}`,
-            })}
-          </Text>
+          {/*<Text style={styles.actionItemsTitle}>*/}
+          {/*  {t('actionItemsTitle', {*/}
+          {/*    age: `${milestoneAgeFormatted || '  '}`,*/}
+          {/*  })}*/}
+          {/*</Text>*/}
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
@@ -161,6 +165,10 @@ const DashboardContainer: React.FC = () => {
   const [setOnboarding] = useSetOnboarding();
   // const navigation = useNavigation();
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
+  const ageLessTwoMonth = ageInWeeks < 6;
+
   // useEffect(() => {
   //   child && setMilestoneNotifications({child});
   // }, [child, setMilestoneNotifications]);
@@ -183,6 +191,7 @@ const DashboardContainer: React.FC = () => {
 
   return (
     <DashboardSkeleton
+      ageLessTwoMonth={ageLessTwoMonth}
       childNameComponent={
         <View style={{alignItems: 'center'}}>
           <Text style={styles.childNameText}>{childName}</Text>
@@ -233,6 +242,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
           <Suspense
             fallback={
               <DashboardSkeleton
+                ageLessTwoMonth={false}
                 childNameComponent={
                   <View style={[{height: 54}, styles.spinnerContainer]}>
                     <ActivityIndicator size={'small'} />
