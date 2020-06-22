@@ -58,7 +58,7 @@ const MilestoneChecklistScreen: React.FC<{
     React.useCallback(() => {
       return () => {
         if (unansweredData && !_.isEmpty(unansweredData)) {
-          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`)).join(',');
+          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
           ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
         }
       };
