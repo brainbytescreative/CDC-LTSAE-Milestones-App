@@ -60,7 +60,6 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         component={ChildSummaryScreen}
         options={() => ({
           headerStyle: {
-            title: t('milestoneChecklist:milestoneChecklist'),
             backgroundColor: colors.iceCold,
           },
           headerBackTitle: ' ',

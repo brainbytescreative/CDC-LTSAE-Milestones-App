@@ -215,7 +215,7 @@ const ChildSummaryScreen: React.FC = () => {
         },
       );
     },
-    [refetch, t, answerQuestion, child, showActionSheetWithOptions, milestoneAge],
+    [refetch, t, answerQuestion, child?.id, showActionSheetWithOptions, milestoneAge],
   );
 
   const onEditConcernPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(

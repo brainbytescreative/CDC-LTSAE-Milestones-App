@@ -7,6 +7,7 @@ import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
 import ActEarlyPage from './ActEarlyPage';
 import {
+  useGetCheckListAnswers,
   useGetChecklistQuestions,
   useGetMilestone,
   useGetMilestoneGotStarted,
@@ -15,7 +16,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
-import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -24,6 +25,8 @@ import ViewPager from '@react-native-community/viewpager';
 import withSuspense from '../../components/withSuspense';
 import {useQuery} from 'react-query';
 import {slowdown} from '../../utils/helpers';
+import {ACPCore} from '@adobe/react-native-acpcore';
+import _ from 'lodash';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -41,6 +44,7 @@ const MilestoneChecklistScreen: React.FC<{
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
   const {t} = useTranslation('milestoneChecklist');
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
+  const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
 
   useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
 
@@ -49,6 +53,17 @@ const MilestoneChecklistScreen: React.FC<{
       navigation.replace('MilestoneChecklistGetStarted');
     }
   }, [gotStarted, gotStartedStatus, navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (unansweredData && !_.isEmpty(unansweredData)) {
+          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`)).join(',');
+          ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
+        }
+      };
+    }, [unansweredData, t]),
+  );
 
   const flatListRef = useRef<FlatList>(null);
   const viewPagerRef = useRef<ViewPager | null>(null);

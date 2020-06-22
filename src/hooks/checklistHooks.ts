@@ -108,10 +108,13 @@ export function useSetMilestoneAge() {
   ];
 }
 
-async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnswer[] | undefined> {
+async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[] | undefined> {
   const result = await sqLiteClient.dB?.executeSql(
-    `select * from milestones_answers where childId=? and questionId in (${ids.join(',')})`,
-    [childId],
+    `SELECT *
+       FROM milestones_answers
+       WHERE childId = ?1
+         AND milestoneId = ?2`,
+    [childId, milestoneId],
   );
 
   return result && result[0].rows.raw();
@@ -147,7 +150,8 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
           .value() as any);
 
       const ids = questionsData && questionsData.map((i) => i.id || 0);
-      const data = (variables.childId && ids && (await getAnswers(ids, variables.childId))) || [];
+      const data =
+        (variables.childId && ids && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
@@ -203,22 +207,31 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
   );
 }
 
-export function useGetCheckListAnswers(ids?: number[], childId?: number) {
-  return useQuery(['answers', {ids, childId}], async (key, variables) => {
+export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
+  return useQuery(['answers', {milestoneId, childId}], async (key, variables) => {
     const answers =
-      (variables.childId && variables.ids && (await getAnswers(variables.ids, variables.childId))) || undefined;
-    const complete = answers && variables.ids && answers.length === variables.ids.length;
-    return {answers, complete};
+      (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
+      undefined;
+
+    const questions =
+      milestoneId && _.first(milestoneChecklist.filter((value) => value.id === milestoneId))?.milestones;
+
+    const questionsData = Object.values(questions || {}).flat();
+    const questionsIds = questionsData?.map((value) => value.id);
+    const answerIds = answers?.map((value) => value.questionId) || [];
+    const unansweredIds = _.difference(questionsIds, answerIds);
+    const unansweredData = questionsData.filter((value) => unansweredIds.includes(value.id));
+
+    const complete = unansweredIds.length === 0; //answers && variables.ids && answers.length === variables.ids.length;
+    return {answers, complete, unansweredData};
   });
 }
 
 export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
   const {data: checkListData} = useGetChecklistQuestions();
   const questions = checkListData?.questions;
-  const {data: {answers, complete} = {}} = useGetCheckListAnswers(
-    questions?.map((value) => value.id || 0),
-    childId,
-  );
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone(childId);
+  const {data: {answers, complete} = {}} = useGetCheckListAnswers(milestoneId, childId);
 
   const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
