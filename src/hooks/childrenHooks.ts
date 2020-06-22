@@ -6,6 +6,7 @@ import {objectToQuery} from '../utils/helpers';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
 import {InteractionManager, Platform} from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import {ACPCore} from '@adobe/react-native-acpcore';
 
 interface Record {
   id: number;
@@ -227,6 +228,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
     },
     {
       onSuccess: (data, variables) => {
+        ACPCore.trackState(`Child added: ${JSON.stringify(variables)}`, {'gov.cdc.appname': 'CDC Health IQ'});
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries(['children'], {force: true});
         options?.onSuccess && options.onSuccess(data, variables);
