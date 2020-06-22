@@ -18,7 +18,7 @@ interface Props {
   section?: Section;
 }
 
-const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0]}) => {
+const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0], milestoneAge}) => {
   const {t} = useTranslation('milestoneChecklist');
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {bottom} = useSafeAreaInsets();
@@ -30,6 +30,8 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
     }, []),
   );
 
+  const isBirthday: boolean = !!milestoneAge && milestoneAge % 12 === 0;
+
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
@@ -37,7 +39,9 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
           <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
           <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
           <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
-            {t('quickViewMessage', {milestone: milestoneAgeFormatted})}
+            {isBirthday
+              ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted})
+              : t('quickViewMessage', {milestone: milestoneAgeFormatted})}
           </Text>
 
           {questionsGrouped?.get(section)?.map((item, index) => (

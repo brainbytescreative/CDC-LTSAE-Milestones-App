@@ -161,6 +161,7 @@
         "myChildSummary": "My Child’s Summary",
         "nextSection": "Next Section",
         "quickViewMessage": "Here’s a quick look at all of the milestones most children reach by {{milestone}}.",
+        "quickViewMessageBirthDay": "Here's a quick look at all of the milestones most children reach by their {{milestone}} birthday",
         "section-actEarly": "When to\nact early",
         "section-cognitive": "$t(skillTypes:cognitive)",
         "section-language": "$t(skillTypes:language)",

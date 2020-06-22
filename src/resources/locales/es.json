@@ -161,6 +161,7 @@
         "myChildSummary": "El resumen de mi hijo",
         "nextSection": "Siguiente sección",
         "quickViewMessage": "A continuación se incluye una descripción breve do todos los indicadores del desarrollo que alcanzan la mayoria de los niños para la edad de {{milestone}} meses.",
+        "quickViewMessageBirthDay": "Aquí están todos los indicadores del desarrollo que la mayoría de los niños alcanzan en su {{milestone}} cumpleaños",
         "section-actEarly": "Cuándo\nreaccionar\npronto",
         "section-cognitive": "$t(skillTypes:cognitive)",
         "section-language": "$t(skillTypes:language)",
