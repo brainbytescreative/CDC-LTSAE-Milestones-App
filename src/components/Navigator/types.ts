@@ -58,7 +58,7 @@ export type RootStackParamList = {
 };
 
 export type DashboardDrawerParamsList = {
-  DashboardStack: {addChild?: boolean} | undefined;
+  DashboardStack: {addChild?: boolean; screen?: string; params?: AddChildScreenParams} | undefined;
   AddChildStub: {redirect: [string, any]} | undefined;
   WhenToActEarly: {redirect: [string, any]} | undefined;
   SettingsStack: undefined;

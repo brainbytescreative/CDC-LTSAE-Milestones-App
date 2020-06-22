@@ -69,7 +69,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   const {top} = useSafeAreaInsets();
   const [childSelectorVisible, setChildSelectorVisible] = useState(false);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<DashboardScreenNavigationProp>();
   const [selectChild] = useSetSelectedChild();
 
   useEffect(() => {
