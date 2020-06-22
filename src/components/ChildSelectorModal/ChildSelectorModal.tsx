@@ -103,11 +103,34 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
-    navigation.navigate('DashboardStack', {
-      screen: 'AddChild',
-      params: {
-        childId: id,
-      },
+    // navigation.navigate('DashboardStack', {
+    //   screen: 'AddChild',
+    //   params: {
+    //     childId: id,
+    //   },
+    // });
+
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'DashboardStack',
+          state: {
+            index: 1,
+            routes: [
+              {
+                name: 'Dashboard',
+              },
+              {
+                name: 'AddChild',
+                params: {
+                  childId: id,
+                },
+              },
+            ],
+          },
+        },
+      ],
     });
   };
 
