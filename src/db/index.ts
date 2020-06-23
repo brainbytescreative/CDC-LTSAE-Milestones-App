@@ -35,8 +35,8 @@ const DB_MIGRATIONS = [
                 UNIQUE,
             childId    integer
                 REFERENCES children (id)
-                    ON UPDATE CASCADE ON DELETE CASCADE,
-            date       datetime,
+                    ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+            date       datetime NOT NULL,
             notes      text,
             apptType   text    NOT NULL,
             doctorName text,

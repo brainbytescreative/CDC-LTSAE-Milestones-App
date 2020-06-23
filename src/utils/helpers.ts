@@ -90,7 +90,7 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
   return {isMissingConcern, isNotYet, isNotSure};
 }
 
-type TableNames = 'children' | 'appointments';
+type TableNames = 'children' | 'appointments' | 'milestones_answers';
 type QueryType = 'insert' | 'updateById';
 
 export function objectToQuery<T extends Record<string, any>>(

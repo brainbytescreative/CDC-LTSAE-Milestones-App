@@ -43,9 +43,9 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
-  public async connect(): Promise<void> {
-    if (this.privateConnected) {
-      return;
+  public async connect(): Promise<SQLiteDatabase> {
+    if (this.privateConnected && this.privateDb) {
+      return this.privateDb;
     }
     try {
       this.privateDb = await SQLite.openDatabase({
@@ -57,21 +57,24 @@ export default class SQLiteClient {
       });
 
       // MIGRATIONS
-      const resultSet = await this.privateDb.executeSql('PRAGMA user_version');
-      const version: number = resultSet[0].rows.item(0).user_version;
-      const nextVersion = this.migrations.length;
-      if (version > nextVersion) {
-        throw new DowngradeError();
-      }
-      for (let i = version; i < nextVersion; i += 1) {
-        const migration = this.migrations[i];
-        await migration(this.privateDb);
-      }
-      if (version !== nextVersion) {
-        await this.privateDb.executeSql(`PRAGMA user_version = ${nextVersion}`);
+      if (this.migrations.length) {
+        const resultSet = await this.privateDb.executeSql('PRAGMA user_version');
+        const version: number = resultSet[0].rows.item(0).user_version;
+        const nextVersion = this.migrations.length;
+        if (version > nextVersion) {
+          throw new DowngradeError();
+        }
+        for (let i = version; i < nextVersion; i += 1) {
+          const migration = this.migrations[i];
+          await migration(this.privateDb);
+        }
+        if (version !== nextVersion) {
+          await this.privateDb.executeSql(`PRAGMA user_version = ${nextVersion}`);
+        }
       }
 
       this.privateConnected = true;
+      return this.privateDb;
     } catch (err) {
       if (err instanceof DowngradeError) {
         throw err;
