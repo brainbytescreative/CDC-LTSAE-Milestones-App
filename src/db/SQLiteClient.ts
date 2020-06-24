@@ -20,11 +20,8 @@ export class DowngradeError extends Error {
 /** Interface to SQLiteClient client. */
 export default class SQLiteClient {
   private privateConnected = false;
-
   private name: string;
-
   private migrations: Migration[];
-
   private privateDb: SQLiteDatabase | null = null;
 
   constructor(name: string, migrations: Migration[], debug?: boolean) {
@@ -43,6 +40,10 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
+  /**
+   * @type {SQLiteDatabase}
+   * @throws if database is not connected
+   */
   public get db(): SQLiteDatabase {
     if (!this.privateDb) {
       throw new Error('Db is not connected');

@@ -6,7 +6,7 @@ import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
   Concern,
-  MilestoneChecklist,
+  milestoneQuestions,
   Milestones,
   SkillSection,
 } from '../resources/milestoneChecklist';
@@ -134,51 +134,25 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       if (!variables.childId || !variables.milestoneAge) {
         return;
       }
-      const checklist = _.find(milestoneChecklist, {id: variables.milestoneAge}) as MilestoneChecklist | undefined;
-      const questionsData: ChecklistData[] | undefined =
-        variables.milestoneAge &&
-        (_.chain(skillTypes)
-          .map(
-            (section: keyof Milestones) =>
-              checklist?.milestones && checklist?.milestones[section]?.map((i: any) => ({...i, section})),
-          )
-          .flatten()
-          .map((item: SkillSection) => ({
-            ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
-          }))
-          .value() as any);
 
-      const ids = questionsData && questionsData.map((i) => i.id || 0);
-      const data =
-        (variables.childId && ids && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
+      const data = (variables.childId && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
+      const answersIds = data.map((value) => value.questionId || 0);
+
+      const questionsData = milestoneQuestions
+        .filter((value) => value.milestoneId === variables.milestoneAge)
+        .map((item) => ({
+          ...item,
+          value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
+        }))
+        .sort((a) => (a.id && !answersIds.includes(a.id) ? -1 : 1));
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
       });
 
-      const answersIds = data.map((value) => value.questionId || 0);
-
-      const groupedBySection = _.groupBy(questionsData, 'section');
-      const questionsGrouped: Map<Section, SkillSection[]> = skillTypes.reduce((prev, section) => {
-        prev.set(
-          section,
-          groupedBySection[section]
-            .filter((item) => item.section === section)
-            .sort((a) => {
-              if (a.id && !answersIds.includes(a.id)) {
-                return -1;
-              }
-              return 1;
-            }),
-        );
-
-        return prev;
-      }, new Map());
-
+      const questionsGrouped = new Map(Object.entries(_.groupBy(questionsData, 'skillType')));
       const total = questionsData?.length || 0;
       const done = data?.length || 0;
-
       const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
@@ -191,18 +165,14 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       groupedByAnswer.undefined = Array.from(_.merge(groupedByAnswer.undefined, groupedByAnswer.null));
 
       return {
-        questions: questionsData as ChecklistData[],
+        questions: questionsData,
         totalProgress: `${done}/${total}`,
         totalProgressValue: done / total,
         answers: data,
-        questionsIds: ids,
         questionsGrouped,
         groupedByAnswer,
         answeredQuestionsCount: answersIds.length,
       };
-    },
-    {
-      staleTime: Infinity,
     },
   );
 }
@@ -228,24 +198,23 @@ export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
 }
 
 export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
-  const {data: checkListData} = useGetChecklistQuestions();
-  const questions = checkListData?.questions;
+  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone(childId);
   const {data: {answers, complete} = {}} = useGetCheckListAnswers(milestoneId, childId);
 
   const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
   const progress: Map<Section, {total: number; answered: number}> | undefined = useMemo(() => {
-    if (questions?.length) {
+    if (questionsGrouped && answers) {
       return skillTypes.reduce((previousValue, section) => {
-        const sectionsQuestions = questions.filter((value) => value.section === section);
+        const sectionsQuestions = questionsGrouped?.get(section) || [];
         const questionsIds = sectionsQuestions.map((value) => value.id);
-        const answeredInSection = answers?.filter((value) => questionsIds.includes(value.questionId)) || [];
+        const answeredInSection = answers.filter((value) => questionsIds.includes(value.questionId)) || [];
         previousValue.set(section, {total: sectionsQuestions.length, answered: answeredInSection.length});
         return previousValue;
       }, new Map<SkillType, {total: number; answered: number}>());
     }
-  }, [answers, questions]);
+  }, [answers, questionsGrouped]);
 
   return {progress, complete, hasNotYet};
 }

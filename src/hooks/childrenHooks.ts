@@ -152,8 +152,8 @@ export function useGetChild(options: {id: number | string | undefined}) {
       return;
     }
 
-    const result = await sqLiteClient.dB?.executeSql('select * from children where id = ?', [variables.id]);
-    const record: ChildDbRecord = result && result[0].rows.item(0);
+    const [result] = await sqLiteClient.db.executeSql('select * from children where id = ?', [variables.id]);
+    const record: ChildDbRecord = result.rows.item(0);
     return {
       ...record,
       photo: pathFromDB(record.photo),

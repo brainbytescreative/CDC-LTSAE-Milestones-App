@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
@@ -92,12 +92,7 @@ const SettingsScreen: React.FC = () => {
     }
   }, [settings]);
 
-  const rescheduleNotifications = useCallback(
-    _.debounce(() => {
-      scheduleNotifications();
-    }, 3000),
-    [scheduleNotifications],
-  );
+  const rescheduleNotifications = useRef(_.debounce(scheduleNotifications, 3000));
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -123,7 +118,7 @@ const SettingsScreen: React.FC = () => {
                 tipsAndActivitiesNotification: true,
               }}
               validate={(values) => {
-                setSettings(values).then(() => rescheduleNotifications());
+                setSettings(values).then(() => rescheduleNotifications.current());
               }}
               onSubmit={() => {
                 return;

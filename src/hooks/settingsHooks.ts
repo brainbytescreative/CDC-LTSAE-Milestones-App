@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from 'react-query';
+import {queryCache, useMutation, useQuery} from 'react-query';
 import Storage from '../utils/Storage';
 import _ from 'lodash';
 
@@ -40,7 +40,12 @@ export function useGetNotificationSettings() {
 }
 
 export function useSetNotificationSettings() {
-  return useMutation<void, NotificationSettings>((variables) =>
-    Storage.setItem('notificationSettings', JSON.stringify(variables)),
+  return useMutation<void, NotificationSettings>(
+    (variables) => Storage.setItem('notificationSettings', JSON.stringify(variables)),
+    {
+      onSuccess: () => {
+        queryCache.refetchQueries('notificationSettings', {force: true});
+      },
+    },
   );
 }

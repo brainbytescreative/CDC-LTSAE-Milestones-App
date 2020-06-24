@@ -115,8 +115,8 @@ const DB_MIGRATIONS = [
 export const sqLiteClient = new SQLiteClient(DB_NAME, DB_MIGRATIONS, DB_DEBUG);
 
 /** Applicaiton initialization. */
-export const initialize = async (): Promise<void> => {
-  await sqLiteClient.connect();
+export const initialize = async (): Promise<SQLiteDatabase> => {
+  return sqLiteClient.connect();
 };
 
 // /* eslint-disable @typescript-eslint/no-unused-vars */

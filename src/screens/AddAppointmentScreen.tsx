@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {useFormik} from 'formik';

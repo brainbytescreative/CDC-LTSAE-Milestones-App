@@ -1,5 +1,5 @@
 import SQLiteClient from '../db/SQLiteClient';
-import milestoneChecklist, {milestoneQuestions} from '../resources/milestoneChecklist';
+import {milestoneQuestions} from '../resources/milestoneChecklist';
 import {formatISO, fromUnixTime, parseISO} from 'date-fns';
 import {useCallback} from 'react';
 import {sqLiteClient} from '../db';
