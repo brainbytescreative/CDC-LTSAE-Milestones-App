@@ -85,7 +85,7 @@ const AddAppointmentScreen: React.FC = () => {
     },
   });
 
-  const setValues = useCallback(formik.setValues, []);
+  const setValues = formik.setValues;
 
   useEffect(() => {
     if (appointment) {

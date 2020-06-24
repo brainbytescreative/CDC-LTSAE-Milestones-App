@@ -214,7 +214,6 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
         'children',
       );
       const res = await sqLiteClient.dB?.executeSql(query, values);
-
       const [{insertId}] = res || [{}];
       if (!variables.isAnotherChild) {
         insertId && Storage.setItem('selectedChild', `${insertId}`);

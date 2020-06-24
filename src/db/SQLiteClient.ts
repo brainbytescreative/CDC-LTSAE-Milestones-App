@@ -43,6 +43,13 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
+  public get db(): SQLiteDatabase {
+    if (!this.privateDb) {
+      throw new Error('Db is not connected');
+    }
+    return this.privateDb;
+  }
+
   public async connect(): Promise<SQLiteDatabase> {
     if (this.privateConnected && this.privateDb) {
       return this.privateDb;

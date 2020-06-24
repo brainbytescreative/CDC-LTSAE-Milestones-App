@@ -26,11 +26,11 @@ export interface MilestoneChecklist {
   concerns?: Concern[];
   helpful_hints?: Concern[];
   id?: number;
-  milestones?: Milestones;
+  milestones?: Record<keyof Milestones | string, SkillSection[]>;
   title?: string;
 }
 
-export default [
+const checklist: MilestoneChecklist[] = [
   {
     concerns: [
       {
@@ -3677,4 +3677,27 @@ export default [
     },
     title: 'milestone_60_title',
   },
-] as MilestoneChecklist[];
+];
+
+export const milestoneQuestions: Readonly<
+  (SkillSection & {skillType: keyof Milestones; milestoneId: number})[]
+> = Object.freeze(
+  checklist
+    .map((value) => {
+      if (!value.milestones) {
+        return [];
+      }
+      return Object.keys(value.milestones).reduce((previousValue, currentValue) => {
+        const newValue =
+          value?.milestones?.[currentValue]?.map((v) => ({
+            ...v,
+            skillType: currentValue,
+            milestoneId: value.id,
+          })) || [];
+        return [...previousValue, ...newValue];
+      }, [] as any[]);
+    })
+    .flat(),
+);
+
+export default Object.freeze(checklist);
