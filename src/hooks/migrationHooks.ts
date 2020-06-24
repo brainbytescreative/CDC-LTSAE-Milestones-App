@@ -43,7 +43,7 @@ export function useTransferDataFromOldDb() {
       const children: ChildIOSDB[] = (res && res[0].rows.raw()) || [];
 
       const childrenRecords = children.map(({dateOfBirth, ...rest}) => ({
-        birthday: formatISO(fromUnixTime(Math.floor(dateOfBirth))),
+        birthday: formatISO(fromUnixTime(Math.floor(dateOfBirth)), {representation: 'date'}),
         ...rest,
       }));
 
