@@ -18,10 +18,6 @@ const Stack = createStackNavigator<DashboardStackParamList>();
 const DashboardStack: FC = () => {
   const {t} = useTranslation();
 
-  useEffect(() => {
-    console.log('DashboardStack');
-  }, []);
-
   return (
     <Stack.Navigator screenOptions={sharedScreenOptions}>
       <Stack.Screen
