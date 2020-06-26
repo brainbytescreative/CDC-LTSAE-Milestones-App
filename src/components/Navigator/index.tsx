@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import {RootStackParamList} from './types';
@@ -33,7 +33,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
     async () => {
       await initialize()
         .then(() => {
-          transferDataFromOldDb();
+          return transferDataFromOldDb();
         })
         .catch((err) => {
           // todo implement error handling

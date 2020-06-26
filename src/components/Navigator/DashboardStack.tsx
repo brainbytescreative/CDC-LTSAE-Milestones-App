@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
 import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import {createStackNavigator} from '@react-navigation/stack';

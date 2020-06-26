@@ -26,10 +26,6 @@ import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
-import SQLiteClient from './src/db/SQLiteClient';
-import {formatISO, fromUnixTime, parse} from 'date-fns';
-import {sqLiteClient} from './src/db';
-import {objectToQuery} from './src/utils/helpers';
 
 enableScreens();
 

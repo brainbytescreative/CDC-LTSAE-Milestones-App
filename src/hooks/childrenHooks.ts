@@ -33,7 +33,7 @@ type Key = 'children' | 'selectedChild';
 
 export function useGetCurrentChildId() {
   return useQuery('selectedChildId', async () => {
-    let selectedChild: string | null = await Storage.getItem('selectedChild');
+    let selectedChild = await Storage.getItemTyped('selectedChild');
 
     if (!selectedChild) {
       const res = await sqLiteClient.dB?.executeSql('select * from children order by id  limit 1');
@@ -44,7 +44,7 @@ export function useGetCurrentChildId() {
         return;
       }
 
-      await Storage.setItem('selectedChild', `${selectedChild}`);
+      await Storage.setItemTyped('selectedChild', selectedChild);
     }
 
     return selectedChild;
@@ -53,7 +53,7 @@ export function useGetCurrentChildId() {
 
 export function useGetCurrentChild() {
   const {data: selectedChildId} = useGetCurrentChildId();
-  return useQuery<ChildResult, [string, {id?: string}]>(['selectedChild', {id: selectedChildId}], async () => {
+  return useQuery<ChildResult, [string, {id?: number}]>(['selectedChild', {id: selectedChildId}], async () => {
     let result = await sqLiteClient.dB?.executeSql('select * from children where id=?1', [selectedChildId]);
     if (!result || result[0].rows.length === 0) {
       result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');

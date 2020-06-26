@@ -9,6 +9,7 @@ import {useSetAppointmentNotifications, useSetMilestoneNotifications} from './no
 import {queryCache} from 'react-query';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {Platform} from 'react-native';
+import Storage from '../utils/Storage';
 
 type ChildIOSDB = {
   id: number;
@@ -38,6 +39,12 @@ export function useTransferDataFromOldDb() {
 
   const func = useCallback(async () => {
     try {
+      const migrated = await Storage.getItemTyped('migrated');
+
+      if (migrated) {
+        return;
+      }
+
       const dbName = Platform.select({
         ios: 'act_early',
         android: 'com.brainbytescreative.actearly.database',
@@ -130,8 +137,6 @@ export function useTransferDataFromOldDb() {
                 apptType: `${record.name}`,
               };
 
-              console.log(date, '<<<<<');
-
               const [queryText, params] = objectToQuery(newApt, 'appointments');
               const [{insertId}] = await sqLiteClient.db.executeSql(queryText, params);
 
@@ -163,7 +168,9 @@ export function useTransferDataFromOldDb() {
       await queryCache.refetchQueries(['appointment'], {force: true});
     } catch (e) {
       crashlytics().recordError(e);
+      await Storage.setItemTyped('migrationFailed', true);
     } finally {
+      await Storage.setItemTyped('migrated', true);
     }
   }, [setAppointmentNotifications, setMilestoneNotifications]);
 

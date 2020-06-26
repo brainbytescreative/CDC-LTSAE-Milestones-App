@@ -295,19 +295,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  actionItemsTitle: {
-    fontSize: 22,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    textTransform: 'capitalize',
-    fontFamily: 'Montserrat-Bold',
-  },
   actionItemText: {
     fontSize: 15,
     marginTop: 6,
     textAlign: 'center',
   },
-
   childNameText: {
     fontSize: 22,
     textAlign: 'center',

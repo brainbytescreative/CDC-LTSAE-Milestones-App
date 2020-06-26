@@ -1,4 +1,4 @@
-import i18next, {BackendModule, InitOptions, ReadCallback, Services} from 'i18next';
+import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import translationES from './locales/es.json';
 import translationEN from './locales/en.json';

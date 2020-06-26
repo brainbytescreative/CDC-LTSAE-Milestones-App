@@ -139,7 +139,7 @@ const TipsAndActivitiesScreen: React.FC = () => {
     (id, value) => {
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
-      const selectedTip = tips?.filter(({id: tipId}) => id === tipId)[0];
+      const selectedTip = (tips || []).filter(({id: tipId}) => id === tipId)[0];
       const notificationId = `tips-${id}-${child?.id}-${milestoneId}`;
 
       if (id && selectedTip?.key && child?.id && value) {
@@ -148,7 +148,7 @@ const TipsAndActivitiesScreen: React.FC = () => {
         notificationId && cancelNotification({notificationId});
       }
     },
-    [tips, setTip, setNotification, child, milestoneId, cancelNotification],
+    [tips, setTip, setNotification, child?.id, milestoneId, cancelNotification],
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
