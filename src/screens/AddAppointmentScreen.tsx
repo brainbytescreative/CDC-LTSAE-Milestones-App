@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {useFormik} from 'formik';
@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import DatePicker from '../components/DatePicker';
 import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {format, parse} from 'date-fns';
+import {add, differenceInSeconds, startOfDay} from 'date-fns';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import _ from 'lodash';
@@ -44,16 +44,20 @@ const AddAppointmentScreen: React.FC = () => {
     validateOnMount: true,
     validateOnChange: true,
     onSubmit: (values) => {
-      const date = values.date && format(values.date, 'yyyy-MM-dd');
-      const time = values.time && format(values.time, 'HH:mm:ss');
-      const dateTime = parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
+      if (!values.date || !values.time) {
+        throw new Error('Wrong date');
+      }
+
+      const dayStart = startOfDay(values.date);
+      const seconds = differenceInSeconds(values.time, dayStart);
+      const dateTime = add(dayStart, {seconds});
 
       let action;
       if (apptId) {
         action = updateAppointment({
           ..._.pick(values, ['apptType', 'notes', 'doctorName', 'questions']),
           childId: child?.id || 0,
-          date: values.date || new Date(),
+          date: dateTime || new Date(),
           id: apptId,
         });
       } else {
@@ -81,7 +85,7 @@ const AddAppointmentScreen: React.FC = () => {
     },
   });
 
-  const setValues = useCallback(formik.setValues, []);
+  const setValues = formik.setValues;
 
   useEffect(() => {
     if (appointment) {

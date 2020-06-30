@@ -1,7 +1,7 @@
 import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
-import {FlatList, FlatListProps, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, FlatListProps, Platform, Text, TouchableOpacity, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {childAges, colors, PropType} from '../../resources/constants';
+import {colors, milestonesIds, PropType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
@@ -73,25 +73,21 @@ const MonthCarousel: React.FC = () => {
 
   const {data: child} = useGetCurrentChild();
 
-  const currentAgeIndex = childAges.findIndex((value) => value === childAge);
+  const currentAgeIndex = milestonesIds.findIndex((value) => value === milestoneAge);
 
   useLayoutEffect(() => {
     setTimeout(() => {
-      try {
-        if (currentAgeIndex > -1) {
-          flatListRef.current?.scrollToIndex({
-            index: currentAgeIndex,
-            viewPosition: 0.5,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }, 500);
+      flatListRef.current?.scrollToIndex({
+        index: currentAgeIndex,
+        viewPosition: 0.5,
+      });
+    }, Platform.select({default: 0, android: 500}));
   }, [currentAgeIndex]);
 
   const onViewableItemsChanged = useCallback<onViewableItemsChanged>((info) => {
-    visible.current = {first: _.first(info.viewableItems)?.index, last: _.last(info.viewableItems)?.index};
+    const first = _.first(info.viewableItems)?.index;
+    const last = _.last(info.viewableItems)?.index;
+    visible.current = {first, last};
   }, []);
 
   // workaround to fix crashes on fast refresh
@@ -121,8 +117,16 @@ const MonthCarousel: React.FC = () => {
         style={{
           marginHorizontal: 13,
         }}
+        onScrollToIndexFailed={() => {
+          setTimeout(() => {
+            flatListRef.current?.scrollToIndex({
+              index: currentAgeIndex,
+              viewPosition: 0.5,
+            });
+          }, 1000);
+        }}
         onViewableItemsChanged={onViewableItemsChanged}
-        data={childAges}
+        data={milestonesIds}
         extraData={{childId: child?.id, milstone: childAge}}
         horizontal
         renderItem={({item}) => (
@@ -140,7 +144,7 @@ const MonthCarousel: React.FC = () => {
       />
       <TouchableOpacity
         onPress={() => {
-          const last = visible.current?.last || childAges.length - 1;
+          const last = visible.current?.last || milestonesIds.length - 1;
           flatListRef.current?.scrollToIndex({
             index: last,
             viewPosition: 0.5,

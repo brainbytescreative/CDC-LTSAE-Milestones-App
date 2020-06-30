@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Defs, ClipPath, Path, G, SvgProps} from 'react-native-svg';
+import Svg, {ClipPath, Defs, G, Path, SvgProps} from 'react-native-svg';
 
 const TipsAndActivitiesSign: React.FC<SvgProps> = (props) => (
   <Svg width={45} height={45} viewBox="0 0 45 45" {...props}>

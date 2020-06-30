@@ -3,7 +3,9 @@ import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
 import {PropType} from '../resources/constants';
-import {ChildResult} from './childrenHooks';
+import {ChildDbRecord, ChildResult} from './childrenHooks';
+import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
+import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
 
 export interface AppointmentDb {
   id: number;
@@ -16,12 +18,13 @@ export interface AppointmentDb {
   doctorName?: string;
   questions?: string;
 }
-
+type JoinedChildFields = 'childName' | 'childGender';
 export type Appointment = Omit<AppointmentDb, 'date'> & {date: Date};
-type UpdateAppointment = Omit<Appointment, 'childName' | 'childGender'>;
+export type UpdateAppointment = Omit<Appointment, JoinedChildFields>;
 export type NewAppointment = Omit<UpdateAppointment, 'id'>;
 
 export function useUpdateAppointment() {
+  const [setAppointmentNotifications] = useSetAppointmentNotifications();
   return useMutation<number, UpdateAppointment>(
     async (variables) => {
       const [query, values] = objectToQuery(
@@ -41,14 +44,16 @@ export function useUpdateAppointment() {
       return rowsAffected;
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         queryCache.refetchQueries('appointment', {force: true});
+        setAppointmentNotifications({appointmentId: variables.id});
       },
     },
   );
 }
 
 export function useAddAppointment() {
+  const [setAppointmentNotifications] = useSetAppointmentNotifications();
   return useMutation<number, NewAppointment>(
     async (variables) => {
       const [query, values] = objectToQuery(
@@ -68,19 +73,21 @@ export function useAddAppointment() {
       return insertId;
     },
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryCache.refetchQueries(['appointment'], {force: true});
+        setAppointmentNotifications({
+          appointmentId: data,
+        });
       },
     },
   );
 }
 
 export function useDeleteAppointment() {
-  return useMutation<void, string | number>(
+  const [deleteNotificationsByAppointmentId] = useDeleteNotificationsByAppointmentId();
+  return useMutation<void, PropType<AppointmentDb, 'id'>>(
     async (id) => {
-      const result = await sqLiteClient.dB?.executeSql('delete FROM appointments where id = ?', [id]);
-
-      const rowsAffected = result && result[0].rowsAffected;
+      const rowsAffected = await deleteAppointmentById(id);
 
       if (!rowsAffected) {
         throw new Error('Deletion failed');
@@ -88,14 +95,15 @@ export function useDeleteAppointment() {
     },
     {
       throwOnError: false,
-      onSuccess: () => {
+      onSuccess: (data, id) => {
         queryCache.refetchQueries('appointment', {force: true});
+        deleteNotificationsByAppointmentId({id});
       },
     },
   );
 }
 
-export function useGetAppointmentById(id: string | number | undefined) {
+export function useGetAppointmentById(id?: PropType<Appointment, 'id'>) {
   return useQuery<(Appointment & {childName?: string}) | undefined, [string, {id: typeof id}]>(
     ['appointment', {id}],
     async (key, variables) => {
@@ -105,43 +113,37 @@ export function useGetAppointmentById(id: string | number | undefined) {
       }
 
       // language=SQLite
-      const query = `select appointments.*, children.name 'childName', children.id 'childId', children.gender 'childGender'
-       from appointments
-                left join children on appointments.childId = children.id
-       where appointments.id = ?`;
-      const res = await sqLiteClient.dB?.executeSql(query, [variables.id]);
+      const appointment = await getAppointmentById(variables.id);
 
-      if (!res) {
+      if (!appointment) {
         // throw new Error('fetch failed');
         return;
       }
 
-      const dbRes: AppointmentDb = res && res[0].rows.item(0);
-
       return {
-        ...dbRes,
-        date: parseISO(dbRes.date),
+        ...appointment,
+        date: parseISO(appointment.date),
       } as Appointment;
     },
   );
 }
 
-export function useGetChildAppointments(childId: number | string | undefined, options?: QueryOptions<Appointment[]>) {
+export function useGetChildAppointments(
+  childId?: PropType<ChildDbRecord, 'id'>,
+  options?: QueryOptions<Appointment[]>,
+) {
   return useQuery<Appointment[], [string, {childId: typeof childId}]>(
     ['appointment', {childId: childId}],
     async (key, variables) => {
       if (!variables.childId) {
         return [];
       }
-      const res = await sqLiteClient.dB?.executeSql('select * from appointments where childId=? order by date desc', [
-        variables.childId,
-      ]);
+      const dbRes = await getAppointmentsByChildId(variables.childId);
 
-      if (!res) {
+      if (!dbRes) {
         throw new Error('fetch failed');
       }
 
-      const dbRes: AppointmentDb[] = res && res[0].rows.raw();
       return dbRes.map((value) => ({
         ...value,
         date: parseISO(value.date),

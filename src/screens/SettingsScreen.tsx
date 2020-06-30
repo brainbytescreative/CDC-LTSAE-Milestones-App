@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {LayoutChangeEvent, ScrollView, StyleProp, TextStyle, View} from 'react-native';
+import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
 import {Formik, useField} from 'formik';
 import {
   NotificationSettings,
@@ -11,7 +11,7 @@ import {
 } from '../hooks/settingsHooks';
 import {FormikProps} from 'formik/dist/types';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
-import NotificationsBadge from '../components/NotificationsBadge';
+import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import AESwitch from '../components/AESwitch';
 import {colors, sharedStyle} from '../resources/constants';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
@@ -62,6 +62,8 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         onValueChange={(value) => {
           helpers.setValue(value);
         }}
+        onText={t('onLabel')}
+        offText={t('offLabel')}
       />
     </View>
   );
@@ -90,12 +92,7 @@ const SettingsScreen: React.FC = () => {
     }
   }, [settings]);
 
-  const rescheduleNotifications = useCallback(
-    _.debounce(() => {
-      scheduleNotifications();
-    }, 3000),
-    [scheduleNotifications],
-  );
+  const rescheduleNotifications = useRef(_.debounce(scheduleNotifications, 3000));
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -121,7 +118,7 @@ const SettingsScreen: React.FC = () => {
                 tipsAndActivitiesNotification: true,
               }}
               validate={(values) => {
-                setSettings(values).then(() => rescheduleNotifications());
+                setSettings(values).then(() => rescheduleNotifications.current());
               }}
               onSubmit={() => {
                 return;

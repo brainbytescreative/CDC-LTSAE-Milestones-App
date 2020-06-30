@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Concern} from '../../resources/milestoneChecklist';
 import {
+  useGetChecklistQuestions,
   useGetConcern,
   useGetConcerns,
   useGetIsMissingMilestone,
@@ -49,14 +50,10 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
       };
 
-  const saveNote = useCallback(
+  const saveNote = useRef(
     _.debounce((text: string) => {
-      id &&
-        childId &&
-        milestoneId &&
-        setConcern({concernId: id, childId, note: text, answer: !!concern?.answer, milestoneId});
+      id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
     }, 500),
-    [id, childId, concern?.answer],
   );
 
   useEffect(() => {
@@ -90,7 +87,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
             value={note}
             onChange={(e) => {
               setNote(e.nativeEvent.text);
-              saveNote(e.nativeEvent.text);
+              saveNote.current(e.nativeEvent.text);
             }}
             multiline
             style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
@@ -148,12 +145,13 @@ const itemStyles = StyleSheet.create({
   },
 });
 
-const ActEarlyPage: React.FC = () => {
+const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSummaryPress}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
+  const {data: {totalProgressValue} = {}} = useGetChecklistQuestions();
 
   const {t} = useTranslation('milestoneChecklist');
   return (
@@ -164,7 +162,7 @@ const ActEarlyPage: React.FC = () => {
             <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
             <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
-              {t('complete')}
+              {totalProgressValue === 1 ? t('complete') : t('incomplete')}
             </Text>
             <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
@@ -191,7 +189,7 @@ const ActEarlyPage: React.FC = () => {
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
                 onPress={() => {
-                  navigation.navigate('ChildSummary');
+                  onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
                 }}>
                 <View
                   style={[
@@ -228,20 +226,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },
-  text: {
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    marginTop: 20,
-    fontSize: 16,
-  },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkMarkSelected: {},
 });
 
 export default ActEarlyPage;

@@ -11,101 +11,101 @@ const DB_MIGRATIONS = [
   async (dB: SQLiteDatabase): Promise<void> => {
     // USE dB TO CREATE TABLES
     await dB.executeSql(`
-        create table children
+        CREATE TABLE children
         (
-            id          INTEGER not null
-                primary key autoincrement
-                unique,
-            name        TEXT    not null,
-            birthday    DATE    not null,
-            gender      INTEGER not null,
-            doctorName  TEXT,
-            parentName  TEXT,
-            parentEmail TEXT,
-            doctorEmail TEXT,
-            photo       TEXT
+            id          integer NOT NULL
+                PRIMARY KEY AUTOINCREMENT
+                UNIQUE,
+            name        text    NOT NULL,
+            birthday    date    NOT NULL,
+            gender      integer NOT NULL,
+            doctorName  text,
+            parentName  text,
+            parentEmail text,
+            doctorEmail text,
+            photo       text
         );
     `);
 
     await dB.executeSql(`
-        create table appointments
+        CREATE TABLE appointments
         (
-            id         INTEGER not null
-                primary key autoincrement
-                unique,
-            childId    INTEGER
-                references children (id)
-                    on update cascade on delete cascade,
-            date   DATETIME,
-            notes      TEXT,
-            apptType   TEXT not null,
-            doctorName TEXT,
-            questions  TEXT
+            id         integer NOT NULL
+                PRIMARY KEY AUTOINCREMENT
+                UNIQUE,
+            childId    integer
+                REFERENCES children (id)
+                    ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+            date       datetime NOT NULL,
+            notes      text,
+            apptType   text    NOT NULL,
+            doctorName text,
+            questions  text
         );
     `);
 
     await dB.executeSql(`
-        create table milestones_answers
+        CREATE TABLE milestones_answers
         (
-            childId    INTEGER not null
-                references children (id)
-                    on update cascade on delete cascade,
-            questionId INTEGER not null,
-            milestoneId integer not null,
-            answer     INTEGER,
-            note       TEXT,
+            childId     integer NOT NULL
+                REFERENCES children (id)
+                    ON UPDATE CASCADE ON DELETE CASCADE,
+            questionId  integer NOT NULL,
+            milestoneId integer NOT NULL,
+            answer      integer,
+            note        text,
             PRIMARY KEY (childId, questionId, milestoneId)
         );
     `);
 
     await dB.executeSql(`
-        create table concern_answers
+        CREATE TABLE concern_answers
         (
-            answer    BOOLEAN not null,
-            note      TEXT,
-            concernId INTEGER not null,
-            milestoneId integer not null,
-            childId   INTEGER not null
-                references Children (id)
-                    on update cascade on delete cascade,
-            primary key (concernId, childId, milestoneId)
+            answer      boolean NOT NULL,
+            note        text,
+            concernId   integer NOT NULL,
+            milestoneId integer NOT NULL,
+            childId     integer NOT NULL
+                REFERENCES Children (id)
+                    ON UPDATE CASCADE ON DELETE CASCADE,
+            PRIMARY KEY (concernId, childId, milestoneId)
         );
     `);
 
     await dB.executeSql(`
-        create table tips_status
+        CREATE TABLE tips_status
         (
-            hintId   INTEGER not null,
-            childId  INTEGER not null
-                references children (id)
-                    on update cascade on delete cascade,
-            like     BOOLEAN,
-            remindMe BOOLEAN,
-            primary key (hintId, childId)
+            hintId   integer NOT NULL,
+            childId  integer NOT NULL
+                REFERENCES children (id)
+                    ON UPDATE CASCADE ON DELETE CASCADE,
+            like     boolean,
+            remindMe boolean,
+            PRIMARY KEY (hintId, childId)
         );
     `);
 
     await dB.executeSql(`
-        create table milestone_got_started
+        CREATE TABLE milestone_got_started
         (
             childId     int,
             milestoneId int
         );
     `);
     await dB.executeSql(`
-        create table notifications
+        CREATE TABLE notifications
         (
-            notificationId           TEXT     not null
-                primary key,
-            fireDateTimestamp        DATETIME not null,
-            notificationRead         BOOLEAN not null default false,
-            notificationCategoryType INTEGER not null,
-            childId                  INTEGER,
-            milestoneId              INTEGER,
-            appointmentId            INTEGER,
-            bodyArguments            TEXT,
-            bodyLocalizedKey         TEXT,
-            titleLocalizedKey        TEXT
+            notificationId           text     NOT NULL
+                PRIMARY KEY,
+            fireDateTimestamp        datetime NOT NULL,
+            notificationRead         boolean  NOT NULL DEFAULT FALSE,
+            notificationCategoryType integer  NOT NULL,
+            childId                  integer,
+            milestoneId              integer,
+            appointmentId            integer,
+            bodyArguments            text,
+            bodyLocalizedKey         text,
+            titleLocalizedKey        text
         );
     `);
   },
@@ -115,8 +115,8 @@ const DB_MIGRATIONS = [
 export const sqLiteClient = new SQLiteClient(DB_NAME, DB_MIGRATIONS, DB_DEBUG);
 
 /** Applicaiton initialization. */
-export const initialize = async (): Promise<void> => {
-  await sqLiteClient.connect();
+export const initialize = async (): Promise<SQLiteDatabase> => {
+  return sqLiteClient.connect();
 };
 
 // /* eslint-disable @typescript-eslint/no-unused-vars */

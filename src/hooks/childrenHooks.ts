@@ -6,6 +6,7 @@ import {objectToQuery} from '../utils/helpers';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
 import {InteractionManager, Platform} from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import {ACPCore} from '@adobe/react-native-acpcore';
 
 interface Record {
   id: number;
@@ -32,10 +33,10 @@ type Key = 'children' | 'selectedChild';
 
 export function useGetCurrentChildId() {
   return useQuery('selectedChildId', async () => {
-    let selectedChild: string | null = await Storage.getItem('selectedChild');
+    let selectedChild = await Storage.getItemTyped('selectedChild');
 
     if (!selectedChild) {
-      const res = await sqLiteClient.dB?.executeSql('select * from main.children order by id  limit 1');
+      const res = await sqLiteClient.dB?.executeSql('select * from children order by id  limit 1');
       selectedChild = res && res[0].rows.item(0)?.id;
 
       if (!selectedChild) {
@@ -43,34 +44,29 @@ export function useGetCurrentChildId() {
         return;
       }
 
-      await Storage.setItem('selectedChild', `${selectedChild}`);
+      await Storage.setItemTyped('selectedChild', selectedChild);
     }
 
     return selectedChild;
   });
 }
 
-export function useGetCurrentChild(options?: QueryOptions<ChildResult>) {
-  const {data: selectedChild} = useGetCurrentChildId();
-  return useQuery<ChildResult, [string, {id?: string}]>(
-    ['selectedChild', {id: selectedChild}],
-    async () => {
-      const result = await sqLiteClient.dB?.executeSql('select * from children where id=?', [selectedChild]);
+export function useGetCurrentChild() {
+  const {data: selectedChildId} = useGetCurrentChildId();
+  return useQuery<ChildResult, [string, {id?: number}]>(['selectedChild', {id: selectedChildId}], async () => {
+    let result = await sqLiteClient.dB?.executeSql('select * from children where id=?1', [selectedChildId]);
+    if (!result || result[0].rows.length === 0) {
+      result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');
+    }
 
-      if (!result || result[0].rows.length === 0) {
-        throw Error('Not found');
-      }
+    const child = (result && result[0].rows.item(0)) || {};
 
-      const child = (result && result[0].rows.item(0)) || {};
-
-      return {
-        ...child,
-        photo: pathFromDB(child.photo),
-        birthday: parseISO(child.birthday),
-      };
-    },
-    options,
-  );
+    return {
+      ...child,
+      photo: pathFromDB(child.photo),
+      birthday: child.birthday && parseISO(child.birthday),
+    };
+  });
 }
 
 export function useSetSelectedChild() {
@@ -86,7 +82,7 @@ export function useSetSelectedChild() {
       });
     },
     {
-      onSuccess: async (data, {id}) => {
+      onSuccess: async () => {
         // await queryCache.setQueryData('selectedChild', id);
         // console.log(Date.now());
         // Promise.all([
@@ -156,8 +152,8 @@ export function useGetChild(options: {id: number | string | undefined}) {
       return;
     }
 
-    const result = await sqLiteClient.dB?.executeSql('select * from children where id = ?', [variables.id]);
-    const record: ChildDbRecord = result && result[0].rows.item(0);
+    const [result] = await sqLiteClient.db.executeSql('select * from children where id = ?', [variables.id]);
+    const record: ChildDbRecord = result.rows.item(0);
     return {
       ...record,
       photo: pathFromDB(record.photo),
@@ -218,7 +214,6 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
         'children',
       );
       const res = await sqLiteClient.dB?.executeSql(query, values);
-
       const [{insertId}] = res || [{}];
       if (!variables.isAnotherChild) {
         insertId && Storage.setItem('selectedChild', `${insertId}`);
@@ -232,6 +227,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
     },
     {
       onSuccess: (data, variables) => {
+        ACPCore.trackState(`Child added: ${JSON.stringify(variables)}`, {'gov.cdc.appname': 'CDC Health IQ'});
         queryCache.refetchQueries('selectedChild', {force: true});
         queryCache.refetchQueries(['children'], {force: true});
         options?.onSuccess && options.onSuccess(data, variables);

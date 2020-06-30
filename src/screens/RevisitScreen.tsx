@@ -28,12 +28,12 @@ const Item: React.FC<ItemProps> = ({value, id, note, index}) => {
         <Text style={[sharedStyle.boldText]}>{`${index}. `}</Text>
         {value}
       </Text>
-      {note && (
+      {!!note && (
         <Text style={{fontSize: 15}} key={`${id}`}>
-          <Text style={{fontFamily: 'Montserrat-Bold'}}>
+          <Text>
             {t('note')}
             {': '}
-          </Text>{' '}
+          </Text>
           {note}
         </Text>
       )}
@@ -88,12 +88,12 @@ const RevisitScreen: React.FC = () => {
           <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
-          <Trans t={t} i18nKey={'description'}>
+          <Trans t={t} i18nKey={'description'} tOptions={{name: child?.name}}>
             <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
           </Trans>
         </Text>
         <View style={{marginHorizontal: 32}}>
-          <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item, index) => (
@@ -110,7 +110,7 @@ const RevisitScreen: React.FC = () => {
             <Item index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
           <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
-            <Trans t={t} i18nKey={'notYetText'}>
+            <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
               <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
             </Trans>
           </Text>
@@ -124,7 +124,7 @@ const RevisitScreen: React.FC = () => {
               },
               sharedStyle.boldText,
             ]}>
-            {t('timeToCelebrate')}
+            {t('timeToCelebrate', {name: child?.name})}
           </Text>
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>

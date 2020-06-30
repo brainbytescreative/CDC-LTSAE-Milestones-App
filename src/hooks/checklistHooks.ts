@@ -1,22 +1,26 @@
 import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {childAges, missingConcerns, PropType, SkillType, skillTypes} from '../resources/constants';
+import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
 import milestoneChecklist, {
   Concern,
-  MilestoneChecklist,
+  milestoneQuestions,
   Milestones,
   SkillSection,
 } from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, slowdown, tOpt} from '../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
 import emailSummaryContent from '../resources/EmailChildSummary';
-import {useSetCompleteMilestoneReminder} from './notificationsHooks';
+import {
+  useDeleteRecommendationNotifications,
+  useSetCompleteMilestoneReminder,
+  useSetRecommendationNotifications,
+} from './notificationsHooks';
 import {Answer, MilestoneAnswer} from './types';
 
 type ChecklistData = SkillSection & {section: keyof Milestones};
@@ -27,7 +31,7 @@ interface ConcernAnswer {
   concernId: number;
   milestoneId: number;
   childId: number;
-  answer: boolean;
+  answer?: boolean;
   note?: string | undefined | null;
 }
 
@@ -42,7 +46,7 @@ type MilestoneQueryResult =
     }
   | undefined;
 
-type MilestoneQueryKey = [string, {childBirthday?: Date}];
+type MilestoneQueryKey = [string, {childBirthday?: Date | string}];
 
 export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
@@ -87,7 +91,7 @@ export function useSetMilestoneAge() {
   const {t} = useTranslation('common');
   const {data: child} = useGetCurrentChild();
   return [
-    (age: typeof childAges[number]) => {
+    (age: typeof milestonesIds[number]) => {
       const {milestoneAge: childAge} = calcChildAge(child?.birthday);
       const formatted = formattedAge(age, t);
       const data: MilestoneQueryResult = {
@@ -104,10 +108,13 @@ export function useSetMilestoneAge() {
   ];
 }
 
-async function getAnswers(ids: number[], childId: number): Promise<MilestoneAnswer[] | undefined> {
+async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[] | undefined> {
   const result = await sqLiteClient.dB?.executeSql(
-    `select * from milestones_answers where childId=? and questionId in (${ids.join(',')})`,
-    [childId],
+    `SELECT *
+       FROM milestones_answers
+       WHERE childId = ?1
+         AND milestoneId = ?2`,
+    [childId, milestoneId],
   );
 
   return result && result[0].rows.raw();
@@ -127,50 +134,25 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       if (!variables.childId || !variables.milestoneAge) {
         return;
       }
-      const checklist = _.find(milestoneChecklist, {id: variables.milestoneAge}) as MilestoneChecklist | undefined;
-      const questionsData: ChecklistData[] | undefined =
-        variables.milestoneAge &&
-        (_.chain(skillTypes)
-          .map(
-            (section: keyof Milestones) =>
-              checklist?.milestones && checklist?.milestones[section]?.map((i: any) => ({...i, section})),
-          )
-          .flatten()
-          .map((item: SkillSection) => ({
-            ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
-          }))
-          .value() as any);
 
-      const ids = questionsData && questionsData.map((i) => i.id || 0);
-      const data = (variables.childId && ids && (await getAnswers(ids, variables.childId))) || [];
+      const data = (variables.childId && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
+      const answersIds = data.map((value) => value.questionId || 0);
+
+      const questionsData = milestoneQuestions
+        .filter((value) => value.milestoneId === variables.milestoneAge)
+        .map((item) => ({
+          ...item,
+          value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
+        }))
+        .sort((a) => (a.id && !answersIds.includes(a.id) ? -1 : 1));
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
       });
 
-      const answersIds = data.map((value) => value.questionId || 0);
-
-      const groupedBySection = _.groupBy(questionsData, 'section');
-      const questionsGrouped: Map<SkillType, SkillSection[]> = skillTypes.reduce((prev, section) => {
-        prev.set(
-          section,
-          groupedBySection[section]
-            .filter((item) => item.section === section)
-            .sort((a) => {
-              if (a.id && !answersIds.includes(a.id)) {
-                return -1;
-              }
-              return 1;
-            }),
-        );
-
-        return prev;
-      }, new Map());
-
+      const questionsGrouped = new Map(Object.entries(_.groupBy(questionsData, 'skillType')));
       const total = questionsData?.length || 0;
       const done = data?.length || 0;
-
       const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
@@ -180,55 +162,59 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
         'answer',
       ) as any;
 
-      groupedByAnswer.undefined = _.merge(groupedByAnswer.undefined, groupedByAnswer.null);
+      groupedByAnswer.undefined = Array.from(_.merge(groupedByAnswer.undefined, groupedByAnswer.null));
 
       return {
-        questions: questionsData as ChecklistData[],
+        questions: questionsData,
         totalProgress: `${done}/${total}`,
         totalProgressValue: done / total,
         answers: data,
-        questionsIds: ids,
         questionsGrouped,
         groupedByAnswer,
         answeredQuestionsCount: answersIds.length,
       };
     },
-    {
-      staleTime: Infinity,
-    },
   );
 }
 
-export function useGetCheckListAnswers(ids?: number[], childId?: number) {
-  return useQuery(['answers', {ids, childId}], async (key, variables) => {
+export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
+  return useQuery(['answers', {milestoneId, childId}], async (key, variables) => {
     const answers =
-      (variables.childId && variables.ids && (await getAnswers(variables.ids, variables.childId))) || undefined;
-    const complete = answers && variables.ids && answers.length === variables.ids.length;
-    return {answers, complete};
+      (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
+      undefined;
+
+    const questions =
+      milestoneId && _.first(milestoneChecklist.filter((value) => value.id === milestoneId))?.milestones;
+
+    const questionsData = Object.values(questions || {}).flat();
+    const questionsIds = questionsData?.map((value) => value.id);
+    const answerIds = answers?.map((value) => value.questionId) || [];
+    const unansweredIds = _.difference(questionsIds, answerIds);
+    const unansweredData = questionsData.filter((value) => unansweredIds.includes(value.id));
+
+    const complete = unansweredIds.length === 0; //answers && variables.ids && answers.length === variables.ids.length;
+    return {answers, complete, unansweredData};
   });
 }
 
 export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
-  const {data: checkListData} = useGetChecklistQuestions();
-  const questions = checkListData?.questions;
-  const {data: {answers, complete} = {}} = useGetCheckListAnswers(
-    questions?.map((value) => value.id || 0),
-    childId,
-  );
+  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone(childId);
+  const {data: {answers, complete} = {}} = useGetCheckListAnswers(milestoneId, childId);
 
   const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
-  const progress: Map<SkillType, {total: number; answered: number}> | undefined = useMemo(() => {
-    if (questions?.length) {
+  const progress: Map<Section, {total: number; answered: number}> | undefined = useMemo(() => {
+    if (questionsGrouped && answers) {
       return skillTypes.reduce((previousValue, section) => {
-        const sectionsQuestions = questions.filter((value) => value.section === section);
+        const sectionsQuestions = questionsGrouped?.get(section) || [];
         const questionsIds = sectionsQuestions.map((value) => value.id);
-        const answeredInSection = answers?.filter((value) => questionsIds.includes(value.questionId)) || [];
+        const answeredInSection = answers.filter((value) => questionsIds.includes(value.questionId)) || [];
         previousValue.set(section, {total: sectionsQuestions.length, answered: answeredInSection.length});
         return previousValue;
       }, new Map<SkillType, {total: number; answered: number}>());
     }
-  }, [answers, questions]);
+  }, [answers, questionsGrouped]);
 
   return {progress, complete, hasNotYet};
 }
@@ -294,7 +280,7 @@ export function useSetQuestionAnswer() {
       onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
         // queryCache.refetchQueries(['question', {childId, questionId, milestoneId}], {force: true}).then();
-        // queryCache.refetchQueries('answers', {force: true, exact: false}).then();
+        queryCache.refetchQueries('answers', {force: true, exact: false}).then();
         if (milestoneAge) {
           queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
         } else {
@@ -389,16 +375,18 @@ export function useGetConcern(predicate: ConcernPredicate) {
 
 export function useSetConcern() {
   const [checkMissing] = useCheckMissingMilestones();
+  const [setRecommendationNotifications] = useSetRecommendationNotifications();
+  const [deleteRecommendationNotifications] = useDeleteRecommendationNotifications();
 
   return useMutation<void, ConcernAnswer>(
-    async ({answer = false, childId, concernId, milestoneId, note}) => {
+    async ({answer, childId, concernId, milestoneId, note}) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
                   INSERT OR
                   REPLACE
                   INTO concern_answers (concernId, answer, childId, milestoneId, note)
-                  VALUES (?1, ?2, ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 and childId = ?3)))
+                  VALUES (?1, coalesce(?2, coalesce((SELECT answer FROM concern_answers WHERE concernId=?1 AND childId=?3), 0)), ?3, ?4,
+                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3)))
         `,
         [concernId, answer, childId, milestoneId, note],
       );
@@ -408,10 +396,15 @@ export function useSetConcern() {
       }
     },
     {
-      onSuccess: (data, {childId, concernId, milestoneId}) => {
+      onSuccess: async (data, {childId, concernId, milestoneId}) => {
         // const predicate = {childId, concernId};
         // console.log(predicate, answer);
-        checkMissing({childId, milestoneId});
+        const {isMissingConcern} = await checkMissing({childId, milestoneId});
+        if (isMissingConcern) {
+          setRecommendationNotifications({milestoneId, child: {id: childId}});
+        } else {
+          deleteRecommendationNotifications({milestoneId, childId});
+        }
         queryCache.refetchQueries(['concern', {childId, concernId}], {force: true});
       },
     },
@@ -611,7 +604,7 @@ export function useCheckMissingMilestones() {
   return useMutation(
     async ({childId, milestoneId}: {childId: number; milestoneId: number}) => {
       const {isMissingConcern, isNotYet, isNotSure} = await checkMissingMilestones(milestoneId, childId);
-      const concernId = missingConcerns[childAges.indexOf(milestoneId)];
+      const concernId = missingConcerns[milestonesIds.indexOf(milestoneId)];
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `

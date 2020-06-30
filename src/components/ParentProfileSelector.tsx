@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ViewStyle} from 'react-native';
+import {View} from 'react-native';
 import {sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import DropDownPicker from './DropDownPicker';
@@ -13,12 +13,20 @@ export interface ParentProfileSelectorValues {
 interface Props {
   onChange: (values: ParentProfileSelectorValues) => void;
   value?: ParentProfileSelectorValues | null | undefined;
-  style?: ViewStyle;
+  // style?: ViewStyle;
 }
 
-const guardianTypes = ['guardian', 'healthcareProvider'];
+const guardianTypes = [
+  'guardian',
+  'headStartProvider',
+  'teacher',
+  'WICProvider',
+  'homeVisitor',
+  'healthcareProvider',
+  'other',
+];
 
-const ParentProfileSelector: React.FC<Props> = ({onChange, value, style}) => {
+const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
   const {t} = useTranslation();
 
   return (

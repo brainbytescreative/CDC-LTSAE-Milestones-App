@@ -3,12 +3,7 @@ import {useTranslation} from 'react-i18next';
 import DashboardStack from './DashboardStack';
 import SettingsStack from './SettingsStack';
 import TipsAndActivitiesStack from './TipsAndActivitiesStack';
-import {
-  createDrawerNavigator,
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItemList,
-} from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
 import InfoStack from './InfoStack';
 import ChildSummaryStack from './ChildSummaryStack';
@@ -18,11 +13,11 @@ import {Text} from 'react-native-paper';
 import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../Svg/CloseCross';
 import i18next from 'i18next';
-import {DrawerContentOptions} from '@react-navigation/drawer';
+import WhenActEarlyStack from './WhenActEarlyStack';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
-const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
+const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
   // const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
 
   return (
@@ -67,33 +62,51 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
               <CloseCross />
             </TouchableOpacity>
           </View>
-          <DrawerItemList
-            itemStyle={[
-              {
-                backgroundColor: colors.white,
-                marginHorizontal: 16,
-                borderRadius: 10,
-                marginTop: 0,
-                marginBottom: 12,
-                overflow: 'visible',
-              },
-              sharedStyle.shadow,
-            ]}
-            activeTintColor={colors.purple}
-            labelStyle={[
-              sharedStyle.regularText,
-              {
-                marginHorizontal: 8,
-                fontSize: 18,
-                fontWeight: 'normal',
-              },
-            ]}
-            {...props}
-          />
+          {props.state.routes.map(({name, params, key}: any, index) => {
+            return (
+              <View
+                key={key}
+                style={[
+                  {
+                    backgroundColor: colors.white,
+                    marginHorizontal: 16,
+                    borderRadius: 10,
+                    marginTop: 0,
+                    marginBottom: 12,
+                    overflow: 'visible',
+                  },
+                  sharedStyle.shadow,
+                ]}>
+                <TouchableOpacity
+                  style={{paddingHorizontal: 16, paddingVertical: 12}}
+                  onPress={() => {
+                    if (params?.redirect) {
+                      props.navigation.navigate(...params.redirect);
+                    } else {
+                      props.navigation.navigate(name);
+                    }
+                  }}>
+                  <Text
+                    style={[
+                      {
+                        fontSize: 18,
+                      },
+                      index === props.state.index && {color: colors.purple},
+                    ]}>
+                    {props.descriptors[key].options.drawerLabel}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
       </SafeAreaView>
     </DrawerContentScrollView>
   );
+};
+
+const Stub: React.FC = () => {
+  return null;
 };
 
 const RootDrawer: React.FC = () => {
@@ -103,6 +116,9 @@ const RootDrawer: React.FC = () => {
       drawerContent={(contentProps) => <DefaultDrawer {...contentProps} />}
       overlayColor={colors.whiteTransparent}
       drawerStyle={{width: '100%', backgroundColor: 'transparent'}}
+      screenOptions={{
+        unmountOnBlur: true,
+      }}
       initialRouteName={'DashboardStack'}>
       <Drawer.Screen
         name={'DashboardStack'}
@@ -118,6 +134,7 @@ const RootDrawer: React.FC = () => {
         }}
         component={MilestoneChecklistStack}
       />
+
       <Drawer.Screen
         name={'MilestoneQuickViewStack'}
         options={{
@@ -139,6 +156,31 @@ const RootDrawer: React.FC = () => {
           drawerLabel: t('childSummary:drawerLabel'),
         }}
         component={ChildSummaryStack}
+      />
+      <Drawer.Screen
+        name={'WhenToActEarly'}
+        options={{
+          drawerLabel: t('milestoneChecklist:whenToActEarly'),
+        }}
+        component={WhenActEarlyStack}
+      />
+      <Drawer.Screen
+        name={'AddChildStub'}
+        options={{
+          drawerLabel: t('addChild:drawerLabel'),
+        }}
+        initialParams={{
+          redirect: [
+            'DashboardStack',
+            {
+              screen: 'Dashboard',
+              params: {
+                addChild: true,
+              },
+            },
+          ],
+        }}
+        component={Stub}
       />
       <Drawer.Screen
         name={'SettingsStack'}

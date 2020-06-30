@@ -5,7 +5,7 @@ PODS:
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
-  - EXApplication (2.1.1):
+  - EXApplication (2.2.1):
     - UMCore
   - EXFileSystem (8.1.0):
     - UMCore
@@ -13,7 +13,7 @@ PODS:
   - EXMailComposer (8.1.0):
     - UMCore
     - UMFileSystemInterface
-  - EXNotifications (0.1.7):
+  - EXNotifications (0.3.2):
     - UMCore
     - UMPermissionsInterface
   - EXPermissions (8.1.0):
@@ -155,9 +155,9 @@ PODS:
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
   - PromisesObjC (1.2.8)
-  - RCTACPAnalytics (1.1.5):
+  - RCTACPAnalytics (1.1.6):
     - React
-  - RCTACPCore (1.2.3):
+  - RCTACPCore (1.2.4):
     - React
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
@@ -326,13 +326,11 @@ PODS:
     - React
   - react-native-image-picker (2.3.1):
     - React
-  - react-native-safe-area-context (2.0.3):
-    - React
-  - react-native-segmented-control (1.6.1):
+  - react-native-safe-area-context (3.0.5):
     - React
   - react-native-sqlite-storage (5.0.0):
     - React
-  - react-native-viewpager (4.0.0):
+  - react-native-viewpager (4.0.1):
     - React
   - react-native-webview (9.4.0):
     - React
@@ -401,16 +399,16 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNDateTimePicker (2.4.0):
+  - RNDateTimePicker (2.4.2):
     - React
-  - RNFBAnalytics (7.1.0):
+  - RNFBAnalytics (7.1.4):
     - Firebase/Analytics (~> 6.25.0)
     - React
     - RNFBApp
-  - RNFBApp (7.1.0):
+  - RNFBApp (7.2.1):
     - Firebase/CoreOnly (~> 6.25.0)
     - React
-  - RNFBCrashlytics (7.1.0):
+  - RNFBCrashlytics (7.1.5):
     - Crashlytics (~> 3.14.0)
     - Fabric (~> 1.10.2)
     - React
@@ -472,7 +470,6 @@ DEPENDENCIES:
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - "react-native-segmented-control (from `../node_modules/@react-native-community/segmented-control`)"
   - react-native-sqlite-storage (from `../node_modules/react-native-sqlite-storage`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -586,8 +583,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-segmented-control:
-    :path: "../node_modules/@react-native-community/segmented-control"
   react-native-sqlite-storage:
     :path: "../node_modules/react-native-sqlite-storage"
   react-native-viewpager:
@@ -661,10 +656,10 @@ SPEC CHECKSUMS:
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  EXApplication: 7cf81de6fafccff42f5d1caa5c24a159db6b9437
+  EXApplication: d7ccb60c33fa4d506967ff6adde42a0f872d69ad
   EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
   EXMailComposer: 8efe254989ceace18681b98c049c6c0209d4ae56
-  EXNotifications: cc5d647c15b5f00602e1c4f7244d6a3a15dd2eb6
+  EXNotifications: cb377772a90e4f1d2038c54f6d3586f4db217eec
   EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
@@ -691,8 +686,8 @@ SPEC CHECKSUMS:
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
-  RCTACPAnalytics: 20cd3dd24fb7c0fcde6719fdc57883878c38de74
-  RCTACPCore: 6e52fa0b83f5064b6a435c73268184fb94393708
+  RCTACPAnalytics: 9333df25f666125dd6e498a729ef7b7b4e393af8
+  RCTACPCore: bc91a3ee1cd1505225e40adef02cd2e05f522333
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3
@@ -704,10 +699,9 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-get-random-values: 2b7500cdb68066aba87cdccd97067c29e16ffe95
   react-native-image-picker: 6a850c41f57f0848d918c2a77aedd7aa272ffa30
-  react-native-safe-area-context: 14c793e8b0bfe51e74dcdbe75dd14ee7498b88b8
-  react-native-segmented-control: d7c444e5cc5f526da766f8ff24346898b7ac7be5
+  react-native-safe-area-context: e768fca90207ee68924b3d0877633f2ce9cc9d68
   react-native-sqlite-storage: 418ef4afc5e6df6ce3574c4617e5f0b65cffde55
-  react-native-viewpager: 859f14262726819ab9bc993838511289edec46f2
+  react-native-viewpager: 1af972f5a745647b51250285f4da26d3fb3d5f0f
   react-native-webview: cf5527893252b3b036eea024a1da6996f7344c74
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -722,10 +716,10 @@ SPEC CHECKSUMS:
   ReactNativeKeyboardInput: 266ba27a2e9921f5bdc0b4cc30289b2a2f46b157
   RNCAsyncStorage: d059c3ee71738c39834a627476322a5a8cd5bf36
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNDateTimePicker: c4285bfdd87430f1e575b81a4742b7586a09d53e
-  RNFBAnalytics: faa7f3d312854c5e4e952a9a4b4cecf3fdb69885
-  RNFBApp: 25a6476dfd7aac2bcbe984f569875bcea122895b
-  RNFBCrashlytics: e5c49721cac180f72c89ea67cc13a614b9fcecc4
+  RNDateTimePicker: bacbf754c3298b061c7eaa0a5352cbb2ede8d5a2
+  RNFBAnalytics: d986cc14df3bf2942bd8f917578e5f2dc185a7dd
+  RNFBApp: def13f6392e7c9839c938879f065ec0088c4496a
+  RNFBCrashlytics: ce4deb00692924b6c796e438a3c573baf07ed5c8
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244

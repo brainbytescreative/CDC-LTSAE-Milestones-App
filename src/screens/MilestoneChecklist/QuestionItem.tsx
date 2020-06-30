@@ -45,7 +45,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
 
   const height = (Dimensions.get('window').width - 64) * 0.595;
 
-  const video = videos?.map((item, index) => {
+  const video = videos?.map((item) => {
     const code = item.name && t(item?.name);
     return (
       <WebView
@@ -67,6 +67,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       answerQuestion({questionId: id, childId, answer: answerValue, note: note, milestoneId});
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const saveNote = useCallback(
     _.debounce((text: string) => {
       id &&
@@ -74,7 +75,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         milestoneId &&
         answerQuestion({questionId: id, answer: data?.answer, childId, note: text, milestoneId});
     }, 500),
-    [id, childId, data?.answer],
+    [id, childId, milestoneId, data?.answer],
   );
 
   useEffect(() => {
@@ -94,7 +95,16 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
               ref={viewPagerRef}
               style={{flex: 1, height}}
               initialPage={0}>
-              {photo}
+              {__DEV__
+                ? photo.map((item: any, index: number) => {
+                    return (
+                      <View key={index}>
+                        <Text>{photos[index].name}</Text>
+                        {item}
+                      </View>
+                    );
+                  })
+                : photo}
             </ViewPager>
             {photo && photo?.length > 1 && (
               <>
@@ -204,12 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 14,
-  },
-  selected: {
-    backgroundColor: 'gray',
-  },
-  selectedText: {
-    color: 'white',
   },
   addNoteContainer: {
     marginTop: 15,

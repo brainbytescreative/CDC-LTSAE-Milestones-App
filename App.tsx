@@ -8,15 +8,13 @@
  * @format
  */
 
-import React, {Ref, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import {NavigationContainer, NavigationContainerProps} from '@react-navigation/native';
 import Navigator from './src/components/Navigator';
-import {I18nextProvider} from 'react-i18next';
-import i18next from './src/resources/l18n';
 import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
-import {queryCache, ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import {colors, PropType} from './src/resources/constants';
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {ACPCore} from '@adobe/react-native-acpcore';
@@ -28,6 +26,7 @@ import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
+
 enableScreens();
 
 // First, set the handler that will cause the notification
@@ -84,6 +83,9 @@ const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
 };
 
 const App = () => {
+  const routeNameRef = React.useRef<string | undefined>(undefined);
+  const navigationRef = React.useRef<NavigationContainerRef>(null);
+
   useEffect(() => {
     ACPAnalytics.extensionVersion().then((version) =>
       console.log('AdobeExperienceSDK: ACPAnalytics version: ' + version),
@@ -91,32 +93,11 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('addNotificationReceivedListener', notification);
-      setTimeout(() => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
-      }, 2000);
-    });
-    return () => subscription.remove();
-  }, []);
-
-  React.useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const url = response.notification.request; //.content.data.url;
-      console.log('addNotificationResponseReceivedListener', url);
-    });
-    return () => subscription.remove();
-  }, []);
-
-  React.useEffect(() => {
     crashlytics().log('App mounted.');
     // crashlytics().crash();
     Notifications.requestPermissionsAsync();
-    Notifications.getPermissionsAsync().then(console.log);
+    Notifications.getPermissionsAsync();
   }, []);
-
-  const routeNameRef = React.useRef<string | undefined>(undefined);
-  const navigationRef = React.useRef<Ref<NavigationContainerRef>>(null);
 
   return (
     <>
@@ -138,9 +119,7 @@ const App = () => {
                 // Save the current route name for later comparision
                 routeNameRef.current = currentRouteName;
               }}>
-              <I18nextProvider i18n={i18next}>
-                <Navigator />
-              </I18nextProvider>
+              <Navigator navigation={navigationRef.current} />
             </NavigationContainer>
           </PaperProvider>
         </ReactQueryConfigProvider>

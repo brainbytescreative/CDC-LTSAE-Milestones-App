@@ -14,7 +14,8 @@ const AEYellowBox: React.FC<Props> = ({children, containerStyle, labelStyle}) =>
       style={[
         {
           backgroundColor: colors.yellow,
-          padding: 5,
+          paddingVertical: 10,
+          paddingHorizontal: 10,
           marginHorizontal: 32,
           marginTop: 20,
           marginBottom: 50,

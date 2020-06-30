@@ -4,9 +4,10 @@ import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import _ from 'lodash';
 import {TFunction} from 'i18next';
-import {childAges, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {milestonesIds, missingConcerns, PropType, tooYongAgeDays} from '../resources/constants';
 import {sqLiteClient} from '../db';
 import {Answer} from '../hooks/types';
+import {AppointmentDb} from '../hooks/appointmentsHooks';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -48,8 +49,8 @@ export function calcChildAge(birthDay: Date | undefined) {
   let ageMonth: number;
   if (birthDay) {
     ageMonth = differenceInMonths(new Date(), birthDay);
-    const minAge = _.min(childAges) || 0;
-    const maxAge = _.max(childAges) || Infinity;
+    const minAge = _.min(milestonesIds) || 0;
+    const maxAge = _.max(milestonesIds) || Infinity;
 
     if (ageMonth <= minAge) {
       milestoneAge = minAge;
@@ -58,7 +59,7 @@ export function calcChildAge(birthDay: Date | undefined) {
     } else if (ageMonth >= maxAge) {
       milestoneAge = maxAge;
     } else {
-      const milestones = childAges.filter((value) => value <= ageMonth);
+      const milestones = milestonesIds.filter((value) => value <= ageMonth);
       milestoneAge = _.last(milestones);
     }
     return {milestoneAge, isTooYong, ageMonth};
@@ -89,7 +90,7 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
   return {isMissingConcern, isNotYet, isNotSure};
 }
 
-type TableNames = 'children' | 'appointments';
+type TableNames = 'children' | 'appointments' | 'milestones_answers';
 type QueryType = 'insert' | 'updateById';
 
 export function objectToQuery<T extends Record<string, any>>(
@@ -147,3 +148,26 @@ export function slowdown<T>(promise: Promise<T> | T, timeOut = 300): Promise<T> 
     ([, res]) => res,
   );
 }
+
+export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 'id'>) => ({
+  index: 0,
+  routes: [
+    {
+      name: 'DashboardStack',
+      state: {
+        index: 1,
+        routes: [
+          {
+            name: 'Dashboard',
+          },
+          {
+            name: 'Appointment',
+            params: {
+              appointmentId: appointmentId,
+            },
+          },
+        ],
+      },
+    },
+  ],
+});

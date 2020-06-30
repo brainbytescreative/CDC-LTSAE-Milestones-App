@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
 import OverviewPage from './OverviewPage';
-import {useGetMilestone, useGetSectionsProgress} from '../../hooks/checklistHooks';
-import {checklistSections, colors, skillTypes} from '../../resources/constants';
+import {useGetMilestone} from '../../hooks/checklistHooks';
+import {checklistSections, colors, Section, skillTypes} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import SectionItem, {Section} from './SectionItem';
+import SectionItem from './SectionItem';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import _ from 'lodash';
 
 type NavigationProp = CompositeNavigationProp<
@@ -26,6 +25,11 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   const [section, setSection] = useState<Section>(skillTypes[0]);
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   // const {data: {id: childId} = {}} = useGetCurrentChild();
+  const onSectionSet = (val: Section) => {
+    if (val !== 'actEarly') {
+      setSection(val);
+    }
+  };
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -35,7 +39,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
-          renderItem={({item}) => <SectionItem section={item} selectedSection={section} />}
+          renderItem={({item}) => <SectionItem onSectionSet={onSectionSet} section={item} selectedSection={section} />}
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
@@ -52,7 +56,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           if (section === _.last(skillTypes)) {
             setSection(skillTypes[0]);
           } else {
-            setSection(skillTypes[skillTypes.indexOf(section) + 1]);
+            setSection(checklistSections[checklistSections.indexOf(section) + 1]);
             // navigation.navigate('MilestoneChecklistStack');
           }
         }}

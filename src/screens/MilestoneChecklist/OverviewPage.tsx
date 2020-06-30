@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {colors, SkillType, skillTypes} from '../../resources/constants';
+import {colors, Section, sharedStyle, skillTypes} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
@@ -15,10 +15,10 @@ interface Props {
   onNext: () => void;
   milestoneAgeFormatted: string | undefined;
   milestoneAge: number | undefined;
-  section?: SkillType;
+  section?: Section;
 }
 
-const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestoneAge, section = skillTypes[0]}) => {
+const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0], milestoneAge}) => {
   const {t} = useTranslation('milestoneChecklist');
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {bottom} = useSafeAreaInsets();
@@ -30,6 +30,8 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
     }, []),
   );
 
+  const isBirthday: boolean = !!milestoneAge && milestoneAge % 12 === 0;
+
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
@@ -37,7 +39,9 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
           <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
           <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
           <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
-            {t('quickViewMessage', {milestone: milestoneAgeFormatted})}
+            {isBirthday
+              ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted})
+              : t('quickViewMessage', {milestone: milestoneAgeFormatted})}
           </Text>
 
           {questionsGrouped?.get(section)?.map((item, index) => (
@@ -48,7 +52,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
                 marginHorizontal: 48,
                 marginTop: 15,
               }}>
-              <Text style={{fontSize: 15, marginRight: 15, fontFamily: 'Montserrat-Bold'}}>{'+'}</Text>
+              <Text style={{fontSize: 15, marginRight: 15}}>{'+'}</Text>
               <View
                 style={{
                   flexGrow: 1,
@@ -74,21 +78,13 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, milestone
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    fontSize: 22,
     textTransform: 'capitalize',
     marginTop: 5,
     marginHorizontal: 48,
-    fontFamily: 'Montserrat-Bold',
+    ...sharedStyle.largeBoldText,
   },
   text: {
     fontSize: 15,
-  },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

@@ -1,12 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors, skillTypes} from '../../resources/constants';
+import {checklistSections, colors, Section} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
-import SectionItem, {Section} from './SectionItem';
+import SectionItem from './SectionItem';
 import ActEarlyPage from './ActEarlyPage';
 import {
+  useGetCheckListAnswers,
   useGetChecklistQuestions,
   useGetMilestone,
   useGetMilestoneGotStarted,
@@ -15,7 +16,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useTranslation} from 'react-i18next';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
-import {CompositeNavigationProp} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -24,15 +25,18 @@ import ViewPager from '@react-native-community/viewpager';
 import withSuspense from '../../components/withSuspense';
 import {useQuery} from 'react-query';
 import {slowdown} from '../../utils/helpers';
-
-const sections = [...skillTypes, 'actEarly'];
+import {ACPCore} from '@adobe/react-native-acpcore';
+import _ from 'lodash';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
   StackNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklist'>
 >;
 
-const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navigation}) => {
+const MilestoneChecklistScreen: React.FC<{
+  navigation: NavigationProp;
+  route: RouteProp<MilestoneCheckListParamList, 'MilestoneChecklist'>;
+}> = ({navigation}) => {
   const [section, setSection] = useState<Section>(checklistSections[0]);
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
@@ -40,14 +44,26 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
   const {t} = useTranslation('milestoneChecklist');
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
+  const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
 
-  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 300), {staleTime: 0});
+  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
 
   useEffect(() => {
     if (gotStartedStatus === 'success' && !gotStarted) {
       navigation.replace('MilestoneChecklistGetStarted');
     }
   }, [gotStarted, gotStartedStatus, navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (unansweredData && !_.isEmpty(unansweredData)) {
+          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
+          ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
+        }
+      };
+    }, [unansweredData, t]),
+  );
 
   const flatListRef = useRef<FlatList>(null);
   const viewPagerRef = useRef<ViewPager | null>(null);
@@ -59,21 +75,21 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
   //   }
   // }, [section]);
 
-  const onSectionSet = (val: string) => {
+  const onSectionSet = (val: Section) => {
     setSection(val);
-    viewPagerRef.current?.setPageWithoutAnimation(sections.indexOf(val));
+    viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
     flatListRef.current?.scrollToOffset({animated: false, offset: 0});
   };
 
   const onPressNextSection = () => {
-    const currentSection = section?.length && sections.indexOf(section);
-    let nextSection;
-    if (currentSection !== undefined && currentSection < sections.length - 1) {
+    const currentSection = section?.length && checklistSections.indexOf(section);
+    let nextSection: Section;
+    if (currentSection !== undefined && currentSection < checklistSections.length - 1) {
       // setSection(sections[currentSection + 1]);
-      nextSection = sections[currentSection + 1];
+      nextSection = checklistSections[currentSection + 1];
     } else {
       // setSection(sections[0]);
-      nextSection = sections[0];
+      nextSection = checklistSections[0];
     }
     onSectionSet(nextSection);
   };
@@ -143,11 +159,12 @@ const MilestoneChecklistScreen: React.FC<{navigation: NavigationProp}> = ({navig
       {/*    ) as any*/}
       {/*  }*/}
       {/*</ViewPager>*/}
-      {section && skillTypes.includes(section) && (
+      {section && section !== 'actEarly' && (
         <FlatList
           ref={flatListRef}
           bounces={false}
-          initialNumToRender={1}
+          initialNumToRender={2}
+          scrollIndicatorInsets={{right: 0.1}}
           data={questionsGrouped?.get(section) || []}
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `question-item-${item.id}-${index}`}

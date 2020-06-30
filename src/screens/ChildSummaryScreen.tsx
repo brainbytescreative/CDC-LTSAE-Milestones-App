@@ -215,7 +215,7 @@ const ChildSummaryScreen: React.FC = () => {
         },
       );
     },
-    [refetch, t, answerQuestion, child, showActionSheetWithOptions, milestoneAge],
+    [refetch, t, answerQuestion, child?.id, showActionSheetWithOptions, milestoneAge],
   );
 
   const onEditConcernPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(
@@ -250,7 +250,7 @@ const ChildSummaryScreen: React.FC = () => {
         },
       );
     },
-    [refetchConcerns, t, child, showActionSheetWithOptions, setConcern, milestoneAge],
+    [refetchConcerns, t, child?.id, showActionSheetWithOptions, setConcern, milestoneAge],
   );
 
   const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
@@ -261,7 +261,7 @@ const ChildSummaryScreen: React.FC = () => {
           refetch({force: true}),
         );
     },
-    [child, answerQuestion, refetch, milestoneAge],
+    [child?.id, answerQuestion, refetch, milestoneAge],
   );
 
   const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
@@ -278,13 +278,15 @@ const ChildSummaryScreen: React.FC = () => {
           refetchConcerns({force: true});
         });
     },
-    [child, refetchConcerns, setConcern, milestoneAge],
+    [child?.id, refetchConcerns, setConcern, milestoneAge],
   );
 
   const unanswered = data?.groupedByAnswer['undefined'] || [];
   const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
   const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
   const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
+
+  // console.log('<<<<', data?.groupedByAnswer[`${Answer.UNSURE}`]);
 
   return (
     <View style={{backgroundColor: colors.white}}>
@@ -314,13 +316,11 @@ const ChildSummaryScreen: React.FC = () => {
               },
               sharedStyle.largeBoldText,
             ]}>
-            {`${child?.name}${t('childSummary:title')}`}
-            {'\n'}
-            {milestoneAgeFormatted}
+            {`${t('childSummary:title', {name: child?.name, age: milestoneAgeFormatted})}`}
           </Text>
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
-              <Trans t={t} i18nKey={'message1'}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name}}>
                 <Text onPress={() => Linking.openURL(t('findElLink'))} style={{textDecorationLine: 'underline'}} />
                 <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
               </Trans>
@@ -366,7 +366,7 @@ const ChildSummaryScreen: React.FC = () => {
                 note={item.note}
               />
             ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.apricot}]}>
+            <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
               <Text style={styles.blockText}>{t('concerns')}</Text>
             </View>
             {concerns?.concerned?.map((item) => (

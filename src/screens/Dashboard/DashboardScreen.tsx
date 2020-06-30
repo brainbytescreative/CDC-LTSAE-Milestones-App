@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import MonthCarousel from './MonthCarousel';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
@@ -17,16 +17,17 @@ import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
-import {ReactQueryConfigProvider, useQuery} from 'react-query';
+import {ReactQueryConfigProvider} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
-import {useScheduleNotifications, useSetMilestoneNotifications} from '../../hooks/notificationsHooks';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {differenceInWeeks} from 'date-fns';
 
 interface Props {
   navigation: StackNavigationProp<any>;
+  route: RouteProp<DashboardStackParamList, 'Dashboard'>;
 }
 
 export type DashboardStackNavigationProp = CompositeNavigationProp<
@@ -41,6 +42,7 @@ interface SkeletonProps {
   milestoneChecklistWidgetComponent?: any;
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
+  ageLessTwoMonth: boolean;
 }
 
 const DashboardSkeleton: React.FC<SkeletonProps> = ({
@@ -48,8 +50,8 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
   childNameComponent,
   monthSelectorComponent,
   milestoneChecklistWidgetComponent,
-  milestoneAgeFormatted = 0,
   appointments = [],
+  ageLessTwoMonth,
 }) => {
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {t} = useTranslation('dashboard');
@@ -58,7 +60,9 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
       {childPhotoComponent}
       {childNameComponent}
       {monthSelectorComponent}
-      <AEYellowBox containerStyle={styles.yellowTipContainer}>{t('yellowTip')}</AEYellowBox>
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>
+        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
+      </AEYellowBox>
       <PurpleArc width={'100%'} />
       <View
         style={{
@@ -71,11 +75,11 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
           style={{
             marginVertical: 20,
           }}>
-          <Text style={styles.actionItemsTitle}>
-            {t('actionItemsTitle', {
-              age: `${milestoneAgeFormatted || '  '}`,
-            })}
-          </Text>
+          {/*<Text style={styles.actionItemsTitle}>*/}
+          {/*  {t('actionItemsTitle', {*/}
+          {/*    age: `${milestoneAgeFormatted || '  '}`,*/}
+          {/*  })}*/}
+          {/*</Text>*/}
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
@@ -155,10 +159,15 @@ const DashboardContainer: React.FC = () => {
   const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
   const childAgeText = formatAge(child?.birthday);
-  const [setMilestoneNotifications] = useSetMilestoneNotifications();
-  const [sheduleNotifications] = useScheduleNotifications();
+  // const [setMilestoneNotifications] = useSetMilestoneNotifications();
+  // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
+  // const navigation = useNavigation();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
+  const ageLessTwoMonth = ageInWeeks < 6;
 
   // useEffect(() => {
   //   child && setMilestoneNotifications({child});
@@ -172,20 +181,17 @@ const DashboardContainer: React.FC = () => {
       setTimeout(() => {
         setOnboarding(true);
         refetch({force: true});
-      }, 300);
+      }, 3000);
     }, [setOnboarding, refetch]),
   );
 
-  useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
-    return new Promise((resolve) =>
-      setTimeout(() => {
-        resolve(null);
-      }, 200),
-    );
-  });
+  // useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
+  //   return slowdown(Promise.resolve(), 200);
+  // });
 
   return (
     <DashboardSkeleton
+      ageLessTwoMonth={ageLessTwoMonth}
       childNameComponent={
         <View style={{alignItems: 'center'}}>
           <Text style={styles.childNameText}>{childName}</Text>
@@ -201,9 +207,16 @@ const DashboardContainer: React.FC = () => {
   );
 };
 
-const DashboardScreen: React.FC<Props> = () => {
-  // useGetMilestoneGotStarted({childId: child?.id, milestoneId: childAge});
+const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
+  // useGetMilestoneGotStarted({childId: child?.id, year: childAge});
   // const {refetch} = useGetChecklistQuestions();
+
+  const addChildParam = route.params?.addChild;
+  useEffect(() => {
+    if (addChildParam) {
+      navigation.setParams({addChild: false});
+    }
+  }, [addChildParam, navigation]);
 
   return (
     <>
@@ -211,9 +224,13 @@ const DashboardScreen: React.FC<Props> = () => {
         config={{
           suspense: true,
         }}>
-        <ChildSelectorModal />
+        <ChildSelectorModal visible={addChildParam} />
 
-        <ScrollView bounces={false} style={{backgroundColor: '#fff'}} contentContainerStyle={{flexGrow: 1}}>
+        <ScrollView
+          scrollIndicatorInsets={{right: 0.1}}
+          bounces={false}
+          style={{backgroundColor: '#fff'}}
+          contentContainerStyle={{flexGrow: 1}}>
           <View
             style={{
               position: 'absolute',
@@ -225,6 +242,7 @@ const DashboardScreen: React.FC<Props> = () => {
           <Suspense
             fallback={
               <DashboardSkeleton
+                ageLessTwoMonth={false}
                 childNameComponent={
                   <View style={[{height: 54}, styles.spinnerContainer]}>
                     <ActivityIndicator size={'small'} />
@@ -277,19 +295,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  actionItemsTitle: {
-    fontSize: 22,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    textTransform: 'capitalize',
-    fontFamily: 'Montserrat-Bold',
-  },
   actionItemText: {
     fontSize: 15,
     marginTop: 6,
     textAlign: 'center',
   },
-
   childNameText: {
     fontSize: 22,
     textAlign: 'center',
@@ -305,43 +315,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 32,
     alignItems: 'center',
     borderRadius: 20,
-  },
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 30,
-  },
-  image: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    width: 190,
-    height: 190,
-    borderRadius: 190,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
-
-  container: {
-    flex: 1,
-    marginTop: 10,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
   },
 });
 

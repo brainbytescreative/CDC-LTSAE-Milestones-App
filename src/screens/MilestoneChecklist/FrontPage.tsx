@@ -42,7 +42,6 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
       <View>
         <PurpleArc width={'100%'} />
         <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom, paddingTop: 32}}>
-          <Text style={[styles.text, {marginHorizontal: 32, marginBottom: 16}]}>{t('message3')}</Text>
           <AEButtonRounded onPress={onGetStarted}>{t('common:getStartedBtn')}</AEButtonRounded>
         </View>
       </View>
@@ -61,13 +60,6 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: 15,
-  },
-  answerButton: {
-    borderWidth: 1,
-    height: 50,
-    width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
