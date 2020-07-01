@@ -9,13 +9,13 @@ const BurgerButton: React.FC = () => {
   const {t} = useTranslation();
   return (
     <TouchableOpacity
-      accessibilityRole={'button'}
+      accessibilityRole={'menu'}
       accessibilityLabel={t('accessibility:mainMenuButton')}
       hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
       onPress={() => {
         navigation.dispatch(DrawerActions.toggleDrawer());
       }}
-      style={{paddingHorizontal: 32}}>
+      style={{paddingHorizontal: 32, paddingVertical: 32}}>
       <BurgerIcon />
     </TouchableOpacity>
   );

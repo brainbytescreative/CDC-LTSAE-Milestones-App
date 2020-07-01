@@ -23,7 +23,9 @@ import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
 import PurpleArc from '../../components/Svg/PurpleArc';
-import {differenceInWeeks} from 'date-fns';
+import {differenceInWeeks, format} from 'date-fns';
+import {dateFnsLocales} from '../../resources/dateFnsLocales';
+import i18next from '../../resources/l18n';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -135,19 +137,29 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             <Text style={{fontSize: 12}}>{t('addApt')}</Text>
           </TouchableOpacity>
         </View>
-        {appointments?.map((appt) => (
-          <TouchableOpacity
-            key={`appointment-${appt.id}`}
-            onPress={() => {
-              navigation.navigate('Appointment', {
-                appointmentId: appt.id,
-              });
-            }}
-            style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
-            <Text style={{fontSize: 18}}>{appt.apptType}</Text>
-            <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
-          </TouchableOpacity>
-        ))}
+        {appointments?.map((appt) => {
+          return (
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={t('accessibility:appointmentCaption', {
+                caption: appt.apptType,
+                time: format(appt.date, 'PPPpp', {
+                  locale: dateFnsLocales[i18next.language],
+                }),
+              })}
+              key={`appointment-${appt.id}`}
+              onPress={() => {
+                navigation.navigate('Appointment', {
+                  appointmentId: appt.id,
+                });
+              }}
+              style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
+              <Text style={{fontSize: 18}}>{appt.apptType}</Text>
+              {/*<Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>*/}
+              <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   );

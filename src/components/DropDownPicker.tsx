@@ -181,6 +181,7 @@ const DropDownPicker: React.FC<Props> = ({
       ]}>
       <View style={[styles.dropDownContainer, state.visible && styles.noBottomRadius, style]}>
         <TouchableOpacity
+          accessibilityRole={'menu'}
           ref={tochableRef}
           onLayout={(event) => {
             // console.log(event.nativeEvent.layout);
@@ -228,6 +229,7 @@ const DropDownPicker: React.FC<Props> = ({
         <ScrollView nestedScrollEnabled bounces={false} style={[{width: '100%', zIndex}]}>
           {items.map((item, index) => (
             <TouchableOpacity
+              accessibilityRole={'menuitem'}
               key={index}
               onPress={() => select(item, index)}
               style={[styles.dropDownItem, itemStyle, state.choice?.value === item.value && activeItemStyle]}>

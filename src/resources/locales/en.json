@@ -305,13 +305,17 @@
     "title": "Tips & Activities"
   },
   "accessibility": {
-    "mainMenuButton": "Main menu button",
-    "nextButton": "Next button",
-    "previousButton": "Previous button",
+    "mainMenuButton": "Main menu",
+    "nextButton": "Next",
+    "previousButton": "Previous",
     "childName": "Child name: {{name}}",
     "unreadNotifications": "Number of unread notifications: {{count}}",
     "closeMainMenu": "Close main menu",
-    "concernToggleButton": "Concern toggle button",
-    "addChildPhoto": "$t(addChild:addPhoto)"
+    "close": "Close",
+    "concernToggleButton": "Concern toggle",
+    "addChildPhoto": "$t(addChild:addPhoto)",
+    "childPhotoPlaceholder": "Child's photo placeholder",
+    "appointmentCaption": "$t(appointment:title): {{caption}} at {{time}}",
+    "selectChildButton": "Select a child"
   }
 }

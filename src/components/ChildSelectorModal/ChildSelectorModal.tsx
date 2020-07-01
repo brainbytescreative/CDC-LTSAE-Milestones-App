@@ -88,12 +88,14 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
       headerTitle: () => {
         return (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => setChildSelectorVisible(!childSelectorVisible)}
             style={{
               // flex: 1,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              minHeight: 50,
             }}>
             <Suspense fallback={<ActivityIndicator size={'small'} />}>
               <ChildName />

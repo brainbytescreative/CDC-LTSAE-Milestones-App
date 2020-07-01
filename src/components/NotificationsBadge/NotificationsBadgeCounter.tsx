@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps} from 'react-native';
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
 import {useGetUnreadNotifications} from '../../hooks/notificationsHooks';
 import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
@@ -11,10 +11,14 @@ const NotificationsBadgeCounter: React.FC<Pick<TouchableOpacityProps, 'onPress'>
   const count = notifications?.length || 0;
   return (
     <TouchableOpacity
+      hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+      accessibilityRole={'button'}
       accessibilityLabel={t('accessibility:unreadNotifications', {count})}
       onPress={onPress}
-      style={counterStyle.badgeContainer}>
-      <Text style={counterStyle.badgeText}>{count}</Text>
+      style={{minHeight: 45, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={counterStyle.badgeContainer}>
+        <Text style={counterStyle.badgeText}>{count}</Text>
+      </View>
     </TouchableOpacity>
   );
 };

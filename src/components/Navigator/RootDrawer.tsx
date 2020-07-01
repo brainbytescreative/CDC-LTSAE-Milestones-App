@@ -79,6 +79,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                   sharedStyle.shadow,
                 ]}>
                 <TouchableOpacity
+                  accessibilityRole={'menuitem'}
                   style={{paddingHorizontal: 16, paddingVertical: 12}}
                   onPress={() => {
                     if (params?.redirect) {

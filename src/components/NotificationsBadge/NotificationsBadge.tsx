@@ -78,11 +78,14 @@ const NotificationsBadge: React.FC = () => {
                 {t('notifications')}
               </Text>
               <TouchableOpacity
-                hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+                accessibilityRole={'button'}
+                accessibilityLabel={t('accessibility:close')}
                 onPress={() => {
                   setIsVisible(false);
                 }}>
-                <ChevronLeft />
+                <View style={{minHeight: 44, minWidth: 44, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <ChevronLeft />
+                </View>
               </TouchableOpacity>
             </View>
             <FlatList
