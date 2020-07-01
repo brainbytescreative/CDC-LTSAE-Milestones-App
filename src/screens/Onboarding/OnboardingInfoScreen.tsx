@@ -107,6 +107,7 @@ const OnboardingInfoScreen: React.FC = () => {
             visible={visible}>
             <LanguageSelector title={'Select a Language/\nSeleccione Un Idioma'} />
             <TouchableOpacity
+              accessibilityRole={'button'}
               onPress={() => {
                 setVisible(false);
               }}>

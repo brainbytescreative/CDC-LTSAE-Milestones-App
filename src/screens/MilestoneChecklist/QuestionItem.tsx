@@ -30,35 +30,42 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const answer = data?.answer;
 
   const {t} = useTranslation('milestones');
-  const photo = photos?.map((item, index) => {
-    const name = (item.name && t(item.name)) || '';
-    const image = images[name];
-    return (
-      <Image
-        key={`photo-${index}-${id}`}
-        accessibilityLabel={item.alt && t(item.alt)}
-        source={image}
-        style={{width: '100%', borderRadius: 10}}
-      />
-    );
-  }) as any;
+
+  const video =
+    videos?.map((item) => {
+      const code = item.name && t(item?.name);
+      const uri = `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`;
+      console.log(uri);
+      return (
+        <WebView
+          key={`video-${item.name}`}
+          style={{alignSelf: 'stretch', height}}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState
+          scrollEnabled={false}
+          source={{uri}}
+        />
+      );
+    }) || [];
+
+  const photo =
+    (photos?.map((item, index) => {
+      const name = (item.name && t(item.name)) || '';
+      const image = images[name];
+      return (
+        <Image
+          key={`photo-${index}-${id}`}
+          accessibilityLabel={item.alt && t(item.alt)}
+          accessibilityRole={'image'}
+          accessible={true}
+          source={image}
+          style={{width: '100%', borderRadius: 10}}
+        />
+      );
+    }) as any) || [];
 
   const height = (Dimensions.get('window').width - 64) * 0.595;
-
-  const video = videos?.map((item) => {
-    const code = item.name && t(item?.name);
-    return (
-      <WebView
-        key={`video-${item.name}`}
-        style={{alignSelf: 'stretch', height}}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState
-        scrollEnabled={false}
-        source={{uri: `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`}}
-      />
-    );
-  });
 
   const doAnswer = (answerValue: Answer) => () => {
     id &&
@@ -82,16 +89,19 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     !isFetching && setNote(data?.note || '');
   }, [data, isFetching]);
 
+  const mediaItems = [...photo, ...video];
+
   return (
     <View style={{flex: 1, marginTop: 38, marginHorizontal: 32}}>
       <View style={{backgroundColor: colors.purple, borderRadius: 10, overflow: 'hidden'}}>
         <Text style={{margin: 15, textAlign: 'center', fontSize: 15}}>{value}</Text>
-        {photos && photos.length > 0 && (
+        {mediaItems && mediaItems.length > 0 && (
           <View>
             <ViewPager
               onPageSelected={(event) => {
                 setPage(event.nativeEvent.position);
               }}
+              scrollEnabled={mediaItems.length > 1}
               ref={viewPagerRef}
               style={{flex: 1, height}}
               initialPage={0}>
@@ -99,16 +109,18 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                 ? photo.map((item: any, index: number) => {
                     return (
                       <View key={index}>
-                        <Text>{photos[index].name}</Text>
+                        <Text accessible={false}>{photos?.[index].name}</Text>
                         {item}
                       </View>
                     );
                   })
                 : photo}
+              {video}
             </ViewPager>
-            {photo && photo?.length > 1 && (
+            {mediaItems && mediaItems?.length > 1 && (
               <>
                 <TouchableOpacity
+                  accessibilityLabel={t('accessibility:previousButton')}
                   onPress={() => {
                     const prevPage = page - 1 < 0 ? photo?.length - 1 : page - 1;
                     viewPagerRef?.current?.setPage(prevPage);
@@ -124,8 +136,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                   <PhotoChevronLeft style={{marginLeft: 16}} />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityLabel={t('accessibility:nextButton')}
                   onPress={() => {
-                    const nextPage = page + 1 > photos?.length - 1 ? 0 : page + 1;
+                    const nextPage = page + 1 > mediaItems?.length - 1 ? 0 : page + 1;
                     viewPagerRef?.current?.setPage(nextPage);
                   }}
                   style={{
@@ -143,7 +156,6 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             )}
           </View>
         )}
-        {video}
       </View>
       <View style={[styles.buttonsContainer]}>
         <TouchableOpacity

@@ -12,6 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
@@ -20,14 +21,17 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
 
 const ChildName: React.FC = () => {
   const {data: selectedChild} = useGetCurrentChild();
+  const {t} = useTranslation();
   return (
     <Text
+      accessibilityLabel={t('accessibility:childName', {name: selectedChild?.name})}
       numberOfLines={1}
-      style={{
-        fontSize: 22,
-        textAlign: 'center',
-        fontFamily: 'Montserrat-Bold',
-      }}>
+      style={[
+        {
+          textAlign: 'center',
+        },
+        sharedStyle.largeBoldText,
+      ]}>
       {selectedChild?.name}
     </Text>
   );
@@ -94,7 +98,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
             <Suspense fallback={<ActivityIndicator size={'small'} />}>
               <ChildName />
             </Suspense>
-            <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
+            <EvilIcons accessibilityLabel={''} name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         );
       },
@@ -144,6 +148,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
       <NotificationsBadge />
       <Modal animated animationType={'fade'} transparent visible={childSelectorVisible}>
         <TouchableWithoutFeedback
+          accessible={false}
           onPressIn={() => {
             setChildSelectorVisible(false);
           }}>

@@ -18,6 +18,7 @@ const AERadioButton: React.FC<SvgProps & Props> = ({title, titleStyle, onChange,
 
   return (
     <TouchableOpacity
+      accessibilityRole={'radio'}
       onPress={() => {
         setState(!actualState);
         onChange && onChange(!actualState);

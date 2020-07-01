@@ -13,10 +13,10 @@ const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone}) => {
   const {t} = useTranslation();
   return (
     <View style={{flexDirection: 'row', marginHorizontal: 32, marginVertical: 10}}>
-      <TouchableOpacity onPress={onCancel} style={{flexGrow: 1}}>
+      <TouchableOpacity accessibilityRole={'button'} onPress={onCancel} style={{flexGrow: 1}}>
         <Text style={[sharedStyle.regularText]}>{t('common:cancel')}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={onDone} style={{flexGrow: 1, alignItems: 'flex-end'}}>
+      <TouchableOpacity accessibilityRole={'button'} onPress={onDone} style={{flexGrow: 1, alignItems: 'flex-end'}}>
         <Text style={[sharedStyle.regularText]}>{t('common:done')}</Text>
       </TouchableOpacity>
     </View>

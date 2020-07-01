@@ -127,6 +127,8 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             {t('appointments')}
           </Text>
           <TouchableOpacity
+            accessibilityRole={'button'}
+            accessibilityLabel={t('addAppointment:title')}
             onPress={() => {
               navigation.navigate('AddAppointment');
             }}>

@@ -18,6 +18,9 @@ const MilestoneChecklistWidget: React.FC = () => {
 
   return (
     <TouchableOpacity
+      accessibilityLabel={`${t('milestoneCheckList')}.${t('milestonesAnswered', {
+        progress: totalProgress?.replace('/', ' of '),
+      })}`}
       onPress={() => {
         navigation.navigate('MilestoneChecklistStack');
       }}

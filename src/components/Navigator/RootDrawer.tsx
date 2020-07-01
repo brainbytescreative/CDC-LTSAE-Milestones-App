@@ -19,7 +19,7 @@ const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
 const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
   // const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
-
+  const {t} = useTranslation();
   return (
     <DrawerContentScrollView {...props}>
       <SafeAreaView>
@@ -47,6 +47,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
               {i18next.t('common:menu')}
             </Text>
             <TouchableOpacity
+              accessibilityLabel={t('accessibility:closeMainMenu')}
               style={{
                 position: 'absolute',
                 right: 0,

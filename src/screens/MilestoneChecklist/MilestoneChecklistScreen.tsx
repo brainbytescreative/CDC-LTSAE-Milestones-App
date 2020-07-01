@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors, Section} from '../../resources/constants';
+import {checklistSections, colors, Section, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -169,9 +169,7 @@ const MilestoneChecklistScreen: React.FC<{
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
           ListHeaderComponent={() => (
-            <Text style={{textAlign: 'center', marginTop: 38, fontSize: 22, fontFamily: 'Montserrat-Bold'}}>
-              {milestoneAgeFormatted}
-            </Text>
+            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
           )}
           ListFooterComponent={() => (
             <View style={{marginTop: 50}}>

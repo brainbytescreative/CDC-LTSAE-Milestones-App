@@ -103,6 +103,7 @@ const Item: React.FC<ItemProps> = ({
       <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6}}>
         {!hideControls && (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => {
               id && onEditAnswerPress && onEditAnswerPress(id, note);
             }}>
@@ -111,6 +112,7 @@ const Item: React.FC<ItemProps> = ({
         )}
         {noteLocal === undefined && (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => {
               setNote(note || '');
             }}>
@@ -321,8 +323,16 @@ const ChildSummaryScreen: React.FC = () => {
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
               <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name}}>
-                <Text onPress={() => Linking.openURL(t('findElLink'))} style={{textDecorationLine: 'underline'}} />
-                <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('findElLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('concernedLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
               </Trans>
             </Text>
             {/*<Text>Show your doctor or email summary</Text>*/}

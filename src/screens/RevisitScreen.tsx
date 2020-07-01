@@ -111,7 +111,11 @@ const RevisitScreen: React.FC = () => {
           ))}
           <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
             <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
-              <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
+              <Text
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('concernedLink'))}
+                style={{textDecorationLine: 'underline'}}
+              />
             </Trans>
           </Text>
           <Text
@@ -163,7 +167,11 @@ const RevisitScreen: React.FC = () => {
               fontSize: 15,
             }}>
             <Trans t={t} i18nKey={'thankYouText2'}>
-              <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
+              <Text
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('actEarlyLink'))}
+                style={{textDecorationLine: 'underline'}}
+              />
             </Trans>
           </Text>
         </View>

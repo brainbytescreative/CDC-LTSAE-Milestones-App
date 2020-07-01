@@ -59,6 +59,8 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
       <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
         <View style={[sharedStyle.shadow]}>
           <TouchableOpacity
+            accessibilityRole={'button'}
+            accessibilityLabel={t('accessibility:addChildPhoto')}
             onPress={() => {
               ImagePicker.showImagePicker(options, (response) => {
                 if (response.uri) {
@@ -148,7 +150,7 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
 };
 
 const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps, 'onPress'>> = ({t, onPress}) => (
-  <TouchableWithoutFeedback onPress={onPress}>
+  <TouchableWithoutFeedback onPress={onPress} accessibilityRole={'button'}>
     <View style={[styles.prematureTip, sharedStyle.shadow]}>
       <Text
         numberOfLines={1}
@@ -325,6 +327,7 @@ const AddChildScreen: React.FC = () => {
                         ]}>
                         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
                         <Text
+                          accessibilityRole={'link'}
                           onPress={() => Linking.openURL(t('correctedAgeLink'))}
                           style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
                           {t('noteClick')}

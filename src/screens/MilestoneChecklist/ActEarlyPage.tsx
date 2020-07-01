@@ -72,6 +72,9 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
       </View>
       <View style={[itemStyles.buttonsContainer]}>
         <TouchableOpacity
+          accessible={!isMissingAnswerConcern}
+          accessibilityRole={'button'}
+          accessibilityLabel={t('accessibility:concernToggleButton')}
           disabled={isMissingAnswerConcern}
           onPress={onPress}
           style={[
@@ -168,6 +171,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
               <Trans t={t} i18nKey={'actEarlyMessage1'}>
                 <Text
+                  accessibilityRole={'link'}
                   onPress={() => {
                     Linking.openURL(t('actEarlyMessageLink'));
                   }}
@@ -188,6 +192,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
+                accessibilityRole={'button'}
                 onPress={() => {
                   onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
                 }}>
