@@ -33,14 +33,15 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
 };
 
 export const formatAge = (childBirth: Date | undefined): string => {
-  const days = (childBirth && Math.abs(differenceInDays(new Date(), childBirth))) || 0;
-  return childBirth
-    ? formatDistanceStrict(new Date(), childBirth, {
-        unit: days > 0 ? undefined : 'day',
-        roundingMethod: 'floor',
-        locale: dateFnsLocales[i18next.language],
-      })
-    : '';
+  const birthDay = childBirth ?? new Date();
+  const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
+  const childAge = formatDistanceStrict(days < 1 ? birthDay : new Date(), birthDay, {
+    unit: days > 0 ? undefined : 'day',
+    roundingMethod: 'floor',
+    locale: dateFnsLocales[i18next.language],
+  });
+
+  return birthDay ? childAge : '';
 };
 
 export function calcChildAge(birthDay: Date | undefined) {

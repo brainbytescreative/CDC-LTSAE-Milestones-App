@@ -174,7 +174,13 @@ const AddAppointmentScreen: React.FC = () => {
             <AEButtonRounded disabled={disabled} onPress={formik.handleSubmit} style={{marginBottom: 0}}>
               {apptId ? t('common:done') : t('title')}
             </AEButtonRounded>
-            <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('common:cancel')}</AEButtonRounded>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{marginTop: 10, marginBottom: 30}}>
+              {t('common:cancel')}
+            </AEButtonRounded>
           </View>
         </View>
       </View>

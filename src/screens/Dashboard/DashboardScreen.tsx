@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect} from 'react';
+import React, {Suspense, useEffect, useMemo} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -172,7 +172,10 @@ const DashboardContainer: React.FC = () => {
   useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
   const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
-  const childAgeText = formatAge(child?.birthday);
+  const currentDay = new Date().getDay();
+  const birthday = child?.birthday;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const childAgeText = useMemo(() => formatAge(birthday), [birthday, currentDay]);
   // const [setMilestoneNotifications] = useSetMilestoneNotifications();
   // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
