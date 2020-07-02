@@ -236,7 +236,7 @@ const AddChildScreen: React.FC = () => {
         innerRef={(ref) => (formikRef.current = ref)}
         validateOnChange
         validateOnMount
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           const childInput = {
             ...values.firstChild,
             birthday: values.firstChild.birthday || new Date(),
@@ -249,17 +249,16 @@ const AddChildScreen: React.FC = () => {
             addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then();
           }
 
-          Promise.all(
-            values.anotherChildren?.map((item) => {
-              const otherInput = {
-                ...item,
-                birthday: item.birthday || new Date(),
-                gender: item.gender || 0,
-              };
-
-              return addChild({data: otherInput, isAnotherChild: true});
-            }) || [],
-          );
+          const anotherChildren = values.anotherChildren ?? [];
+          for (const anotherChild of anotherChildren) {
+            const otherInput = {
+              ...anotherChild,
+              birthday: anotherChild.birthday!,
+              gender: anotherChild.gender!,
+            };
+            console.log(anotherChild);
+            await addChild({data: otherInput, isAnotherChild: true}).catch(console.error);
+          }
         }}>
         {(formikProps) => (
           <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
