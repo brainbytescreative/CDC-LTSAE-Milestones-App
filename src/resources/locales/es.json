@@ -1,4 +1,18 @@
 {
+    "accessibility": {
+        "addChildPhoto": "$t(addChild:addPhoto)",
+        "appointmentCaption": "$t(appointment:title): {{caption}} at {{time}}",
+        "childName": "Child name: {{name}}",
+        "childPhotoPlaceholder": "Child's photo placeholder",
+        "close": "Close",
+        "closeMainMenu": "Close main menu",
+        "concernToggleButton": "Concern toggle",
+        "mainMenuButton": "Main menu",
+        "nextButton": "Next",
+        "previousButton": "Previous",
+        "selectChildButton": "Select a child",
+        "unreadNotifications": "Number of unread notifications: {{count}}"
+    },
     "addAppointment": {
         "edit-title": "Editar cita",
         "title": "Agregar una cita"
@@ -175,6 +189,7 @@
         "milestoneCompleteReminder": "Algunos de los indicadores del desarrollo de los {{milestoneAgeFormatted}} de {{name}} están marcados como “Todavía no” o “No estoy seguro”. ¿Desea volver a revisar esos indicadores?",
         "milestoneNotificationTitle": "Notificaciones de indicadores del desarrollo",
         "nextMilestoneBirthdayNotificationBody": "{{name}} tiene {{childAgeFormatted}} de edad🎂. Complete su lista de verificación de los indicadores del desarrollo de los {{milestoneAgeFormatted}}, ¡hoy mismo!",
+        "nextMilestoneNotificationBody": "$t(notifications:nextMilestoneBirthdayNotificationBody)",
         "recommendation1DayPassedBody": "Reaccionar pronto ante los indicadores del desarrollo no alcanzados u otras preocupaciones que tenga puede marcar una gran diferencia. Aunque el desarrollo de cada niño es diferente, algunas diferencias pueden ser causa de preocupación. Haga una cita con el médico de {{name}} para mostrarle su resumen y solicitar pruebas del desarrollo. No espere. 🗓\n",
         "recommendation1weekPassedBody": "Para algunos de los indicadores del desarrollo de {{name}} usted marcó “Todavía no” o indicó una posible preocupación. Reaccione pronto al hablar con su médico y solicitar pruebas del desarrollo. ⚕️️",
         "recommendation4weeksPassedBody": "¿Hizo la cita con el médico de {{name}} para hablarle sobre el resumen de los indicadores del desarrollo? No espere. Reaccionar pronto puede marcar una gran diferencia. ⚠️",
