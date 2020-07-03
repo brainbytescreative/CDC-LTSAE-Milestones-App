@@ -34,10 +34,10 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const video =
     videos?.map((item) => {
       const code = item.name && t(item?.name);
-      const uri = `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`;
-      console.log(uri);
+      const uri = `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0&playsinline=1`;
       return (
         <WebView
+          allowsInlineMediaPlayback={true}
           key={`video-${item.name}`}
           style={{alignSelf: 'stretch', height}}
           javaScriptEnabled={true}
