@@ -1,5 +1,13 @@
 import React, {Suspense, useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
@@ -43,6 +51,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
 }) => {
   const {data: children} = useGetChildren({suspense: true});
   const [deleteChild] = useDeleteChild();
+  const {t} = useTranslation();
 
   return (
     <FlatList
@@ -52,8 +61,24 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
           {...item}
           onSelect={onSelect}
           onEdit={onEdit}
-          onDelete={(id) => {
-            deleteChild({id});
+          onDelete={(id, name) => {
+            Alert.alert(
+              '',
+              t('dialog:deleteMessage', {subject: ` ${name}`}),
+              [
+                {
+                  text: t('dialog:no'),
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {
+                  text: t('dialog:yes'),
+                  style: 'default',
+                  onPress: () => deleteChild({id}),
+                },
+              ],
+              {cancelable: false},
+            );
           }}
         />
       )}

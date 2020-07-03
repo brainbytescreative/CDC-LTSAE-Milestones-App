@@ -8,9 +8,9 @@ import {formatAge} from '../../utils/helpers';
 import BabyPlaceholder from '../Svg/BabyPlaceholder';
 
 interface ItemProps extends ChildResult {
-  onSelect: (id: number) => void;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onSelect: (id: ChildResult['id']) => void;
+  onEdit: (id: ChildResult['id']) => void;
+  onDelete: (id: ChildResult['id'], name: ChildResult['name']) => void;
 }
 
 const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
@@ -69,7 +69,7 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
             <TouchableOpacity
               accessibilityRole={'button'}
               onPress={() => {
-                onDelete(id);
+                onDelete(id, name);
               }}
               style={{marginLeft: 16}}>
               <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
