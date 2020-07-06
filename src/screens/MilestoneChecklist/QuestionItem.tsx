@@ -28,8 +28,8 @@ import withSuspense from '../../components/withSuspense';
 function getVideoHtml(videId: string) {
   return `
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head >
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -46,10 +46,10 @@ function getVideoHtml(videId: string) {
             width: 100% !important;
             height: 100% !important;
         }
-        </style>
+        </style><title>Video</title>
 
 </head>
-<body style="margin:0px;padding:0px;overflow:hidden; height: 100%">
+<body style="margin:0;padding:0;overflow:hidden; height: 100%">
 <div id="video-placeholder"></div>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -138,7 +138,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       return (
         <Image
           key={`photo-${index}-${id}`}
-          accessibilityLabel={item.alt && t(item.alt)}
+          accessibilityLabel={item.alt && t(`milestones:alts:${item.alt}`)}
           accessibilityRole={'image'}
           accessible={true}
           source={image}
@@ -191,7 +191,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                 ? photo.map((item: any, index: number) => {
                     return (
                       <View key={index}>
-                        <Text accessible={false}>{photos?.[index].name}</Text>
+                        <Text accessible={false}>{`${photos?.[index].alt}\n${t(
+                          `milestones:alts:${photos?.[index].alt}`,
+                        )}`}</Text>
                         {item}
                       </View>
                     );

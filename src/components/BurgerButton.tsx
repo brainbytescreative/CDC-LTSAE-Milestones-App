@@ -11,7 +11,7 @@ const BurgerButton: React.FC = () => {
     <TouchableOpacity
       accessibilityRole={'menu'}
       accessibilityLabel={t('accessibility:mainMenuButton')}
-      hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+      hitSlop={{top: 30, bottom: 20, left: 10, right: 10}}
       onPress={() => {
         navigation.dispatch(DrawerActions.toggleDrawer());
       }}

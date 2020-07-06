@@ -4,12 +4,7 @@ import _ from 'lodash';
 import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import milestoneChecklist, {
-  Concern,
-  milestoneQuestions,
-  Milestones,
-  SkillSection,
-} from '../resources/milestoneChecklist';
+import milestoneChecklist, {Concern, milestoneQuestions, SkillSection} from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
@@ -23,7 +18,7 @@ import {
 } from './notificationsHooks';
 import {Answer, MilestoneAnswer} from './types';
 
-type ChecklistData = SkillSection & {section: keyof Milestones};
+// type ChecklistData = SkillSection & {section: keyof Milestones};
 
 type QuestionAnswerKey = Required<Pick<MilestoneAnswer, 'childId' | 'questionId' | 'milestoneId'>>;
 
@@ -137,14 +132,24 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
 
       const data = (variables.childId && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
       const answersIds = data.map((value) => value.questionId || 0);
-
+      console.log(answersIds);
       const questionsData = milestoneQuestions
         .filter((value) => value.milestoneId === variables.milestoneAge)
         .map((item) => ({
           ...item,
           value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
         }))
-        .sort((a) => (a.id && !answersIds.includes(a.id) ? -1 : 1));
+        .sort((a, b) => {
+          const aIsAnswered = answersIds.includes(a.id!);
+          const bIsAbswered = answersIds.includes(b.id!);
+          if (aIsAnswered && !bIsAbswered) {
+            return 1;
+          } else if (bIsAbswered && !aIsAnswered) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);

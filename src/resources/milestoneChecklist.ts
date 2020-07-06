@@ -187,6 +187,17 @@ const checklist: MilestoneChecklist[] = [
       ],
       cognitive: [
         {
+          id: 6,
+          value: 'milestone_2_skill_6',
+          photos: [
+            {
+              name: 'milestone_2_skill_6_photo_8',
+              alt: 'milestone_2_skill_6_alt_9',
+            },
+          ],
+          videos: [],
+        },
+        {
           id: 7,
           value: 'milestone_2_skill_7',
           photos: [
@@ -215,17 +226,6 @@ const checklist: MilestoneChecklist[] = [
               alt: 'milestone_2_skill_8_alt_8',
             },
           ],
-        },
-        {
-          id: 6,
-          value: 'milestone_2_skill_6',
-          photos: [
-            {
-              name: 'milestone_2_skill_6_photo_8',
-              alt: 'milestone_2_skill_6_alt_9',
-            },
-          ],
-          videos: [],
         },
       ],
       movement: [
