@@ -15,6 +15,85 @@ import i18next from 'i18next';
 import {Answer} from '../../hooks/types';
 import withSuspense from '../../components/withSuspense';
 
+// const jsCode = `
+//
+// document.addEventListener('DOMContentLoaded', function(){ // Аналог $(document).ready(function(){
+//   alert('lol');
+//   console.log('test')
+//   document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
+// });
+// // document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
+// `;
+
+function getVideoHtml(videId: string) {
+  return `
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <style>
+        body { margin: 0; width:100%; height:100%;  background-color:#000000; }
+        html { width:100%; height:100%; background-color:#000000; }
+    
+        .video-placeholder iframe,
+        .video-placeholder object,
+        .video-placeholder embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        </style>
+
+</head>
+<body style="margin:0px;padding:0px;overflow:hidden; height: 100%">
+<div id="video-placeholder"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+
+var player,
+    time_update_interval = 0;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('video-placeholder', {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        videoId: '${videId}',
+        playerVars: {
+            color: 'white',
+            rel: 0,
+            controls: 0,
+            playsinline: 1,
+            hl:'${i18next.language}'
+        },
+        events: {
+            onReady: initialize,
+            onStateChange: onStateChange
+        }
+    });
+}
+
+function onStateChange(event){
+    if (event.data === YT.PlayerState.ENDED) {
+        player.seekTo(0);
+        player.stopVideo();
+    }
+}
+window.onresize = function() {
+        player.setSize(window.innerWidth, window.innerHeight);
+}
+function initialize(){
+    
+}
+</script>
+</body>
+</html>
+`;
+}
+
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data, isFetching} = useGetQuestion({
@@ -34,9 +113,12 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const video =
     videos?.map((item) => {
       const code = item.name && t(item?.name);
-      const uri = `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0&playsinline=1`;
+      if (!code) {
+        return null;
+      }
       return (
         <WebView
+          originWhitelist={['*']}
           allowsInlineMediaPlayback={true}
           key={`video-${item.name}`}
           style={{alignSelf: 'stretch', height}}
@@ -44,7 +126,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           domStorageEnabled={true}
           startInLoadingState
           scrollEnabled={false}
-          source={{uri}}
+          source={{html: getVideoHtml(code)}}
         />
       );
     }) || [];
