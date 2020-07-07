@@ -35,7 +35,7 @@
         "concernsOrNotesForDoctor": "Preguntas, inquietudes o notas para el proveedor",
         "deleteAppointment": "Borrar cita",
         "emailChildsSummary": "Enviar el resumen del niño por correo electrónico",
-        "showChildsSummary": "Show child's summary",
+        "showChildsSummary": "Mostrar el resumen del niño",
         "title": "Cita"
     },
     "childSelector": {
@@ -44,7 +44,7 @@
         "edit": "Editar"
     },
     "childSummary": {
-        "changeYourAnswerTitle": "Change your answer to this milestone to",
+        "changeYourAnswerTitle": "Cambie su respuesta para este indicador a",
         "concernedLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_sp_sum",
         "concerns": "Inquietudes",
         "drawerLabel": "El resumen de mi hijo",
@@ -84,9 +84,9 @@
         "hisHersTag_1": " ",
         "menu": "Menu",
         "month": "{{count}} mes",
-        "monthDash": "{{count}}-Month-old",
-        "monthDash_plural": "{{count}}-Months-old",
-        "monthShort": "{{count}} mo",
+        "monthDash": "{{count}}-mes de vida",
+        "monthDash_plural": "{{count}}-meses de vida",
+        "monthShort": " ",
         "monthSingular": "{{count}} mes",
         "month_plural": "{{count}} meses",
         "next": "Siguiente",
@@ -94,24 +94,24 @@
         "required": "* requerido",
         "timeFormat": "h:mm a",
         "year": "{{count}} año",
-        "yearDash": "{{count}}-Year-old",
-        "yearDash_plural": "{{count}}-Years-old",
+        "yearDash": "{{count}}-año de vida",
+        "yearDash_plural": "{{count}}-años de vida",
         "yearShort": "{{count}} año",
         "yearShort_plural": "{{count}} años",
         "yearSingular": "{{count}} año",
         "year_plural": "{{count}} años"
     },
     "dashboard": {
-        "actionItemsTitle": "{{age}} Milestone\nAction Items",
+        "actionItemsTitle": " ",
         "addApt": "+ agregar cita ",
         "appointments": "Cita",
         "childAge": "¡tiene {{value}} años!",
         "drawerLabel": "$t(dashboard:title)",
         "milestoneCheckList": "Lista de indicadores",
         "milestoneSummary": "Resumen de los indicadore",
-        "milestonesAnswered": "{{progress}} Milestones answered",
+        "milestonesAnswered": "{{progress}} Indicadores con respuestas",
         "tipsAndActivities": "Consejos y actividades",
-        "title": "Dashboard",
+        "title": "Panel visual",
         "whenToActEarly": "Cuándo reaccionar pronto",
         "yellowTip": "Si la edad de su hijo está entre dos de las listas de verificación de arriba, recibirá la lista de la edad menor.",
         "yellowTipLessTwoMonth": "La primera es la de los 2 meses. ¡Haga clic en el botón Menú para ver la Vista rápida de los indicadores que le muestra un adelanto de lo que viene!"
@@ -126,12 +126,12 @@
     },
     "fields": {
         "appointmentNotifications": "Notificaciones de citas",
-        "apptTypePlaceholder": "Appointment type / description",
+        "apptTypePlaceholder": "Tipo o descripción de la cita",
         "childNamePlaceholder": "Nombre del niño",
         "dateOfBirthPlaceholder": "Dia de nacimiento",
         "datePlaceholder": "Fecha",
         "doctorPlaceholder": "Nombre del proveedor",
-        "guardianPlaceholder": "Guardian / Healthcare Provider",
+        "guardianPlaceholder": "Padre/tutor legal",
         "milestoneNotifications": "Notificaciones de siguiente lista",
         "notesConcernsPlaceholder": "Preguntas/inquietudes/notas",
         "offLabel": "Desactivadas",
@@ -165,7 +165,7 @@
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_pronto",
         "actEarlyWarning": "Puede que sea el momento de reaccionar pronto, hable con el médico.",
         "addANote": "Agregar una nota",
-        "addANoteLong": "Notes will save automatically, \nenter them here.",
+        "addANoteLong": "Las notas se guardarán automáticamente; ingresarlas aquí",
         "answer_no": "no",
         "answer_not_yet": "Todavía no",
         "answer_unsure": "No estoy seguro",
@@ -207,7 +207,7 @@
         "wellCheckUpSR2": "A {{name}} le tocará pronto el chequeo de rutina de los {{milestoneAgeFormattedDashed}} de edad. Lleve su lista de verificación a la cita y pregunte por las pruebas del desarrollo y de autismo; se recomiendan para TODOS los niños a esta edad. ⚕️"
     },
     "onboardingHowToUse": {
-        "howToUseApp": "How to use the app"
+        "howToUseApp": "Cómo usar la aplicación"
     },
     "onboardingInfo": {
         "broughtToYouBy": "Creado por",
@@ -240,7 +240,7 @@
         "thankYouText": "Gracias por usar la aplicación Milestone Tracker de los CDC para registrar los indicadores del desarrollo de {{childName}}",
         "thankYouText2": "Gracias por usar la aplicación Milestone Tracker de los CDC.\n\nObtenga más información sobre los indicadores del desarrollo y sobre cómo reaccionar pronto si tiene inquietudes en <0>cdc.gov/ActEarly.</0>",
         "timeToCelebrate": "Tómese un tiempo para CELEBRAR que {{name}} alcanzó estos indicadores del desarrollo importantes:",
-        "unanswered": "{{milestoneAge}} Milestones\nYou Skipped",
+        "unanswered": "{{milestoneAge}} Indicadores que se saltó",
         "yellowTip": "Usted es quien mejor conoce a {{childName}}. Si no alcanza algún indicador del desarrollo o en algún momento le preocupa su desarrollo, hable con el médico, coméntele sus inquietudes y pídale una evaluación del desarrollo."
     },
     "settings": {

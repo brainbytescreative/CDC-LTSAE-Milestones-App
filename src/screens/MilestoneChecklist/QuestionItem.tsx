@@ -118,6 +118,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       }
       return (
         <WebView
+          onShouldStartLoadWithRequest={() => true}
           originWhitelist={['*']}
           allowsInlineMediaPlayback={true}
           key={`video-${item.name}`}

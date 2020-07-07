@@ -3649,7 +3649,7 @@ const milestoneChecklist = [
 ];
 
 // const enTrans = require('./src/resources/milestones/en.json');
-const enTextTrans = require('./src/resources/milestones/es-texts.json');
+const enTextTrans = require('./src/resources/milestones/en-texts.json');
 const _ = require('lodash');
 
 const keys = milestoneChecklist.map((value) => {
@@ -3659,18 +3659,19 @@ const keys = milestoneChecklist.map((value) => {
   const milestones = Object.values(value.milestones).flat();
   const milestoneIds = milestones.map((v) => v.value);
   // const photoIds = milestones.map((v) => v.photos.map((v2) => v2.name));
-  // const photoIdsAlts = milestones.map((v) => v.photos.map((v2) => v2.alt));
+  const photoIdsAlts = milestones.map((v) => v.photos.map((v2) => v2.alt));
   // const videoIds = milestones.map((v) => v.videos.map((v2) => v2.name));
-  // const videoIdsAlts = milestones.map((v) => v.videos.map((v2) => v2.alt));
+  const videoIdsAlts = milestones.map((v) => v.videos.map((v2) => v2.alt));
 
-  return [...concernsIds, ...hintsIds, ...milestoneIds];
+  return [photoIdsAlts, videoIdsAlts];
 });
 
-const transKeys = Object.keys({...enTextTrans}).filter((value) => value.startsWith('milestone_'));
+const transKeys = Object.keys({...enTextTrans.alts}).filter((value) => value.startsWith('milestone_'));
 // console.log(JSON.stringify(transKeys.length, null, 2));
-const milestonesKeys = keys.flat(2);
+const milestonesKeys = keys.flat(3);
 // console.log(JSON.stringify(milestonesKeys.length, null, 2));
-// const redundant = milestonesKeys.filter((value) => transKeys.includes(value));
+// const redundant = milestonesKeys.filter((value) => !transKeys.includes(value));
+const redundant = transKeys.filter((value) => !milestonesKeys.includes(value));
 // console.log(JSON.stringify(_.pick(enTextTrans, redundant), null, 2));
-// console.log(JSON.stringify(enTextTrans, null, 2));
+console.log(JSON.stringify(redundant.length, null, 2));
 // console.log(_.difference(milestonesKeys, transKeys));

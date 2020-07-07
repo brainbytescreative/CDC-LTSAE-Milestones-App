@@ -40,7 +40,7 @@ static void InitializeFlipper(UIApplication *application) {
   InitializeFlipper(application);
 #endif
   
-  [ACPCore configureWithAppId:@"66818A1A54FA2E890A4C98A6"];
+  [ACPCore configureWithAppId:@"b36c1852e229/039962c157f4/launch-b9889b425fcc-development"];
   [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
   [ACPAnalytics registerExtension];
   [ACPIdentity registerExtension];
