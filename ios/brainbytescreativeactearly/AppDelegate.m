@@ -5,8 +5,11 @@
 #import <React/RCTRootView.h>
 
 #import "ACPCore.h"
-#import "ACPAnalytics.h"
+#import "ACPUserProfile.h"
 #import "ACPIdentity.h"
+#import "ACPLifecycle.h"
+#import "ACPSignal.h"
+#import "ACPAnalytics.h"
 @import Firebase;
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
@@ -39,7 +42,7 @@ static void InitializeFlipper(UIApplication *application) {
 #if DEBUG
   InitializeFlipper(application);
 #endif
-  
+//  [ACPCore setLogLevel:ACPMobileLogLevelVerbose];
   [ACPCore configureWithAppId:@"b36c1852e229/039962c157f4/launch-b9889b425fcc-development"];
   [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
   [ACPAnalytics registerExtension];

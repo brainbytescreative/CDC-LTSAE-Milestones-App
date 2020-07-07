@@ -132,7 +132,7 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
 
       const data = (variables.childId && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
       const answersIds = data.map((value) => value.questionId || 0);
-      console.log(answersIds);
+
       const questionsData = milestoneQuestions
         .filter((value) => value.milestoneId === variables.milestoneAge)
         .map((item) => ({

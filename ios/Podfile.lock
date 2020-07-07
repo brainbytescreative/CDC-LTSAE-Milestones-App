@@ -168,6 +168,8 @@ PODS:
     - React
   - RCTACPCore (1.2.4):
     - React
+  - RCTACPUserProfile (1.1.0):
+    - React
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
     - FBLazyVector (= 0.62.2)
@@ -465,6 +467,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - "RCTACPAnalytics (from `../node_modules/@adobe/react-native-acpanalytics`)"
   - "RCTACPCore (from `../node_modules/@adobe/react-native-acpcore`)"
+  - "RCTACPUserProfile (from `../node_modules/@adobe/react-native-acpuserprofile`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -568,6 +571,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@adobe/react-native-acpanalytics"
   RCTACPCore:
     :path: "../node_modules/@adobe/react-native-acpcore"
+  RCTACPUserProfile:
+    :path: "../node_modules/@adobe/react-native-acpuserprofile"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -697,6 +702,7 @@ SPEC CHECKSUMS:
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   RCTACPAnalytics: 9333df25f666125dd6e498a729ef7b7b4e393af8
   RCTACPCore: bc91a3ee1cd1505225e40adef02cd2e05f522333
+  RCTACPUserProfile: 4624c5ee41dd85b7a01b634be5a1b7ce9254fa9c
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3

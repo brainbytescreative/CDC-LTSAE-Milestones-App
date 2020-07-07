@@ -68,7 +68,6 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
               [
                 {
                   text: t('dialog:no'),
-                  onPress: () => console.log('Cancel Pressed'),
                   style: 'cancel',
                 },
                 {
