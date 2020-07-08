@@ -21,6 +21,7 @@
         "addAnotherChild": "+ Agregar otro niño",
         "addPhoto": "Agregar una foto",
         "boy": "Niño",
+        "changePhoto": "Cambiar la foto",
         "correctedAgeLink": "bit.ly/2S73jso",
         "drawerLabel": "Niños y agregar un niño",
         "edit-title": "Editar niño",
@@ -247,7 +248,7 @@
         "drawerLabel": "Notificaciones y configuraciones del usuario",
         "notificationSettings": "Configuración de la Notificacion",
         "requiredForState": "*requerido",
-        "statePrivacyLanguage": "{State-privacy language}",
+        "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. \nNo se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
         "userProfile": "Configuraciones de la cuenta"
     },
     "skillTypes": {

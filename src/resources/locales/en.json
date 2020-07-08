@@ -21,6 +21,7 @@
         "addAnotherChild": "+ Add another child",
         "addPhoto": "Add a photo",
         "boy": "Boy",
+        "changePhoto": "Change photo",
         "correctedAgeLink": "http://bit.ly/2RUpEu1",
         "drawerLabel": "Children & Add Child",
         "edit-title": "Edit child",
@@ -247,7 +248,7 @@
         "drawerLabel": "Notifications & User Settings ",
         "notificationSettings": "Notification settings",
         "requiredForState": "*required for state",
-        "statePrivacyLanguage": "{State-privacy language}",
+        "statePrivacyLanguage": "Milestone Tracker asks for state and territory to learn where the app is being used. \nIt does not collect or share any personal information that could be used to identify you or your child.",
         "userProfile": "User profile"
     },
     "skillTypes": {

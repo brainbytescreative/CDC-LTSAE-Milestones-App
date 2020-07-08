@@ -83,7 +83,7 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
             )}
           </TouchableOpacity>
         </View>
-        <Text style={{marginTop: 10, fontSize: 15}}>{t('addPhoto')}</Text>
+        <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
       </View>
     )}
   </FastField>
