@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {
+  Alert,
   Image,
   Linking,
   ScrollView,
@@ -267,7 +268,7 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
+              <CancelDoneTopControl onCancel={route.params?.onboarding ? undefined : onCancel} onDone={onDone} />
               <Text
                 adjustsFontSizeToFit
                 style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
@@ -295,6 +296,29 @@ const AddChildScreen: React.FC = () => {
                         <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
                         <PrematureTip t={t} onPress={onPrematureTipPress} />
                         <GenderField t={t} name={`anotherChildren.${index}.gender`} />
+                        <AEButtonRounded
+                          contentStyle={{backgroundColor: colors.apricot}}
+                          onPress={() => {
+                            Alert.alert(
+                              '',
+                              t('dialog:deleteMessage', {subject: ''}),
+                              [
+                                {
+                                  text: t('dialog:no'),
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: t('dialog:yes'),
+                                  style: 'default',
+                                  onPress: () => arrayHelpers.remove(index),
+                                },
+                              ],
+                              {cancelable: false},
+                            );
+                          }}
+                          style={{marginHorizontal: 0}}>
+                          {t('common:delete')}
+                        </AEButtonRounded>
                       </>
                     ))}
                   </View>

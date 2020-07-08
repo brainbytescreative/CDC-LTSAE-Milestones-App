@@ -182,7 +182,6 @@ const DashboardContainer: React.FC = () => {
   const [setOnboarding] = useSetOnboarding();
   // const navigation = useNavigation();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
   const ageLessTwoMonth = ageInWeeks < 6;
 
