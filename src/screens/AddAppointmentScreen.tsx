@@ -15,7 +15,7 @@ import {colors} from '../resources/constants';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
+import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
 import PurpleArc from '../components/Svg/PurpleArc';
 
