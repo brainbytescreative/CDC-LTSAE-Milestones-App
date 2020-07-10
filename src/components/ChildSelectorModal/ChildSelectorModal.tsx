@@ -11,7 +11,13 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
+import {
+  ChildResult,
+  useDeleteChild,
+  useGetChildren,
+  useGetCurrentChild,
+  useSetSelectedChild,
+} from '../../hooks/childrenHooks';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
@@ -52,35 +58,38 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
   const {data: children} = useGetChildren({suspense: true});
   const [deleteChild] = useDeleteChild();
   const {t} = useTranslation();
+  const onDelete = (id: ChildResult['id'], name: ChildResult['name']) => {
+    Alert.alert(
+      '',
+      t('dialog:deleteMessage', {subject: ` ${name}`}),
+      [
+        {
+          text: t('dialog:no'),
+          style: 'cancel',
+        },
+        {
+          text: t('dialog:yes'),
+          style: 'default',
+          onPress: () => deleteChild({id}),
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <FlatList
       data={children}
-      renderItem={({item}) => (
-        <ChildSelectorsItem
-          {...item}
-          onSelect={onSelect}
-          onEdit={onEdit}
-          onDelete={(id, name) => {
-            Alert.alert(
-              '',
-              t('dialog:deleteMessage', {subject: ` ${name}`}),
-              [
-                {
-                  text: t('dialog:no'),
-                  style: 'cancel',
-                },
-                {
-                  text: t('dialog:yes'),
-                  style: 'default',
-                  onPress: () => deleteChild({id}),
-                },
-              ],
-              {cancelable: false},
-            );
-          }}
-        />
-      )}
+      renderItem={({item}) => {
+        return (
+          <ChildSelectorsItem
+            {...item}
+            onSelect={onSelect}
+            onEdit={onEdit}
+            onDelete={Number(children?.length) > 1 ? onDelete : undefined}
+          />
+        );
+      }}
       keyExtractor={(item) => `${item.id}`}
       ListFooterComponent={
         <ChildSectorFooter

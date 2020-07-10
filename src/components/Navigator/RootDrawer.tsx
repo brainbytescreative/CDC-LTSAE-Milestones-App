@@ -148,6 +148,7 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'TipsAndActivitiesStack'}
         options={{
+          unmountOnBlur: true,
           drawerLabel: t('tipsAndActivities:drawerLabel'),
         }}
         component={TipsAndActivitiesStack}

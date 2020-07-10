@@ -8,7 +8,7 @@ import BurgerButton from '../BurgerButton';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
-import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen';
+import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
 import {colors, sharedScreenOptions} from '../../resources/constants';
 import RevisitScreen from '../../screens/RevisitScreen';
 import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';

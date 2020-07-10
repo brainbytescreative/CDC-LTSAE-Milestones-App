@@ -10,7 +10,7 @@ import BabyPlaceholder from '../Svg/BabyPlaceholder';
 interface ItemProps extends ChildResult {
   onSelect: (id: ChildResult['id']) => void;
   onEdit: (id: ChildResult['id']) => void;
-  onDelete: (id: ChildResult['id'], name: ChildResult['name']) => void;
+  onDelete?: (id: ChildResult['id'], name: ChildResult['name']) => void;
 }
 
 const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
@@ -66,14 +66,16 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
               }}>
               <Text style={{textDecorationLine: 'underline'}}>{t('edit')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              accessibilityRole={'button'}
-              onPress={() => {
-                onDelete(id, name);
-              }}
-              style={{marginLeft: 16}}>
-              <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
-            </TouchableOpacity>
+            {Boolean(onDelete) && (
+              <TouchableOpacity
+                accessibilityRole={'button'}
+                onPress={() => {
+                  onDelete?.(id, name);
+                }}
+                style={{marginLeft: 16}}>
+                <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

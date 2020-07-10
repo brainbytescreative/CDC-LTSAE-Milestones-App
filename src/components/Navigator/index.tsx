@@ -58,8 +58,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
   // });
 
   React.useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('addNotificationReceivedListener', notification);
+    const subscription = Notifications.addNotificationReceivedListener(() => {
       setTimeout(() => {
         queryCache.refetchQueries('unreadNotifications', {force: true});
       }, 2000);

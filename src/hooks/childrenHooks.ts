@@ -203,7 +203,6 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
-      console.log('useAddChild');
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,

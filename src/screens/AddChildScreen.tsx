@@ -257,7 +257,6 @@ const AddChildScreen: React.FC = () => {
               birthday: anotherChild.birthday!,
               gender: anotherChild.gender!,
             };
-            console.log(anotherChild);
             await addChild({data: otherInput, isAnotherChild: true}).catch(console.error);
           }
         }}>
