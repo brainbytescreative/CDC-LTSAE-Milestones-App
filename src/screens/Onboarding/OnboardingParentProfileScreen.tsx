@@ -15,6 +15,7 @@ import {RootStackParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {trackNext, trackSelectLanguage} from '../../utils/analytics';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
@@ -79,7 +80,12 @@ const OnboardingParentProfileScreen: React.FC = () => {
               ]}>
               {t('common:appLanguage')}
             </Text>
-            <LanguageSelector style={{marginHorizontal: 32}} />
+            <LanguageSelector
+              onLanguageChange={(lng) => {
+                trackSelectLanguage(lng);
+              }}
+              style={{marginHorizontal: 32}}
+            />
           </View>
         </View>
 
@@ -89,6 +95,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
             <AEButtonRounded
               disabled={!profile?.territory}
               onPress={() => {
+                trackNext();
                 navigation.navigate(NextScreen, {
                   onboarding: true,
                 });

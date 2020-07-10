@@ -14,6 +14,7 @@ import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../Svg/CloseCross';
 import i18next from 'i18next';
 import WhenActEarlyStack from './WhenActEarlyStack';
+import {trackDrawerSelect} from '../../utils/analytics';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
@@ -87,6 +88,8 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                     } else {
                       props.navigation.navigate(name);
                     }
+
+                    trackDrawerSelect(name);
                   }}>
                   <Text
                     style={[

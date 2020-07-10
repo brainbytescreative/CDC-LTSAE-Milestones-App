@@ -17,6 +17,7 @@ import {
   useSetRecommendationNotifications,
 } from './notificationsHooks';
 import {Answer, MilestoneAnswer} from './types';
+import {trackChecklistAnswer} from '../utils/analytics';
 
 // type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -249,6 +250,7 @@ export function useSetQuestionAnswer() {
   return useMutation<Answer | undefined, MilestoneAnswer>(
     async (variables) => {
       const {answer, childId, note, questionId, milestoneId} = variables;
+      answer && trackChecklistAnswer(answer);
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
       const prevAnswerRes = await sqLiteClient.dB?.executeSql(
         `

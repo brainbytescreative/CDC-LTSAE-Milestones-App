@@ -21,6 +21,7 @@ import AEScrollView from '../components/AEScrollView';
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
 import _ from 'lodash';
 import PurpleArc from '../components/Svg/PurpleArc';
+import {trackSelectByType, trackSelectLanguage} from '../utils/analytics';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -61,6 +62,7 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         value={field.value}
         onValueChange={(value) => {
           helpers.setValue(value);
+          value ? trackSelectByType('On') : trackSelectByType('Off');
         }}
         onText={t('onLabel')}
         offText={t('offLabel')}
@@ -172,7 +174,12 @@ const SettingsScreen: React.FC = () => {
                 ]}>
                 {t('common:appLanguage')}
               </Text>
-              <LanguageSelector style={{marginBottom: 40}} />
+              <LanguageSelector
+                onLanguageChange={(lng) => {
+                  trackSelectLanguage(lng);
+                }}
+                style={{marginBottom: 40}}
+              />
             </View>
           </View>
         </View>

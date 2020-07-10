@@ -32,6 +32,7 @@ import {Text} from 'react-native-paper';
 import _ from 'lodash';
 import AEYellowBox from '../../components/AEYellowBox';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {trackInteractionByType} from '../../utils/analytics';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();
@@ -48,11 +49,13 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           childId &&
           milestoneId &&
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
+        !concern?.answer && trackInteractionByType('Checked Act Early Item');
       };
 
   const saveNote = useRef(
     _.debounce((text: string) => {
       id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
+      trackInteractionByType('Add Act Early Note');
     }, 500),
   );
 

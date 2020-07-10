@@ -14,6 +14,7 @@ import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
 import {Answer} from '../../hooks/types';
 import withSuspense from '../../components/withSuspense';
+import {trackInteractionByType} from '../../utils/analytics';
 
 // const jsCode = `
 //
@@ -164,6 +165,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         childId &&
         milestoneId &&
         answerQuestion({questionId: id, answer: data?.answer, childId, note: text, milestoneId});
+      trackInteractionByType('Add Milestone Note');
     }, 500),
     [id, childId, milestoneId, data?.answer],
   );
@@ -207,6 +209,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                 <TouchableOpacity
                   accessibilityLabel={t('accessibility:previousButton')}
                   onPress={() => {
+                    trackInteractionByType('Scroll Photo');
                     const prevPage = page - 1 < 0 ? photo?.length - 1 : page - 1;
                     viewPagerRef?.current?.setPage(prevPage);
                   }}
@@ -223,6 +226,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                 <TouchableOpacity
                   accessibilityLabel={t('accessibility:nextButton')}
                   onPress={() => {
+                    trackInteractionByType('Scroll Photo');
                     const nextPage = page + 1 > mediaItems?.length - 1 ? 0 : page + 1;
                     viewPagerRef?.current?.setPage(nextPage);
                   }}

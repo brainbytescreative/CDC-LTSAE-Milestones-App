@@ -8,6 +8,7 @@ import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../ho
 import _ from 'lodash';
 import ChevronLeft from '../../components/Svg/ChevronLeft';
 import ChevronRight from '../../components/Svg/ChevronRight';
+import {trackSelectByType} from '../../utils/analytics';
 
 interface ItemProps {
   childAge: number;
@@ -30,6 +31,9 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
   return (
     <TouchableOpacity
       onPress={() => {
+        childAge < month
+          ? trackSelectByType('Previous Milestone Checklist Age')
+          : trackSelectByType('Future Milestone Checklist Age');
         onSelect && onSelect(month);
       }}>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>

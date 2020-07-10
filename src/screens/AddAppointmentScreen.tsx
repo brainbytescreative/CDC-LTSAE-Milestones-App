@@ -18,6 +18,7 @@ import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
 import PurpleArc from '../components/Svg/PurpleArc';
+import {trackInteractionByType} from '../utils/analytics';
 
 interface FormValues {
   apptType: string;
@@ -47,6 +48,8 @@ const AddAppointmentScreen: React.FC = () => {
       if (!values.date || !values.time) {
         throw new Error('Wrong date');
       }
+
+      trackInteractionByType('Completed Add Appointment');
 
       const dayStart = startOfDay(values.date);
       const seconds = differenceInSeconds(values.time, dayStart);
@@ -176,6 +179,7 @@ const AddAppointmentScreen: React.FC = () => {
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {
+                trackInteractionByType('Cancel');
                 navigation.goBack();
               }}
               style={{marginTop: 10, marginBottom: 30}}>

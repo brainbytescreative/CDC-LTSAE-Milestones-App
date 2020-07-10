@@ -26,6 +26,7 @@ import PurpleArc from '../../components/Svg/PurpleArc';
 import {differenceInWeeks, format} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
+import {trackSelectByType} from '../../utils/analytics';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -86,6 +87,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
               onPress={() => {
+                trackSelectByType('When to Act Early');
                 navigation.navigate('WhenActEarly');
               }}
               style={styles.actionItem}>
@@ -98,6 +100,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
               <TouchableOpacity
                 style={[{alignItems: 'center'}]}
                 onPress={() => {
+                  trackSelectByType('My Child Summary');
                   navigation.navigate('ChildSummary');
                 }}>
                 <MilestoneSummarySign />
@@ -109,6 +112,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             <View style={styles.actionItem}>
               <TouchableOpacity
                 onPress={() => {
+                  trackSelectByType('Tips');
                   navigation.navigate('TipsAndActivities');
                 }}
                 style={{alignItems: 'center'}}>
@@ -149,6 +153,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
               })}
               key={`appointment-${appt.id}`}
               onPress={() => {
+                trackSelectByType('Add Appointment');
                 navigation.navigate('Appointment', {
                   appointmentId: appt.id,
                 });

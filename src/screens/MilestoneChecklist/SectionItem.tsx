@@ -4,6 +4,7 @@ import {colors, Section, sharedStyle} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import _ from 'lodash';
+import {trackChecklistSectionSelect} from '../../utils/analytics';
 
 interface ItemProps {
   section: Section;
@@ -22,7 +23,8 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
     <TouchableOpacity
       disabled={!onSectionSet}
       onPress={() => {
-        onSectionSet && onSectionSet(section);
+        onSectionSet?.(section);
+        trackChecklistSectionSelect(section);
       }}
       style={{flex: 1, paddingBottom: 5}}>
       <View

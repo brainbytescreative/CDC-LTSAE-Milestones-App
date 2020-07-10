@@ -3,6 +3,7 @@ import {TouchableOpacity, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
 import {sharedStyle} from '../resources/constants';
+import {trackTopCancel, trackTopDone} from '../utils/analytics';
 
 interface Props {
   onCancel?: () => void;
@@ -14,11 +15,23 @@ const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone}) => {
   return (
     <View style={{flexDirection: 'row', marginHorizontal: 32, marginVertical: 10}}>
       {Boolean(onCancel) && (
-        <TouchableOpacity accessibilityRole={'button'} onPress={onCancel} style={{flexGrow: 1}}>
+        <TouchableOpacity
+          accessibilityRole={'button'}
+          onPress={() => {
+            onCancel?.();
+            trackTopCancel();
+          }}
+          style={{flexGrow: 1}}>
           <Text style={[sharedStyle.regularText]}>{t('common:cancel')}</Text>
         </TouchableOpacity>
       )}
-      <TouchableOpacity accessibilityRole={'button'} onPress={onDone} style={{flexGrow: 1, alignItems: 'flex-end'}}>
+      <TouchableOpacity
+        accessibilityRole={'button'}
+        onPress={() => {
+          onDone?.();
+          trackTopDone();
+        }}
+        style={{flexGrow: 1, alignItems: 'flex-end'}}>
         <Text style={[sharedStyle.regularText]}>{t('common:done')}</Text>
       </TouchableOpacity>
     </View>

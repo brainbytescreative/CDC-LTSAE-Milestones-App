@@ -14,6 +14,7 @@ import AEScrollView from '../../components/AEScrollView';
 import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
 import Chevron from '../../components/Svg/Chevron';
 import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
+import {trackInteractionByType} from '../../utils/analytics';
 
 const tipFilters = ['all', 'like', 'remindMe'];
 type TipType = typeof tipFilters[number];
@@ -74,6 +75,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
 
   const onRemindMePress = useCallback<NonNullable<PropType<ItemProps, 'onRemindMePress'>>>(
     (id, value) => {
+      trackInteractionByType('Remind Me');
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = (tips || []).filter(({id: tipId}) => id === tipId)[0];
@@ -90,6 +92,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
+    trackInteractionByType('Like');
     id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
     setHighlightedTip(undefined);
   };

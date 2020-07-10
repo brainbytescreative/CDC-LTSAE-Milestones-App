@@ -13,6 +13,7 @@ import {
 import ChevronLeft from '../Svg/ChevronLeft';
 import NotificationsListItem from './NotificationsListItem';
 import NotificationsBadgeCounter from './NotificationsBadgeCounter';
+import {trackInteractionByType, trackSelectByType} from '../../utils/analytics';
 
 const NotificationsBadge: React.FC = () => {
   const {bottom} = useSafeAreaInsets();
@@ -28,6 +29,7 @@ const NotificationsBadge: React.FC = () => {
   React.useLayoutEffect(() => {
     const onPress = () => {
       setIsVisible(!visible);
+      trackSelectByType('Notifications');
     };
     navigation.setOptions({
       ...sharedScreenOptions,
@@ -38,6 +40,7 @@ const NotificationsBadge: React.FC = () => {
   }, [navigation, visible]);
 
   const onCrossPress = (notificationId: string) => {
+    trackInteractionByType('Delete Appointment');
     setNotificationRead({notificationId});
   };
 

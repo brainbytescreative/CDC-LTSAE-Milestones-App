@@ -37,6 +37,7 @@ import _ from 'lodash';
 import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {Answer, MilestoneAnswer} from '../hooks/types';
+import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -105,7 +106,8 @@ const Item: React.FC<ItemProps> = ({
           <TouchableOpacity
             accessibilityRole={'button'}
             onPress={() => {
-              id && onEditAnswerPress && onEditAnswerPress(id, note);
+              trackSelectByType('Edit Answer');
+              id && onEditAnswerPress?.(id, note);
             }}>
             <Text style={{textDecorationLine: 'underline', fontSize: 12}}>{t('editAnswer')}</Text>
           </TouchableOpacity>
@@ -114,6 +116,7 @@ const Item: React.FC<ItemProps> = ({
           <TouchableOpacity
             accessibilityRole={'button'}
             onPress={() => {
+              trackSelectByType('Edit Note');
               setNote(note || '');
             }}>
             <Text
@@ -206,14 +209,14 @@ const ChildSummaryScreen: React.FC = () => {
           messageTextStyle: {...sharedStyle.regularText},
         },
         (index) => {
-          Object.values(Answer).includes(index) &&
-            child?.id &&
-            milestoneAge &&
+          if (Object.values(Answer).includes(index) && child?.id && milestoneAge) {
             answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
               () => {
                 refetch({force: true});
               },
             );
+            trackSelectSummary(index);
+          }
         },
       );
     },
@@ -355,7 +358,13 @@ const ChildSummaryScreen: React.FC = () => {
                 style={{marginTop: 10, marginBottom: 30}}>
                 {t('showDoctor')}
               </AEButtonRounded>
-              <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
+              <LanguageSelector
+                onLanguageChange={(lng) => {
+                  trackSelectLanguage(lng);
+                  return refetch({force: true});
+                }}
+                style={{marginHorizontal: 32}}
+              />
             </View>
           </View>
 

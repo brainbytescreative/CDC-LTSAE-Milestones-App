@@ -31,8 +31,22 @@ import AERadioButton from '../components/AERadioButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PurpleArc from '../components/Svg/PurpleArc';
 import PlusIcon from '../components/Svg/PlusIcon';
+import {
+  trackAddAnotherChild,
+  trackChildAddAPhoto,
+  trackChildAddChildName,
+  trackChildAge,
+  trackChildCompletedAddChildName,
+  trackChildCompletedAddPhoto,
+  trackChildCompletedChildDateOfBirth,
+  trackChildDone,
+  trackChildGender,
+  trackChildStartedChildDateOfBirth,
+  trackCompleteAddChild,
+} from '../utils/analytics';
 
 const options: ImagePickerOptions = {
+  noData: true,
   quality: 1.0,
   maxWidth: 500,
   maxHeight: 500,
@@ -63,8 +77,11 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
             accessibilityRole={'button'}
             accessibilityLabel={t('accessibility:addChildPhoto')}
             onPress={() => {
+              trackChildAddAPhoto();
               ImagePicker.showImagePicker(options, (response) => {
+                console.log('response.type', JSON.stringify(response, null, 2));
                 if (response.uri) {
+                  trackChildCompletedAddPhoto();
                   form.setFieldValue(field.name, response.uri);
                 }
                 console.log(response.uri);
@@ -94,6 +111,12 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
     <FastField name={name}>
       {({field, form}: FastFieldProps<string>) => (
         <AETextInput
+          onFocus={() => {
+            trackChildAddChildName();
+          }}
+          onBlur={() => {
+            trackChildCompletedAddChildName();
+          }}
           autoCorrect={false}
           value={field.value}
           onChangeText={form.handleChange(field.name) as any}
@@ -109,9 +132,15 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
     <FastField name={name}>
       {({field, form}: FastFieldProps<Date | undefined>) => (
         <DatePicker
+          onPress={() => {
+            trackChildStartedChildDateOfBirth();
+          }}
           value={field.value}
           label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => form.setFieldValue(name, date)}
+          onChange={(date) => {
+            trackChildCompletedChildDateOfBirth();
+            form.setFieldValue(name, date);
+          }}
         />
       )}
     </FastField>
@@ -216,6 +245,7 @@ const AddChildScreen: React.FC = () => {
       // navigation.navigate('Dashboard');
       navigation.goBack();
     }
+    trackChildDone();
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -240,14 +270,18 @@ const AddChildScreen: React.FC = () => {
         onSubmit={async (values) => {
           const childInput = {
             ...values.firstChild,
-            birthday: values.firstChild.birthday || new Date(),
+            birthday: values.firstChild.birthday!,
             gender: values.firstChild.gender || 0,
           };
 
           if (childId) {
             updateChild({...childInput, id: childId}).then();
           } else {
-            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then();
+            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then(() => {
+              trackCompleteAddChild();
+              trackChildAge(values.firstChild.birthday);
+              trackChildGender(Number(values.firstChild.gender));
+            });
           }
 
           const anotherChildren = values.anotherChildren ?? [];
@@ -257,7 +291,13 @@ const AddChildScreen: React.FC = () => {
               birthday: anotherChild.birthday!,
               gender: anotherChild.gender!,
             };
-            await addChild({data: otherInput, isAnotherChild: true}).catch(console.error);
+            await addChild({data: otherInput, isAnotherChild: true})
+              .then(() => {
+                trackCompleteAddChild();
+                trackChildAge(anotherChild.birthday);
+                trackChildGender(Number(anotherChild.gender));
+              })
+              .catch(console.error);
           }
         }}>
         {(formikProps) => (
@@ -329,6 +369,7 @@ const AddChildScreen: React.FC = () => {
                           disabled={isLoading || !formikProps.isValid}
                           style={{marginVertical: 0}}
                           onPress={() => {
+                            trackAddAnotherChild();
                             arrayHelpers.push({
                               name: '',
                             });

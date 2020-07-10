@@ -27,6 +27,7 @@ import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
+import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
@@ -70,7 +71,10 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
         {
           text: t('dialog:yes'),
           style: 'default',
-          onPress: () => deleteChild({id}),
+          onPress: () => {
+            trackSelectByType('Delete', {page: 'Child Dropdown Page'});
+            deleteChild({id});
+          },
         },
       ],
       {cancelable: false},
@@ -94,6 +98,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
       ListFooterComponent={
         <ChildSectorFooter
           onPress={() => {
+            trackSelectByType('Add Child', {page: 'Child Dropdown Page'});
             onEdit();
           }}
         />
@@ -174,7 +179,11 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   };
 
   const onSelect = (id?: number) => {
-    id && selectChild({id});
+    if (id) {
+      selectChild({id});
+      trackSelectChild(id);
+    }
+
     setChildSelectorVisible(false);
   };
 
