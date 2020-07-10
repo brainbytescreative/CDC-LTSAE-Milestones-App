@@ -135,6 +135,7 @@ type InteractionType =
   | 'Add Act Early Note'
   | 'Next Section'
   | 'Next'
+  | 'Play Video'
   | 'Back'
   | 'Cancel'
   | 'Like'
@@ -146,14 +147,16 @@ type InteractionType =
   | 'Start Add Appointment'
   | 'Completed Add Appointment'
   | 'Checked Act Early Item'
-  | 'Started Social Milestones' // fixme
-  | 'Completed Social Milestones' // fixme
-  | 'Started Language Milestones' // fixme
-  | 'Completed Language Milestones' // fixme
-  | 'Started Cognitive Milestones' // fixme
-  | 'Completed Cognitive Milestones' // fixme
-  | 'Started Movement Milestones' // fixme
-  | 'Completed Movement Milestones'; // fixme
+  | 'Started Social Milestones'
+  | 'Completed Social Milestones'
+  | 'Started Language Milestones'
+  | 'Completed Language Milestones'
+  | 'Started Cognitive Milestones'
+  | 'Completed Cognitive Milestones'
+  | 'Started Movement Milestones'
+  | 'Completed Movement Milestones'
+  | 'Started When to Act Early'
+  | 'Completed When to Act Early';
 
 export function trackInteractionByType(type: InteractionType) {
   trackState(`Interaction: ${type}`);
@@ -176,6 +179,10 @@ const AnswerToText = ['Yes', 'Not Sure', 'Not Yet'];
 
 export function trackChecklistAnswer(answer: Answer) {
   trackState(`Answer: ${AnswerToText[answer]}`);
+}
+
+export function trackChecklistUnanswered() {
+  trackState('Answer: Unanswered');
 }
 
 export function trackSelectSummary(answer: Answer) {

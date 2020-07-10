@@ -25,9 +25,8 @@ import ViewPager from '@react-native-community/viewpager';
 import withSuspense from '../../components/withSuspense';
 import {useQuery} from 'react-query';
 import {slowdown} from '../../utils/helpers';
-import {ACPCore} from '@adobe/react-native-acpcore';
 import _ from 'lodash';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -58,14 +57,15 @@ const MilestoneChecklistScreen: React.FC<{
 
   useFocusEffect(
     React.useCallback(() => {
+      gotStarted && trackInteractionByType('Started Social Milestones');
       return () => {
         if (unansweredData && !_.isEmpty(unansweredData)) {
-          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
-          ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
+          trackChecklistUnanswered();
+          // const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
+          // ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
         }
-        gotStarted && trackInteractionByType('Started Social Milestones');
       };
-    }, [unansweredData, t, gotStarted]),
+    }, [unansweredData, gotStarted]),
   );
 
   const flatListRef = useRef<FlatList>(null);
@@ -118,6 +118,7 @@ const MilestoneChecklistScreen: React.FC<{
         trackInteractionByType('Started Movement Milestones');
         break;
       case 'actEarly':
+        trackInteractionByType('Started When to Act Early');
         break;
     }
   };

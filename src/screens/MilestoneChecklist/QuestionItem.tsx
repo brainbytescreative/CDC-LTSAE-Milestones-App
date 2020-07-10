@@ -78,9 +78,12 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onStateChange(event){
-    if (event.data === YT.PlayerState.ENDED) {
+    if (event.data === 0) {
         player.seekTo(0);
         player.stopVideo();
+    }
+    if (event.data === 1){
+     window.ReactNativeWebView.postMessage("PLAYING"); 
     }
 }
 window.onresize = function() {
@@ -119,7 +122,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       }
       return (
         <WebView
-          onShouldStartLoadWithRequest={() => true}
+          onMessage={(event) => {
+            event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
+          }}
           originWhitelist={['*']}
           allowsInlineMediaPlayback={true}
           key={`video-${item.name}`}

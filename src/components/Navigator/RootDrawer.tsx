@@ -166,6 +166,7 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'WhenToActEarly'}
         options={{
+          unmountOnBlur: true,
           drawerLabel: t('milestoneChecklist:whenToActEarly'),
         }}
         component={WhenActEarlyStack}

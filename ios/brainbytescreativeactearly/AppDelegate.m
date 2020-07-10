@@ -42,7 +42,7 @@ static void InitializeFlipper(UIApplication *application) {
 #if DEBUG
   InitializeFlipper(application);
 #endif
-//  [ACPCore setLogLevel:ACPMobileLogLevelVerbose];
+  [ACPCore setLogLevel:ACPMobileLogLevelVerbose];
   [ACPCore configureWithAppId:@"b36c1852e229/039962c157f4/launch-b9889b425fcc-development"];
   [ACPCore setWrapperType:ACPMobileWrapperTypeReactNative];
   [ACPAnalytics registerExtension];

@@ -63,6 +63,13 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
     !isFetching && setNote(concern?.note || '');
   }, [concern, isFetching]);
 
+  useEffect(() => {
+    trackInteractionByType('Started When to Act Early');
+    return () => {
+      trackInteractionByType('Completed When to Act Early');
+    };
+  }, []);
+
   return (
     <View>
       <View style={[itemStyles.container, sharedStyle.shadow]}>
