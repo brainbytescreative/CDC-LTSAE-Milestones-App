@@ -49,13 +49,13 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           childId &&
           milestoneId &&
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
-        !concern?.answer && trackInteractionByType('Checked Act Early Item');
+        !concern?.answer && trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
       };
 
   const saveNote = useRef(
     _.debounce((text: string) => {
       id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
-      trackInteractionByType('Add Act Early Note');
+      trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
     }, 500),
   );
 
@@ -64,9 +64,9 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
   }, [concern, isFetching]);
 
   useEffect(() => {
-    trackInteractionByType('Started When to Act Early');
+    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
     return () => {
-      trackInteractionByType('Completed When to Act Early');
+      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
     };
   }, []);
 

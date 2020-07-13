@@ -8,6 +8,7 @@ import {milestonesIds, missingConcerns, PropType, tooYongAgeDays} from '../resou
 import {sqLiteClient} from '../db';
 import {Answer} from '../hooks/types';
 import {AppointmentDb} from '../hooks/appointmentsHooks';
+import {NavigationContainerProps} from '@react-navigation/native';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -172,3 +173,17 @@ export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 
     },
   ],
 });
+
+type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];
+
+// Gets the current screen from navigation state
+export const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
+  const route = state?.routes[state.index];
+
+  if (route?.state) {
+    // Dive into nested navigators
+    return getActiveRouteName(route.state as any);
+  }
+
+  return route?.name;
+};
