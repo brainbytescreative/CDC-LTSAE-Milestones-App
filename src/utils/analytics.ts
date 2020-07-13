@@ -73,7 +73,7 @@ export function trackState(key: string, options?: {page?: PageType; eventname?: 
   const screenName =
     currentScreen.currentRouteName ?? getActiveRouteName(currentScreen.navigation?.current?.getRootState());
   const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
-  console.log('<<<', pageName, `,key: ${key}`);
+  // console.log('<<<', pageName, `,key: ${key}`);
 
   ACPCore.trackState(key, {
     'gov.cdc.appname': 'CDC Health IQ',
