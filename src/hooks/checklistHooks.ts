@@ -363,6 +363,7 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
     },
     {
       staleTime: 0,
+      suspense: true,
     },
   );
 }

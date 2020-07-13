@@ -1,9 +1,9 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
+import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {colors, Section, sharedStyle, skillTypes} from '../../resources/constants';
 import AEScrollView from '../../components/AEScrollView';
@@ -18,11 +18,19 @@ interface Props {
   section?: Section;
 }
 
+type OverviewItems = {value: string | undefined}[];
+type OverviewMap = Map<string, OverviewItems>;
+
 const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section = skillTypes[0], milestoneAge}) => {
   const {t} = useTranslation('milestoneChecklist');
-  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
+  const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped! as OverviewMap;
   const {bottom} = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
+  const concerns = useGetConcerns().data!.concerns! as OverviewItems;
+
+  useEffect(() => {
+    questionsGrouped.set('actEarly', concerns);
+  }, [concerns, questionsGrouped]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -30,7 +38,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
     }, []),
   );
 
-  const isBirthday: boolean = !!milestoneAge && milestoneAge % 12 === 0;
+  const isBirthday: boolean = Number(milestoneAge) % 12 === 0;
 
   return (
     <AEScrollView innerRef={scrollViewRef}>

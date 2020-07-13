@@ -27,9 +27,9 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   // const {data: {id: childId} = {}} = useGetCurrentChild();
   const onSectionSet = (val: Section) => {
-    if (val !== 'actEarly') {
-      setSection(val);
-    }
+    // if (val !== 'actEarly') {
+    setSection(val);
+    // }
   };
 
   return (
