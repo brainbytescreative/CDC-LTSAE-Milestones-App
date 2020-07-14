@@ -259,6 +259,8 @@ const AddChildScreen: React.FC = () => {
     scrollViewRef.current?.scrollToEnd();
   }, [scrollViewRef]);
 
+  const canSubmit = isLoading || !formikRef.current?.isValid;
+
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <Formik
@@ -307,7 +309,11 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              <CancelDoneTopControl onCancel={route.params?.onboarding ? undefined : onCancel} onDone={onDone} />
+              <CancelDoneTopControl
+                disabled={canSubmit}
+                onCancel={route.params?.onboarding ? undefined : onCancel}
+                onDone={onDone}
+              />
               <Text
                 adjustsFontSizeToFit
                 style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
@@ -366,7 +372,7 @@ const AddChildScreen: React.FC = () => {
                     <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
                       <View style={{marginTop: 50}}>
                         <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
+                          disabled={canSubmit}
                           style={{marginVertical: 0}}
                           onPress={() => {
                             trackAddAnotherChild();
@@ -376,10 +382,7 @@ const AddChildScreen: React.FC = () => {
                           }}>
                           {t('addAnotherChild').toUpperCase()}
                         </AEButtonRounded>
-                        <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
-                          style={{marginBottom: 24}}
-                          onPress={onDone}>
+                        <AEButtonRounded disabled={canSubmit} style={{marginBottom: 24}} onPress={onDone}>
                           {t('common:done').toUpperCase()}
                         </AEButtonRounded>
                       </View>

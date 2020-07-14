@@ -2,15 +2,16 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native-paper';
-import {sharedStyle} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import {trackTopCancel, trackTopDone} from '../utils/analytics';
 
 interface Props {
   onCancel?: () => void;
   onDone?: () => void;
+  disabled?: boolean;
 }
 
-const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone}) => {
+const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone, disabled = false}) => {
   const {t} = useTranslation();
   return (
     <View style={{flexDirection: 'row', marginHorizontal: 32, marginVertical: 10}}>
@@ -26,13 +27,16 @@ const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone}) => {
         </TouchableOpacity>
       )}
       <TouchableOpacity
+        disabled={disabled}
         accessibilityRole={'button'}
         onPress={() => {
           onDone?.();
           trackTopDone();
         }}
         style={{flexGrow: 1, alignItems: 'flex-end'}}>
-        <Text style={[sharedStyle.regularText]}>{t('common:done')}</Text>
+        <Text style={[sharedStyle.regularText, {color: disabled ? colors.gray : colors.black}]}>
+          {t('common:done')}
+        </Text>
       </TouchableOpacity>
     </View>
   );
