@@ -324,16 +324,15 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
         queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
       });
 
-      const concernsData: Concern[] = _.chain(milestoneChecklist)
-        .find({id: milestoneAge})
-        .get('concerns')
-        .map((item) => {
-          return {
-            ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
-          };
-        })
-        .value();
+      const concernsData: Concern[] =
+        milestoneChecklist
+          .filter((value) => value.id === milestoneAge)[0]
+          ?.concerns?.map((item) => {
+            return {
+              ...item,
+              value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
+            };
+          }) ?? [];
 
       const answeredIds = answers?.map((value) => value.concernId);
 
