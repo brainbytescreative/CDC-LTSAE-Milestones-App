@@ -103,10 +103,6 @@ export function trackSelectLanguage(lng: LangCode) {
   trackState(`Select: Language: ${lngDescr[language]}`);
 }
 
-export function trackHowToUseApp() {
-  trackState('Select: How to Use App');
-}
-
 export function trackTopCancel(options?: OptionsType) {
   trackState('Select: Cancel', options);
 }

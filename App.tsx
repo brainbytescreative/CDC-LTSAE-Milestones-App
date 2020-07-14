@@ -25,7 +25,13 @@ import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
-import {currentScreen, trackInteractionByType, trackStartAddChild, trackState} from './src/utils/analytics';
+import {
+  currentScreen,
+  trackInteractionByType,
+  trackSelectByType,
+  trackStartAddChild,
+  trackState,
+} from './src/utils/analytics';
 import {getActiveRouteName} from './src/utils/helpers';
 
 enableScreens();
@@ -110,6 +116,9 @@ const App = () => {
                 if (previousRouteName !== currentRouteName && currentRouteName) {
                   // trackCurrentScreen(currentRouteName);
                   switch (currentRouteName) {
+                    case 'OnboardingHowToUse':
+                      trackSelectByType('How to Use App');
+                      break;
                     case 'OnboardingParentProfile':
                       trackState('Interaction: Parent/Caregiver Profile: Started');
                       break;

@@ -94,6 +94,7 @@ export type SelectEventType =
   | "Email Child's Summary"
   | 'Delete'
   | 'Dashboard'
+  | 'How to Use App'
   | 'Add Child'
   | 'Add Appointment'
   | 'Milestone Checklist'
