@@ -1,9 +1,23 @@
 import React, {Suspense, useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
+import {
+  ChildResult,
+  useDeleteChild,
+  useGetChildren,
+  useGetCurrentChild,
+  useSetSelectedChild,
+} from '../../hooks/childrenHooks';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
@@ -12,6 +26,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChildSelectorsItem from './ChildSelectorsItem';
 import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
+import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
@@ -20,14 +36,17 @@ type DashboardScreenNavigationProp = CompositeNavigationProp<
 
 const ChildName: React.FC = () => {
   const {data: selectedChild} = useGetCurrentChild();
+  const {t} = useTranslation();
   return (
     <Text
+      accessibilityLabel={t('accessibility:childName', {name: selectedChild?.name})}
       numberOfLines={1}
-      style={{
-        fontSize: 22,
-        textAlign: 'center',
-        fontFamily: 'Montserrat-Bold',
-      }}>
+      style={[
+        {
+          textAlign: 'center',
+        },
+        sharedStyle.largeBoldText,
+      ]}>
       {selectedChild?.name}
     </Text>
   );
@@ -39,24 +58,47 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
 }) => {
   const {data: children} = useGetChildren({suspense: true});
   const [deleteChild] = useDeleteChild();
+  const {t} = useTranslation();
+  const onDelete = (id: ChildResult['id'], name: ChildResult['name']) => {
+    Alert.alert(
+      '',
+      t('dialog:deleteMessage', {subject: ` ${name}`}),
+      [
+        {
+          text: t('dialog:no'),
+          style: 'cancel',
+        },
+        {
+          text: t('dialog:yes'),
+          style: 'default',
+          onPress: () => {
+            trackSelectByType('Delete', {page: 'Child Dropdown Page'});
+            deleteChild({id});
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <FlatList
       data={children}
-      renderItem={({item}) => (
-        <ChildSelectorsItem
-          {...item}
-          onSelect={onSelect}
-          onEdit={onEdit}
-          onDelete={(id) => {
-            deleteChild({id});
-          }}
-        />
-      )}
+      renderItem={({item}) => {
+        return (
+          <ChildSelectorsItem
+            {...item}
+            onSelect={onSelect}
+            onEdit={onEdit}
+            onDelete={Number(children?.length) > 1 ? onDelete : undefined}
+          />
+        );
+      }}
       keyExtractor={(item) => `${item.id}`}
       ListFooterComponent={
         <ChildSectorFooter
           onPress={() => {
+            trackSelectByType('Add Child', {page: 'Child Dropdown Page'});
             onEdit();
           }}
         />
@@ -84,17 +126,19 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
       headerTitle: () => {
         return (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => setChildSelectorVisible(!childSelectorVisible)}
             style={{
               // flex: 1,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              minHeight: 50,
             }}>
             <Suspense fallback={<ActivityIndicator size={'small'} />}>
               <ChildName />
             </Suspense>
-            <EvilIcons name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
+            <EvilIcons accessibilityLabel={''} name={childSelectorVisible ? 'chevron-up' : 'chevron-down'} size={30} />
           </TouchableOpacity>
         );
       },
@@ -135,7 +179,11 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   };
 
   const onSelect = (id?: number) => {
-    id && selectChild({id});
+    if (id) {
+      selectChild({id});
+      trackSelectChild(id);
+    }
+
     setChildSelectorVisible(false);
   };
 
@@ -144,6 +192,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
       <NotificationsBadge />
       <Modal animated animationType={'fade'} transparent visible={childSelectorVisible}>
         <TouchableWithoutFeedback
+          accessible={false}
           onPressIn={() => {
             setChildSelectorVisible(false);
           }}>

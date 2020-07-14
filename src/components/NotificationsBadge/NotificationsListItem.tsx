@@ -54,10 +54,22 @@ const NotificationsListItem: React.FC<{
         </View>
 
         <TouchableOpacity
+          accessibilityRole={'button'}
+          accessibilityLabel={t('accessibility:close')}
           onPress={() => {
             onCrossPress(item.notificationId);
           }}>
-          <CloseCross />
+          <View
+            style={{
+              right: -16,
+              minWidth: 45,
+              minHeight: 45,
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <CloseCross />
+          </View>
         </TouchableOpacity>
       </View>
     </>

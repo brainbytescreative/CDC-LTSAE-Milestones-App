@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {
+  Alert,
   Image,
   Linking,
   ScrollView,
@@ -30,8 +31,22 @@ import AERadioButton from '../components/AERadioButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PurpleArc from '../components/Svg/PurpleArc';
 import PlusIcon from '../components/Svg/PlusIcon';
+import {
+  trackAddAnotherChild,
+  trackChildAddAPhoto,
+  trackChildAddChildName,
+  trackChildAge,
+  trackChildCompletedAddChildName,
+  trackChildCompletedAddPhoto,
+  trackChildCompletedChildDateOfBirth,
+  trackChildDone,
+  trackChildGender,
+  trackChildStartedChildDateOfBirth,
+  trackCompleteAddChild,
+} from '../utils/analytics';
 
 const options: ImagePickerOptions = {
+  noData: true,
   quality: 1.0,
   maxWidth: 500,
   maxHeight: 500,
@@ -59,9 +74,14 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
       <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
         <View style={[sharedStyle.shadow]}>
           <TouchableOpacity
+            accessibilityRole={'button'}
+            accessibilityLabel={t('accessibility:addChildPhoto')}
             onPress={() => {
+              trackChildAddAPhoto();
               ImagePicker.showImagePicker(options, (response) => {
+                console.log('response.type', JSON.stringify(response, null, 2));
                 if (response.uri) {
+                  trackChildCompletedAddPhoto();
                   form.setFieldValue(field.name, response.uri);
                 }
                 console.log(response.uri);
@@ -80,7 +100,7 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
             )}
           </TouchableOpacity>
         </View>
-        <Text style={{marginTop: 10, fontSize: 15}}>{t('addPhoto')}</Text>
+        <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
       </View>
     )}
   </FastField>
@@ -91,6 +111,12 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
     <FastField name={name}>
       {({field, form}: FastFieldProps<string>) => (
         <AETextInput
+          onFocus={() => {
+            trackChildAddChildName();
+          }}
+          onBlur={() => {
+            trackChildCompletedAddChildName();
+          }}
           autoCorrect={false}
           value={field.value}
           onChangeText={form.handleChange(field.name) as any}
@@ -106,9 +132,15 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
     <FastField name={name}>
       {({field, form}: FastFieldProps<Date | undefined>) => (
         <DatePicker
+          onPress={() => {
+            trackChildStartedChildDateOfBirth();
+          }}
           value={field.value}
           label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => form.setFieldValue(name, date)}
+          onChange={(date) => {
+            trackChildCompletedChildDateOfBirth();
+            form.setFieldValue(name, date);
+          }}
         />
       )}
     </FastField>
@@ -148,7 +180,7 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
 };
 
 const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps, 'onPress'>> = ({t, onPress}) => (
-  <TouchableWithoutFeedback onPress={onPress}>
+  <TouchableWithoutFeedback onPress={onPress} accessibilityRole={'button'}>
     <View style={[styles.prematureTip, sharedStyle.shadow]}>
       <Text
         numberOfLines={1}
@@ -213,6 +245,7 @@ const AddChildScreen: React.FC = () => {
       // navigation.navigate('Dashboard');
       navigation.goBack();
     }
+    trackChildDone();
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -234,30 +267,38 @@ const AddChildScreen: React.FC = () => {
         innerRef={(ref) => (formikRef.current = ref)}
         validateOnChange
         validateOnMount
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           const childInput = {
             ...values.firstChild,
-            birthday: values.firstChild.birthday || new Date(),
+            birthday: values.firstChild.birthday!,
             gender: values.firstChild.gender || 0,
           };
 
           if (childId) {
             updateChild({...childInput, id: childId}).then();
           } else {
-            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then();
+            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then(() => {
+              trackCompleteAddChild();
+              trackChildAge(values.firstChild.birthday);
+              trackChildGender(Number(values.firstChild.gender));
+            });
           }
 
-          Promise.all(
-            values.anotherChildren?.map((item) => {
-              const otherInput = {
-                ...item,
-                birthday: item.birthday || new Date(),
-                gender: item.gender || 0,
-              };
-
-              return addChild({data: otherInput, isAnotherChild: true});
-            }) || [],
-          );
+          const anotherChildren = values.anotherChildren ?? [];
+          for (const anotherChild of anotherChildren) {
+            const otherInput = {
+              ...anotherChild,
+              birthday: anotherChild.birthday!,
+              gender: anotherChild.gender!,
+            };
+            await addChild({data: otherInput, isAnotherChild: true})
+              .then(() => {
+                trackCompleteAddChild();
+                trackChildAge(anotherChild.birthday);
+                trackChildGender(Number(anotherChild.gender));
+              })
+              .catch(console.error);
+          }
         }}>
         {(formikProps) => (
           <View style={{backgroundColor: colors.iceCold, paddingTop: top, flex: 1}}>
@@ -266,7 +307,7 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              <CancelDoneTopControl onCancel={onCancel} onDone={onDone} />
+              <CancelDoneTopControl onCancel={route.params?.onboarding ? undefined : onCancel} onDone={onDone} />
               <Text
                 adjustsFontSizeToFit
                 style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
@@ -294,6 +335,29 @@ const AddChildScreen: React.FC = () => {
                         <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
                         <PrematureTip t={t} onPress={onPrematureTipPress} />
                         <GenderField t={t} name={`anotherChildren.${index}.gender`} />
+                        <AEButtonRounded
+                          contentStyle={{backgroundColor: colors.apricot}}
+                          onPress={() => {
+                            Alert.alert(
+                              '',
+                              t('dialog:deleteMessage', {subject: ''}),
+                              [
+                                {
+                                  text: t('dialog:no'),
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: t('dialog:yes'),
+                                  style: 'default',
+                                  onPress: () => arrayHelpers.remove(index),
+                                },
+                              ],
+                              {cancelable: false},
+                            );
+                          }}
+                          style={{marginHorizontal: 0}}>
+                          {t('common:delete')}
+                        </AEButtonRounded>
                       </>
                     ))}
                   </View>
@@ -305,6 +369,7 @@ const AddChildScreen: React.FC = () => {
                           disabled={isLoading || !formikProps.isValid}
                           style={{marginVertical: 0}}
                           onPress={() => {
+                            trackAddAnotherChild();
                             arrayHelpers.push({
                               name: '',
                             });
@@ -325,6 +390,7 @@ const AddChildScreen: React.FC = () => {
                         ]}>
                         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
                         <Text
+                          accessibilityRole={'link'}
                           onPress={() => Linking.openURL(t('correctedAgeLink'))}
                           style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
                           {t('noteClick')}

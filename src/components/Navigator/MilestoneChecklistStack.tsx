@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator, StackNavigationProp} from '@react-navigation/stack';
+import {createStackNavigator, StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
 import BurgerButton from '../BurgerButton';
@@ -11,6 +11,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
 import {useTranslation} from 'react-i18next';
+import {trackInteractionByType} from '../../utils/analytics';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 
@@ -58,11 +59,21 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
       <Stack.Screen
         name={'ChildSummary'}
         component={ChildSummaryScreen}
-        options={() => ({
+        options={(screenProps) => ({
           headerStyle: {
             backgroundColor: colors.iceCold,
           },
           headerBackTitle: ' ',
+          headerLeft: () => (
+            <HeaderBackButton
+              tintColor={colors.black}
+              label={' '}
+              onPress={() => {
+                trackInteractionByType('Back');
+                screenProps.navigation?.goBack?.();
+              }}
+            />
+          ),
         })}
       />
       <Stack.Screen

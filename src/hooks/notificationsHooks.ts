@@ -42,9 +42,9 @@ export interface NotificationDB {
   childName: string | null;
 }
 
-interface NotificationResult extends Omit<NotificationDB, 'fireDateTimestamp'> {
-  fireDateTimestamp: Date;
-}
+// interface NotificationResult extends Omit<NotificationDB, 'fireDateTimestamp'> {
+//   fireDateTimestamp: Date;
+// }
 
 interface MilestoneNotificationsPayload {
   child: ChildResult;
@@ -120,7 +120,7 @@ function completeMilestoneReminderTrigger() {
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
 function tipsAndActivitiesTrigger() {
-  return add(new Date(), {seconds: 5});
+  return add(new Date(), __DEV__ ? {seconds: 5} : {weeks: 1});
 }
 
 /**
@@ -177,7 +177,7 @@ export function useSetMilestoneNotifications() {
 
   return useMutation<void, MilestoneNotificationsPayload>(
     async (variables) => {
-      const years = Array.from(new Array(5)).map((value, index) => index);
+      const years = Array.from(new Array(5)).map((value, index) => index + 1);
       const queriesParams = years.map((value) => {
         const milestoneId = value ? value * 12 : milestonesIds[0];
         const at8am = getMilestoneOnBirthDayTrigger({birthday: variables.child.birthday, years: value});
@@ -398,7 +398,7 @@ const scheduleNotifications = async (t: TFunction) => {
       `
       SELECT *, ch.gender 'childGender', ch.name 'childName'
        FROM notifications
-      LEFT JOIN children ch ON ch.id = notifications.childId
+      INNER JOIN children ch ON ch.id = notifications.childId
        WHERE fireDateTimestamp > ?1
          AND notificationRead <> 1   
          AND notificationCategoryType IN (${activeNotifications.join(',')})
@@ -534,7 +534,7 @@ export function useGetUnreadNotifications() {
         `
                   SELECT notifications.*, ch.gender 'childGender', ch.name 'childName'
                   FROM notifications
-                  LEFT JOIN children ch ON ch.id = childId
+                           INNER JOIN children ch ON ch.id = childId
                   WHERE fireDateTimestamp <= ?1
                     AND notificationRead <> 1
                   ORDER BY fireDateTimestamp DESC
@@ -749,7 +749,7 @@ export function useSetWellChildCheckUpAppointments() {
         notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
         fireDateTimestamp: getWellCheckUpTrigger({milestoneId: value, birthday: child.birthday}),
         body: 'notifications:wellCheckUp5DaysAfterBirthday',
-        milestoneId: null,
+        milestoneId: Math.abs(value),
       }));
 
       const series = [...noCheckListData, ...screeningReminders1Data, ...screeningReminders2Data, ...before2WeeksData];
@@ -826,7 +826,13 @@ export function useNavigateNotification() {
         case NotificationCategory.TipsAndActivities: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          navigator.navigate('TipsAndActivitiesStack');
+          // navigator.navigate('TipsAndActivitiesStack');
+          navigator.navigate('TipsAndActivitiesStack', {
+            screen: 'TipsAndActivities',
+            params: {
+              notificationId: notificationData?.notificationId,
+            },
+          });
           break;
         }
         case NotificationCategory.Milestone:

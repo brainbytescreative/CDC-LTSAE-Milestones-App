@@ -4,6 +4,7 @@ import {sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import DropDownPicker from './DropDownPicker';
 import Chevron from './Svg/Chevron';
+import {trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 
 export interface ParentProfileSelectorValues {
   territory: string | undefined | null;
@@ -45,6 +46,7 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
         zIndex={1100}
         style={[sharedStyle.shadow]}
         onChangeItem={(item) => {
+          trackSelectProfile(String(item.label));
           onChange({guardian: item.value, territory: value?.territory});
         }}
       />
@@ -63,7 +65,10 @@ const ParentProfileSelector: React.FC<Props> = ({onChange, value}) => {
         dropDownMaxHeight={140}
         value={value?.territory}
         zIndex={1000}
-        onChangeItem={(item) => onChange({guardian: value?.guardian, territory: item.value})}
+        onChangeItem={(item) => {
+          trackSelectTerritory(String(item.label));
+          onChange({guardian: value?.guardian, territory: item.value});
+        }}
       />
     </>
   );

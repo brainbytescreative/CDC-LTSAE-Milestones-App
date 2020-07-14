@@ -29,9 +29,17 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
         <Text style={[sharedStyle.screenTitle]}>{t('aboutThisApp')}</Text>
         <Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>
           <Trans t={t} i18nKey={'aboutThisAppText'}>
-            <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
+            <Text
+              accessibilityRole={'link'}
+              onPress={() => Linking.openURL(t('actEarlyLink'))}
+              style={{textDecorationLine: 'underline'}}
+            />
             <Text style={sharedStyle.boldText} />
-            <Text onPress={() => Linking.openURL(t('actEarlyLink'))} style={{textDecorationLine: 'underline'}} />
+            <Text
+              accessibilityRole={'link'}
+              onPress={() => Linking.openURL(t('actEarlyLink'))}
+              style={{textDecorationLine: 'underline'}}
+            />
           </Trans>
         </Text>
         <View style={styles.logosRow}>

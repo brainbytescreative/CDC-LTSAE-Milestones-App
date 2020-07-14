@@ -14,12 +14,13 @@ import MilestoneChecklistStack from './MilestoneChecklistStack';
 import CloseCross from '../Svg/CloseCross';
 import i18next from 'i18next';
 import WhenActEarlyStack from './WhenActEarlyStack';
+import {trackDrawerSelect} from '../../utils/analytics';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
 const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
   // const navigation = useNavigation<DrawerNavigationProp<DashboardDrawerParamsList>>();
-
+  const {t} = useTranslation();
   return (
     <DrawerContentScrollView {...props}>
       <SafeAreaView>
@@ -47,6 +48,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
               {i18next.t('common:menu')}
             </Text>
             <TouchableOpacity
+              accessibilityLabel={t('accessibility:closeMainMenu')}
               style={{
                 position: 'absolute',
                 right: 0,
@@ -78,6 +80,7 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                   sharedStyle.shadow,
                 ]}>
                 <TouchableOpacity
+                  accessibilityRole={'menuitem'}
                   style={{paddingHorizontal: 16, paddingVertical: 12}}
                   onPress={() => {
                     if (params?.redirect) {
@@ -85,6 +88,8 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                     } else {
                       props.navigation.navigate(name);
                     }
+
+                    trackDrawerSelect(name);
                   }}>
                   <Text
                     style={[
@@ -146,6 +151,7 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'TipsAndActivitiesStack'}
         options={{
+          unmountOnBlur: true,
           drawerLabel: t('tipsAndActivities:drawerLabel'),
         }}
         component={TipsAndActivitiesStack}
@@ -160,6 +166,7 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'WhenToActEarly'}
         options={{
+          unmountOnBlur: true,
           drawerLabel: t('milestoneChecklist:whenToActEarly'),
         }}
         component={WhenActEarlyStack}

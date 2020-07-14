@@ -9,7 +9,7 @@ interface Props extends TouchableWithoutFeedbackProps {
 
 const ButtonWithChevron: React.FC<Props> = ({children, containerStyle, ...props}) => {
   return (
-    <TouchableWithoutFeedback {...props}>
+    <TouchableWithoutFeedback {...props} accessibilityRole={'button'}>
       <View
         style={[
           {

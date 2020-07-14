@@ -1,15 +1,22 @@
 import React from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import BabyPlaceholder from './Svg/BabyPlaceholder';
+import {useTranslation} from 'react-i18next';
 
 const ChildPhoto: React.FC<{photo?: string; style?: StyleProp<ViewStyle>}> = ({photo, style}) => {
+  const {t} = useTranslation();
   return (
-    <View style={[{alignItems: 'center', marginTop: 16, marginBottom: 25}, style]}>
+    <View accessible={true} style={[{alignItems: 'center', marginTop: 16, marginBottom: 25}, style]}>
       <View style={styles.image}>
         {photo ? (
           <Image style={{width: '100%', height: '100%', borderRadius: 500}} source={{uri: photo}} />
         ) : (
-          <BabyPlaceholder width={'90%'} height={'90%'} />
+          <BabyPlaceholder
+            accessibilityRole={'image'}
+            accessibilityLabel={t('accessibility:childPhotoPlaceholder')}
+            width={'90%'}
+            height={'90%'}
+          />
         )}
       </View>
     </View>

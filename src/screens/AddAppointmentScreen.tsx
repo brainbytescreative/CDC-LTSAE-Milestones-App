@@ -15,9 +15,10 @@ import {colors} from '../resources/constants';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import AETextInput from '../components/AETextInput';
 import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import AEKeyboardAvoidingView from '../AEKeyboardAvoidingView';
+import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
 import PurpleArc from '../components/Svg/PurpleArc';
+import {trackInteractionByType} from '../utils/analytics';
 
 interface FormValues {
   apptType: string;
@@ -47,6 +48,8 @@ const AddAppointmentScreen: React.FC = () => {
       if (!values.date || !values.time) {
         throw new Error('Wrong date');
       }
+
+      trackInteractionByType('Completed Add Appointment');
 
       const dayStart = startOfDay(values.date);
       const seconds = differenceInSeconds(values.time, dayStart);
@@ -174,7 +177,14 @@ const AddAppointmentScreen: React.FC = () => {
             <AEButtonRounded disabled={disabled} onPress={formik.handleSubmit} style={{marginBottom: 0}}>
               {apptId ? t('common:done') : t('title')}
             </AEButtonRounded>
-            <AEButtonRounded style={{marginTop: 10, marginBottom: 30}}>{t('common:cancel')}</AEButtonRounded>
+            <AEButtonRounded
+              onPress={() => {
+                trackInteractionByType('Cancel');
+                navigation.goBack();
+              }}
+              style={{marginTop: 10, marginBottom: 30}}>
+              {t('common:cancel')}
+            </AEButtonRounded>
           </View>
         </View>
       </View>

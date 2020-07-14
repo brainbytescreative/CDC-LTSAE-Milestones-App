@@ -1,5 +1,5 @@
 import React, {Suspense} from 'react';
-import FullScreenLoading from '../FullScreenLoading';
+import FullScreenLoading from './FullScreenLoading';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
 const withSuspense = <P extends any>(

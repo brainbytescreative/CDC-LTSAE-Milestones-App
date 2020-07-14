@@ -1,105 +1,25 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import ChildSelectorModal from '../components/ChildSelectorModal';
-import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
+import ChildSelectorModal from '../../components/ChildSelectorModal';
+import {Platform, ScrollView, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {colors, PropType, sharedStyle} from '../resources/constants';
-import {TFunction} from 'i18next';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import ChildPhoto from '../components/ChildPhoto';
-import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {formatAge} from '../utils/helpers';
-import LikeHeart from '../components/Svg/LikeHeart';
-import {Tip, useGetMilestone, useGetTips, useGetTipValue, useSetTip} from '../hooks/checklistHooks';
-import DropDownPicker from '../components/DropDownPicker';
-import AEScrollView from '../components/AEScrollView';
-import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../hooks/notificationsHooks';
-import Chevron from '../components/Svg/Chevron';
-
-type ItemProps = {
-  title: string | undefined;
-  t: TFunction;
-  itemId: number | undefined;
-  onLikePress?: (id: number | undefined, value: boolean) => void;
-  onRemindMePress?: (id: number | undefined, value: boolean) => void;
-  childId?: number;
-} & Tip;
-
-const Item: React.FC<ItemProps> = ({title, t, itemId, onLikePress, childId, onRemindMePress}) => {
-  const {data: {like, remindMe} = {}} = useGetTipValue({hintId: itemId, childId});
-
-  return (
-    <View>
-      <View
-        style={[
-          {
-            padding: 20,
-            paddingBottom: 40,
-            marginHorizontal: 32,
-            marginTop: 30,
-            backgroundColor: colors.white,
-          },
-          sharedStyle.shadow,
-          sharedStyle.border,
-        ]}>
-        <Text>{title}</Text>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          marginHorizontal: 48,
-          marginTop: -25,
-          justifyContent: 'space-between',
-        }}>
-        <View
-          style={[
-            itemStyle.button,
-            sharedStyle.border,
-            sharedStyle.shadow,
-            !!like && {backgroundColor: colors.purple},
-          ]}>
-          <TouchableOpacity style={itemStyle.buttonTouchable} onPress={() => onLikePress && onLikePress(itemId, !like)}>
-            <LikeHeart selected={!!like} style={{marginRight: 5}} />
-            <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={[
-            itemStyle.button,
-            sharedStyle.border,
-            sharedStyle.shadow,
-            !!remindMe && {backgroundColor: colors.purple},
-          ]}>
-          <TouchableOpacity
-            style={itemStyle.buttonTouchable}
-            onPress={() => {
-              onRemindMePress && onRemindMePress(itemId, !remindMe);
-            }}>
-            <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const itemStyle = StyleSheet.create({
-  button: {
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonTouchable: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-  },
-});
+import {colors, PropType, sharedStyle} from '../../resources/constants';
+import ShortHeaderArc from '../../components/Svg/ShortHeaderArc';
+import ChildPhoto from '../../components/ChildPhoto';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {formatAge} from '../../utils/helpers';
+import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks';
+import DropDownPicker from '../../components/DropDownPicker';
+import AEScrollView from '../../components/AEScrollView';
+import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
+import Chevron from '../../components/Svg/Chevron';
+import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
+import {trackInteractionByType} from '../../utils/analytics';
 
 const tipFilters = ['all', 'like', 'remindMe'];
 type TipType = typeof tipFilters[number];
 
-const TipsAndActivitiesScreen: React.FC = () => {
+const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: string}}}> = ({route}) => {
   const {t} = useTranslation('tipsAndActivities');
   const [tipType, setTipType] = useState<TipType>('all');
   const {data: child} = useGetCurrentChild();
@@ -108,6 +28,24 @@ const TipsAndActivitiesScreen: React.FC = () => {
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const [setNotification] = useSetTipsAndActivitiesNotification();
   const [cancelNotification] = useCancelNotificationById();
+  const positionMap = useRef(new Map<number, number>());
+  const scrollView = useRef<ScrollView | undefined>(undefined);
+  const [highlightedTip, setHighlightedTip] = useState<number | undefined>();
+
+  const notificationIdParam = route?.params?.notificationId;
+
+  useLayoutEffect(() => {
+    if (notificationIdParam) {
+      setTipType('all');
+      const [, tipId] = notificationIdParam.match(/^tips-(\d+)/) ?? [];
+      const number = Number(tipId);
+      setTimeout(() => {
+        const position = positionMap.current.get(number);
+        position && scrollView.current?.scrollTo({y: position});
+      }, 1000);
+      setHighlightedTip(number);
+    }
+  }, [notificationIdParam]);
 
   let sortedTips;
 
@@ -137,6 +75,7 @@ const TipsAndActivitiesScreen: React.FC = () => {
 
   const onRemindMePress = useCallback<NonNullable<PropType<ItemProps, 'onRemindMePress'>>>(
     (id, value) => {
+      trackInteractionByType('Remind Me');
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = (tips || []).filter(({id: tipId}) => id === tipId)[0];
@@ -147,12 +86,15 @@ const TipsAndActivitiesScreen: React.FC = () => {
       } else if (id && child?.id && !value) {
         notificationId && cancelNotification({notificationId});
       }
+      setHighlightedTip(undefined);
     },
     [tips, setTip, setNotification, child?.id, milestoneId, cancelNotification],
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
+    trackInteractionByType('Like');
     id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
+    setHighlightedTip(undefined);
   };
 
   return (
@@ -165,7 +107,7 @@ const TipsAndActivitiesScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <AEScrollView>
+      <AEScrollView innerRef={scrollView}>
         <ChildSelectorModal />
         <ChildPhoto photo={child?.photo} />
         <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
@@ -200,7 +142,12 @@ const TipsAndActivitiesScreen: React.FC = () => {
 
         {sortedTips?.map((item, index) => (
           // <View>
-          <Item
+          <TipsAndActivitiesItem
+            isHighlighted={Boolean(highlightedTip) && item.id === highlightedTip}
+            onLayout={(event) => {
+              // console.log(event.nativeEvent.layout.height);
+              positionMap.current.set(Number(item.id), event.nativeEvent.layout.y);
+            }}
             key={`${item.id}-${index}`}
             onLikePress={onLikePress}
             onRemindMePress={onRemindMePress}

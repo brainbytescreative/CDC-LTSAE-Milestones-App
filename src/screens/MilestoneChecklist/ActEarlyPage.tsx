@@ -32,6 +32,7 @@ import {Text} from 'react-native-paper';
 import _ from 'lodash';
 import AEYellowBox from '../../components/AEYellowBox';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {trackInteractionByType} from '../../utils/analytics';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();
@@ -48,17 +49,26 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           childId &&
           milestoneId &&
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
+        !concern?.answer && trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
       };
 
   const saveNote = useRef(
     _.debounce((text: string) => {
       id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
+      trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
     }, 500),
   );
 
   useEffect(() => {
     !isFetching && setNote(concern?.note || '');
   }, [concern, isFetching]);
+
+  useEffect(() => {
+    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
+    return () => {
+      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
+    };
+  }, []);
 
   return (
     <View>
@@ -72,6 +82,9 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
       </View>
       <View style={[itemStyles.buttonsContainer]}>
         <TouchableOpacity
+          accessible={!isMissingAnswerConcern}
+          accessibilityRole={'button'}
+          accessibilityLabel={t('accessibility:concernToggleButton')}
           disabled={isMissingAnswerConcern}
           onPress={onPress}
           style={[
@@ -168,6 +181,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
               <Trans t={t} i18nKey={'actEarlyMessage1'}>
                 <Text
+                  accessibilityRole={'link'}
                   onPress={() => {
                     Linking.openURL(t('actEarlyMessageLink'));
                   }}
@@ -188,6 +202,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple}}>
               <TouchableWithoutFeedback
+                accessibilityRole={'button'}
                 onPress={() => {
                   onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
                 }}>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
-import {StateCode, states} from './resources/constants';
+import {StateCode, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Text} from 'react-native-paper';

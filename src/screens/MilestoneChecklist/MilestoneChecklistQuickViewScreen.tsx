@@ -10,6 +10,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
+import {trackInteractionByType} from '../../utils/analytics';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -26,9 +27,9 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
   // const {data: {id: childId} = {}} = useGetCurrentChild();
   const onSectionSet = (val: Section) => {
-    if (val !== 'actEarly') {
-      setSection(val);
-    }
+    // if (val !== 'actEarly') {
+    setSection(val);
+    // }
   };
 
   return (
@@ -48,6 +49,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
         milestoneAge={milestoneAge}
         milestoneAgeFormatted={milestoneAgeFormatted}
         onNext={() => {
+          trackInteractionByType('Next');
           // if (route.params?.quickView) {
           //   navigation.navigate('MilestoneChecklistStack');
           // } else {

@@ -12,6 +12,7 @@ import {OnboardingNavigationProp} from '../../components/Navigator/types';
 import CDCLogo from '../../components/Svg/CDCLogo';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import IceColdArc from '../../components/Svg/IceColdArc';
+import {trackStartTracking} from '../../utils/analytics';
 
 const OnboardingInfoScreen: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -84,6 +85,7 @@ const OnboardingInfoScreen: React.FC = () => {
             <AEButtonRounded
               onPress={() => {
                 navigation.navigate('OnboardingParentProfile');
+                trackStartTracking();
               }}>
               {t('getStartedBtn')}
             </AEButtonRounded>
@@ -107,6 +109,7 @@ const OnboardingInfoScreen: React.FC = () => {
             visible={visible}>
             <LanguageSelector title={'Select a Language/\nSeleccione Un Idioma'} />
             <TouchableOpacity
+              accessibilityRole={'button'}
               onPress={() => {
                 setVisible(false);
               }}>

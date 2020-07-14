@@ -5,6 +5,7 @@ import {colors} from '../../resources/constants';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from '../../components/Navigator/types';
+import {trackInteractionByType} from '../../utils/analytics';
 
 type NavProp = DrawerNavigationProp<DashboardDrawerParamsList, 'WhenToActEarly'>;
 
@@ -14,6 +15,7 @@ const MilestoneChecklistActEarlyScreen: React.FC<{navigation: NavProp}> = ({navi
       <ChildSelectorModal />
       <ActEarlyPage
         onChildSummaryPress={() => {
+          trackInteractionByType('My Child Summary');
           navigation.navigate('ChildSummaryStack');
         }}
       />

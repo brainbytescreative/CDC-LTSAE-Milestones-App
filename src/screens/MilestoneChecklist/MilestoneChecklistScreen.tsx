@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors, Section} from '../../resources/constants';
+import {checklistSections, colors, Section, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -25,8 +25,8 @@ import ViewPager from '@react-native-community/viewpager';
 import withSuspense from '../../components/withSuspense';
 import {useQuery} from 'react-query';
 import {slowdown} from '../../utils/helpers';
-import {ACPCore} from '@adobe/react-native-acpcore';
 import _ from 'lodash';
+import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -45,6 +45,7 @@ const MilestoneChecklistScreen: React.FC<{
   const {t} = useTranslation('milestoneChecklist');
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
   const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
+  const prevSection = useRef<{name: Section}>({name: 'social'}).current;
 
   useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
 
@@ -56,13 +57,15 @@ const MilestoneChecklistScreen: React.FC<{
 
   useFocusEffect(
     React.useCallback(() => {
+      gotStarted && trackInteractionByType('Started Social Milestones');
       return () => {
         if (unansweredData && !_.isEmpty(unansweredData)) {
-          const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
-          ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
+          trackChecklistUnanswered();
+          // const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
+          // ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
         }
       };
-    }, [unansweredData, t]),
+    }, [unansweredData, gotStarted]),
   );
 
   const flatListRef = useRef<FlatList>(null);
@@ -75,10 +78,49 @@ const MilestoneChecklistScreen: React.FC<{
   //   }
   // }, [section]);
 
+  useEffect(() => {
+    if (section !== prevSection.name) {
+      switch (prevSection.name) {
+        case 'social':
+          trackInteractionByType('Completed Social Milestones');
+          break;
+        case 'language':
+          trackInteractionByType('Completed Language Milestones');
+          break;
+        case 'cognitive':
+          trackInteractionByType('Completed Cognitive Milestones');
+          break;
+        case 'movement':
+          trackInteractionByType('Completed Movement Milestones');
+          break;
+        case 'actEarly':
+          break;
+      }
+    }
+  }, [section, prevSection.name]);
+
   const onSectionSet = (val: Section) => {
+    prevSection.name = section;
     setSection(val);
     viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
     flatListRef.current?.scrollToOffset({animated: false, offset: 0});
+    switch (val) {
+      case 'social':
+        trackInteractionByType('Started Social Milestones');
+        break;
+      case 'language':
+        trackInteractionByType('Started Language Milestones');
+        break;
+      case 'cognitive':
+        trackInteractionByType('Started Cognitive Milestones');
+        break;
+      case 'movement':
+        trackInteractionByType('Started Movement Milestones');
+        break;
+      case 'actEarly':
+        trackInteractionByType('Started When to Act Early');
+        break;
+    }
   };
 
   const onPressNextSection = () => {
@@ -92,6 +134,7 @@ const MilestoneChecklistScreen: React.FC<{
       nextSection = checklistSections[0];
     }
     onSectionSet(nextSection);
+    trackInteractionByType('Next Section');
   };
 
   return (
@@ -169,9 +212,7 @@ const MilestoneChecklistScreen: React.FC<{
           renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
           keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
           ListHeaderComponent={() => (
-            <Text style={{textAlign: 'center', marginTop: 38, fontSize: 22, fontFamily: 'Montserrat-Bold'}}>
-              {milestoneAgeFormatted}
-            </Text>
+            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
           )}
           ListFooterComponent={() => (
             <View style={{marginTop: 50}}>

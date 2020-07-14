@@ -7,9 +7,10 @@ type Created = React.ComponentProps<typeof Button>;
 
 interface Props {
   style?: ViewStyle;
+  contentStyle?: ViewStyle;
 }
 
-const AEButtonRounded: React.FC<Created & Props> = ({children, style, ...rest}) => {
+const AEButtonRounded: React.FC<Created & Props> = ({children, style, contentStyle, ...rest}) => {
   return (
     <Button
       contentStyle={[
@@ -19,6 +20,7 @@ const AEButtonRounded: React.FC<Created & Props> = ({children, style, ...rest}) 
           borderRadius: 10,
           overflow: 'hidden',
         },
+        contentStyle,
       ]}
       labelStyle={{
         textTransform: 'capitalize',

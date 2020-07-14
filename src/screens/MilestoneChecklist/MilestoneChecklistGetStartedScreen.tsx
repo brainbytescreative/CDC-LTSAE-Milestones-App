@@ -15,6 +15,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {trackInteractionByType} from '../../utils/analytics';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklistGetStarted'>,
@@ -61,6 +62,7 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
         onGetStarted={() => {
           setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
             navigation.navigate('MilestoneChecklist');
+            trackInteractionByType('Get Started');
           });
         }}
       />

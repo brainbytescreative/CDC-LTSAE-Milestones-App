@@ -2,15 +2,15 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ChildResult, useGetCurrentChild} from '../../hooks/childrenHooks';
 import {colors, sharedStyle} from '../../resources/constants';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {formatAge} from '../../utils/helpers';
 import BabyPlaceholder from '../Svg/BabyPlaceholder';
 
 interface ItemProps extends ChildResult {
-  onSelect: (id: number) => void;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onSelect: (id: ChildResult['id']) => void;
+  onEdit: (id: ChildResult['id']) => void;
+  onDelete?: (id: ChildResult['id'], name: ChildResult['name']) => void;
 }
 
 const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
@@ -18,32 +18,39 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
   const {data: {id: currentId} = {}} = useGetCurrentChild();
   const selected = currentId === id;
   const selectedStyle = selected && [{backgroundColor: colors.lightGreen, borderRadius: 10}, sharedStyle.shadow];
+  const onSelectPress = () => {
+    onSelect(id);
+  };
   return (
     <TouchableOpacity
-      onPress={() => {
-        onSelect(id);
-      }}
+      accessible={false}
+      onPress={onSelectPress}
       style={[
         {flexDirection: 'row', height: 81, alignItems: 'center'},
         !selected && {borderBottomWidth: 0.5, borderColor: colors.gray},
         selectedStyle,
       ]}>
-      <View style={{margin: 16}}>
-        {photo ? (
-          <Image source={{uri: photo}} style={styles.photo} />
-        ) : (
-          <View
-            style={[
-              {
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              styles.photo,
-              sharedStyle.shadow,
-            ]}>
-            <BabyPlaceholder color={colors.purple} width={'80%'} height={'80%'} />
-          </View>
-        )}
+      <View accessible={false} style={{margin: 16}}>
+        <TouchableWithoutFeedback
+          accessibilityLabel={t('accessibility:selectChildButton')}
+          accessibilityRole={'button'}
+          onPress={onSelectPress}>
+          {photo ? (
+            <Image accessibilityRole={'image'} source={{uri: photo}} style={styles.photo} />
+          ) : (
+            <View
+              style={[
+                {
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+                styles.photo,
+                sharedStyle.shadow,
+              ]}>
+              <BabyPlaceholder color={colors.purple} width={'80%'} height={'80%'} />
+            </View>
+          )}
+        </TouchableWithoutFeedback>
       </View>
       <View style={{flexGrow: 1, justifyContent: 'center', width: 0}}>
         <Text numberOfLines={1} style={styles.childNameText}>
@@ -53,18 +60,22 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
           <Text style={{fontSize: 12}}>{formatAge(birthday)}</Text>
           <View style={{flexDirection: 'row', marginRight: 16}}>
             <TouchableOpacity
+              accessibilityRole={'button'}
               onPress={() => {
                 onEdit(id);
               }}>
               <Text style={{textDecorationLine: 'underline'}}>{t('edit')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                onDelete(id);
-              }}
-              style={{marginLeft: 16}}>
-              <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
-            </TouchableOpacity>
+            {Boolean(onDelete) && (
+              <TouchableOpacity
+                accessibilityRole={'button'}
+                onPress={() => {
+                  onDelete?.(id, name);
+                }}
+                style={{marginLeft: 16}}>
+                <Text style={{textDecorationLine: 'underline'}}>{t('delete')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

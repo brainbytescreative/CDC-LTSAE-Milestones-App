@@ -1,4 +1,18 @@
 {
+    "accessibility": {
+        "addChildPhoto": "$t(addChild:addPhoto)",
+        "appointmentCaption": "$t(appointment:title): {{caption}} at {{time}}",
+        "childName": "Child name: {{name}}",
+        "childPhotoPlaceholder": "Child's photo placeholder",
+        "close": "Close",
+        "closeMainMenu": "Close main menu",
+        "concernToggleButton": "Concern toggle",
+        "mainMenuButton": "Main menu",
+        "nextButton": "Next",
+        "previousButton": "Previous",
+        "selectChildButton": "Select a child",
+        "unreadNotifications": "Number of unread notifications: {{count}}"
+    },
     "addAppointment": {
         "edit-title": "Edit appointment",
         "title": "Add an Appointment"
@@ -7,6 +21,7 @@
         "addAnotherChild": "+ Add another child",
         "addPhoto": "Add a photo",
         "boy": "Boy",
+        "changePhoto": "Change photo",
         "correctedAgeLink": "http://bit.ly/2RUpEu1",
         "drawerLabel": "Children & Add Child",
         "edit-title": "Edit child",
@@ -102,6 +117,11 @@
         "yellowTip": "If your child is between these\nages, you will receive the checklist\nfor the younger age.",
         "yellowTipLessTwoMonth": "The first checklist is for age 2 months. Click the menu button to take a look at the Milestone Overview for a peek ahead!"
     },
+    "dialog": {
+        "deleteMessage": "Are you sure you want to delete{{subject}}?",
+        "no": "No",
+        "yes": "Yes"
+    },
     "email": {
         "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
     },
@@ -175,6 +195,7 @@
         "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked ‘Not Yet’ or ‘Not Sure.’ Would you like to recheck those milestones?",
         "milestoneNotificationTitle": "Milestone Notification",
         "nextMilestoneBirthdayNotificationBody": "{{name}} is {{childAgeFormatted}} old 🎂! Complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist today!",
+        "nextMilestoneNotificationBody": "$t(notifications:nextMilestoneBirthdayNotificationBody)",
         "recommendation1DayPassedBody": "Acting early on missed milestones or other concerns can make a big difference. While each child develops differently, some differences can be a cause for concern. Set a doctor’s appointment to share {{name}}’s summary and ask for developmental screening. Don’t wait. 🗓",
         "recommendation1weekPassedBody": "You marked some of {{name}}’s milestones as Not Yet or marked a possible concern. Act Early by talking to {{hisHersTag}} doctor and ask for developmental screening.⚕️️",
         "recommendation4weeksPassedBody": "Did you make an appointment to talk with the doctor about {{name}}’s milestone summary? Don’t wait. Acting early can make a big difference. ⚠️",
@@ -227,7 +248,7 @@
         "drawerLabel": "Notifications & User Settings ",
         "notificationSettings": "Notification settings",
         "requiredForState": "*required for state",
-        "statePrivacyLanguage": "{State-privacy language}",
+        "statePrivacyLanguage": "Milestone Tracker asks for state and territory to learn where the app is being used. \nIt does not collect or share any personal information that could be used to identify you or your child.",
         "userProfile": "User profile"
     },
     "skillTypes": {

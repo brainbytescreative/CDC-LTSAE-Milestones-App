@@ -8,6 +8,7 @@ import {milestonesIds, missingConcerns, PropType, tooYongAgeDays} from '../resou
 import {sqLiteClient} from '../db';
 import {Answer} from '../hooks/types';
 import {AppointmentDb} from '../hooks/appointmentsHooks';
+import {NavigationContainerProps} from '@react-navigation/native';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -33,14 +34,15 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
 };
 
 export const formatAge = (childBirth: Date | undefined): string => {
-  const days = (childBirth && Math.abs(differenceInDays(new Date(), childBirth))) || 0;
-  return childBirth
-    ? formatDistanceStrict(new Date(), childBirth, {
-        unit: days > 0 ? undefined : 'day',
-        roundingMethod: 'floor',
-        locale: dateFnsLocales[i18next.language],
-      })
-    : '';
+  const birthDay = childBirth ?? new Date();
+  const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
+  const childAge = formatDistanceStrict(days < 1 ? birthDay : new Date(), birthDay, {
+    unit: days > 0 ? undefined : 'day',
+    roundingMethod: 'floor',
+    locale: dateFnsLocales[i18next.language],
+  });
+
+  return birthDay ? childAge : '';
 };
 
 export function calcChildAge(birthDay: Date | undefined) {
@@ -171,3 +173,17 @@ export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 
     },
   ],
 });
+
+type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];
+
+// Gets the current screen from navigation state
+export const getActiveRouteName: (state: NavState) => string | undefined = (state) => {
+  const route = state?.routes[state.index];
+
+  if (route?.state) {
+    // Dive into nested navigators
+    return getActiveRouteName(route.state as any);
+  }
+
+  return route?.name;
+};

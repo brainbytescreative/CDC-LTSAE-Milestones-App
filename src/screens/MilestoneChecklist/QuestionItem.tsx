@@ -14,6 +14,89 @@ import {WebView} from 'react-native-webview';
 import i18next from 'i18next';
 import {Answer} from '../../hooks/types';
 import withSuspense from '../../components/withSuspense';
+import {trackInteractionByType} from '../../utils/analytics';
+
+// const jsCode = `
+//
+// document.addEventListener('DOMContentLoaded', function(){ // Аналог $(document).ready(function(){
+//   alert('lol');
+//   console.log('test')
+//   document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
+// });
+// // document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
+// `;
+
+function getVideoHtml(videId: string) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <style>
+        body { margin: 0; width:100%; height:100%;  background-color:#000000; }
+        html { width:100%; height:100%; background-color:#000000; }
+    
+        .video-placeholder iframe,
+        .video-placeholder object,
+        .video-placeholder embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        </style><title>Video</title>
+
+</head>
+<body style="margin:0;padding:0;overflow:hidden; height: 100%">
+<div id="video-placeholder"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+
+var player,
+    time_update_interval = 0;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('video-placeholder', {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        videoId: '${videId}',
+        playerVars: {
+            color: 'white',
+            rel: 0,
+            controls: 0,
+            playsinline: 1,
+            hl:'${i18next.language}'
+        },
+        events: {
+            onReady: initialize,
+            onStateChange: onStateChange
+        }
+    });
+}
+
+function onStateChange(event){
+    if (event.data === 0) {
+        player.seekTo(0);
+        player.stopVideo();
+    }
+    if (event.data === 1){
+     window.ReactNativeWebView.postMessage("PLAYING"); 
+    }
+}
+window.onresize = function() {
+        player.setSize(window.innerWidth, window.innerHeight);
+}
+function initialize(){
+    
+}
+</script>
+</body>
+</html>
+`;
+}
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
@@ -30,35 +113,48 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const answer = data?.answer;
 
   const {t} = useTranslation('milestones');
-  const photo = photos?.map((item, index) => {
-    const name = (item.name && t(item.name)) || '';
-    const image = images[name];
-    return (
-      <Image
-        key={`photo-${index}-${id}`}
-        accessibilityLabel={item.alt && t(item.alt)}
-        source={image}
-        style={{width: '100%', borderRadius: 10}}
-      />
-    );
-  }) as any;
+
+  const video =
+    videos?.map((item) => {
+      const code = item.name && t(item?.name);
+      if (!code) {
+        return null;
+      }
+      return (
+        <WebView
+          onMessage={(event) => {
+            event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
+          }}
+          originWhitelist={['*']}
+          allowsInlineMediaPlayback={true}
+          key={`video-${item.name}`}
+          style={{alignSelf: 'stretch', height}}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState
+          scrollEnabled={false}
+          source={{html: getVideoHtml(code)}}
+        />
+      );
+    }) || [];
+
+  const photo =
+    (photos?.map((item, index) => {
+      const name = (item.name && t(item.name)) || '';
+      const image = images[name];
+      return (
+        <Image
+          key={`photo-${index}-${id}`}
+          accessibilityLabel={item.alt && t(`milestones:alts:${item.alt}`)}
+          accessibilityRole={'image'}
+          accessible={true}
+          source={image}
+          style={{width: '100%', borderRadius: 10}}
+        />
+      );
+    }) as any) || [];
 
   const height = (Dimensions.get('window').width - 64) * 0.595;
-
-  const video = videos?.map((item) => {
-    const code = item.name && t(item?.name);
-    return (
-      <WebView
-        key={`video-${item.name}`}
-        style={{alignSelf: 'stretch', height}}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState
-        scrollEnabled={false}
-        source={{uri: `https://www.youtube.com/embed/${code}?controls=0&hl=${i18next.language}&rel=0`}}
-      />
-    );
-  });
 
   const doAnswer = (answerValue: Answer) => () => {
     id &&
@@ -74,6 +170,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         childId &&
         milestoneId &&
         answerQuestion({questionId: id, answer: data?.answer, childId, note: text, milestoneId});
+      trackInteractionByType('Add Milestone Note');
     }, 500),
     [id, childId, milestoneId, data?.answer],
   );
@@ -82,16 +179,19 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
     !isFetching && setNote(data?.note || '');
   }, [data, isFetching]);
 
+  const mediaItems = [...photo, ...video];
+
   return (
     <View style={{flex: 1, marginTop: 38, marginHorizontal: 32}}>
       <View style={{backgroundColor: colors.purple, borderRadius: 10, overflow: 'hidden'}}>
         <Text style={{margin: 15, textAlign: 'center', fontSize: 15}}>{value}</Text>
-        {photos && photos.length > 0 && (
+        {mediaItems && mediaItems.length > 0 && (
           <View>
             <ViewPager
               onPageSelected={(event) => {
                 setPage(event.nativeEvent.position);
               }}
+              scrollEnabled={mediaItems.length > 1}
               ref={viewPagerRef}
               style={{flex: 1, height}}
               initialPage={0}>
@@ -99,17 +199,22 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                 ? photo.map((item: any, index: number) => {
                     return (
                       <View key={index}>
-                        <Text>{photos[index].name}</Text>
+                        <Text accessible={false}>{`${photos?.[index].alt}\n${t(
+                          `milestones:alts:${photos?.[index].alt}`,
+                        )}`}</Text>
                         {item}
                       </View>
                     );
                   })
                 : photo}
+              {video}
             </ViewPager>
-            {photo && photo?.length > 1 && (
+            {mediaItems && mediaItems?.length > 1 && (
               <>
                 <TouchableOpacity
+                  accessibilityLabel={t('accessibility:previousButton')}
                   onPress={() => {
+                    trackInteractionByType('Scroll Photo');
                     const prevPage = page - 1 < 0 ? photo?.length - 1 : page - 1;
                     viewPagerRef?.current?.setPage(prevPage);
                   }}
@@ -124,8 +229,10 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
                   <PhotoChevronLeft style={{marginLeft: 16}} />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityLabel={t('accessibility:nextButton')}
                   onPress={() => {
-                    const nextPage = page + 1 > photos?.length - 1 ? 0 : page + 1;
+                    trackInteractionByType('Scroll Photo');
+                    const nextPage = page + 1 > mediaItems?.length - 1 ? 0 : page + 1;
                     viewPagerRef?.current?.setPage(nextPage);
                   }}
                   style={{
@@ -143,7 +250,6 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             )}
           </View>
         )}
-        {video}
       </View>
       <View style={[styles.buttonsContainer]}>
         <TouchableOpacity

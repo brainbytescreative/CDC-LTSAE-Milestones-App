@@ -5,6 +5,7 @@ import {formatDate} from '../utils/helpers';
 import AETextInput from './AETextInput';
 
 interface PageProps {
+  onPress?: () => void;
   onChange?: (date?: Date) => void;
   label?: string;
   value?: Date;
@@ -12,7 +13,7 @@ interface PageProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style}) => {
+const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style, onPress}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
 
@@ -20,6 +21,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
 
   const showDatePicker = () => {
     setModalVisible(true);
+    onPress?.();
   };
 
   const hideDatePicker = () => {

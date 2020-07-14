@@ -8,6 +8,7 @@ import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../ho
 import _ from 'lodash';
 import ChevronLeft from '../../components/Svg/ChevronLeft';
 import ChevronRight from '../../components/Svg/ChevronRight';
+import {trackSelectByType} from '../../utils/analytics';
 
 interface ItemProps {
   childAge: number;
@@ -20,15 +21,19 @@ interface ItemProps {
 const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, milestone}) => {
   const {t} = useTranslation('dashboard');
   const isCurrentMilestone = milestone === month;
-  const suffix = isCurrentMilestone ? '' : 'Short';
-  const unit =
-    month % 12 === 0 ? t(`common:year${suffix}`, {count: month / 12}) : t(`common:month${suffix}`, {count: month});
+  // const suffix = isCurrentMilestone ? '' : 'Short';
+  const unit = month % 12 === 0 ? t('common:year', {count: month / 12}) : t('common:month', {count: month});
+  const unitShort =
+    month % 12 === 0 ? t('common:yearShort', {count: month / 12}) : t('common:monthShort', {count: month});
 
   const {data: progress = 0} = useGetMonthProgress({childId, milestone: month});
 
   return (
     <TouchableOpacity
       onPress={() => {
+        childAge < month
+          ? trackSelectByType('Previous Milestone Checklist Age')
+          : trackSelectByType('Future Milestone Checklist Age');
         onSelect && onSelect(month);
       }}>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>
@@ -49,11 +54,12 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
                 justifyContent: 'center',
               }}>
               <Text
+                accessibilityLabel={unit}
                 style={{
                   fontSize: 12,
                   fontFamily: month === milestone ? 'Avenir-Heavy' : 'Avenir-light',
                 }}>
-                {unit}
+                {isCurrentMilestone ? unit : unitShort}
               </Text>
             </View>
           )}
@@ -93,6 +99,8 @@ const MonthCarousel: React.FC = () => {
   // workaround to fix crashes on fast refresh
   const flatListKey = useMemo(() => Math.random(), []);
 
+  const {t} = useTranslation();
+
   return (
     <View
       style={{
@@ -102,6 +110,9 @@ const MonthCarousel: React.FC = () => {
         marginHorizontal: 32,
       }}>
       <TouchableOpacity
+        accessibilityRole={'button'}
+        accessibilityLabel={t('accessibility:previousButton')}
+        hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
         onPress={() => {
           const first = visible.current?.first || 0;
           flatListRef.current?.scrollToIndex({
@@ -143,6 +154,9 @@ const MonthCarousel: React.FC = () => {
         keyExtractor={(item) => `${item}`}
       />
       <TouchableOpacity
+        accessibilityRole={'button'}
+        accessibilityLabel={t('accessibility:nextButton')}
+        hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
         onPress={() => {
           const last = visible.current?.last || milestonesIds.length - 1;
           flatListRef.current?.scrollToIndex({

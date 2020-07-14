@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {DashboardStackNavigationProp} from './DashboardScreen';
 import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
+import {trackSelectByType} from '../../utils/analytics';
 
 const MilestoneChecklistWidget: React.FC = () => {
   const {t} = useTranslation('dashboard');
@@ -18,8 +19,12 @@ const MilestoneChecklistWidget: React.FC = () => {
 
   return (
     <TouchableOpacity
+      accessibilityLabel={`${t('milestoneCheckList')}.${t('milestonesAnswered', {
+        progress: totalProgress?.replace('/', ' of '),
+      })}`}
       onPress={() => {
         navigation.navigate('MilestoneChecklistStack');
+        trackSelectByType('Milestone Checklist');
       }}
       style={[{backgroundColor: 'white', padding: 20, borderRadius: 15, overflow: 'visible'}, sharedStyle.shadow]}>
       <View style={styles.milestoneCheckListContainer}>

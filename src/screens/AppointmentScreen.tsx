@@ -14,6 +14,7 @@ import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
 import PurpleArc from '../components/Svg/PurpleArc';
+import {trackInteractionByType, trackSelectByType} from '../utils/analytics';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 
@@ -81,6 +82,7 @@ const AppointmentScreen: React.FC = () => {
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
             <AEButtonRounded
               onPress={() => {
+                trackInteractionByType('Edit Appointment');
                 navigation.replace('AddAppointment', {
                   appointmentId: Number(route.params?.appointmentId),
                 });
@@ -90,6 +92,7 @@ const AppointmentScreen: React.FC = () => {
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {
+                trackSelectByType('My Child Summary');
                 navigation.navigate('ChildSummary');
               }}
               disabled={loading}
@@ -98,6 +101,7 @@ const AppointmentScreen: React.FC = () => {
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {
+                trackSelectByType("Email Child's Summary");
                 composeMail().catch((e) => {
                   Alert.alert('', e.message);
                 });
@@ -109,7 +113,10 @@ const AppointmentScreen: React.FC = () => {
             <Button
               disabled={loading}
               onPress={() => {
-                appointment?.id && deleteAppointment(appointment?.id);
+                if (appointment?.id) {
+                  trackInteractionByType('Delete Appointment');
+                  deleteAppointment(appointment?.id);
+                }
                 navigation.navigate('Dashboard');
               }}
               labelStyle={{textTransform: 'capitalize', textDecorationLine: 'underline'}}

@@ -3,6 +3,7 @@
 import {StyleSheet} from 'react-native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
+import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
 export const states = [
   'AL',
@@ -77,9 +78,64 @@ export enum WellChildCheckUpAppointmentAgesEnum {
   Age30 = 30,
 }
 
+export type SelectEventType =
+  | 'Menu'
+  | 'On'
+  | 'Off'
+  | 'Back'
+  | 'Child Name Drop-down'
+  | 'Notifications'
+  | 'Social'
+  | 'Language'
+  | 'Cognitive'
+  | 'Movement'
+  | 'When to Act Early'
+  | 'My Child Summary'
+  | "Email Child's Summary"
+  | 'Delete'
+  | 'Dashboard'
+  | 'How to Use App'
+  | 'Add Child'
+  | 'Add Appointment'
+  | 'Milestone Checklist'
+  | 'Milestone Quickview'
+  | 'Notifications and Settings '
+  | 'Privacy Policy and App'
+  | 'Tips'
+  | 'Previous Milestone Checklist Age'
+  | 'Future Milestone Checklist Age'
+  | 'Questions to Ask Doctor'
+  | 'Notes/Concerns'
+  | 'Doctor'
+  | 'Date'
+  | 'Appointment Type/Description'
+  | 'Edit'
+  | 'Edit Note'
+  | 'Edit Answer';
+
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
 export type SkillType = typeof skillTypes[number];
 export type Section = SkillType | 'actEarly';
+
+export const sectionToEvent: Record<Section, SelectEventType> = {
+  language: 'Language',
+  actEarly: 'When to Act Early',
+  cognitive: 'Cognitive',
+  movement: 'Movement',
+  social: 'Social',
+};
+
+export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEventType | undefined> = {
+  AddChildStub: 'Add Child',
+  ChildSummaryStack: 'My Child Summary',
+  DashboardStack: 'Dashboard',
+  InfoStack: 'Privacy Policy and App',
+  MilestoneQuickViewStack: 'Milestone Quickview',
+  SettingsStack: 'Notifications and Settings ',
+  TipsAndActivitiesStack: 'Tips',
+  WhenToActEarly: 'When to Act Early',
+  MilestoneChecklistStack: 'Milestone Checklist',
+};
 
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',

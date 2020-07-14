@@ -37,6 +37,7 @@ import _ from 'lodash';
 import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {Answer, MilestoneAnswer} from '../hooks/types';
+import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -103,15 +104,19 @@ const Item: React.FC<ItemProps> = ({
       <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6}}>
         {!hideControls && (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => {
-              id && onEditAnswerPress && onEditAnswerPress(id, note);
+              trackSelectByType('Edit Answer');
+              id && onEditAnswerPress?.(id, note);
             }}>
             <Text style={{textDecorationLine: 'underline', fontSize: 12}}>{t('editAnswer')}</Text>
           </TouchableOpacity>
         )}
         {noteLocal === undefined && (
           <TouchableOpacity
+            accessibilityRole={'button'}
             onPress={() => {
+              trackSelectByType('Edit Note');
               setNote(note || '');
             }}>
             <Text
@@ -204,14 +209,14 @@ const ChildSummaryScreen: React.FC = () => {
           messageTextStyle: {...sharedStyle.regularText},
         },
         (index) => {
-          Object.values(Answer).includes(index) &&
-            child?.id &&
-            milestoneAge &&
+          if (Object.values(Answer).includes(index) && child?.id && milestoneAge) {
             answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
               () => {
                 refetch({force: true});
               },
             );
+            trackSelectSummary(index);
+          }
         },
       );
     },
@@ -286,8 +291,6 @@ const ChildSummaryScreen: React.FC = () => {
   const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
   const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
 
-  // console.log('<<<<', data?.groupedByAnswer[`${Answer.UNSURE}`]);
-
   return (
     <View style={{backgroundColor: colors.white}}>
       <View
@@ -321,8 +324,16 @@ const ChildSummaryScreen: React.FC = () => {
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
               <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name}}>
-                <Text onPress={() => Linking.openURL(t('findElLink'))} style={{textDecorationLine: 'underline'}} />
-                <Text onPress={() => Linking.openURL(t('concernedLink'))} style={{textDecorationLine: 'underline'}} />
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('findElLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('concernedLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
               </Trans>
             </Text>
             {/*<Text>Show your doctor or email summary</Text>*/}
@@ -347,7 +358,13 @@ const ChildSummaryScreen: React.FC = () => {
                 style={{marginTop: 10, marginBottom: 30}}>
                 {t('showDoctor')}
               </AEButtonRounded>
-              <LanguageSelector onLanguageChange={() => refetch({force: true})} style={{marginHorizontal: 32}} />
+              <LanguageSelector
+                onLanguageChange={(lng) => {
+                  trackSelectLanguage(lng);
+                  return refetch({force: true});
+                }}
+                style={{marginHorizontal: 32}}
+              />
             </View>
           </View>
 

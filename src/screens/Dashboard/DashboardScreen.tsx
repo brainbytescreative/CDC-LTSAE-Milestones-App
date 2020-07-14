@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect} from 'react';
+import React, {Suspense, useEffect, useMemo} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -23,7 +23,10 @@ import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import TipsAndActivitiesSign from '../../components/Svg/TipsAndActivitiesSign';
 import PurpleArc from '../../components/Svg/PurpleArc';
-import {differenceInWeeks} from 'date-fns';
+import {differenceInWeeks, format} from 'date-fns';
+import {dateFnsLocales} from '../../resources/dateFnsLocales';
+import i18next from '../../resources/l18n';
+import {trackSelectByType} from '../../utils/analytics';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -84,6 +87,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
               onPress={() => {
+                trackSelectByType('When to Act Early');
                 navigation.navigate('WhenActEarly');
               }}
               style={styles.actionItem}>
@@ -96,6 +100,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
               <TouchableOpacity
                 style={[{alignItems: 'center'}]}
                 onPress={() => {
+                  trackSelectByType('My Child Summary');
                   navigation.navigate('ChildSummary');
                 }}>
                 <MilestoneSummarySign />
@@ -107,6 +112,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             <View style={styles.actionItem}>
               <TouchableOpacity
                 onPress={() => {
+                  trackSelectByType('Tips');
                   navigation.navigate('TipsAndActivities');
                 }}
                 style={{alignItems: 'center'}}>
@@ -127,25 +133,38 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             {t('appointments')}
           </Text>
           <TouchableOpacity
+            accessibilityRole={'button'}
+            accessibilityLabel={t('addAppointment:title')}
             onPress={() => {
               navigation.navigate('AddAppointment');
             }}>
             <Text style={{fontSize: 12}}>{t('addApt')}</Text>
           </TouchableOpacity>
         </View>
-        {appointments?.map((appt) => (
-          <TouchableOpacity
-            key={`appointment-${appt.id}`}
-            onPress={() => {
-              navigation.navigate('Appointment', {
-                appointmentId: appt.id,
-              });
-            }}
-            style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
-            <Text style={{fontSize: 18}}>{appt.apptType}</Text>
-            <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
-          </TouchableOpacity>
-        ))}
+        {appointments?.map((appt) => {
+          return (
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={t('accessibility:appointmentCaption', {
+                caption: appt.apptType,
+                time: format(appt.date, 'PPPpp', {
+                  locale: dateFnsLocales[i18next.language],
+                }),
+              })}
+              key={`appointment-${appt.id}`}
+              onPress={() => {
+                trackSelectByType('Add Appointment');
+                navigation.navigate('Appointment', {
+                  appointmentId: appt.id,
+                });
+              }}
+              style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
+              <Text style={{fontSize: 18}}>{appt.apptType}</Text>
+              {/*<Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>*/}
+              <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   );
@@ -158,14 +177,16 @@ const DashboardContainer: React.FC = () => {
   useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
   const {refetch} = useGetChecklistQuestions();
   const {t} = useTranslation('dashboard');
-  const childAgeText = formatAge(child?.birthday);
+  const currentDay = new Date().getDay();
+  const birthday = child?.birthday;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const childAgeText = useMemo(() => formatAge(birthday), [birthday, currentDay]);
   // const [setMilestoneNotifications] = useSetMilestoneNotifications();
   // const [sheduleNotifications] = useScheduleNotifications();
   const childName = child?.name;
   const [setOnboarding] = useSetOnboarding();
   // const navigation = useNavigation();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
   const ageLessTwoMonth = ageInWeeks < 6;
 

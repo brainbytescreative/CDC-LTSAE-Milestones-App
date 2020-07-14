@@ -4,12 +4,7 @@ import _ from 'lodash';
 import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../resources/constants';
 import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import milestoneChecklist, {
-  Concern,
-  milestoneQuestions,
-  Milestones,
-  SkillSection,
-} from '../resources/milestoneChecklist';
+import milestoneChecklist, {Concern, milestoneQuestions, SkillSection} from '../resources/milestoneChecklist';
 import {sqLiteClient} from '../db';
 import {useMemo} from 'react';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
@@ -22,8 +17,9 @@ import {
   useSetRecommendationNotifications,
 } from './notificationsHooks';
 import {Answer, MilestoneAnswer} from './types';
+import {trackChecklistAnswer} from '../utils/analytics';
 
-type ChecklistData = SkillSection & {section: keyof Milestones};
+// type ChecklistData = SkillSection & {section: keyof Milestones};
 
 type QuestionAnswerKey = Required<Pick<MilestoneAnswer, 'childId' | 'questionId' | 'milestoneId'>>;
 
@@ -144,7 +140,17 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
           ...item,
           value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
         }))
-        .sort((a) => (a.id && !answersIds.includes(a.id) ? -1 : 1));
+        .sort((a, b) => {
+          const aIsAnswered = answersIds.includes(a.id!);
+          const bIsAbswered = answersIds.includes(b.id!);
+          if (aIsAnswered && !bIsAbswered) {
+            return 1;
+          } else if (bIsAbswered && !aIsAnswered) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
@@ -244,6 +250,7 @@ export function useSetQuestionAnswer() {
   return useMutation<Answer | undefined, MilestoneAnswer>(
     async (variables) => {
       const {answer, childId, note, questionId, milestoneId} = variables;
+      answer && trackChecklistAnswer(answer);
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
       const prevAnswerRes = await sqLiteClient.dB?.executeSql(
         `
@@ -356,6 +363,7 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
     },
     {
       staleTime: 0,
+      suspense: true,
     },
   );
 }
