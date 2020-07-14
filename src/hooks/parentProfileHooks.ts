@@ -14,7 +14,7 @@ export function useSetParentProfile() {
     {
       onSuccess: (data, variables) => {
         queryCache.setQueryData('parentProfile', variables);
-        // queryCache.refetchQueries('parentProfile');
+        // queryCache.invalidateQueries('parentProfile');
       },
     },
   );

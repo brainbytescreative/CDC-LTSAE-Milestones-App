@@ -35,7 +35,7 @@ export function useChangeLanguage() {
     },
     {
       onSuccess: () => {
-        return queryCache.refetchQueries([languageCode], {force: true});
+        return queryCache.invalidateQueries([languageCode]);
       },
     },
   );

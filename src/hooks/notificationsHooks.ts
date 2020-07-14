@@ -229,7 +229,7 @@ export function useSetMilestoneNotifications() {
     },
     {
       onSuccess: async (data, {child}) => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
         await setWellChildCheckUpAppointments({child, reschedule: false});
         reschedule();
       },
@@ -483,7 +483,7 @@ export function useCancelNotificationById() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );
@@ -498,7 +498,7 @@ export function useSetNotificationRead() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );
@@ -519,7 +519,7 @@ export function useRemoveNotificationsByChildId() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
         reschedule();
       },
     },
@@ -527,9 +527,9 @@ export function useRemoveNotificationsByChildId() {
 }
 
 export function useGetUnreadNotifications() {
-  return useQuery(
+  return useQuery<NotificationDB[] | undefined, string>(
     'unreadNotifications',
-    async () => {
+    async (): Promise<NotificationDB[] | undefined> => {
       const result = await sqLiteClient.dB?.executeSql(
         `
                   SELECT notifications.*, ch.gender 'childGender', ch.name 'childName'
@@ -541,12 +541,7 @@ export function useGetUnreadNotifications() {
         `,
         [formatISO(new Date())],
       );
-      const unreadNotifications: NotificationDB[] | undefined = result && result[0].rows.raw();
-      //   .map((value: NotificationDB) => ({
-      //   ...value,
-      //   fireDateTimestamp: parseISO(value.fireDateTimestamp),
-      // }));
-      return unreadNotifications;
+      return result && result[0].rows.raw();
     },
     {
       suspense: true,
@@ -789,7 +784,7 @@ export function useSetWellChildCheckUpAppointments() {
     },
     {
       onSuccess: (data, {reschedule}) => {
-        (reschedule === undefined || reschedule) && queryCache.refetchQueries('unreadNotifications', {force: true});
+        (reschedule === undefined || reschedule) && queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );

@@ -65,7 +65,7 @@
     "react-native-unimodules": "^0.10.1",
     "react-native-vector-icons": "^7.0.0",
     "react-native-webview": "10.3.2",
-    "react-query": "^1.5.8",
+    "react-query": "^2.4.16",
     "uuid": "^8.2.0",
     "yup": "^0.29.1"
   },
@@ -86,7 +86,6 @@
     "@types/react-native": "0.62.2",
     "@types/react-native-sqlite-storage": "^3.3.2",
     "@types/react-native-vector-icons": "^6.4.5",
-    "@types/react-query": "^1.1.2",
     "@types/react-test-renderer": "16.9.2",
     "@types/uuid": "^8.0.0",
     "@types/yup": "^0.29.3",

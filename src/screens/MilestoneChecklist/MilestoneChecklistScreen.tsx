@@ -230,6 +230,10 @@ const MilestoneChecklistScreen: React.FC<{
 };
 
 export default withSuspense(MilestoneChecklistScreen, {
-  suspense: true,
-  staleTime: Infinity,
+  shared: {
+    suspense: true,
+  },
+  queries: {
+    staleTime: Infinity,
+  },
 });

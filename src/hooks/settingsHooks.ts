@@ -44,7 +44,7 @@ export function useSetNotificationSettings() {
     (variables) => Storage.setItem('notificationSettings', JSON.stringify(variables)),
     {
       onSuccess: () => {
-        queryCache.refetchQueries('notificationSettings', {force: true});
+        queryCache.invalidateQueries('notificationSettings');
       },
     },
   );

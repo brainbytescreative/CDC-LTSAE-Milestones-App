@@ -342,7 +342,9 @@ const styles = StyleSheet.create({
 export default withSuspense(
   QuestionItem,
   {
-    suspense: true,
+    shared: {
+      suspense: true,
+    },
   },
   <View
     style={{

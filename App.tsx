@@ -70,9 +70,13 @@ const theme: Theme = {
 };
 
 const queryConfig: ReactQueryProviderConfig = {
-  suspense: false,
-  staleTime: Infinity,
-  retry: false,
+  shared: {
+    suspense: false,
+  },
+  queries: {
+    staleTime: Infinity,
+    retry: false,
+  },
 };
 
 const App = () => {

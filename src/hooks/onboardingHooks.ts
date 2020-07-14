@@ -17,7 +17,7 @@ export function useGetOnboarding() {
   );
 }
 export function useSetOnboarding() {
-  return useMutation<void, boolean>((variables) => Storage.setItem('onboarding', JSON.stringify(variables)), {
+  return useMutation((variables: {finished: boolean}) => Storage.setItemTyped('onboarding', variables.finished), {
     onSuccess: (data, variables) => {
       queryCache.setQueryData('onboarding', variables);
     },

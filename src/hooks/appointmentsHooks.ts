@@ -45,7 +45,7 @@ export function useUpdateAppointment() {
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.refetchQueries('appointment', {force: true});
+        queryCache.invalidateQueries('appointment');
         setAppointmentNotifications({appointmentId: variables.id});
       },
     },
@@ -74,7 +74,7 @@ export function useAddAppointment() {
     },
     {
       onSuccess: (data) => {
-        queryCache.refetchQueries(['appointment'], {force: true});
+        queryCache.invalidateQueries(['appointment']);
         setAppointmentNotifications({
           appointmentId: data,
         });
@@ -96,7 +96,7 @@ export function useDeleteAppointment() {
     {
       throwOnError: false,
       onSuccess: (data, id) => {
-        queryCache.refetchQueries('appointment', {force: true});
+        queryCache.invalidateQueries('appointment');
         deleteNotificationsByAppointmentId({id});
       },
     },
@@ -149,6 +149,6 @@ export function useGetChildAppointments(
         date: parseISO(value.date),
       })) as Appointment[];
     },
-    options,
+    options ?? {},
   );
 }

@@ -74,7 +74,7 @@ export function useSetSelectedChild() {
       // console.log(Date.now());
       setTimeout(() => {
         queryCache.setQueryData('selectedChildId', id);
-        queryCache.refetchQueries('selectedChild', {force: true});
+        queryCache.invalidateQueries('selectedChild');
       }, 0);
       InteractionManager.runAfterInteractions(async () => {
         await Storage.setItem('selectedChild', `${id}`);
@@ -85,11 +85,11 @@ export function useSetSelectedChild() {
         // await queryCache.setQueryData('selectedChild', id);
         // console.log(Date.now());
         // Promise.all([
-        //   queryCache.refetchQueries('selectedChild', {force: true}),
-        //   queryCache.refetchQueries('questions', {force: true}),
-        //   queryCache.refetchQueries('concerns', {force: true}),
-        //   queryCache.refetchQueries('monthProgress', {force: true}),
-        //   queryCache.refetchQueries('milestone', {force: true}),
+        //   queryCache.invalidateQueries('selectedChild'),
+        //   queryCache.invalidateQueries('questions'),
+        //   queryCache.invalidateQueries('concerns'),
+        //   queryCache.invalidateQueries('monthProgress'),
+        //   queryCache.invalidateQueries('milestone'),
         // ]);
         // queryCache.clear();
       },
@@ -116,9 +116,9 @@ export function useUpdateChild() {
     },
     {
       onSuccess: (redult, variables) => {
-        queryCache.refetchQueries('selectedChild', {force: true});
-        queryCache.refetchQueries('children', {force: true});
-        queryCache.refetchQueries(['children', {id: variables.id}], {force: true});
+        queryCache.invalidateQueries('selectedChild');
+        queryCache.invalidateQueries('children');
+        queryCache.invalidateQueries(['children', {id: variables.id}]);
         setMilestoneNotifications({child: variables});
       },
     },
@@ -137,8 +137,8 @@ export function useDeleteChild() {
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.refetchQueries('selectedChild', {force: true});
-        queryCache.refetchQueries('children', {force: true});
+        queryCache.invalidateQueries('selectedChild');
+        queryCache.invalidateQueries('children');
         removeNotificationsByChildId({childId: variables.id});
       },
     },
@@ -173,7 +173,7 @@ export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
         birthday: parseISO(value.birthday),
       }));
     },
-    options,
+    options ?? {},
   );
 }
 
@@ -226,8 +226,8 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.refetchQueries('selectedChild', {force: true});
-        queryCache.refetchQueries(['children'], {force: true});
+        queryCache.invalidateQueries('selectedChild');
+        queryCache.invalidateQueries(['children']);
         options?.onSuccess && options.onSuccess(data, variables);
         data && setMilestoneNotifications({child: {id: data, ...variables.data}});
       },

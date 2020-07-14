@@ -286,12 +286,13 @@ export function useSetQuestionAnswer() {
       throwOnError: false,
       onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
-        // queryCache.refetchQueries(['question', {childId, questionId, milestoneId}], {force: true}).then();
-        queryCache.refetchQueries('answers', {force: true, exact: false}).then();
+        // queryCache.invalidateQueries(['question', {childId, questionId, milestoneId}]).then();
+        // todo optimistic
+        queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
         if (milestoneAge) {
-          queryCache.refetchQueries(['monthProgress', {childId, milestone: milestoneAge}], {force: true}).then();
+          queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
         } else {
-          queryCache.refetchQueries('monthProgress', {force: true}).then();
+          queryCache.invalidateQueries('monthProgress');
         }
 
         prevAnswer !== answer && setReminder({childId, questionId, milestoneId, answer, prevAnswer});
@@ -412,7 +413,7 @@ export function useSetConcern() {
         } else {
           deleteRecommendationNotifications({milestoneId, childId});
         }
-        queryCache.refetchQueries(['concern', {childId, concernId}], {force: true});
+        queryCache.invalidateQueries(['concern', {childId, concernId}]);
       },
     },
   );
@@ -508,7 +509,7 @@ export function useSetTip() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('tips', {force: true});
+        queryCache.invalidateQueries('tips');
       },
     },
   );
@@ -644,10 +645,10 @@ export function useCheckMissingMilestones() {
       onSuccess: async (data, {milestoneId, childId}) => {
         await Promise.all(
           missingConcerns.map((concernId) => {
-            return queryCache.refetchQueries(['concern', {childId, concernId, milestoneId}], {force: true});
+            return queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}]);
           }),
         );
-        queryCache.refetchQueries('isMissingMilestones', {force: true});
+        queryCache.invalidateQueries('isMissingMilestones');
       },
     },
   );
