@@ -41,7 +41,7 @@ export function useGetNotificationSettings() {
 
 export function useSetNotificationSettings() {
   return useMutation<void, NotificationSettings>(
-    (variables) => Storage.setItem('notificationSettings', JSON.stringify(variables)),
+    (variables) => Storage.setItemTyped('notificationSettings', variables),
     {
       onSuccess: () => {
         queryCache.invalidateQueries('notificationSettings');

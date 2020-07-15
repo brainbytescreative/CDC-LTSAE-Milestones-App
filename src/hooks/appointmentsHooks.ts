@@ -3,9 +3,10 @@ import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
 import {PropType} from '../resources/constants';
-import {ChildDbRecord, ChildResult} from './childrenHooks';
+import {ChildDbRecord} from './childrenHooks';
 import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
 import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
+import {ChildResult} from './types';
 
 export interface AppointmentDb {
   id: number;

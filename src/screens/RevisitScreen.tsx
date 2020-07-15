@@ -50,8 +50,8 @@ const RevisitScreen: React.FC = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch().then();
-      refetchConcerns().then();
+      refetch();
+      refetchConcerns();
     }, [refetch, refetchConcerns]),
   );
 
@@ -70,7 +70,7 @@ const RevisitScreen: React.FC = () => {
         <LanguageSelector
           onLanguageChange={() => {
             refetch();
-            refetchConcerns().then();
+            refetchConcerns();
           }}
           style={{marginHorizontal: 32, marginTop: 16}}
         />

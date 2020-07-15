@@ -183,8 +183,8 @@ const ChildSummaryScreen: React.FC = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch().then();
-      refetchConcerns().then();
+      refetch();
+      refetchConcerns();
     }, [refetch, refetchConcerns]),
   );
 

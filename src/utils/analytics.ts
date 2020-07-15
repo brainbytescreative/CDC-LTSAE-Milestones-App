@@ -4,10 +4,9 @@ import {Platform} from 'react-native';
 import {getModel, getReadableVersion} from 'react-native-device-info';
 import {LangCode} from '../resources/l18n';
 import {formatAge, getActiveRouteName} from './helpers';
-import {ChildResult} from '../hooks/childrenHooks';
 import {drawerMenuToEvent, Section, sectionToEvent, SelectEventType} from '../resources/constants';
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
-import {Answer} from '../hooks/types';
+import {Answer, ChildResult} from '../hooks/types';
 import {RefObject} from 'react';
 import {NavigationContainerRef} from '@react-navigation/core';
 

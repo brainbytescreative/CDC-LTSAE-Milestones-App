@@ -1,7 +1,7 @@
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {ChildResult} from '../../hooks/childrenHooks';
+import {ChildResult} from '../../hooks/types';
 
 export type AddChildScreenParams =
   | {

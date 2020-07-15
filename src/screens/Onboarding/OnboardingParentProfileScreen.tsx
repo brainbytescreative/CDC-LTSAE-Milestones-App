@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, sharedStyle} from '../../resources/constants';
+import {colors, ParentProfileSelectorValues, sharedStyle} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
 import LanguageSelector from '../../components/LanguageSelector';
-import ParentProfileSelector, {ParentProfileSelectorValues} from '../../components/ParentProfileSelector';
+import ParentProfileSelector from '../../components/ParentProfileSelector';
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

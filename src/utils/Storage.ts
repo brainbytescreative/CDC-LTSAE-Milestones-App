@@ -1,16 +1,18 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {ParentProfileSelectorValues} from '../resources/constants';
+import {NotificationSettings} from '../hooks/settingsHooks';
 
 type Key = keyof ParsedValue;
 
-interface ParsedValue {
+type ParsedValue = {
   migrated: boolean;
   migrationFailed: boolean;
   selectedChild: number;
-  notificationSettings: Record<string, any>;
+  notificationSettings: NotificationSettings;
   onboarding: boolean;
-  parentProfile: string;
-}
+  parentProfile: ParentProfileSelectorValues;
+};
 
 export default class Storage {
   static clear(callback?: (error?: Error) => void): Promise<void> {

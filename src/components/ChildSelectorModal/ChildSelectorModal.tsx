@@ -11,13 +11,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {
-  ChildResult,
-  useDeleteChild,
-  useGetChildren,
-  useGetCurrentChild,
-  useSetSelectedChild,
-} from '../../hooks/childrenHooks';
+import {useDeleteChild, useGetChildren} from '../../hooks/childrenHooks';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
@@ -28,6 +22,8 @@ import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
+import {useSetSelectedChild, useGetCurrentChild} from '../../hooks/childrenHooks';
+import {ChildResult} from '../../hooks/types';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,

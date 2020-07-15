@@ -1,11 +1,14 @@
 import {MutateOptions, queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
-import {sqLiteClient} from '../db';
+import {sqLiteClient} from '../../db';
 import {formatISO, parseISO} from 'date-fns';
-import Storage from '../utils/Storage';
-import {objectToQuery} from '../utils/helpers';
-import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from './notificationsHooks';
-import {InteractionManager, Platform} from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import Storage from '../../utils/Storage';
+import {objectToQuery} from '../../utils/helpers';
+import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
+import {pathFromDB, pathToDB} from '../../resources/constants';
+import {ChildResult} from '../types';
+import {useGetCurrentChild} from './useGetCurrentChild';
+import {useGetCurrentChildId} from './useGetCurrentChildId';
+import {useSetSelectedChild} from './useSetSelectedChild';
 
 interface Record {
   id: number;
@@ -24,78 +27,7 @@ export interface ChildDbRecord extends Record {
 
 type ChildDbRecordNew = Omit<ChildDbRecord, 'id'>;
 
-export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
-  birthday: Date;
-}
-
 type Key = 'children' | 'selectedChild';
-
-export function useGetCurrentChildId() {
-  return useQuery('selectedChildId', async () => {
-    let selectedChild = await Storage.getItemTyped('selectedChild');
-
-    if (!selectedChild) {
-      const res = await sqLiteClient.dB?.executeSql('select * from children order by id  limit 1');
-      selectedChild = res && res[0].rows.item(0)?.id;
-
-      if (!selectedChild) {
-        // throw new Error('There are no children');
-        return;
-      }
-
-      await Storage.setItemTyped('selectedChild', selectedChild);
-    }
-
-    return selectedChild;
-  });
-}
-
-export function useGetCurrentChild() {
-  const {data: selectedChildId} = useGetCurrentChildId();
-  return useQuery<ChildResult, [string, {id?: number}]>(['selectedChild', {id: selectedChildId}], async () => {
-    let result = await sqLiteClient.dB?.executeSql('select * from children where id=?1', [selectedChildId]);
-    if (!result || result[0].rows.length === 0) {
-      result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');
-    }
-
-    const child = (result && result[0].rows.item(0)) || {};
-
-    return {
-      ...child,
-      photo: pathFromDB(child.photo),
-      birthday: child.birthday && parseISO(child.birthday),
-    };
-  });
-}
-
-export function useSetSelectedChild() {
-  return useMutation<void, {id: number; name?: string}>(
-    async ({id}) => {
-      // console.log(Date.now());
-      setTimeout(() => {
-        queryCache.setQueryData('selectedChildId', id);
-        queryCache.invalidateQueries('selectedChild');
-      }, 0);
-      InteractionManager.runAfterInteractions(async () => {
-        await Storage.setItem('selectedChild', `${id}`);
-      });
-    },
-    {
-      onSuccess: async () => {
-        // await queryCache.setQueryData('selectedChild', id);
-        // console.log(Date.now());
-        // Promise.all([
-        //   queryCache.invalidateQueries('selectedChild'),
-        //   queryCache.invalidateQueries('questions'),
-        //   queryCache.invalidateQueries('concerns'),
-        //   queryCache.invalidateQueries('monthProgress'),
-        //   queryCache.invalidateQueries('milestone'),
-        // ]);
-        // queryCache.clear();
-      },
-    },
-  );
-}
 
 export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
@@ -180,24 +112,6 @@ export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
 type AddChildResult = number | undefined;
 type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean};
 
-const pathToDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: path?.replace(FileSystem.documentDirectory || '', ''),
-        default: path,
-      })
-    : path;
-};
-
-const pathFromDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: `${FileSystem.documentDirectory || ''}${path}`,
-        default: path,
-      })
-    : path;
-};
-
 export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<AddChildResult, AddChildVariables>(
@@ -215,7 +129,8 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       const res = await sqLiteClient.dB?.executeSql(query, values);
       const [{insertId}] = res || [{}];
       if (!variables.isAnotherChild) {
-        insertId && Storage.setItem('selectedChild', `${insertId}`);
+        insertId && Storage.setItemTyped('selectedChild', insertId);
+        // insertId && Storage.setItem('selectedChild', `${insertId}`);
       }
 
       const rowsAffected = res && res[0].rowsAffected;
@@ -234,3 +149,5 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
     },
   );
 }
+
+export {useGetCurrentChild, useGetCurrentChildId, useSetSelectedChild};

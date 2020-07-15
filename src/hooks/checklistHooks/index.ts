@@ -1,23 +1,25 @@
 import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../resources/constants';
-import {ChildResult, useGetChild, useGetCurrentChild} from './childrenHooks';
+import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../../resources/constants';
+import {useGetChild} from '../childrenHooks';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import milestoneChecklist, {Concern, milestoneQuestions, SkillSection} from '../resources/milestoneChecklist';
-import {sqLiteClient} from '../db';
+import milestoneChecklist, {Concern, milestoneQuestions, SkillSection} from '../../resources/milestoneChecklist';
+import {sqLiteClient} from '../../db';
 import {useMemo} from 'react';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import * as MailComposer from 'expo-mail-composer';
 import nunjucks from 'nunjucks';
-import emailSummaryContent from '../resources/EmailChildSummary';
+import emailSummaryContent from '../../resources/EmailChildSummary';
 import {
   useDeleteRecommendationNotifications,
   useSetCompleteMilestoneReminder,
   useSetRecommendationNotifications,
-} from './notificationsHooks';
-import {Answer, MilestoneAnswer} from './types';
-import {trackChecklistAnswer} from '../utils/analytics';
+} from '../notificationsHooks';
+import {Answer, ChildResult, MilestoneAnswer, MilestoneQueryKey, MilestoneQueryResult} from '../types';
+import {trackChecklistAnswer} from '../../utils/analytics';
+import {useGetCurrentChild} from '../childrenHooks';
+import useSetMilestoneAge from './useSetMilestoneAge';
 
 // type ChecklistData = SkillSection & {section: keyof Milestones};
 
@@ -30,19 +32,6 @@ interface ConcernAnswer {
   answer?: boolean;
   note?: string | undefined | null;
 }
-
-type MilestoneQueryResult =
-  | {
-      milestoneAge: number | undefined;
-      childAge: number | undefined;
-      milestoneAgeFormatted: string | undefined;
-      milestoneAgeFormattedDashes: string | undefined;
-      isTooYong: boolean;
-      betweenCheckList: boolean;
-    }
-  | undefined;
-
-type MilestoneQueryKey = [string, {childBirthday?: Date | string}];
 
 export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
@@ -81,27 +70,6 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
       };
     },
   );
-}
-
-export function useSetMilestoneAge() {
-  const {t} = useTranslation('common');
-  const {data: child} = useGetCurrentChild();
-  return [
-    (age: typeof milestonesIds[number]) => {
-      const {milestoneAge: childAge} = calcChildAge(child?.birthday);
-      const formatted = formattedAge(age, t);
-      const data: MilestoneQueryResult = {
-        milestoneAge: age,
-        ...formatted,
-        childAge,
-        isTooYong: false,
-        betweenCheckList: false,
-      };
-
-      const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday}];
-      queryCache.setQueryData(key, data);
-    },
-  ];
 }
 
 async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[] | undefined> {
@@ -653,3 +621,5 @@ export function useCheckMissingMilestones() {
     },
   );
 }
+
+export {useSetMilestoneAge};

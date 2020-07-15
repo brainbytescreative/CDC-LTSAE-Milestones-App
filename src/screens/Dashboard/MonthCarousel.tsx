@@ -3,12 +3,12 @@ import {FlatList, FlatListProps, Platform, Text, TouchableOpacity, View} from 'r
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {colors, milestonesIds, PropType} from '../../resources/constants';
 import {useTranslation} from 'react-i18next';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import _ from 'lodash';
 import ChevronLeft from '../../components/Svg/ChevronLeft';
 import ChevronRight from '../../components/Svg/ChevronRight';
 import {trackSelectByType} from '../../utils/analytics';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 interface ItemProps {
   childAge: number;
