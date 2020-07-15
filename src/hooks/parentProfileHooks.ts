@@ -1,6 +1,6 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
-import {ParentProfileSelectorValues} from '../components/ParentProfileSelector';
 import Storage from '../utils/Storage';
+import {ParentProfileSelectorValues} from '../resources/constants';
 
 type QueryKey = 'parentProfile';
 
@@ -8,13 +8,13 @@ export function useSetParentProfile() {
   return useMutation<void, ParentProfileSelectorValues | undefined>(
     async (variables) => {
       if (variables) {
-        await Storage.setItem('parentProfile', JSON.stringify(variables));
+        await Storage.setItemTyped('parentProfile', variables);
       }
     },
     {
       onSuccess: (data, variables) => {
         queryCache.setQueryData('parentProfile', variables);
-        // queryCache.refetchQueries('parentProfile');
+        // queryCache.invalidateQueries('parentProfile');
       },
     },
   );

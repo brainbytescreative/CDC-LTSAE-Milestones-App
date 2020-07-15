@@ -3,9 +3,10 @@ import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
 import {PropType} from '../resources/constants';
-import {ChildDbRecord, ChildResult} from './childrenHooks';
+import {ChildDbRecord} from './childrenHooks';
 import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
 import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
+import {ChildResult} from './types';
 
 export interface AppointmentDb {
   id: number;
@@ -45,7 +46,7 @@ export function useUpdateAppointment() {
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.refetchQueries('appointment', {force: true});
+        queryCache.invalidateQueries('appointment');
         setAppointmentNotifications({appointmentId: variables.id});
       },
     },
@@ -74,7 +75,7 @@ export function useAddAppointment() {
     },
     {
       onSuccess: (data) => {
-        queryCache.refetchQueries(['appointment'], {force: true});
+        queryCache.invalidateQueries(['appointment']);
         setAppointmentNotifications({
           appointmentId: data,
         });
@@ -96,7 +97,7 @@ export function useDeleteAppointment() {
     {
       throwOnError: false,
       onSuccess: (data, id) => {
-        queryCache.refetchQueries('appointment', {force: true});
+        queryCache.invalidateQueries('appointment');
         deleteNotificationsByAppointmentId({id});
       },
     },
@@ -149,6 +150,6 @@ export function useGetChildAppointments(
         date: parseISO(value.date),
       })) as Appointment[];
     },
-    options,
+    options ?? {},
   );
 }

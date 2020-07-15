@@ -275,7 +275,7 @@ const AddChildScreen: React.FC = () => {
           };
 
           if (childId) {
-            updateChild({...childInput, id: childId}).then();
+            updateChild({...childInput, id: childId});
           } else {
             addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then(() => {
               trackCompleteAddChild();

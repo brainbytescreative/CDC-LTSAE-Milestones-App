@@ -4,21 +4,23 @@ import {NotificationRequestInput} from 'expo-notifications';
 import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay, sub} from 'date-fns';
 import {useTranslation} from 'react-i18next';
 import {v4 as uuid} from 'uuid';
-import {sqLiteClient} from '../db';
-import {ChildDbRecord, ChildResult, useSetSelectedChild} from './childrenHooks';
-import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../utils/helpers';
-import {milestonesIds, PropType, WellChildCheckUpAppointmentAgesEnum} from '../resources/constants';
+import {sqLiteClient} from '../../db';
+import {ChildDbRecord} from '../childrenHooks';
+import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../../utils/helpers';
+import {milestonesIds, PropType, WellChildCheckUpAppointmentAgesEnum} from '../../resources/constants';
 import {TFunction} from 'i18next';
-import {getNotificationSettings, NotificationsSettingType} from './settingsHooks';
+import {getNotificationSettings, NotificationsSettingType} from '../settingsHooks';
 import {InteractionManager} from 'react-native';
 import _ from 'lodash';
-import {Answer, MilestoneAnswer} from './types';
-import {Appointment, AppointmentDb} from './appointmentsHooks';
-import {getAppointmentById} from '../db/appoinmetQueries';
-import {deleteNotificationsByAppointmentId, getNotificationById} from '../db/notificationQueries';
+import {Answer, ChildResult, MilestoneAnswer} from '../types';
+import {Appointment, AppointmentDb} from '../appointmentsHooks';
+import {getAppointmentById} from '../../db/appoinmetQueries';
+import {deleteNotificationsByAppointmentId, getNotificationById} from '../../db/notificationQueries';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {useCallback} from 'react';
-import {useSetMilestoneAge} from './checklistHooks';
+import useSetMilestoneAge from '../checklistHooks/useSetMilestoneAge';
+// noinspection ES6PreferShortImport
+import {useSetSelectedChild} from '../childrenHooks/useSetSelectedChild';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -229,7 +231,7 @@ export function useSetMilestoneNotifications() {
     },
     {
       onSuccess: async (data, {child}) => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
         await setWellChildCheckUpAppointments({child, reschedule: false});
         reschedule();
       },
@@ -483,7 +485,7 @@ export function useCancelNotificationById() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );
@@ -498,7 +500,7 @@ export function useSetNotificationRead() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );
@@ -519,7 +521,7 @@ export function useRemoveNotificationsByChildId() {
     },
     {
       onSuccess: () => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
         reschedule();
       },
     },
@@ -527,9 +529,9 @@ export function useRemoveNotificationsByChildId() {
 }
 
 export function useGetUnreadNotifications() {
-  return useQuery(
+  return useQuery<NotificationDB[] | undefined, string>(
     'unreadNotifications',
-    async () => {
+    async (): Promise<NotificationDB[] | undefined> => {
       const result = await sqLiteClient.dB?.executeSql(
         `
                   SELECT notifications.*, ch.gender 'childGender', ch.name 'childName'
@@ -541,12 +543,7 @@ export function useGetUnreadNotifications() {
         `,
         [formatISO(new Date())],
       );
-      const unreadNotifications: NotificationDB[] | undefined = result && result[0].rows.raw();
-      //   .map((value: NotificationDB) => ({
-      //   ...value,
-      //   fireDateTimestamp: parseISO(value.fireDateTimestamp),
-      // }));
-      return unreadNotifications;
+      return result && result[0].rows.raw();
     },
     {
       suspense: true,
@@ -789,7 +786,7 @@ export function useSetWellChildCheckUpAppointments() {
     },
     {
       onSuccess: (data, {reschedule}) => {
-        (reschedule === undefined || reschedule) && queryCache.refetchQueries('unreadNotifications', {force: true});
+        (reschedule === undefined || reschedule) && queryCache.invalidateQueries('unreadNotifications');
       },
     },
   );

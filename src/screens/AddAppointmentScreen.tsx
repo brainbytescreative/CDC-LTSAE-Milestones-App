@@ -5,7 +5,6 @@ import {useFormik} from 'formik';
 import {useTranslation} from 'react-i18next';
 import DatePicker from '../components/DatePicker';
 import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
-import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {add, differenceInSeconds, startOfDay} from 'date-fns';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
@@ -19,6 +18,7 @@ import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
 import {Text} from 'react-native-paper';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {trackInteractionByType} from '../utils/analytics';
+import {useGetCurrentChild} from '../hooks/childrenHooks';
 
 interface FormValues {
   apptType: string;

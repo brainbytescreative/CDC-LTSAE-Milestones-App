@@ -60,7 +60,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(() => {
       setTimeout(() => {
-        queryCache.refetchQueries('unreadNotifications', {force: true});
+        queryCache.invalidateQueries('unreadNotifications');
       }, 2000);
     });
     return () => subscription.remove();

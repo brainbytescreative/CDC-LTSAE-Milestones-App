@@ -1,9 +1,10 @@
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
+import * as FileSystem from 'expo-file-system';
 
 export const states = [
   'AL',
@@ -65,6 +66,11 @@ export const states = [
 ] as const;
 
 export type StateCode = typeof states[number];
+
+export interface ParentProfileSelectorValues {
+  territory: string | undefined | null;
+  guardian: string | undefined | null;
+}
 
 export type Guardian = 'guardian' | 'healthcareProvider';
 
@@ -388,3 +394,20 @@ export const images = {
   en_m24_s144_1: require('./images/en_m24_s144_1.jpg'),
   en_m60_s221_140: require('./images/en_m60_s221_140.jpg'),
 } as {[key: string]: any};
+
+export const pathToDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: path?.replace(FileSystem.documentDirectory || '', ''),
+        default: path,
+      })
+    : path;
+};
+export const pathFromDB = (path?: string) => {
+  return path
+    ? Platform.select({
+        ios: `${FileSystem.documentDirectory || ''}${path}`,
+        default: path,
+      })
+    : path;
+};

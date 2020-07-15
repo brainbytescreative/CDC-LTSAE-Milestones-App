@@ -183,8 +183,8 @@ const ChildSummaryScreen: React.FC = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch({force: true}).then();
-      refetchConcerns({force: true}).then();
+      refetch();
+      refetchConcerns();
     }, [refetch, refetchConcerns]),
   );
 
@@ -212,7 +212,7 @@ const ChildSummaryScreen: React.FC = () => {
           if (Object.values(Answer).includes(index) && child?.id && milestoneAge) {
             answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
               () => {
-                refetch({force: true});
+                refetch();
               },
             );
             trackSelectSummary(index);
@@ -251,7 +251,7 @@ const ChildSummaryScreen: React.FC = () => {
               childId: child?.id,
               note: note,
               milestoneId: milestoneAge,
-            }).then(() => refetchConcerns({force: true}));
+            }).then(() => refetchConcerns());
         },
       );
     },
@@ -263,7 +263,7 @@ const ChildSummaryScreen: React.FC = () => {
       child?.id &&
         milestoneAge &&
         answerQuestion({questionId: id, childId: child?.id, note, answer, milestoneId: milestoneAge}).then(() =>
-          refetch({force: true}),
+          refetch(),
         );
     },
     [child?.id, answerQuestion, refetch, milestoneAge],
@@ -280,7 +280,7 @@ const ChildSummaryScreen: React.FC = () => {
           note,
           milestoneId: milestoneAge,
         }).then(() => {
-          refetchConcerns({force: true});
+          refetchConcerns();
         });
     },
     [child?.id, refetchConcerns, setConcern, milestoneAge],
@@ -361,7 +361,7 @@ const ChildSummaryScreen: React.FC = () => {
               <LanguageSelector
                 onLanguageChange={(lng) => {
                   trackSelectLanguage(lng);
-                  return refetch({force: true});
+                  return refetch();
                 }}
                 style={{marginHorizontal: 32}}
               />

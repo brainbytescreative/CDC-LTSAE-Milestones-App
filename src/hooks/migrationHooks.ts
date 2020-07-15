@@ -165,7 +165,7 @@ export function useTransferDataFromOldDb() {
         }),
       );
 
-      await queryCache.refetchQueries(['appointment'], {force: true});
+      await queryCache.invalidateQueries(['appointment']);
     } catch (e) {
       crashlytics().recordError(e);
       await Storage.setItemTyped('migrationFailed', true);

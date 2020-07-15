@@ -200,9 +200,9 @@ const DashboardContainer: React.FC = () => {
   useFocusEffect(
     React.useCallback(() => {
       setTimeout(() => {
-        setOnboarding(true);
-        refetch({force: true});
+        setOnboarding({finished: true});
       }, 3000);
+      refetch();
     }, [setOnboarding, refetch]),
   );
 
@@ -243,7 +243,9 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
     <>
       <ReactQueryConfigProvider
         config={{
-          suspense: true,
+          shared: {
+            suspense: true,
+          },
         }}>
         <ChildSelectorModal visible={addChildParam} />
 
