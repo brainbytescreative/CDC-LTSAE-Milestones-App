@@ -209,7 +209,7 @@ const AddChildScreen: React.FC = () => {
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
 
-  const formikRef = useRef<FormikProps<typeof initialValues> | undefined>(undefined);
+  const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const firstChild = {

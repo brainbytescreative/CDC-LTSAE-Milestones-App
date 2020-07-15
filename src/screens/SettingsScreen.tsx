@@ -80,7 +80,7 @@ const notificationPreferences = Array.from<SettingName>([
 
 const SettingsScreen: React.FC = () => {
   const {t} = useTranslation('settings');
-  const formikRef = useRef<FormikProps<NotificationSettings> | undefined>();
+  const formikRef = useRef<FormikProps<NotificationSettings> | null>(null);
   const {data: settings} = useGetNotificationSettings();
   const [setSettings] = useSetNotificationSettings();
   const {data: profile} = useGetParentProfile();
