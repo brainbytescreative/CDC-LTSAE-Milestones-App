@@ -1,5 +1,5 @@
 import SQLiteClient from '../db/SQLiteClient';
-import {milestoneQuestions} from '../resources/milestoneChecklist';
+import {questionIdToMilestoneIdMap} from '../resources/milestoneChecklist';
 import {formatISO, fromUnixTime, parseISO} from 'date-fns';
 import {useCallback} from 'react';
 import {sqLiteClient} from '../db';
@@ -150,13 +150,11 @@ export function useTransferDataFromOldDb() {
 
           await Promise.all(
             milestoneAnswersOldRecords.map(async (value) => {
-              const question = _.find(milestoneQuestions, {
-                id: value.questionId,
-              });
-              if (!question?.milestoneId) {
+              const milestoneId = questionIdToMilestoneIdMap.get(value.questionId);
+              if (!milestoneId) {
                 return;
               }
-              const object = {...value, childId: newChildId, milestoneId: question.milestoneId};
+              const object = {...value, childId: newChildId, milestoneId: milestoneId};
               const [milestonesQuery, params] = objectToQuery(object, 'milestones_answers');
 
               await sqLiteClient.dB?.executeSql(milestonesQuery, params);

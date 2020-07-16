@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors, sharedStyle} from '../../resources/constants';
@@ -17,7 +17,6 @@ import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import ChildPhoto from '../../components/ChildPhoto';
-import {ReactQueryConfigProvider} from 'react-query';
 import AEYellowBox from '../../components/AEYellowBox';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
@@ -27,6 +26,7 @@ import {differenceInWeeks, format} from 'date-fns';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
 import {trackSelectByType} from '../../utils/analytics';
+import withSuspense from '../../components/withSuspense';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -47,6 +47,55 @@ interface SkeletonProps {
   appointments?: Appointment[];
   ageLessTwoMonth: boolean;
 }
+
+const styles = StyleSheet.create({
+  spinnerContainer: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  appointmentsHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
+  appointmentsContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 15,
+    marginBottom: 40,
+  },
+  actionItem: {
+    ...sharedStyle.shadow,
+    backgroundColor: '#fff',
+    flex: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    padding: 10,
+  },
+  actionItemText: {
+    fontSize: 15,
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  childNameText: {
+    fontSize: 22,
+    textAlign: 'center',
+    marginHorizontal: 32,
+    fontFamily: 'Montserrat-Bold',
+  },
+  childAgeText: {fontSize: 22},
+  yellowTipContainer: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    marginBottom: 50,
+    marginTop: 0,
+    marginHorizontal: 32,
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+});
 
 const DashboardSkeleton: React.FC<SkeletonProps> = ({
   childPhotoComponent,
@@ -170,63 +219,85 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-const DashboardContainer: React.FC = () => {
-  const {data: child} = useGetCurrentChild();
-  const {data: appointments} = useGetChildAppointments(child?.id);
-  const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
-  useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
-  const {refetch} = useGetChecklistQuestions();
-  const {t} = useTranslation('dashboard');
-  const currentDay = new Date().getDay();
-  const birthday = child?.birthday;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const childAgeText = useMemo(() => formatAge(birthday), [birthday, currentDay]);
-  // const [setMilestoneNotifications] = useSetMilestoneNotifications();
-  // const [sheduleNotifications] = useScheduleNotifications();
-  const childName = child?.name;
-  const [setOnboarding] = useSetOnboarding();
-  // const navigation = useNavigation();
+const DashboardContainer: React.FC = withSuspense(
+  () => {
+    const {data: child} = useGetCurrentChild();
+    const {data: appointments} = useGetChildAppointments(child?.id);
+    const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
+    useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
+    const {refetch} = useGetChecklistQuestions();
+    const {t} = useTranslation('dashboard');
+    const currentDay = new Date().getDay();
+    const birthday = child?.birthday;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const childAgeText = useMemo(() => formatAge(birthday), [birthday, currentDay]);
+    // const [setMilestoneNotifications] = useSetMilestoneNotifications();
+    // const [sheduleNotifications] = useScheduleNotifications();
+    const childName = child?.name;
+    const [setOnboarding] = useSetOnboarding();
+    // const navigation = useNavigation();
 
-  const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
-  const ageLessTwoMonth = ageInWeeks < 6;
+    const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
+    const ageLessTwoMonth = ageInWeeks < 6;
 
-  // useEffect(() => {
-  //   child && setMilestoneNotifications({child});
-  // }, [child, setMilestoneNotifications]);
-  // useEffect(() => {
-  //   sheduleNotifications();
-  // }, [sheduleNotifications]);
+    // useEffect(() => {
+    //   child && setMilestoneNotifications({child});
+    // }, [child, setMilestoneNotifications]);
+    // useEffect(() => {
+    //   sheduleNotifications();
+    // }, [sheduleNotifications]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setTimeout(() => {
-        setOnboarding({finished: true});
-      }, 3000);
-      refetch();
-    }, [setOnboarding, refetch]),
-  );
+    useFocusEffect(
+      React.useCallback(() => {
+        setTimeout(() => {
+          setOnboarding({finished: true});
+        }, 3000);
+        refetch();
+      }, [setOnboarding, refetch]),
+    );
 
-  // useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
-  //   return slowdown(Promise.resolve(), 200);
-  // });
+    // useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
+    //   return slowdown(Promise.resolve(), 200);
+    // });
 
-  return (
-    <DashboardSkeleton
-      ageLessTwoMonth={ageLessTwoMonth}
-      childNameComponent={
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.childNameText}>{childName}</Text>
-          <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
-        </View>
-      }
-      appointments={appointments}
-      milestoneAgeFormatted={milestoneAgeFormatted}
-      milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
-      monthSelectorComponent={<MonthCarousel />}
-      childPhotoComponent={<ChildPhoto photo={child?.photo} />}
-    />
-  );
-};
+    return (
+      <DashboardSkeleton
+        ageLessTwoMonth={ageLessTwoMonth}
+        childNameComponent={
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.childNameText}>{childName}</Text>
+            <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
+          </View>
+        }
+        appointments={appointments}
+        milestoneAgeFormatted={milestoneAgeFormatted}
+        milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
+        monthSelectorComponent={<MonthCarousel />}
+        childPhotoComponent={<ChildPhoto photo={child?.photo} />}
+      />
+    );
+  },
+  {shared: {suspense: true}},
+  <DashboardSkeleton
+    ageLessTwoMonth={false}
+    childNameComponent={
+      <View style={[{height: 54}, styles.spinnerContainer]}>
+        <ActivityIndicator size={'small'} />
+      </View>
+    }
+    milestoneChecklistWidgetComponent={
+      <View style={[{height: 114}, styles.spinnerContainer]}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    }
+    monthSelectorComponent={
+      <View style={[{height: 172}, styles.spinnerContainer]}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    }
+    childPhotoComponent={<ChildPhoto />}
+  />,
+);
 
 const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   // useGetMilestoneGotStarted({childId: child?.id, year: childAge});
@@ -241,104 +312,24 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <>
-      <ReactQueryConfigProvider
-        config={{
-          shared: {
-            suspense: true,
-          },
-        }}>
-        <ChildSelectorModal visible={addChildParam} />
-
-        <ScrollView
-          scrollIndicatorInsets={{right: 0.1}}
-          bounces={false}
-          style={{backgroundColor: '#fff'}}
-          contentContainerStyle={{flexGrow: 1}}>
-          <View
-            style={{
-              position: 'absolute',
-              width: '100%',
-            }}>
-            <View style={{backgroundColor: colors.iceCold, height: 40}} />
-            <NavBarBackground width={'100%'} />
-          </View>
-          <Suspense
-            fallback={
-              <DashboardSkeleton
-                ageLessTwoMonth={false}
-                childNameComponent={
-                  <View style={[{height: 54}, styles.spinnerContainer]}>
-                    <ActivityIndicator size={'small'} />
-                  </View>
-                }
-                milestoneChecklistWidgetComponent={
-                  <View style={[{height: 114}, styles.spinnerContainer]}>
-                    <ActivityIndicator size={'large'} />
-                  </View>
-                }
-                monthSelectorComponent={
-                  <View style={[{height: 172}, styles.spinnerContainer]}>
-                    <ActivityIndicator size={'large'} />
-                  </View>
-                }
-                childPhotoComponent={<ChildPhoto />}
-              />
-            }>
-            <DashboardContainer />
-          </Suspense>
-        </ScrollView>
-      </ReactQueryConfigProvider>
+      <ChildSelectorModal visible={addChildParam} />
+      <ScrollView
+        scrollIndicatorInsets={{right: 0.1}}
+        bounces={false}
+        style={{backgroundColor: '#fff'}}
+        contentContainerStyle={{flexGrow: 1}}>
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+          }}>
+          <View style={{backgroundColor: colors.iceCold, height: 40}} />
+          <NavBarBackground width={'100%'} />
+        </View>
+        <DashboardContainer />
+      </ScrollView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  spinnerContainer: {
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
-  appointmentsHeaderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    marginHorizontal: 20,
-  },
-  appointmentsContainer: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 40,
-  },
-  actionItem: {
-    ...sharedStyle.shadow,
-    backgroundColor: '#fff',
-    flex: 1,
-    borderRadius: 10,
-    alignItems: 'center',
-    padding: 10,
-  },
-  actionItemText: {
-    fontSize: 15,
-    marginTop: 6,
-    textAlign: 'center',
-  },
-  childNameText: {
-    fontSize: 22,
-    textAlign: 'center',
-    marginHorizontal: 32,
-    fontFamily: 'Montserrat-Bold',
-  },
-  childAgeText: {fontSize: 22},
-  yellowTipContainer: {
-    paddingHorizontal: 25,
-    paddingVertical: 10,
-    marginBottom: 50,
-    marginTop: 0,
-    marginHorizontal: 32,
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-});
 
 export default DashboardScreen;

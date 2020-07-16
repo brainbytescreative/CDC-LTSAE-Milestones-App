@@ -277,7 +277,7 @@ const AddChildScreen: React.FC = () => {
           if (childId) {
             updateChild({...childInput, id: childId});
           } else {
-            addChild({data: childInput, isAnotherChild: !!route.params?.anotherChild}).then(() => {
+            addChild({data: childInput, isAnotherChild: false}).then(() => {
               trackCompleteAddChild();
               trackChildAge(values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));

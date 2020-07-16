@@ -1,5 +1,4 @@
 import {useTranslation} from 'react-i18next';
-import {milestonesIds} from '../../resources/constants';
 import {calcChildAge, formattedAge} from '../../utils/helpers';
 import {queryCache} from 'react-query';
 import {MilestoneQueryKey, MilestoneQueryResult} from '../types';
@@ -10,7 +9,7 @@ function useSetMilestoneAge() {
   const {t} = useTranslation('common');
   const {data: child} = useGetCurrentChild();
   return [
-    (age: typeof milestonesIds[number]) => {
+    (age: number) => {
       const {milestoneAge: childAge} = calcChildAge(child?.birthday);
       const formatted = formattedAge(age, t);
       const data: MilestoneQueryResult = {

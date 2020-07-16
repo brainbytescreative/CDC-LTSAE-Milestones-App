@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {RefObject, useEffect, useRef, useState} from 'react';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {FlatList, View} from 'react-native';
 import {checklistSections, colors, Section, sharedStyle} from '../../resources/constants';
@@ -33,16 +33,74 @@ type NavigationProp = CompositeNavigationProp<
   StackNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklist'>
 >;
 
+const QuestionsList: React.FC<{
+  flatListRef: RefObject<FlatList>;
+  section: Section;
+  onPressNextSection: () => void;
+}> = withSuspense(
+  ({flatListRef, section, onPressNextSection}) => {
+    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped!;
+    const milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted ?? '';
+    const childId = useGetCurrentChild().data?.id;
+    const {t} = useTranslation('milestoneChecklist');
+
+    return (
+      <FlatList
+        ref={flatListRef}
+        bounces={false}
+        initialNumToRender={1}
+        scrollIndicatorInsets={{right: 0.1}}
+        data={questionsGrouped?.get(section) || []}
+        renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
+        keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
+        ListHeaderComponent={() => (
+          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
+        )}
+        ListFooterComponent={() => (
+          <View style={{marginTop: 50}}>
+            <PurpleArc />
+            <View style={{backgroundColor: colors.purple}}>
+              <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
+            </View>
+          </View>
+        )}
+      />
+    );
+  },
+  {shared: {suspense: true}, queries: {staleTime: Infinity}},
+);
+
+const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = ({onSectionSet, section}) => {
+  const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
+
+  return (
+    <FlatList
+      extraData={sectionsProgress}
+      showsHorizontalScrollIndicator={false}
+      data={checklistSections}
+      horizontal={true}
+      renderItem={({item}) => (
+        <SectionItem
+          progress={sectionsProgress?.get(item)}
+          // setSection={setSection}
+          onSectionSet={onSectionSet}
+          selectedSection={section}
+          section={item}
+        />
+      )}
+      keyExtractor={(item, index) => `${item}-${index}`}
+    />
+  );
+};
+
 const MilestoneChecklistScreen: React.FC<{
   navigation: NavigationProp;
   route: RouteProp<MilestoneCheckListParamList, 'MilestoneChecklist'>;
 }> = ({navigation}) => {
   const [section, setSection] = useState<Section>(checklistSections[0]);
   const {data: {id: childId} = {}} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
-  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
-  const {t} = useTranslation('milestoneChecklist');
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
   const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
   const prevSection = useRef<{name: Section}>({name: 'social'}).current;
@@ -70,13 +128,6 @@ const MilestoneChecklistScreen: React.FC<{
 
   const flatListRef = useRef<FlatList>(null);
   const viewPagerRef = useRef<ViewPager | null>(null);
-  //
-  // useEffect(() => {
-  //   if (section) {
-  //     // flatListRef?.current?.scrollToOffset({animated: true, offset: 0});
-  //     // viewPagerRef.current?.setPage(sections.indexOf(section));
-  //   }
-  // }, [section]);
 
   useEffect(() => {
     if (section !== prevSection.name) {
@@ -141,88 +192,10 @@ const MilestoneChecklistScreen: React.FC<{
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <ChildSelectorModal />
       <View style={{flex: 0, overflow: 'visible'}}>
-        <FlatList
-          extraData={sectionsProgress}
-          showsHorizontalScrollIndicator={false}
-          data={checklistSections}
-          horizontal={true}
-          renderItem={({item}) => (
-            <SectionItem
-              progress={sectionsProgress?.get(item)}
-              // setSection={setSection}
-              onSectionSet={onSectionSet}
-              selectedSection={section}
-              section={item}
-            />
-          )}
-          keyExtractor={(item, index) => `${item}-${index}`}
-        />
+        <Tabs section={section} onSectionSet={onSectionSet} />
       </View>
-      {/*<ViewPager*/}
-      {/*  key={`${childId}`}*/}
-      {/*  ref={viewPagerRef}*/}
-      {/*  scrollEnabled={false}*/}
-      {/*  // onPageSelected={(event) => {*/}
-      {/*  //   // setPosition(event.nativeEvent.position);*/}
-      {/*  //   // setSection(sections[event.nativeEvent.position]);*/}
-      {/*  //   // onSectionSet(sections[event.nativeEvent.position]);*/}
-      {/*  //   InteractionManager.runAfterInteractions(() => {*/}
-      {/*  //     setSection(sections[event.nativeEvent.position]);*/}
-      {/*  //   });*/}
-      {/*  // }}*/}
-      {/*  style={{flex: 1}}*/}
-      {/*  initialPage={0}>*/}
-      {/*  {*/}
-      {/*    sections.map((val) =>*/}
-      {/*      val !== 'actEarly' ? (*/}
-      {/*        <FlatList*/}
-      {/*          // ref={flatListRef}*/}
-      {/*          initialNumToRender={2}*/}
-      {/*          key={val}*/}
-      {/*          data={questionsGrouped?.get(val) || []}*/}
-      {/*          renderItem={({item}) => <QuestionItem {...item} childId={childId} />}*/}
-      {/*          keyExtractor={(item, index) => `${item.id}-${index}`}*/}
-      {/*          ListHeaderComponent={() => (*/}
-      {/*            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>*/}
-      {/*              {milestoneAgeFormatted}*/}
-      {/*            </Text>*/}
-      {/*          )}*/}
-      {/*          ListFooterComponent={() => (*/}
-      {/*            <View style={{marginTop: 50}}>*/}
-      {/*              <PurpleArc width={'100%'} />*/}
-      {/*              <View style={{backgroundColor: colors.purple}}>*/}
-      {/*                <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>*/}
-      {/*              </View>*/}
-      {/*            </View>*/}
-      {/*          )}*/}
-      {/*        />*/}
-      {/*      ) : (*/}
-      {/*        <ActEarlyPage key={val} />*/}
-      {/*      ),*/}
-      {/*    ) as any*/}
-      {/*  }*/}
-      {/*</ViewPager>*/}
       {section && section !== 'actEarly' && (
-        <FlatList
-          ref={flatListRef}
-          bounces={false}
-          initialNumToRender={2}
-          scrollIndicatorInsets={{right: 0.1}}
-          data={questionsGrouped?.get(section) || []}
-          renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
-          keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
-          ListHeaderComponent={() => (
-            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
-          )}
-          ListFooterComponent={() => (
-            <View style={{marginTop: 50}}>
-              <PurpleArc />
-              <View style={{backgroundColor: colors.purple}}>
-                <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
-              </View>
-            </View>
-          )}
-        />
+        <QuestionsList flatListRef={flatListRef} onPressNextSection={onPressNextSection} section={section} />
       )}
       {section === 'actEarly' && <ActEarlyPage />}
     </View>

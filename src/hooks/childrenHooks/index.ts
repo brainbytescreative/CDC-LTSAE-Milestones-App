@@ -5,10 +5,11 @@ import Storage from '../../utils/Storage';
 import {objectToQuery} from '../../utils/helpers';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
 import {pathFromDB, pathToDB} from '../../resources/constants';
-import {ChildResult} from '../types';
+import {ChildResult, Key} from '../types';
 import {useGetCurrentChild} from './useGetCurrentChild';
 import {useGetCurrentChildId} from './useGetCurrentChildId';
 import {useSetSelectedChild} from './useSetSelectedChild';
+import {useGetChild} from './useGetChild';
 
 interface Record {
   id: number;
@@ -26,8 +27,6 @@ export interface ChildDbRecord extends Record {
 }
 
 type ChildDbRecordNew = Omit<ChildDbRecord, 'id'>;
-
-type Key = 'children' | 'selectedChild';
 
 export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
@@ -77,22 +76,6 @@ export function useDeleteChild() {
   );
 }
 
-export function useGetChild(options: {id: number | string | undefined}) {
-  return useQuery<ChildResult | undefined, [Key, typeof options]>(['children', options], async (key, variables) => {
-    if (!variables.id) {
-      return;
-    }
-
-    const [result] = await sqLiteClient.db.executeSql('select * from children where id = ?', [variables.id]);
-    const record: ChildDbRecord = result.rows.item(0);
-    return {
-      ...record,
-      photo: pathFromDB(record.photo),
-      birthday: parseISO(record.birthday),
-    };
-  });
-}
-
 export function useGetChildren(options?: QueryOptions<ChildResult[]>) {
   return useQuery<ChildResult[], Key>(
     'children',
@@ -114,6 +97,7 @@ type AddChildVariables = {data: Omit<ChildResult, 'id'>; isAnotherChild: boolean
 
 export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVariables>) {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
+  const [setSelectedChild] = useSetSelectedChild();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
       const [query, values] = objectToQuery<ChildDbRecordNew>(
@@ -127,10 +111,11 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
         'children',
       );
       const res = await sqLiteClient.dB?.executeSql(query, values);
-      const [{insertId}] = res || [{}];
-      if (!variables.isAnotherChild) {
-        insertId && Storage.setItemTyped('selectedChild', insertId);
-        // insertId && Storage.setItem('selectedChild', `${insertId}`);
+      const insertId = res?.[0].insertId;
+
+      if (!variables.isAnotherChild && insertId) {
+        console.log(variables.isAnotherChild, insertId);
+        await setSelectedChild({id: insertId});
       }
 
       const rowsAffected = res && res[0].rowsAffected;
@@ -141,8 +126,9 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
     },
     {
       onSuccess: (data, variables) => {
-        queryCache.invalidateQueries('selectedChild');
-        queryCache.invalidateQueries(['children']);
+        // queryCache.invalidateQueries('selectedChild');
+        // queryCache.setQueryData('selectedChild', data);
+        queryCache.invalidateQueries(['children'], {refetchInactive: true});
         options?.onSuccess && options.onSuccess(data, variables);
         data && setMilestoneNotifications({child: {id: data, ...variables.data}});
       },
@@ -150,4 +136,4 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
   );
 }
 
-export {useGetCurrentChild, useGetCurrentChildId, useSetSelectedChild};
+export {useGetCurrentChild, useGetCurrentChildId, useSetSelectedChild, useGetChild};

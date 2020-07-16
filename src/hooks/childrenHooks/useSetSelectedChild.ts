@@ -3,15 +3,15 @@ import {InteractionManager} from 'react-native';
 import Storage from '../../utils/Storage';
 
 export function useSetSelectedChild() {
-  return useMutation<void, {id: number; name?: string}>(
+  return useMutation<void, {id: number}>(
     async ({id}) => {
       // console.log(Date.now());
-      setTimeout(() => {
-        queryCache.setQueryData('selectedChildId', id);
-        queryCache.invalidateQueries('selectedChild');
+      setTimeout(async () => {
+        await Storage.setItemTyped('selectedChild', id);
+        await queryCache.setQueryData('selectedChildId', id);
+        await queryCache.invalidateQueries('selectedChild');
       }, 0);
       InteractionManager.runAfterInteractions(async () => {
-        await Storage.setItemTyped('selectedChild', id);
         // await Storage.setItem('selectedChild', `${id}`);
       });
     },

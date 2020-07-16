@@ -33,6 +33,7 @@ import _ from 'lodash';
 import AEYellowBox from '../../components/AEYellowBox';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {trackInteractionByType} from '../../utils/analytics';
+import withSuspense from '../../components/withSuspense';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();
@@ -243,4 +244,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActEarlyPage;
+export default withSuspense(ActEarlyPage, {
+  shared: {
+    suspense: true,
+  },
+  queries: {
+    staleTime: Infinity,
+  },
+});

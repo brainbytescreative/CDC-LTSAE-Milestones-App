@@ -13,7 +13,7 @@ export function useGetCurrentChild() {
       result = await sqLiteClient.dB?.executeSql('select * from children LIMIT 1');
     }
 
-    const child = (result && result[0].rows.item(0)) || {};
+    const child = result?.[0].rows.item(0);
 
     return {
       ...child,

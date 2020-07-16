@@ -1,3 +1,5 @@
+import {MilestoneIdType} from './constants';
+
 export interface Concern {
   id?: number;
   value?: string;
@@ -11,7 +13,7 @@ export interface Milestones {
 }
 
 export interface SkillSection {
-  id?: number;
+  id: number;
   value?: string;
   photos?: Photo[];
   videos?: Photo[];
@@ -25,7 +27,7 @@ export interface Photo {
 export interface MilestoneChecklist {
   concerns?: Concern[];
   helpful_hints?: Concern[];
-  id?: number;
+  id: MilestoneIdType;
   milestones?: Record<keyof Milestones | string, SkillSection[]>;
   title?: string;
 }
@@ -3679,15 +3681,35 @@ const checklist: MilestoneChecklist[] = [
   },
 ];
 
-export const milestoneQuestions: Readonly<
-  (SkillSection & {skillType: keyof Milestones; milestoneId: number})[]
-> = Object.freeze(
-  checklist
-    .map((value) => {
-      if (!value.milestones) {
-        return [];
-      }
-      return Object.keys(value.milestones).reduce((previousValue, currentValue) => {
+type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
+
+const mapSet = function (key: unknown) {
+  throw "Can't add property " + key + ', map is not extensible';
+};
+
+const mapDelete = function (key: unknown) {
+  throw "Can't delete property " + key + ', map is frozen';
+};
+
+const mapClear = function () {
+  throw 'Can\'t clear map, map is frozen';
+};
+
+function freezeMap<T extends Map<K, V>, K, V>(myMap: T) {
+  myMap.set = mapSet;
+  myMap.delete = mapDelete;
+  myMap.clear = mapClear;
+
+  Object.freeze(myMap);
+
+  return myMap;
+}
+
+type MilestoneData = Pick<MilestoneChecklist, 'id' | 'concerns' | 'helpful_hints'> & {milestones: Quetion[]};
+export const checklistMap = freezeMap(
+  new Map<number, MilestoneData>(
+    checklist.map((value) => {
+      const milestones = Object.keys(value.milestones ?? {}).reduce((previousValue, currentValue) => {
         const newValue =
           value?.milestones?.[currentValue]?.map((v) => ({
             ...v,
@@ -3695,9 +3717,27 @@ export const milestoneQuestions: Readonly<
             milestoneId: value.id,
           })) || [];
         return [...previousValue, ...newValue];
-      }, [] as any[]);
-    })
-    .flat(),
+      }, [] as any[]) as Quetion[];
+
+      return [
+        value.id as number,
+        {milestones, concerns: value.concerns, id: value.id, helpful_hints: value.helpful_hints},
+      ];
+    }),
+  ),
 );
 
-export default Object.freeze(checklist);
+export const questionIdToMilestoneIdMap = freezeMap(
+  new Map(
+    Array.from(checklistMap.values())
+      .map((value) => value?.milestones ?? [])
+      .flat()
+      .map((value) => [value.id, value.milestoneId]),
+  ),
+);
+
+// export const milestoneQuestions = Object.freeze(
+//   Array.from(checklistMap.values())
+//     .map((value) => value?.milestones ?? [])
+//     .flat(),
+// );

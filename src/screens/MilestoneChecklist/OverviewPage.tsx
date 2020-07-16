@@ -10,6 +10,7 @@ import AEScrollView from '../../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import withSuspense from '../../components/withSuspense';
 
 interface Props {
   onNext: () => void;
@@ -96,4 +97,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OverviewPage;
+export default withSuspense(
+  OverviewPage,
+  {
+    shared: {suspense: true},
+  },
+  <View />,
+);

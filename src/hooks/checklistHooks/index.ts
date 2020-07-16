@@ -1,10 +1,19 @@
 import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
 import _ from 'lodash';
-import {milestonesIds, missingConcerns, PropType, Section, SkillType, skillTypes} from '../../resources/constants';
-import {useGetChild} from '../childrenHooks';
+import {
+  MilestoneIdType,
+  milestonesIds,
+  missingConcerns,
+  PropType,
+  Section,
+  SkillType,
+  skillTypes,
+} from '../../resources/constants';
+// noinspection ES6PreferShortImport
+import {useGetChild} from '../childrenHooks/useGetChild';
 import {queryCache, useMutation, useQuery} from 'react-query';
-import milestoneChecklist, {Concern, milestoneQuestions, SkillSection} from '../../resources/milestoneChecklist';
+import {checklistMap, Concern, SkillSection} from '../../resources/milestoneChecklist';
 import {sqLiteClient} from '../../db';
 import {useMemo} from 'react';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
@@ -72,7 +81,7 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   );
 }
 
-async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[] | undefined> {
+async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[]> {
   const result = await sqLiteClient.dB?.executeSql(
     `SELECT *
        FROM milestones_answers
@@ -81,7 +90,7 @@ async function getAnswers(milestoneId: number, childId: number): Promise<Milesto
     [childId, milestoneId],
   );
 
-  return result && result[0].rows.raw();
+  return (result && result[0].rows.raw()) ?? [];
 }
 
 export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) {
@@ -99,26 +108,27 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
         return;
       }
 
-      const data = (variables.childId && milestoneAge && (await getAnswers(milestoneAge, variables.childId))) || [];
-      const answersIds = data.map((value) => value.questionId || 0);
+      const data = await getAnswers(variables.milestoneAge, variables.childId);
+      const answersIds = data.map((value) => value.questionId);
 
-      const questionsData = milestoneQuestions
-        .filter((value) => value.milestoneId === variables.milestoneAge)
-        .map((item) => ({
-          ...item,
-          value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
-        }))
-        .sort((a, b) => {
-          const aIsAnswered = answersIds.includes(a.id!);
-          const bIsAbswered = answersIds.includes(b.id!);
-          if (aIsAnswered && !bIsAbswered) {
-            return 1;
-          } else if (bIsAbswered && !aIsAnswered) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
+      const questionsData =
+        checklistMap
+          .get(variables.milestoneAge)
+          ?.milestones?.map((item) => ({
+            ...item,
+            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
+          }))
+          ?.sort((a, b) => {
+            const aIsAnswered = answersIds.includes(a.id!);
+            const bIsAbswered = answersIds.includes(b.id!);
+            if (aIsAnswered && !bIsAbswered) {
+              return 1;
+            } else if (bIsAbswered && !aIsAnswered) {
+              return -1;
+            } else {
+              return 0;
+            }
+          }) ?? [];
 
       data.forEach((value) => {
         queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
@@ -130,7 +140,7 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       const questionsById = new Map<string, SkillSection>(Object.entries(_.keyBy(questionsData, 'id')));
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
-      questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey), ...answersById.get(mKey)}));
+      questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey)!, ...answersById.get(mKey)}));
       const groupedByAnswer: Record<string, {id: number; value?: string; note: string}[]> = _.groupBy(
         Array.from(questionsById.values()),
         'answer',
@@ -157,14 +167,11 @@ export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
       (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
       undefined;
 
-    const questions =
-      milestoneId && _.first(milestoneChecklist.filter((value) => value.id === milestoneId))?.milestones;
-
-    const questionsData = Object.values(questions || {}).flat();
-    const questionsIds = questionsData?.map((value) => value.id);
+    const questions = checklistMap.get(Number(milestoneId))?.milestones ?? [];
+    const questionsIds = questions.map((value) => value.id);
     const answerIds = answers?.map((value) => value.questionId) || [];
     const unansweredIds = _.difference(questionsIds, answerIds);
-    const unansweredData = questionsData.filter((value) => unansweredIds.includes(value.id));
+    const unansweredData = questions.filter((value) => unansweredIds.includes(value.id));
 
     const complete = unansweredIds.length === 0; //answers && variables.ids && answers.length === variables.ids.length;
     return {answers, complete, unansweredData};
@@ -294,14 +301,12 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
       });
 
       const concernsData: Concern[] =
-        milestoneChecklist
-          .filter((value) => value.id === milestoneAge)[0]
-          ?.concerns?.map((item) => {
-            return {
-              ...item,
-              value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
-            };
-          }) ?? [];
+        checklistMap.get(Number(milestoneAge))?.concerns?.map((item) => {
+          return {
+            ...item,
+            value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
+          };
+        }) ?? [];
 
       const answeredIds = answers?.map((value) => value.concernId);
 
@@ -331,7 +336,6 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
     },
     {
       staleTime: 0,
-      suspense: true,
     },
   );
 }
@@ -377,11 +381,11 @@ export function useSetConcern() {
         // console.log(predicate, answer);
         const {isMissingConcern} = await checkMissing({childId, milestoneId});
         if (isMissingConcern) {
-          setRecommendationNotifications({milestoneId, child: {id: childId}});
+          await setRecommendationNotifications({milestoneId, child: {id: childId}});
         } else {
-          deleteRecommendationNotifications({milestoneId, childId});
+          await deleteRecommendationNotifications({milestoneId, childId});
         }
-        queryCache.invalidateQueries(['concern', {childId, concernId}]);
+        await queryCache.invalidateQueries(['concern', {childId, concernId}]);
       },
     },
   );
@@ -409,13 +413,11 @@ export function useGetTips() {
         return;
       }
 
-      const tips = milestoneChecklist
-        .filter((value) => value.id === milestoneAge)[0]
-        ?.helpful_hints?.map((item) => ({
-          ...item,
-          key: item.value,
-          value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
-        }));
+      const tips = checklistMap.get(Number(milestoneAge))?.helpful_hints?.map((item) => ({
+        ...item,
+        key: item.value,
+        value: item.value && t(`milestones:${item.value}`, tOpt({t, gender: child?.gender})),
+      }));
 
       const tipsIds = tips?.map((value) => value.id) || [0].join(',');
       const result = await sqLiteClient.dB?.executeSql(
@@ -488,21 +490,14 @@ export function useGetMonthProgress(predicate: {childId?: number; milestone?: nu
     if (!variables.childId || !variables.milestone) {
       return 0;
     }
-    const milestoneEntries = new Map(
-      Object.entries(milestoneChecklist.filter((value) => value.id === variables.milestone)[0].milestones || {}),
-    );
-    const molestoneQuestionsIds = (Array.from(milestoneEntries.values()).flat() as SkillSection[]).map(
-      (value) => value.id,
-    );
+    const questions = checklistMap.get(variables.milestone)?.milestones;
     const result = await sqLiteClient.dB?.executeSql(
-      `SELECT count(questionId) cnt from milestones_answers where questionId in (${molestoneQuestionsIds.join(
-        ',',
-      )}) and childId=?`,
-      [variables.childId],
+      'SELECT count(questionId) cnt from milestones_answers where milestoneId=?1 and childId=?2',
+      [variables.milestone, variables.childId],
     );
 
-    const answeredQuestionsCount = (result && result[0].rows.item(0).cnt) || 0;
-    return (answeredQuestionsCount / (molestoneQuestionsIds.length || 1)) * 100;
+    const answeredQuestionsCount = result?.[0].rows.item(0)?.cnt ?? 0;
+    return (answeredQuestionsCount / Number(questions?.length)) * 100 ?? 0;
   });
 }
 
@@ -580,7 +575,7 @@ export function useCheckMissingMilestones() {
   return useMutation(
     async ({childId, milestoneId}: {childId: number; milestoneId: number}) => {
       const {isMissingConcern, isNotYet, isNotSure} = await checkMissingMilestones(milestoneId, childId);
-      const concernId = missingConcerns[milestonesIds.indexOf(milestoneId)];
+      const concernId = missingConcerns[milestonesIds.indexOf(milestoneId as MilestoneIdType)];
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `

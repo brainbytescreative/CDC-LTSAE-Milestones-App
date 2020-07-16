@@ -233,8 +233,8 @@ export const sharedScreenOptions: StackNavigationOptions = {
     ...sharedStyle.largeBoldText,
   },
 };
-
-export const milestonesIds = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60];
+export type MilestoneIdType = typeof milestonesIds[number];
+export const milestonesIds = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60] as const;
 export const missingConcerns = [1, 7, 15, 25, 34, 42, 51, 58, 68, 80];
 export const tooYongAgeDays = 42;
 export type LanguageType = 'en' | 'es';
