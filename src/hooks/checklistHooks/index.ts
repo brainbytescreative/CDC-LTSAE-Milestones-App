@@ -93,7 +93,7 @@ async function getAnswers(milestoneId: number, childId: number): Promise<Milesto
   return (result && result[0].rows.raw()) ?? [];
 }
 
-export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) {
+export function useGetChecklistQuestions(childId?: ChildResult['id']) {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: currentChild} = useGetCurrentChild();
   const {data: anotherChild} = useGetChild({id: childId});
@@ -107,6 +107,8 @@ export function useGetChecklistQuestions(childId?: PropType<ChildResult, 'id'>) 
       if (!variables.childId || !variables.milestoneAge) {
         return;
       }
+
+      // __DEV__ && (await slowdown(Promise.resolve(), 3000));
 
       const data = await getAnswers(variables.milestoneAge, variables.childId);
       const answersIds = data.map((value) => value.questionId);
@@ -201,7 +203,7 @@ export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | un
 }
 
 export function useGetQuestion(data: QuestionAnswerKey) {
-  return useQuery(['question', data], async (key, variables) => {
+  return useQuery<MilestoneAnswer, [string, typeof data]>(['question', data], async (key, variables) => {
     if (!variables.childId || !variables.questionId || !variables.milestoneId) {
       throw new Error('No key');
     }
@@ -211,9 +213,7 @@ export function useGetQuestion(data: QuestionAnswerKey) {
       [variables.childId, variables.questionId],
     );
 
-    // await slowdown(Promise.resolve(), 300);
-
-    return result && (result[0].rows.item(0) as MilestoneAnswer);
+    return result?.[0].rows.item(0);
   });
 }
 

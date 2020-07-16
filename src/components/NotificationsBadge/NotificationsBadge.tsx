@@ -16,7 +16,6 @@ import NotificationsBadgeCounter from './NotificationsBadgeCounter';
 import {trackInteractionByType, trackSelectByType} from '../../utils/analytics';
 
 const NotificationsBadge: React.FC = () => {
-  const {bottom} = useSafeAreaInsets();
   const navigation = useNavigation();
   const [visible, setIsVisible] = useState(false);
   const {top} = useSafeAreaInsets();
@@ -93,9 +92,8 @@ const NotificationsBadge: React.FC = () => {
             </View>
             <FlatList
               data={notifications || []}
-              style={{flex: 1}}
+              style={{flex: 1, marginBottom: 16}}
               keyExtractor={(item, index) => `${index}`}
-              ListFooterComponent={() => <View style={{height: bottom}} />}
               renderItem={({index, item}) => (
                 <NotificationsListItem
                   onNotificationPress={onNavigatePress}

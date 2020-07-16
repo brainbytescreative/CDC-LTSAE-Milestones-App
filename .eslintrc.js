@@ -13,5 +13,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'react-native/no-unused-styles': 1,
+    'no-use-before-define': 'off',
   },
 };

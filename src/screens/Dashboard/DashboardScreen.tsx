@@ -11,7 +11,7 @@ import {DashboardDrawerParamsList, DashboardStackParamList} from '../../componen
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Appointment, useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {formatAge, formatDate} from '../../utils/helpers';
-import {useGetChecklistQuestions, useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
+import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Text} from 'react-native-paper';
@@ -27,6 +27,7 @@ import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
 import {trackSelectByType} from '../../utils/analytics';
 import withSuspense from '../../components/withSuspense';
+import {queryCache} from 'react-query';
 
 interface Props {
   navigation: StackNavigationProp<any>;
@@ -97,21 +98,54 @@ const styles = StyleSheet.create({
   },
 });
 
-const DashboardSkeleton: React.FC<SkeletonProps> = ({
-  childPhotoComponent,
-  childNameComponent,
-  monthSelectorComponent,
-  milestoneChecklistWidgetComponent,
-  appointments = [],
-  ageLessTwoMonth,
-}) => {
+const AppointmentsList: React.FC = withSuspense(
+  () => {
+    const navigation = useNavigation<DashboardStackNavigationProp>();
+    const {data: child} = useGetCurrentChild();
+    const {data: appointments = []} = useGetChildAppointments(child?.id);
+    const {t} = useTranslation('dashboard');
+
+    return (
+      <>
+        {appointments.map((appt) => {
+          return (
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={t('accessibility:appointmentCaption', {
+                caption: appt.apptType,
+                time: format(appt.date, 'PPPpp', {
+                  locale: dateFnsLocales[i18next.language],
+                }),
+              })}
+              key={`appointment-${appt.id}`}
+              onPress={() => {
+                trackSelectByType('Add Appointment');
+                navigation.navigate('Appointment', {
+                  appointmentId: appt.id,
+                });
+              }}
+              style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
+              <Text style={{fontSize: 18}}>{appt.apptType}</Text>
+              {/*<Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>*/}
+              <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </>
+    );
+  },
+  {shared: {suspense: true}},
+  <View />,
+);
+
+const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLessTwoMonth}) => {
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {t} = useTranslation('dashboard');
   return (
     <View>
       {childPhotoComponent}
-      {childNameComponent}
-      {monthSelectorComponent}
+      <ChildName />
+      <MonthCarousel />
       <AEYellowBox containerStyle={styles.yellowTipContainer}>
         {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
       </AEYellowBox>
@@ -122,7 +156,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
           paddingHorizontal: 32,
           backgroundColor: colors.purple,
         }}>
-        {milestoneChecklistWidgetComponent}
+        <MilestoneChecklistWidget />
         <View
           style={{
             marginVertical: 20,
@@ -190,55 +224,40 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({
             <Text style={{fontSize: 12}}>{t('addApt')}</Text>
           </TouchableOpacity>
         </View>
-        {appointments?.map((appt) => {
-          return (
-            <TouchableOpacity
-              accessibilityRole={'button'}
-              accessibilityLabel={t('accessibility:appointmentCaption', {
-                caption: appt.apptType,
-                time: format(appt.date, 'PPPpp', {
-                  locale: dateFnsLocales[i18next.language],
-                }),
-              })}
-              key={`appointment-${appt.id}`}
-              onPress={() => {
-                trackSelectByType('Add Appointment');
-                navigation.navigate('Appointment', {
-                  appointmentId: appt.id,
-                });
-              }}
-              style={[styles.appointmentsContainer, {marginBottom: 20}, sharedStyle.shadow]}>
-              <Text style={{fontSize: 18}}>{appt.apptType}</Text>
-              {/*<Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>*/}
-              <Text style={{fontSize: 18}}>{formatDate(appt.date, 'datetime')}</Text>
-            </TouchableOpacity>
-          );
-        })}
+        <AppointmentsList />
       </View>
     </View>
   );
 };
 
+const ChildName: React.FC = withSuspense(
+  () => {
+    const {t} = useTranslation('dashboard');
+    // const currentDay = new Date().getDay();
+    const {data: {name: childName, birthday} = {}} = useGetCurrentChild();
+    const childAgeText = useMemo(() => formatAge(birthday), [birthday]);
+
+    return (
+      <View style={{alignItems: 'center'}}>
+        <Text style={styles.childNameText}>{childName}</Text>
+        <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
+      </View>
+    );
+  },
+  {shared: {suspense: true}},
+  <View style={[{height: 54}, styles.spinnerContainer]}>
+    <ActivityIndicator size={'small'} />
+  </View>,
+);
+
 const DashboardContainer: React.FC = withSuspense(
   () => {
     const {data: child} = useGetCurrentChild();
-    const {data: appointments} = useGetChildAppointments(child?.id);
-    const {data: {milestoneAge, milestoneAgeFormatted} = {}} = useGetMilestone();
+    const {data: {milestoneAge} = {}} = useGetMilestone();
     useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
-    const {refetch} = useGetChecklistQuestions();
-    const {t} = useTranslation('dashboard');
-    const currentDay = new Date().getDay();
-    const birthday = child?.birthday;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const childAgeText = useMemo(() => formatAge(birthday), [birthday, currentDay]);
-    // const [setMilestoneNotifications] = useSetMilestoneNotifications();
-    // const [sheduleNotifications] = useScheduleNotifications();
-    const childName = child?.name;
     const [setOnboarding] = useSetOnboarding();
-    // const navigation = useNavigation();
-
-    const ageInWeeks = differenceInWeeks(new Date(), child!.birthday);
-    const ageLessTwoMonth = ageInWeeks < 6;
+    const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    const ageLessTwoMonth = Number(ageInWeeks) < 6;
 
     // useEffect(() => {
     //   child && setMilestoneNotifications({child});
@@ -252,8 +271,9 @@ const DashboardContainer: React.FC = withSuspense(
         setTimeout(() => {
           setOnboarding({finished: true});
         }, 3000);
-        refetch();
-      }, [setOnboarding, refetch]),
+        // refetch();
+        queryCache.invalidateQueries('questions', {refetchInactive: true});
+      }, [setOnboarding]),
     );
 
     // useQuery(['timeout', {childId: child?.id, milestoneId: milestoneAge}], () => {
@@ -263,40 +283,22 @@ const DashboardContainer: React.FC = withSuspense(
     return (
       <DashboardSkeleton
         ageLessTwoMonth={ageLessTwoMonth}
-        childNameComponent={
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.childNameText}>{childName}</Text>
-            <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
-          </View>
-        }
-        appointments={appointments}
-        milestoneAgeFormatted={milestoneAgeFormatted}
-        milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
-        monthSelectorComponent={<MonthCarousel />}
+        // childNameComponent={
+        //   <View style={{alignItems: 'center'}}>
+        //     <Text style={styles.childNameText}>{childName}</Text>
+        //     <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
+        //   </View>
+        // }
+        // appointments={appointments}
+        // milestoneAgeFormatted={milestoneAgeFormatted}
+        // milestoneChecklistWidgetComponent={<MilestoneChecklistWidget />}
+        // monthSelectorComponent={<MonthCarousel />}
         childPhotoComponent={<ChildPhoto photo={child?.photo} />}
       />
     );
   },
-  {shared: {suspense: true}},
-  <DashboardSkeleton
-    ageLessTwoMonth={false}
-    childNameComponent={
-      <View style={[{height: 54}, styles.spinnerContainer]}>
-        <ActivityIndicator size={'small'} />
-      </View>
-    }
-    milestoneChecklistWidgetComponent={
-      <View style={[{height: 114}, styles.spinnerContainer]}>
-        <ActivityIndicator size={'large'} />
-      </View>
-    }
-    monthSelectorComponent={
-      <View style={[{height: 172}, styles.spinnerContainer]}>
-        <ActivityIndicator size={'large'} />
-      </View>
-    }
-    childPhotoComponent={<ChildPhoto />}
-  />,
+  {shared: {suspense: false}},
+  <DashboardSkeleton ageLessTwoMonth={false} childPhotoComponent={<ChildPhoto />} />,
 );
 
 const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
