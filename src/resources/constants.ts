@@ -84,6 +84,8 @@ export enum WellChildCheckUpAppointmentAgesEnum {
   Age30 = 30,
 }
 
+export const suspenseEnabled = {shared: {suspense: true}};
+
 export type SelectEventType =
   | 'Menu'
   | 'On'

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Linking, StyleSheet, View} from 'react-native';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {colors, sharedStyle} from '../resources/constants';
+import {colors, sharedStyle, suspenseEnabled} from '../resources/constants';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import LanguageSelector from '../components/LanguageSelector';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
@@ -12,6 +12,7 @@ import AEScrollView from '../components/AEScrollView';
 import {tOpt} from '../utils/helpers';
 import {useFocusEffect} from '@react-navigation/native';
 import CDCLogo from '../components/Svg/CDCLogo';
+import withSuspense from '../components/withSuspense';
 
 interface ItemProps {
   value?: string;
@@ -214,4 +215,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RevisitScreen;
+export default withSuspense(RevisitScreen, suspenseEnabled);

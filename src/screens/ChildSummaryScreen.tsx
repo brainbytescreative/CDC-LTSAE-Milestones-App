@@ -38,6 +38,7 @@ import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import withSuspense from '../components/withSuspense';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -462,4 +463,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChildSummaryScreen;
+export default withSuspense(ChildSummaryScreen, {shared: {suspense: true}});

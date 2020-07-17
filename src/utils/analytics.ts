@@ -75,7 +75,7 @@ export function trackState(key: string, options?: {page?: PageType; eventname?: 
   // console.log('<<<', pageName, `,key: ${key}`);
 
   ACPCore.trackState(key, {
-    'gov.cdc.appname': 'CDC Health IQ',
+    'gov.cdc.appname': 'Mobile App Dev',
     'gov.cdc.language': i18next.language, // t5 (Language)
     'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
     'gov.cdc.osname': Platform.OS, //t54 (OS Name)
