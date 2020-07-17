@@ -49,7 +49,7 @@ Notifications.setNotificationHandler({
 
 ACPAnalytics.registerExtension();
 
-// console.disableYellowBox = true;
+console.disableYellowBox = true;
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 const theme: Theme = {

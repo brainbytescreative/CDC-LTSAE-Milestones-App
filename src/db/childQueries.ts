@@ -1,0 +1,25 @@
+import {sqLiteClient} from './index';
+import {ChildDbRecord} from '../hooks/childrenHooks';
+import {pathFromDB} from '../resources/constants';
+import {parseISO} from 'date-fns';
+import {ChildResult} from '../hooks/types';
+
+export async function getChildById(childId: ChildDbRecord['id']): Promise<ChildResult | undefined> {
+  const result = await sqLiteClient.db.executeSql('select * from children where id=?1', [childId]);
+  const child: ChildDbRecord | undefined = result[0].rows.item(0);
+
+  if (!child) {
+    throw new Error(`There is no child with id: ${childId}`);
+  }
+
+  return {
+    ...child,
+    photo: pathFromDB(child?.photo),
+    birthday: child.birthday && parseISO(child.birthday),
+  } as ChildResult;
+}
+
+export async function getSelectedChildIdFallback(): Promise<ChildDbRecord['id'] | undefined> {
+  const res = await sqLiteClient.db.executeSql('select id from children order by id  limit 1');
+  return res[0].rows.item(0)?.id;
+}

@@ -39,7 +39,11 @@ const OnboardingParentProfileScreen: React.FC = () => {
               navigation.navigate(NextScreen, {onboarding: true});
             }}
             onDone={() => {
-              navigation.navigate('Dashboard');
+              // navigation.navigate('Dashboard');
+              trackNext();
+              navigation.navigate(NextScreen, {
+                onboarding: true,
+              });
             }}
           />
           <Text

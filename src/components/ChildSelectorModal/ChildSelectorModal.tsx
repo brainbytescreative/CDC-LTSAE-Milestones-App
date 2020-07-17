@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -24,6 +24,7 @@ import {useTranslation} from 'react-i18next';
 import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
 import {ChildResult} from '../../hooks/types';
 import withSuspense from '../withSuspense';
+import _ from 'lodash';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,
@@ -57,6 +58,10 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
     const {data: children} = useGetChildren({suspense: true});
     const [deleteChild] = useDeleteChild();
     const {t} = useTranslation();
+    const {data: {id: currentId} = {}} = useGetCurrentChild();
+    const currentIndex = useMemo(() => _.findLastIndex(children, {id: currentId}), [children, currentId]);
+    const flatlistRef = useRef<FlatList | null>(null);
+
     const onDelete = (id: ChildResult['id'], name: ChildResult['name']) => {
       Alert.alert(
         '',
@@ -79,32 +84,39 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
       );
     };
 
+    useEffect(() => {
+      setTimeout(() => {
+        currentIndex > -1 && flatlistRef.current?.scrollToIndex({index: currentIndex, viewPosition: 1});
+      }, 500);
+    }, [currentIndex]);
+
     return (
       <>
-        <View style={{flex: 0.9}}>
-          <FlatList
-            data={children}
-            renderItem={({item}) => {
-              return (
-                <ChildSelectorsItem
-                  {...item}
-                  onSelect={onSelect}
-                  onEdit={onEdit}
-                  onDelete={Number(children?.length) > 1 ? onDelete : undefined}
-                />
-              );
-            }}
-            keyExtractor={(item) => `${item.id}`}
-          />
-        </View>
-        <View style={{flex: 0.1, justifyContent: 'center'}}>
-          <ChildSectorFooter
-            onPress={() => {
-              trackSelectByType('Add Child', {page: 'Child Dropdown Page'});
-              onEdit();
-            }}
-          />
-        </View>
+        <FlatList
+          onScrollToIndexFailed={() => undefined}
+          ref={flatlistRef}
+          data={children}
+          renderItem={({item}) => {
+            return (
+              <ChildSelectorsItem
+                {...item}
+                onSelect={onSelect}
+                onEdit={onEdit}
+                onDelete={Number(children?.length) > 1 ? onDelete : undefined}
+              />
+            );
+          }}
+          // ListFooterComponent={
+          //
+          // }
+          keyExtractor={(item) => `${item.id}`}
+        />
+        <ChildSectorFooter
+          onPress={() => {
+            trackSelectByType('Add Child', {page: 'Child Dropdown Page'});
+            onEdit();
+          }}
+        />
       </>
     );
   },
@@ -200,11 +212,17 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
           onPressIn={() => {
             setChildSelectorVisible(false);
           }}>
-          <View style={{backgroundColor: colors.whiteTransparent, flex: 1, paddingBottom: 16 + bottom}}>
+          <View
+            style={{
+              backgroundColor: colors.whiteTransparent,
+              flex: 1,
+              paddingBottom: 54 + (bottom ?? 16),
+              paddingTop: 16,
+            }}>
             <View
               style={[
                 {
-                  flex: 1,
+                  // flex: 1,
                   marginTop: top,
                   backgroundColor: 'white',
                   marginHorizontal: 32,

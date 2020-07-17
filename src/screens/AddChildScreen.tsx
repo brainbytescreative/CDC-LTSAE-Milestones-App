@@ -332,7 +332,7 @@ const AddChildScreen: React.FC = () => {
                 <>
                   <View style={{backgroundColor: colors.white, paddingHorizontal: 32}}>
                     {formikProps.values.anotherChildren?.map((item, index) => (
-                      <>
+                      <View key={`child-${index}`}>
                         <PhotoField name={`anotherChildren.${index}.photo`} t={t} />
                         <NameField t={t} name={`anotherChildren.${index}.name`} />
                         <View style={{height: 11}} />
@@ -362,7 +362,7 @@ const AddChildScreen: React.FC = () => {
                           style={{marginHorizontal: 0}}>
                           {t('common:delete')}
                         </AEButtonRounded>
-                      </>
+                      </View>
                     ))}
                   </View>
                   <View style={{backgroundColor: colors.white, flexGrow: 2, justifyContent: 'space-between'}}>
