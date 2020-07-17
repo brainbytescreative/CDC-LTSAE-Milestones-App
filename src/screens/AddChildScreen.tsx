@@ -1,4 +1,9 @@
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
+import {TFunction} from 'i18next';
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Alert,
   Image,
@@ -10,27 +15,23 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import {Text} from 'react-native-paper';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
-import DatePicker from '../components/DatePicker';
-import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
-import {colors, sharedStyle} from '../resources/constants';
-import CancelDoneTopControl from '../components/CancelDoneTopControl';
-import AETextInput from '../components/AETextInput';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import AEScrollView from '../components/AEScrollView';
-import NavBarBackground from '../components/Svg/NavBarBackground';
-import {TFunction} from 'i18next';
-import {addEditChildSchema} from '../resources/validationSchemas';
-import AERadioButton from '../components/AERadioButton';
+import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import PurpleArc from '../components/Svg/PurpleArc';
+
+import AERadioButton from '../components/AERadioButton';
+import AEScrollView from '../components/AEScrollView';
+import AETextInput from '../components/AETextInput';
+import CancelDoneTopControl from '../components/CancelDoneTopControl';
+import DatePicker from '../components/DatePicker';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
+import NavBarBackground from '../components/Svg/NavBarBackground';
 import PlusIcon from '../components/Svg/PlusIcon';
+import PurpleArc from '../components/Svg/PurpleArc';
+import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
+import {colors, sharedStyle} from '../resources/constants';
+import {addEditChildSchema} from '../resources/validationSchemas';
 import {
   trackAddAnotherChild,
   trackChildAddAPhoto,

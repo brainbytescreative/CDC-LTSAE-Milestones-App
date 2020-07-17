@@ -1,7 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
+
 import {colors, sharedStyle} from '../resources/constants';
 import {trackTopCancel, trackTopDone} from '../utils/analytics';
 

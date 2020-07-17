@@ -1,7 +1,7 @@
-import {PropType} from '../resources/constants';
-import {sqLiteClient} from './index';
 import {Appointment, AppointmentDb} from '../hooks/appointmentsHooks';
 import {ChildDbRecord} from '../hooks/childrenHooks';
+import {PropType} from '../resources/constants';
+import {sqLiteClient} from './index';
 
 export function getAppointmentById(id: PropType<Appointment, 'id'>): Promise<AppointmentDb | undefined> {
   const query = `select appointments.*, children.name 'childName', children.id 'childId', children.gender 'childGender'

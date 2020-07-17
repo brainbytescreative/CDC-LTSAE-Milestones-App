@@ -1,26 +1,27 @@
+import {Formik, useField} from 'formik';
+import {FormikProps} from 'formik/dist/types';
+import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native-paper';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
-import {Formik, useField} from 'formik';
+import {Text} from 'react-native-paper';
+
+import AEScrollView from '../components/AEScrollView';
+import AESwitch from '../components/AESwitch';
+import LanguageSelector from '../components/LanguageSelector';
+import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
+import ParentProfileSelector from '../components/ParentProfileSelector';
+import PurpleArc from '../components/Svg/PurpleArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
+import {useScheduleNotifications} from '../hooks/notificationsHooks';
+import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
 import {
   NotificationSettings,
   SettingName,
   useGetNotificationSettings,
   useSetNotificationSettings,
 } from '../hooks/settingsHooks';
-import {FormikProps} from 'formik/dist/types';
-import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
-import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
-import AESwitch from '../components/AESwitch';
 import {colors, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import ParentProfileSelector from '../components/ParentProfileSelector';
-import LanguageSelector from '../components/LanguageSelector';
-import AEScrollView from '../components/AEScrollView';
-import {useScheduleNotifications} from '../hooks/notificationsHooks';
-import _ from 'lodash';
-import PurpleArc from '../components/Svg/PurpleArc';
 import {trackSelectByType, trackSelectLanguage} from '../utils/analytics';
 
 // import DropDownPicker from 'react-native-dropdown-picker';

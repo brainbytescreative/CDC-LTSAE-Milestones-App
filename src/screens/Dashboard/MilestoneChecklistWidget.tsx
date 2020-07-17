@@ -1,14 +1,15 @@
-import React from 'react';
-import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {ProgressBar, Text} from 'react-native-paper';
-import {colors, sharedStyle} from '../../resources/constants';
-import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
-import {DashboardStackNavigationProp} from './DashboardScreen';
-import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
-import {trackSelectByType} from '../../utils/analytics';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ProgressBar, Text} from 'react-native-paper';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
 import withSuspense from '../../components/withSuspense';
+import {useGetChecklistQuestions} from '../../hooks/checklistHooks';
+import {colors, sharedStyle} from '../../resources/constants';
+import {trackSelectByType} from '../../utils/analytics';
+import {DashboardStackNavigationProp} from './DashboardScreen';
 
 const styles = StyleSheet.create({
   milestoneCheckListContainer: {

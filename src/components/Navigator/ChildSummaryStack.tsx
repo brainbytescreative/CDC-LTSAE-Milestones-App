@@ -1,10 +1,11 @@
-import React from 'react';
-import BurgerButton from '../BurgerButton';
 import {createStackNavigator} from '@react-navigation/stack';
-import {ChildSummaryParamList} from './types';
-import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
+import React from 'react';
+
 import {colors} from '../../resources/constants';
+import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
+import BurgerButton from '../BurgerButton';
+import {ChildSummaryParamList} from './types';
 
 const Stack = createStackNavigator<ChildSummaryParamList>();
 

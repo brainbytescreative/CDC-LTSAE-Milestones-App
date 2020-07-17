@@ -1,11 +1,12 @@
-import {queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
-import {sqLiteClient} from '../db';
-import {objectToQuery} from '../utils/helpers';
 import {formatISO, parseISO} from 'date-fns';
+import {QueryOptions, queryCache, useMutation, useQuery} from 'react-query';
+
+import {sqLiteClient} from '../db';
+import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
 import {PropType} from '../resources/constants';
+import {objectToQuery} from '../utils/helpers';
 import {ChildDbRecord} from './childrenHooks';
 import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
-import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
 import {ChildResult} from './types';
 
 export interface AppointmentDb {

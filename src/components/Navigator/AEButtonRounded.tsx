@@ -1,6 +1,7 @@
 import React from 'react';
-import {Button} from 'react-native-paper';
 import {ViewStyle} from 'react-native';
+import {Button} from 'react-native-paper';
+
 import {sharedStyle} from '../../resources/constants';
 
 type Created = React.ComponentProps<typeof Button>;

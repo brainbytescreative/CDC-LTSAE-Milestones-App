@@ -1,12 +1,13 @@
-import React from 'react';
-import {NotificationDB, notificationDbToRequest} from '../../hooks/notificationsHooks';
 import {TFunction} from 'i18next';
-import {TouchableOpacity, View} from 'react-native';
-import {colors} from '../../resources/constants';
-import {Text} from 'react-native-paper';
-import CloseCross from '../Svg/CloseCross';
-import {formatDate} from '../../utils/helpers';
 import _ from 'lodash';
+import React from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import {NotificationDB, notificationDbToRequest} from '../../hooks/notificationsHooks';
+import {colors} from '../../resources/constants';
+import {formatDate} from '../../utils/helpers';
+import CloseCross from '../Svg/CloseCross';
 
 const NotificationsListItem: React.FC<{
   index: number;

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
-import {PropType} from '../resources/constants';
+
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
+import {PropType} from '../resources/constants';
 import {trackAppLaunch} from '../utils/analytics';
 
 type StateChangeListener = Parameters<PropType<AppState, 'addEventListener'>>[1];

@@ -1,20 +1,21 @@
+import {DrawerContentComponentProps, DrawerContentScrollView, createDrawerNavigator} from '@react-navigation/drawer';
+import i18next from 'i18next';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {SafeAreaView, TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import {colors, sharedStyle} from '../../resources/constants';
+import {trackDrawerSelect} from '../../utils/analytics';
+import CloseCross from '../Svg/CloseCross';
+import ChildSummaryStack from './ChildSummaryStack';
 import DashboardStack from './DashboardStack';
+import InfoStack from './InfoStack';
+import MilestoneChecklistStack from './MilestoneChecklistStack';
 import SettingsStack from './SettingsStack';
 import TipsAndActivitiesStack from './TipsAndActivitiesStack';
-import {createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView} from '@react-navigation/drawer';
 import {DashboardDrawerParamsList} from './types';
-import InfoStack from './InfoStack';
-import ChildSummaryStack from './ChildSummaryStack';
-import {SafeAreaView, TouchableOpacity, View} from 'react-native';
-import {colors, sharedStyle} from '../../resources/constants';
-import {Text} from 'react-native-paper';
-import MilestoneChecklistStack from './MilestoneChecklistStack';
-import CloseCross from '../Svg/CloseCross';
-import i18next from 'i18next';
 import WhenActEarlyStack from './WhenActEarlyStack';
-import {trackDrawerSelect} from '../../utils/analytics';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Platform, StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle} from 'react-native';
+
 import {colors, sharedStyle} from '../resources/constants';
 import TouchableArea from './TouchableArea/TouchableArea';
 

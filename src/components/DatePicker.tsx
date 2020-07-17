@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 import {StyleProp, ViewStyle} from 'react-native';
+import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
+
 import {formatDate} from '../utils/helpers';
 import AETextInput from './AETextInput';
 

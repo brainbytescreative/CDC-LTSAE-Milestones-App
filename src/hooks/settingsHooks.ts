@@ -1,6 +1,7 @@
-import {queryCache, useMutation, useQuery} from 'react-query';
-import Storage from '../utils/Storage';
 import _ from 'lodash';
+import {queryCache, useMutation, useQuery} from 'react-query';
+
+import Storage from '../utils/Storage';
 
 export type SettingName =
   | 'milestoneNotifications'

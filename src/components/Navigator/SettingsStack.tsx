@@ -1,8 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {SettingsStackParamList} from './types';
+
 import SettingsScreen from '../../screens/SettingsScreen';
 import BurgerButton from '../BurgerButton';
+import {SettingsStackParamList} from './types';
 
 const Stack = createStackNavigator<SettingsStackParamList>();
 

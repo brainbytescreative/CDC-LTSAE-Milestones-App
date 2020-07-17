@@ -1,17 +1,18 @@
+import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
-import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
-import {createStackNavigator} from '@react-navigation/stack';
-import AddChildScreen from '../../screens/AddChildScreen';
-import {DashboardStackParamList} from './types';
-import BurgerButton from '../BurgerButton';
+
+import {colors, sharedScreenOptions} from '../../resources/constants';
 import AddAppointmentScreen from '../../screens/AddAppointmentScreen';
+import AddChildScreen from '../../screens/AddChildScreen';
 import AppointmentScreen from '../../screens/AppointmentScreen';
 import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
-import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
-import {colors, sharedScreenOptions} from '../../resources/constants';
-import RevisitScreen from '../../screens/RevisitScreen';
+import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';
+import RevisitScreen from '../../screens/RevisitScreen';
+import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
+import BurgerButton from '../BurgerButton';
+import {DashboardStackParamList} from './types';
 
 const Stack = createStackNavigator<DashboardStackParamList>();
 

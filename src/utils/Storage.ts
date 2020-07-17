@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {ParentProfileSelectorValues} from '../resources/constants';
+
 import {NotificationSettings} from '../hooks/settingsHooks';
+import {ParentProfileSelectorValues} from '../resources/constants';
 
 type Key = keyof ParsedValue;
 

@@ -1,9 +1,10 @@
 import {useTranslation} from 'react-i18next';
-import {calcChildAge, formattedAge} from '../../utils/helpers';
 import {queryCache} from 'react-query';
-import {MilestoneQueryKey, MilestoneQueryResult} from '../types';
+
+import {calcChildAge, formattedAge} from '../../utils/helpers';
 // noinspection ES6PreferShortImport
 import {useGetCurrentChild} from '../childrenHooks/useGetCurrentChild';
+import {MilestoneQueryKey, MilestoneQueryResult} from '../types';
 
 function useSetMilestoneAge() {
   const {t} = useTranslation('common');

@@ -1,4 +1,7 @@
+import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
 import {
   Dimensions,
   FlatList,
@@ -11,7 +14,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {Concern} from '../../resources/milestoneChecklist';
+import {Text} from 'react-native-paper';
+
+import AEYellowBox from '../../components/AEYellowBox';
+import CheckMark from '../../components/Svg/CheckMark';
+import ChevronRightBig from '../../components/Svg/ChevronRightBig';
+import NoteIcon from '../../components/Svg/NoteIcon';
+import PurpleArc from '../../components/Svg/PurpleArc';
+import withSuspense from '../../components/withSuspense';
 import {
   useGetChecklistQuestions,
   useGetConcern,
@@ -20,20 +30,11 @@ import {
   useGetMilestone,
   useSetConcern,
 } from '../../hooks/checklistHooks';
-import {useNavigation} from '@react-navigation/native';
-import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
-import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {Trans, useTranslation} from 'react-i18next';
-import CheckMark from '../../components/Svg/CheckMark';
-import NoteIcon from '../../components/Svg/NoteIcon';
-import ChevronRightBig from '../../components/Svg/ChevronRightBig';
-import {Text} from 'react-native-paper';
-import _ from 'lodash';
-import AEYellowBox from '../../components/AEYellowBox';
-import PurpleArc from '../../components/Svg/PurpleArc';
+import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
+import {Concern} from '../../resources/milestoneChecklist';
 import {trackInteractionByType} from '../../utils/analytics';
-import withSuspense from '../../components/withSuspense';
+import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 
 const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
   const [setConcern] = useSetConcern();

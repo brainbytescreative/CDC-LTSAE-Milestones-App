@@ -3,6 +3,7 @@
  * @module src/util/global
  */
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
+
 import SQLiteClient from './SQLiteClient';
 
 const DB_NAME = 'act-early-rn.sqlite';

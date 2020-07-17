@@ -1,15 +1,16 @@
-import {MutateOptions, queryCache, QueryOptions, useMutation, useQuery} from 'react-query';
-import {sqLiteClient} from '../../db';
 import {formatISO, parseISO} from 'date-fns';
-import Storage from '../../utils/Storage';
-import {objectToQuery} from '../../utils/helpers';
-import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
+import {MutateOptions, QueryOptions, queryCache, useMutation, useQuery} from 'react-query';
+
+import {sqLiteClient} from '../../db';
 import {pathFromDB, pathToDB} from '../../resources/constants';
+import {objectToQuery} from '../../utils/helpers';
+import Storage from '../../utils/Storage';
+import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
 import {ChildResult, Key} from '../types';
+import {useGetChild} from './useGetChild';
 import {useGetCurrentChild} from './useGetCurrentChild';
 import {useGetCurrentChildId} from './useGetCurrentChildId';
 import {useSetSelectedChild} from './useSetSelectedChild';
-import {useGetChild} from './useGetChild';
 
 interface Record {
   id: number;

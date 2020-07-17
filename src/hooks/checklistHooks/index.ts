@@ -1,33 +1,34 @@
-import {useTranslation} from 'react-i18next';
 import {parseISO} from 'date-fns';
+import * as MailComposer from 'expo-mail-composer';
 import _ from 'lodash';
+import nunjucks from 'nunjucks';
+import {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import {queryCache, useMutation, useQuery} from 'react-query';
+
+import {sqLiteClient} from '../../db';
 import {
   MilestoneIdType,
-  milestonesIds,
-  missingConcerns,
   PropType,
   Section,
   SkillType,
+  milestonesIds,
+  missingConcerns,
   skillTypes,
 } from '../../resources/constants';
+import emailSummaryContent from '../../resources/EmailChildSummary';
+import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
+import {trackChecklistAnswer} from '../../utils/analytics';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
+import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
 import {useGetChild} from '../childrenHooks/useGetChild';
-import {queryCache, useMutation, useQuery} from 'react-query';
-import {checklistMap, Concern, SkillSection} from '../../resources/milestoneChecklist';
-import {sqLiteClient} from '../../db';
-import {useMemo} from 'react';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
-import * as MailComposer from 'expo-mail-composer';
-import nunjucks from 'nunjucks';
-import emailSummaryContent from '../../resources/EmailChildSummary';
 import {
   useDeleteRecommendationNotifications,
   useSetCompleteMilestoneReminder,
   useSetRecommendationNotifications,
 } from '../notificationsHooks';
 import {Answer, ChildResult, MilestoneAnswer, MilestoneQueryKey, MilestoneQueryResult} from '../types';
-import {trackChecklistAnswer} from '../../utils/analytics';
-import {useGetCurrentChild} from '../childrenHooks';
 import useSetMilestoneAge from './useSetMilestoneAge';
 
 // type ChecklistData = SkillSection & {section: keyof Milestones};

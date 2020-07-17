@@ -1,7 +1,8 @@
 import React from 'react';
-import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import BabyPlaceholder from './Svg/BabyPlaceholder';
 import {useTranslation} from 'react-i18next';
+import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+
+import BabyPlaceholder from './Svg/BabyPlaceholder';
 
 const ChildPhoto: React.FC<{photo?: string; style?: StyleProp<ViewStyle>}> = ({photo, style}) => {
   const {t} = useTranslation();

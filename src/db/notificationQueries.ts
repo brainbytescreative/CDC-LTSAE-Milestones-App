@@ -1,7 +1,7 @@
-import {sqLiteClient} from './index';
+import {AppointmentDb} from '../hooks/appointmentsHooks';
 import {NotificationDB} from '../hooks/notificationsHooks';
 import {PropType} from '../resources/constants';
-import {AppointmentDb} from '../hooks/appointmentsHooks';
+import {sqLiteClient} from './index';
 
 export async function getNotificationById(id: string): Promise<NotificationDB | undefined> {
   const query = sqLiteClient.dB?.executeSql(

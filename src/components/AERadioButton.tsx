@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {StyleProp, TextStyle, TouchableOpacity, View} from 'react-native';
-import Svg, {Circle, G, SvgProps} from 'react-native-svg';
-import {colors, sharedStyle} from '../resources/constants';
 import {Text} from 'react-native-paper';
+import Svg, {Circle, G, SvgProps} from 'react-native-svg';
+
+import {colors, sharedStyle} from '../resources/constants';
 
 interface Props {
   title?: string;

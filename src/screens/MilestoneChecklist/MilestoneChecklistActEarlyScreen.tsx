@@ -1,11 +1,12 @@
-import React from 'react';
-import ActEarlyPage from './ActEarlyPage';
-import {View} from 'react-native';
-import {colors} from '../../resources/constants';
-import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import React from 'react';
+import {View} from 'react-native';
+
+import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList} from '../../components/Navigator/types';
+import {colors} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
+import ActEarlyPage from './ActEarlyPage';
 
 type NavProp = DrawerNavigationProp<DashboardDrawerParamsList, 'WhenToActEarly'>;
 

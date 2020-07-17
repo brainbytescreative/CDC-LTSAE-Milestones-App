@@ -1,8 +1,9 @@
 import React from 'react';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
-import {LangCode, useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
-import {colors, sharedStyle} from '../resources/constants';
 import {Text} from 'react-native-paper';
+
+import {colors, sharedStyle} from '../resources/constants';
+import {LangCode, useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
 
 interface Props {
   style?: StyleProp<ViewStyle>;

@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -10,15 +12,14 @@ import {
   View,
 } from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {colors, milestonesIds, PropType} from '../../resources/constants';
-import {useTranslation} from 'react-i18next';
-import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
-import _ from 'lodash';
+
 import ChevronLeft from '../../components/Svg/ChevronLeft';
 import ChevronRight from '../../components/Svg/ChevronRight';
-import {trackSelectByType} from '../../utils/analytics';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import withSuspense from '../../components/withSuspense';
+import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {PropType, colors, milestonesIds} from '../../resources/constants';
+import {trackSelectByType} from '../../utils/analytics';
 
 interface ItemProps {
   childAge: number;

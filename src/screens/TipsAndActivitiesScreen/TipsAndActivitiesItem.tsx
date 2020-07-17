@@ -1,10 +1,12 @@
-import React from 'react';
-import {Tip, useGetTipValue} from '../../hooks/checklistHooks';
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native';
-import {colors, sharedStyle} from '../../resources/constants';
-import {Text} from 'react-native-paper';
-import LikeHeart from '../../components/Svg/LikeHeart';
 import {TFunction} from 'i18next';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import LikeHeart from '../../components/Svg/LikeHeart';
+import {Tip, useGetTipValue} from '../../hooks/checklistHooks';
+import {colors, sharedStyle} from '../../resources/constants';
+
 // import Animated, {
 //   and,
 //   block,

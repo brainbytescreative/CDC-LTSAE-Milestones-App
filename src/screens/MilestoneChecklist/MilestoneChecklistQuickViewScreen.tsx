@@ -1,16 +1,17 @@
-import React, {useState} from 'react';
-import {FlatList, View} from 'react-native';
-import OverviewPage from './OverviewPage';
-import {useGetMilestone} from '../../hooks/checklistHooks';
-import {checklistSections, colors, Section, skillTypes} from '../../resources/constants';
-import ChildSelectorModal from '../../components/ChildSelectorModal';
-import SectionItem from './SectionItem';
-import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
+import React, {useState} from 'react';
+import {FlatList, View} from 'react-native';
+
+import ChildSelectorModal from '../../components/ChildSelectorModal';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import {useGetMilestone} from '../../hooks/checklistHooks';
+import {Section, checklistSections, colors, skillTypes} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
+import OverviewPage from './OverviewPage';
+import SectionItem from './SectionItem';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,

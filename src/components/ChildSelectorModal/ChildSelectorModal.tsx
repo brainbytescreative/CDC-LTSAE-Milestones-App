@@ -1,4 +1,9 @@
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import _ from 'lodash';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
@@ -8,23 +13,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
-import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
-import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ChildSelectorsItem from './ChildSelectorsItem';
-import ChildSectorFooter from './ChildSectorFooter';
 import {Text} from 'react-native-paper';
-import {useTranslation} from 'react-i18next';
-import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
+import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
 import {ChildResult} from '../../hooks/types';
+import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
+import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
+import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
+import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
 import withSuspense from '../withSuspense';
-import _ from 'lodash';
+import ChildSectorFooter from './ChildSectorFooter';
+import ChildSelectorsItem from './ChildSelectorsItem';
 
 type DashboardScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'DashboardStack'>,

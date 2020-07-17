@@ -1,6 +1,7 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
-import Storage from '../utils/Storage';
+
 import {slowdown} from '../utils/helpers';
+import Storage from '../utils/Storage';
 
 export function useGetOnboarding() {
   return useQuery<boolean, string>(

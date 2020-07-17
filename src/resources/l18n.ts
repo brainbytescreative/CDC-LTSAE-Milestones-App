@@ -1,14 +1,15 @@
-import i18next from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import translationES from './locales/es.json';
-import translationEN from './locales/en.json';
-import milestonesEN from './milestones/en.json';
-import milestonesTextsEN from './milestones/en-texts.json';
-import milestonesES from './milestones/es.json';
-import milestonesTextsES from './milestones/es-texts.json';
 import AsyncStorage from '@react-native-community/async-storage';
+import i18next from 'i18next';
 import {useCallback} from 'react';
+import {initReactI18next} from 'react-i18next';
 import {queryCache, useMutation, useQuery} from 'react-query';
+
+import translationEN from './locales/en.json';
+import translationES from './locales/es.json';
+import milestonesTextsEN from './milestones/en-texts.json';
+import milestonesEN from './milestones/en.json';
+import milestonesTextsES from './milestones/es-texts.json';
+import milestonesES from './milestones/es.json';
 
 const languageCode = 'Language';
 export type LangCode = 'en' | 'es' | undefined;

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
-import {StateCode, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {StateCode, states} from '../resources/constants';
 
 interface Props {
   children: (showModal: () => void) => any;

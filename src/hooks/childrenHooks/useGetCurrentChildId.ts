@@ -1,6 +1,7 @@
 import {useQuery} from 'react-query';
-import Storage from '../../utils/Storage';
+
 import {getSelectedChildIdFallback} from '../../db/childQueries';
+import Storage from '../../utils/Storage';
 
 export function useGetCurrentChildId() {
   return useQuery('selectedChildId', async () => {

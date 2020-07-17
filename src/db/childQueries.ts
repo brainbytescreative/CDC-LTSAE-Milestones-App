@@ -1,8 +1,9 @@
-import {sqLiteClient} from './index';
-import {ChildDbRecord} from '../hooks/childrenHooks';
-import {pathFromDB} from '../resources/constants';
 import {parseISO} from 'date-fns';
+
+import {ChildDbRecord} from '../hooks/childrenHooks';
 import {ChildResult} from '../hooks/types';
+import {pathFromDB} from '../resources/constants';
+import {sqLiteClient} from './index';
 
 export async function getChildById(childId: ChildDbRecord['id']): Promise<ChildResult | undefined> {
   const result = await sqLiteClient.db.executeSql('select * from children where id=?1', [childId]);

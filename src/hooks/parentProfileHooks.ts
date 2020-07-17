@@ -1,6 +1,7 @@
 import {queryCache, useMutation, useQuery} from 'react-query';
-import Storage from '../utils/Storage';
+
 import {ParentProfileSelectorValues} from '../resources/constants';
+import Storage from '../utils/Storage';
 
 type QueryKey = 'parentProfile';
 

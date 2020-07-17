@@ -1,8 +1,9 @@
-import React from 'react';
-import WebView from 'react-native-webview';
-import PrivacyPolicy from '../resources/privacyPolicy';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import i18next from 'i18next';
+import React from 'react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import WebView from 'react-native-webview';
+
+import PrivacyPolicy from '../resources/privacyPolicy';
 
 const PrivacyPolicyScreen: React.FC = () => {
   const {bottom} = useSafeAreaInsets();

@@ -1,9 +1,9 @@
+import {Platform} from 'react-native';
 /**
  * Utility module providing modern inteface to Redis client
  * @module src/util/SQLiteClient
  */
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
-import {Platform} from 'react-native';
 
 type Migration = (db: SQLiteDatabase) => Promise<void>;
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
-import {useGetUnreadNotifications} from '../../hooks/notificationsHooks';
-import {Text} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import {useGetUnreadNotifications} from '../../hooks/notificationsHooks';
 import {sharedStyle} from '../../resources/constants';
 
 const NotificationsBadgeCounter: React.FC<Pick<TouchableOpacityProps, 'onPress'>> = ({onPress}) => {

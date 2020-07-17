@@ -1,20 +1,21 @@
 import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {Platform, ScrollView, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {colors, PropType, sharedStyle} from '../../resources/constants';
-import ShortHeaderArc from '../../components/Svg/ShortHeaderArc';
-import ChildPhoto from '../../components/ChildPhoto';
-import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {formatAge} from '../../utils/helpers';
-import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks';
-import DropDownPicker from '../../components/DropDownPicker';
+
 import AEScrollView from '../../components/AEScrollView';
-import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
+import ChildPhoto from '../../components/ChildPhoto';
+import ChildSelectorModal from '../../components/ChildSelectorModal';
+import DropDownPicker from '../../components/DropDownPicker';
 import Chevron from '../../components/Svg/Chevron';
-import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
+import ShortHeaderArc from '../../components/Svg/ShortHeaderArc';
+import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
+import {PropType, colors, sharedStyle} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
+import {formatAge} from '../../utils/helpers';
+import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
 
 const tipFilters = ['all', 'like', 'remindMe'];
 type TipType = typeof tipFilters[number];

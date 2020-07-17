@@ -1,20 +1,20 @@
-import React from 'react';
-
-import {useTranslation} from 'react-i18next';
-import ChildSelectorModal from '../components/ChildSelectorModal';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
-import {Button, Text} from 'react-native-paper';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, View} from 'react-native';
-import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
-import {formatDate} from '../utils/helpers';
-import {colors} from '../resources/constants';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {Button, Text} from 'react-native-paper';
+
 import AEScrollView from '../components/AEScrollView';
-import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
+import ChildSelectorModal from '../components/ChildSelectorModal';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import PurpleArc from '../components/Svg/PurpleArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
+import {useDeleteAppointment, useGetAppointmentById} from '../hooks/appointmentsHooks';
+import {useGetComposeSummaryMail} from '../hooks/checklistHooks';
+import {colors} from '../resources/constants';
 import {trackInteractionByType, trackSelectByType} from '../utils/analytics';
+import {formatDate} from '../utils/helpers';
 
 type AppointmentScreenRouteProp = RouteProp<DashboardStackParamList, 'Appointment'>;
 

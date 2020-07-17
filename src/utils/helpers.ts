@@ -1,14 +1,15 @@
-import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
-import i18next from '../resources/l18n';
-import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
-import {dateFnsLocales} from '../resources/dateFnsLocales';
-import _ from 'lodash';
-import {TFunction} from 'i18next';
-import {milestonesIds, missingConcerns, PropType, tooYongAgeDays} from '../resources/constants';
-import {sqLiteClient} from '../db';
-import {Answer} from '../hooks/types';
-import {AppointmentDb} from '../hooks/appointmentsHooks';
 import {NavigationContainerProps} from '@react-navigation/native';
+import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
+import {TFunction} from 'i18next';
+import _ from 'lodash';
+import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
+
+import {sqLiteClient} from '../db';
+import {AppointmentDb} from '../hooks/appointmentsHooks';
+import {Answer} from '../hooks/types';
+import {PropType, milestonesIds, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {dateFnsLocales} from '../resources/dateFnsLocales';
+import i18next from '../resources/l18n';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {

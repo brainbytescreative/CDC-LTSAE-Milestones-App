@@ -1,17 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modal, Portal, Text} from 'react-native-paper';
-import {useTranslation} from 'react-i18next';
-import {useNavigation} from '@react-navigation/native';
-import {colors, sharedStyle} from '../../resources/constants';
-import LanguageSelector from '../../components/LanguageSelector';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import AEScrollView from '../../components/AEScrollView';
+import LanguageSelector from '../../components/LanguageSelector';
 import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
 import CDCLogo from '../../components/Svg/CDCLogo';
-import PurpleArc from '../../components/Svg/PurpleArc';
 import IceColdArc from '../../components/Svg/IceColdArc';
+import PurpleArc from '../../components/Svg/PurpleArc';
+import {colors, sharedStyle} from '../../resources/constants';
 import {trackStartTracking} from '../../utils/analytics';
 
 const OnboardingInfoScreen: React.FC = () => {

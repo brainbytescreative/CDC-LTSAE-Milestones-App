@@ -1,19 +1,20 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, Modal, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
-import {useTranslation} from 'react-i18next';
+
 import {
   useGetUnreadNotifications,
   useNavigateNotification,
   useSetNotificationRead,
 } from '../../hooks/notificationsHooks';
-import ChevronLeft from '../Svg/ChevronLeft';
-import NotificationsListItem from './NotificationsListItem';
-import NotificationsBadgeCounter from './NotificationsBadgeCounter';
+import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
 import {trackInteractionByType, trackSelectByType} from '../../utils/analytics';
+import ChevronLeft from '../Svg/ChevronLeft';
+import NotificationsBadgeCounter from './NotificationsBadgeCounter';
+import NotificationsListItem from './NotificationsListItem';
 
 const NotificationsBadge: React.FC = () => {
   const navigation = useNavigation();

@@ -1,6 +1,7 @@
 import {useQuery} from 'react-query';
-import {useGetCurrentChildId} from './useGetCurrentChildId';
+
 import {getChildById} from '../../db/childQueries';
+import {useGetCurrentChildId} from './useGetCurrentChildId';
 
 export function useGetCurrentChild() {
   const {data: selectedChildId} = useGetCurrentChildId();

@@ -1,16 +1,16 @@
-import React, {useEffect, useRef} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-
-import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native-paper';
-import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {colors, Section, sharedStyle, skillTypes} from '../../resources/constants';
-import AEScrollView from '../../components/AEScrollView';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import AEScrollView from '../../components/AEScrollView';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
+import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
+import {Section, colors, sharedStyle, skillTypes} from '../../resources/constants';
 
 interface Props {
   onNext: () => void;

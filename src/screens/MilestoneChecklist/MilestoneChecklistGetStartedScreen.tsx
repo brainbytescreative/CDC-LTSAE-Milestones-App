@@ -1,21 +1,22 @@
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import React from 'react';
-import FrontPage from './FrontPage';
+import {FlatList, View} from 'react-native';
+
+import ChildSelectorModal from '../../components/ChildSelectorModal';
+import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {
   useGetMilestone,
   useGetMilestoneGotStarted,
   useGetSectionsProgress,
   useSetMilestoneGotStarted,
 } from '../../hooks/checklistHooks';
-import {FlatList, View} from 'react-native';
-import {checklistSections, colors} from '../../resources/constants';
-import ChildSelectorModal from '../../components/ChildSelectorModal';
-import SectionItem from './SectionItem';
-import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {checklistSections, colors} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
+import FrontPage from './FrontPage';
+import SectionItem from './SectionItem';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<MilestoneCheckListParamList, 'MilestoneChecklistGetStarted'>,

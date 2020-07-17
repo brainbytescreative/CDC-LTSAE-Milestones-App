@@ -1,15 +1,16 @@
+import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {colors, sharedStyle} from '../resources/constants';
+import {Trans, useTranslation} from 'react-i18next';
 import {Image, Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {Trans, useTranslation} from 'react-i18next';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import AEScrollView from '../components/AEScrollView';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import AEScrollView from '../components/AEScrollView';
+import {InfoStackParamList} from '../components/Navigator/types';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
-import {NavigationProp} from '@react-navigation/native';
-import {InfoStackParamList} from '../components/Navigator/types';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
+import {colors, sharedStyle} from '../resources/constants';
 
 const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = ({navigation}) => {
   const {t} = useTranslation('info');

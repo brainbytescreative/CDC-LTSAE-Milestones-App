@@ -1,15 +1,16 @@
+import crashlytics from '@react-native-firebase/crashlytics';
+import {formatISO, fromUnixTime, parseISO} from 'date-fns';
+import _ from 'lodash';
+import {useCallback} from 'react';
+import {Platform} from 'react-native';
+import {queryCache} from 'react-query';
+
+import {sqLiteClient} from '../db';
 import SQLiteClient from '../db/SQLiteClient';
 import {questionIdToMilestoneIdMap} from '../resources/milestoneChecklist';
-import {formatISO, fromUnixTime, parseISO} from 'date-fns';
-import {useCallback} from 'react';
-import {sqLiteClient} from '../db';
 import {objectToQuery} from '../utils/helpers';
-import _ from 'lodash';
-import {useSetAppointmentNotifications, useSetMilestoneNotifications} from './notificationsHooks';
-import {queryCache} from 'react-query';
-import crashlytics from '@react-native-firebase/crashlytics';
-import {Platform} from 'react-native';
 import Storage from '../utils/Storage';
+import {useSetAppointmentNotifications, useSetMilestoneNotifications} from './notificationsHooks';
 
 type ChildIOSDB = {
   id: number;

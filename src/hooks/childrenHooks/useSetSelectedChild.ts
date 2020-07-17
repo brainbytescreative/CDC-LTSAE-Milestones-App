@@ -1,5 +1,6 @@
-import {queryCache, useMutation} from 'react-query';
 import {InteractionManager} from 'react-native';
+import {queryCache, useMutation} from 'react-query';
+
 import Storage from '../../utils/Storage';
 
 export function useSetSelectedChild() {

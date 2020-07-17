@@ -1,4 +1,10 @@
+import {useActionSheet} from '@expo/react-native-action-sheet';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -10,8 +16,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Text} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import ChildPhoto from '../components/ChildPhoto';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import {Trans, useTranslation} from 'react-i18next';
+import LanguageSelector from '../components/LanguageSelector';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
+import NoteIcon from '../components/Svg/NoteIcon';
+import PurpleArc from '../components/Svg/PurpleArc';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
+import withSuspense from '../components/withSuspense';
 import {
   useGetChecklistQuestions,
   useGetComposeSummaryMail,
@@ -20,25 +36,10 @@ import {
   useSetConcern,
   useSetQuestionAnswer,
 } from '../hooks/checklistHooks';
-import {Text} from 'react-native-paper';
-import LanguageSelector from '../components/LanguageSelector';
-import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, missingConcerns, PropType, sharedStyle} from '../resources/constants';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import ChildPhoto from '../components/ChildPhoto';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useActionSheet} from '@expo/react-native-action-sheet';
-import _ from 'lodash';
-import NoteIcon from '../components/Svg/NoteIcon';
-import PurpleArc from '../components/Svg/PurpleArc';
 import {Answer, MilestoneAnswer} from '../hooks/types';
+import {PropType, colors, missingConcerns, sharedStyle} from '../resources/constants';
 import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
-import withSuspense from '../components/withSuspense';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;

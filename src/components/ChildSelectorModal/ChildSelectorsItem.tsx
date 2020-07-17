@@ -1,12 +1,13 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {colors, sharedStyle} from '../../resources/constants';
 import {Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {formatAge} from '../../utils/helpers';
-import BabyPlaceholder from '../Svg/BabyPlaceholder';
+
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {ChildResult} from '../../hooks/types';
+import {colors, sharedStyle} from '../../resources/constants';
+import {formatAge} from '../../utils/helpers';
+import BabyPlaceholder from '../Svg/BabyPlaceholder';
 
 interface ItemProps extends ChildResult {
   onSelect: (id: ChildResult['id']) => void;

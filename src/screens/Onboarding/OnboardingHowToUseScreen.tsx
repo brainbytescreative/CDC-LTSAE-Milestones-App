@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 import ViewPager from '@react-native-community/viewpager';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../components/Navigator/types';
-import {colors, sharedStyle} from '../../resources/constants';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Image, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
+
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
+import {RootStackParamList} from '../../components/Navigator/types';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {colors, sharedStyle} from '../../resources/constants';
 
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 

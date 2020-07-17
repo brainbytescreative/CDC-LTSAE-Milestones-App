@@ -1,6 +1,7 @@
 import React, {Suspense} from 'react';
-import FullScreenLoading from './FullScreenLoading';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+
+import FullScreenLoading from './FullScreenLoading';
 
 const withSuspense = <P extends any>(
   BaseComponent: React.ComponentType<P>,

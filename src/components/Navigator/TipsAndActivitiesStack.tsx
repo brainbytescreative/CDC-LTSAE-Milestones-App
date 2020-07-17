@@ -1,9 +1,10 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {TipsAndActivitiesParamList} from './types';
-import BurgerButton from '../BurgerButton';
+
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
+import BurgerButton from '../BurgerButton';
+import {TipsAndActivitiesParamList} from './types';
 
 const Stack = createStackNavigator<TipsAndActivitiesParamList>();
 

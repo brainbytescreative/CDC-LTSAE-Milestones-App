@@ -1,8 +1,9 @@
+import {parseISO} from 'date-fns';
 import {useQuery} from 'react-query';
-import {ChildResult, Key} from '../types';
+
 import {sqLiteClient} from '../../db';
 import {pathFromDB} from '../../resources/constants';
-import {parseISO} from 'date-fns';
+import {ChildResult, Key} from '../types';
 import {ChildDbRecord} from './index';
 
 export function useGetChild(options: {id: number | string | undefined}) {

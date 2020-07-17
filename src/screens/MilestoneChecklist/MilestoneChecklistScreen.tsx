@@ -1,11 +1,19 @@
+import ViewPager from '@react-native-community/viewpager';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import _ from 'lodash';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
-import ChildSelectorModal from '../../components/ChildSelectorModal';
+import {useTranslation} from 'react-i18next';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors, Section, sharedStyle} from '../../resources/constants';
 import {Text} from 'react-native-paper';
-import QuestionItem from './QuestionItem';
-import SectionItem from './SectionItem';
-import ActEarlyPage from './ActEarlyPage';
+import {useQuery} from 'react-query';
+
+import ButtonWithChevron from '../../components/ButtonWithChevron';
+import ChildSelectorModal from '../../components/ChildSelectorModal';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import PurpleArc from '../../components/Svg/PurpleArc';
+import withSuspense from '../../components/withSuspense';
 import {
   useGetCheckListAnswers,
   useGetChecklistQuestions,
@@ -14,19 +22,12 @@ import {
   useGetSectionsProgress,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {useTranslation} from 'react-i18next';
-import ButtonWithChevron from '../../components/ButtonWithChevron';
-import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
-import {StackNavigationProp} from '@react-navigation/stack';
-import PurpleArc from '../../components/Svg/PurpleArc';
-import ViewPager from '@react-native-community/viewpager';
-import withSuspense from '../../components/withSuspense';
-import {useQuery} from 'react-query';
-import {slowdown} from '../../utils/helpers';
-import _ from 'lodash';
+import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
+import {slowdown} from '../../utils/helpers';
+import ActEarlyPage from './ActEarlyPage';
+import QuestionItem from './QuestionItem';
+import SectionItem from './SectionItem';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,

@@ -1,24 +1,25 @@
-import React from 'react';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {NavigationContainerRef} from '@react-navigation/core';
 import {createStackNavigator} from '@react-navigation/stack';
-import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
-import {RootStackParamList} from './types';
-import RootDrawer from './RootDrawer';
-import {useGetOnboarding} from '../../hooks/onboardingHooks';
+import * as Notifications from 'expo-notifications';
+import React from 'react';
+import {I18nextProvider} from 'react-i18next';
+import {queryCache, useQuery} from 'react-query';
+
 import {initialize} from '../../db';
 import {DowngradeError} from '../../db/SQLiteClient';
+import {useTransferDataFromOldDb} from '../../hooks/migrationHooks';
+import {useNavigateNotification} from '../../hooks/notificationsHooks';
+import {useGetOnboarding} from '../../hooks/onboardingHooks';
+import i18next from '../../resources/l18n';
+import AddChildScreen from '../../screens/AddChildScreen';
+import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
-import AddChildScreen from '../../screens/AddChildScreen';
-import withSuspense from '../withSuspense';
 import ErrorBoundary from '../ErrorBoundary';
-import crashlytics from '@react-native-firebase/crashlytics';
-import {queryCache, useQuery} from 'react-query';
-import * as Notifications from 'expo-notifications';
-import {useNavigateNotification} from '../../hooks/notificationsHooks';
-import {NavigationContainerRef} from '@react-navigation/core';
-import i18next from '../../resources/l18n';
-import {I18nextProvider} from 'react-i18next';
-import {useTransferDataFromOldDb} from '../../hooks/migrationHooks';
+import withSuspense from '../withSuspense';
+import RootDrawer from './RootDrawer';
+import {RootStackParamList} from './types';
 
 const Stack = createStackNavigator<RootStackParamList>();
 

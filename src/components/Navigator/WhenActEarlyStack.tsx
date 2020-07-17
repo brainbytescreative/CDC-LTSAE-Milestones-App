@@ -1,8 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import BurgerButton from '../BurgerButton';
+
 import {sharedScreenOptions} from '../../resources/constants';
 import MilestoneChecklistActEarlyScreen from '../../screens/MilestoneChecklist/MilestoneChecklistActEarlyScreen';
+import BurgerButton from '../BurgerButton';
 
 const Stack = createStackNavigator();
 

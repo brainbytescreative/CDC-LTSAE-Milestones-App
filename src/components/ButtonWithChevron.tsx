@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleProp, Text, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, View, ViewStyle} from 'react-native';
+
 import {colors, sharedStyle} from '../resources/constants';
 import ChevronRightBig from './Svg/ChevronRightBig';
 

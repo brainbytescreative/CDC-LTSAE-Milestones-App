@@ -1,10 +1,11 @@
 // import milestoneChecklist from './milestoneChecklist.json!milestoneChecklist';
 
-import {Platform, StyleSheet} from 'react-native';
 import {StackNavigationOptions} from '@react-navigation/stack';
-import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
-import {DashboardDrawerParamsList} from '../components/Navigator/types';
 import * as FileSystem from 'expo-file-system';
+import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
+import {Platform, StyleSheet} from 'react-native';
+
+import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
 export const states = [
   'AL',

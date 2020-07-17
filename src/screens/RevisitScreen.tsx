@@ -1,18 +1,19 @@
-import React from 'react';
-import {Image, Linking, StyleSheet, View} from 'react-native';
-import ChildSelectorModal from '../components/ChildSelectorModal';
-import {colors, sharedStyle, suspenseEnabled} from '../resources/constants';
-import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import LanguageSelector from '../components/LanguageSelector';
-import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
-import {Text} from 'react-native-paper';
-import {Trans, useTranslation} from 'react-i18next';
-import {useGetCurrentChild} from '../hooks/childrenHooks';
-import AEScrollView from '../components/AEScrollView';
-import {tOpt} from '../utils/helpers';
 import {useFocusEffect} from '@react-navigation/native';
+import React from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {Image, Linking, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import AEScrollView from '../components/AEScrollView';
+import ChildSelectorModal from '../components/ChildSelectorModal';
+import LanguageSelector from '../components/LanguageSelector';
 import CDCLogo from '../components/Svg/CDCLogo';
+import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
+import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
+import {useGetCurrentChild} from '../hooks/childrenHooks';
+import {colors, sharedStyle, suspenseEnabled} from '../resources/constants';
+import {tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;

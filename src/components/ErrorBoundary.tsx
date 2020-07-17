@@ -1,9 +1,10 @@
+import crashlytics from '@react-native-firebase/crashlytics';
 import React from 'react';
 import {View} from 'react-native';
+import {Text} from 'react-native-paper';
+
 import {colors} from '../resources/constants';
 import AEButtonRounded from './Navigator/AEButtonRounded';
-import {Text} from 'react-native-paper';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 type StateType = {
   error?: Error | null;

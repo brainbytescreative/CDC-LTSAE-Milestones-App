@@ -1,20 +1,21 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
-import {useTranslation} from 'react-i18next';
-import {colors, ParentProfileSelectorValues, sharedStyle} from '../../resources/constants';
 import {useNavigation} from '@react-navigation/native';
-import LanguageSelector from '../../components/LanguageSelector';
-import ParentProfileSelector from '../../components/ParentProfileSelector';
-import {useSetParentProfile} from '../../hooks/parentProfileHooks';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
 import {Text} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import AEScrollView from '../../components/AEScrollView';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
+import LanguageSelector from '../../components/LanguageSelector';
+import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {RootStackParamList} from '../../components/Navigator/types';
-import {StackNavigationProp} from '@react-navigation/stack';
+import ParentProfileSelector from '../../components/ParentProfileSelector';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {useSetParentProfile} from '../../hooks/parentProfileHooks';
+import {ParentProfileSelectorValues, colors, sharedStyle} from '../../resources/constants';
 import {trackNext, trackSelectLanguage} from '../../utils/analytics';
 
 const NextScreen: keyof RootStackParamList = 'AddChild';

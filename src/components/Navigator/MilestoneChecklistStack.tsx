@@ -1,17 +1,18 @@
-import React from 'react';
-import {createStackNavigator, StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
-import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
-import BurgerButton from '../BurgerButton';
-import MilestoneChecklistScreen from '../../screens/MilestoneChecklist/MilestoneChecklistScreen';
+import {HeaderBackButton, StackNavigationProp, createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+
 import {colors, sharedScreenOptions} from '../../resources/constants';
+import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
 import MilestoneChecklistGetStartedScreen from '../../screens/MilestoneChecklist/MilestoneChecklistGetStartedScreen';
 import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/MilestoneChecklistQuickViewScreen';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import ChildSummaryScreen from '../../screens/ChildSummaryScreen';
+import MilestoneChecklistScreen from '../../screens/MilestoneChecklist/MilestoneChecklistScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
-import {useTranslation} from 'react-i18next';
 import {trackInteractionByType} from '../../utils/analytics';
+import BurgerButton from '../BurgerButton';
+import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
 
 const Stack = createStackNavigator<MilestoneCheckListParamList>();
 

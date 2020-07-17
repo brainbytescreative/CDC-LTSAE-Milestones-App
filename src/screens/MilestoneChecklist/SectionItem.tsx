@@ -1,9 +1,10 @@
-import React from 'react';
-import {Dimensions, TouchableOpacity, View} from 'react-native';
-import {colors, Section, sharedStyle} from '../../resources/constants';
-import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native-paper';
 import _ from 'lodash';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Dimensions, TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-paper';
+
+import {Section, colors, sharedStyle} from '../../resources/constants';
 import {trackChecklistSectionSelect} from '../../utils/analytics';
 
 interface ItemProps {

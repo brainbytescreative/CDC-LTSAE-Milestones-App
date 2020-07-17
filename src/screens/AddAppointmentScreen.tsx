@@ -1,24 +1,25 @@
-import React, {useEffect} from 'react';
-import {ScrollView, View} from 'react-native';
-import ChildSelectorModal from '../components/ChildSelectorModal';
-import {useFormik} from 'formik';
-import {useTranslation} from 'react-i18next';
-import DatePicker from '../components/DatePicker';
-import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
-import {add, differenceInSeconds, startOfDay} from 'date-fns';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
+import {add, differenceInSeconds, startOfDay} from 'date-fns';
+import {useFormik} from 'formik';
 import _ from 'lodash';
-import {addAppointmentSchema} from '../resources/validationSchemas';
-import {colors} from '../resources/constants';
-import NavBarBackground from '../components/Svg/NavBarBackground';
-import AETextInput from '../components/AETextInput';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
-import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
+import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {ScrollView, View} from 'react-native';
 import {Text} from 'react-native-paper';
+
+import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
+import AETextInput from '../components/AETextInput';
+import ChildSelectorModal from '../components/ChildSelectorModal';
+import DatePicker from '../components/DatePicker';
+import AEButtonRounded from '../components/Navigator/AEButtonRounded';
+import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
+import NavBarBackground from '../components/Svg/NavBarBackground';
 import PurpleArc from '../components/Svg/PurpleArc';
-import {trackInteractionByType} from '../utils/analytics';
+import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
+import {colors} from '../resources/constants';
+import {addAppointmentSchema} from '../resources/validationSchemas';
+import {trackInteractionByType} from '../utils/analytics';
 
 interface FormValues {
   apptType: string;

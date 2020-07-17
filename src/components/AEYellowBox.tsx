@@ -1,7 +1,8 @@
 import React from 'react';
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
-import {colors, sharedStyle} from '../resources/constants';
 import {Text} from 'react-native-paper';
+
+import {colors, sharedStyle} from '../resources/constants';
 
 interface Props {
   containerStyle?: StyleProp<ViewStyle>;

@@ -1,9 +1,10 @@
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import BurgerIcon from './Svg/BurgerIcon';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {TouchableOpacity} from 'react-native';
+
 import {trackSelectByType} from '../utils/analytics';
+import BurgerIcon from './Svg/BurgerIcon';
 
 const BurgerButton: React.FC = () => {
   const navigation = useNavigation();

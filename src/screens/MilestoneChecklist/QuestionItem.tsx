@@ -1,19 +1,20 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {SkillSection} from '../../resources/milestoneChecklist';
-import {useTranslation} from 'react-i18next';
-import {colors, images, sharedStyle} from '../../resources/constants';
-import {ActivityIndicator, Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
-import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
-import NoteIcon from '../../components/Svg/NoteIcon';
+import i18next from 'i18next';
 import _ from 'lodash';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
+import {WebView} from 'react-native-webview';
+
+import NoteIcon from '../../components/Svg/NoteIcon';
 import PhotoChevronLeft from '../../components/Svg/PhotoChevronLeft';
 import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
-import {WebView} from 'react-native-webview';
-import i18next from 'i18next';
-import {Answer} from '../../hooks/types';
 import withSuspense from '../../components/withSuspense';
+import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import {Answer} from '../../hooks/types';
+import {colors, images, sharedStyle} from '../../resources/constants';
+import {SkillSection} from '../../resources/milestoneChecklist';
 import {trackInteractionByType} from '../../utils/analytics';
 
 // const jsCode = `

@@ -1,11 +1,12 @@
 import React from 'react';
 import {FlatList, View} from 'react-native';
-import {checklistSections, colors} from '../../resources/constants';
+
 import ChildSelectorModal from '../../components/ChildSelectorModal';
-import SectionItem from '../MilestoneChecklist/SectionItem';
-import ActEarlyPage from '../MilestoneChecklist/ActEarlyPage';
 import {useGetSectionsProgress} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {checklistSections, colors} from '../../resources/constants';
+import ActEarlyPage from '../MilestoneChecklist/ActEarlyPage';
+import SectionItem from '../MilestoneChecklist/SectionItem';
 
 const WhenActEarlyScreen: React.FC = () => {
   const {data: {id: childId} = {}} = useGetCurrentChild();

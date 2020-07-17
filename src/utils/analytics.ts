@@ -1,14 +1,15 @@
 import {ACPCore} from '@adobe/react-native-acpcore';
+import {NavigationContainerRef} from '@react-navigation/core';
 import i18next from 'i18next';
+import {RefObject} from 'react';
 import {Platform} from 'react-native';
 import {getModel, getReadableVersion} from 'react-native-device-info';
-import {LangCode} from '../resources/l18n';
-import {formatAge, getActiveRouteName} from './helpers';
-import {drawerMenuToEvent, Section, sectionToEvent, SelectEventType} from '../resources/constants';
+
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 import {Answer, ChildResult} from '../hooks/types';
-import {RefObject} from 'react';
-import {NavigationContainerRef} from '@react-navigation/core';
+import {Section, SelectEventType, drawerMenuToEvent, sectionToEvent} from '../resources/constants';
+import {LangCode} from '../resources/l18n';
+import {formatAge, getActiveRouteName} from './helpers';
 
 type PageType =
   | 'Child Dropdown Page'

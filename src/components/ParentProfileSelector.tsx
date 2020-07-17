@@ -1,10 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
-import {ParentProfileSelectorValues, sharedStyle, states} from '../resources/constants';
 import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+
+import {ParentProfileSelectorValues, sharedStyle, states} from '../resources/constants';
+import {trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 import DropDownPicker from './DropDownPicker';
 import Chevron from './Svg/Chevron';
-import {trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 
 interface Props {
   onChange: (values: ParentProfileSelectorValues) => void;

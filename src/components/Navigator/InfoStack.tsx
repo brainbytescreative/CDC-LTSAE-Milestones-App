@@ -1,11 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {InfoStackParamList} from './types';
 import React from 'react';
-import BurgerButton from '../BurgerButton';
-import InfoScreen from '../../screens/InfoScreen';
 import {useTranslation} from 'react-i18next';
+
 import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
+import InfoScreen from '../../screens/InfoScreen';
 import PrivacyPolicyScreen from '../../screens/PrivacyPolicyScreen';
+import BurgerButton from '../BurgerButton';
+import {InfoStackParamList} from './types';
 
 const Stack = createStackNavigator<InfoStackParamList>();
 
