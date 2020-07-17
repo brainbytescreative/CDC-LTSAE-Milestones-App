@@ -51,6 +51,7 @@ interface ItemProps {
   onEditNotePress?: (id: IdType, note: NoteType, answer: any) => void;
   hideControls?: boolean;
   answer: any;
+  key: string;
 }
 
 const Item: React.FC<ItemProps> = ({
@@ -71,11 +72,9 @@ const Item: React.FC<ItemProps> = ({
   };
   return (
     <View style={{marginTop: 32, marginHorizontal: 16}}>
-      <Text style={{fontSize: 15}} key={`${id}`}>
-        {value}
-      </Text>
+      <Text style={{fontSize: 15}}>{value}</Text>
       {!!note && noteLocal === undefined && (
-        <Text style={{fontSize: 15}} key={`${id}`}>
+        <Text style={{fontSize: 15}}>
           <Text style={{fontFamily: 'Montserrat-Bold'}}>
             {t('note')}
             {': '}

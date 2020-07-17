@@ -21,16 +21,16 @@ interface ItemProps {
   note?: string | null;
 }
 
-const Item: React.FC<ItemProps> = ({value, id, note, index}) => {
+const Item: React.FC<ItemProps> = ({value, note, index}) => {
   const {t} = useTranslation('childSummary');
   return (
     <View style={{marginTop: 32, marginHorizontal: 16}}>
-      <Text style={{fontSize: 15}} key={`${id}`}>
+      <Text style={{fontSize: 15}}>
         <Text style={[sharedStyle.boldText]}>{`${index}. `}</Text>
         {value}
       </Text>
       {!!note && (
-        <Text style={{fontSize: 15}} key={`${id}`}>
+        <Text style={{fontSize: 15}}>
           <Text>
             {t('note')}
             {': '}
@@ -98,7 +98,7 @@ const RevisitScreen: React.FC = () => {
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
           {concerns?.concerned?.map((item, index) => (
-            <Item value={item.value} index={index + 1} note={item.note} id={item.id} />
+            <Item key={`concern-${item.id}`} value={item.value} index={index + 1} note={item.note} id={item.id} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>
@@ -108,7 +108,7 @@ const RevisitScreen: React.FC = () => {
             </Text>
           </View>
           {data?.groupedByAnswer['2']?.map((item, index) => (
-            <Item index={index + 1} value={item.value} note={item.note} id={item.id} />
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
           <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
             <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
@@ -139,7 +139,7 @@ const RevisitScreen: React.FC = () => {
             </Text>
           </View>
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
-            <Item index={index + 1} value={item.value} id={item.id} note={item.note} />
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} id={item.id} note={item.note} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>
@@ -149,7 +149,7 @@ const RevisitScreen: React.FC = () => {
             </Text>
           </View>
           {data?.groupedByAnswer['1']?.map((item, index) => (
-            <Item index={index + 1} value={item.value} note={item.note} id={item.id} />
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
           <View style={[styles.yellowTipContainer, {marginTop: 40}]}>
             <Text style={styles.yellowTipText}>

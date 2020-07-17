@@ -80,10 +80,10 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
         name={'Revisit'}
         component={RevisitScreen}
         options={() => ({
-          headerStyle: {
-            title: t('milestoneChecklist:milestoneChecklist'),
-            backgroundColor: colors.iceCold,
-          },
+          // headerStyle: {
+          //   title: t('milestoneChecklist:milestoneChecklist'),
+          //   backgroundColor: colors.iceCold,
+          // },
           headerBackTitle: ' ',
         })}
       />
