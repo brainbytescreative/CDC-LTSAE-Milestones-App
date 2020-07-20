@@ -11,7 +11,7 @@ import NoteIcon from '../../components/Svg/NoteIcon';
 import PhotoChevronLeft from '../../components/Svg/PhotoChevronLeft';
 import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import withSuspense from '../../components/withSuspense';
-import {useGetMilestone, useGetQuestion, useSetQuestionAnswer} from '../../hooks/checklistHooks';
+import {useGetMilestone, useGetQuestionAnswer, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import {Answer} from '../../hooks/types';
 import {colors, images, sharedStyle} from '../../resources/constants';
 import {SkillSection} from '../../resources/milestoneChecklist';
@@ -101,7 +101,7 @@ function initialize(){
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, photos, videos, childId}) => {
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
-  const {data, isFetching} = useGetQuestion({
+  const {data, isFetching} = useGetQuestionAnswer({
     childId: childId || 0,
     questionId: id || 0,
     milestoneId: milestoneId || 0,

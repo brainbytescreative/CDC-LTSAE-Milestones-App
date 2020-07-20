@@ -32,3 +32,4 @@ export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
 }
 
 export type Key = 'children' | 'selectedChild';
+export type QuestionAnswerKey = Required<Pick<MilestoneAnswer, 'childId' | 'questionId' | 'milestoneId'>>;

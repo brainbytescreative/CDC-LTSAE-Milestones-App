@@ -442,11 +442,11 @@ const ChildSummaryScreen: React.FC = () => {
               },
               sharedStyle.largeBoldText,
             ]}>
-            {`${t('childSummary:title', {name: child?.name, age: milestoneAgeFormatted})}`}
+            {`${t('childSummary:title', {name: child?.name ?? '', age: milestoneAgeFormatted ?? ''})}`}
           </Text>
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name}}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => Linking.openURL(t('findElLink'))}

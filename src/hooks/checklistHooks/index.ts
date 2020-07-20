@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
+import {getChecklistAnswer} from '../../db/checklistQueries';
 import {
   MilestoneIdType,
   PropType,
@@ -19,7 +20,7 @@ import {
 import emailSummaryContent from '../../resources/EmailChildSummary';
 import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
 import {trackChecklistAnswer} from '../../utils/analytics';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, slowdown, tOpt} from '../../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
 import {useGetChild} from '../childrenHooks/useGetChild';
@@ -28,12 +29,17 @@ import {
   useSetCompleteMilestoneReminder,
   useSetRecommendationNotifications,
 } from '../notificationsHooks';
-import {Answer, ChildResult, MilestoneAnswer, MilestoneQueryKey, MilestoneQueryResult} from '../types';
+import {
+  Answer,
+  ChildResult,
+  MilestoneAnswer,
+  MilestoneQueryKey,
+  MilestoneQueryResult,
+  QuestionAnswerKey,
+} from '../types';
 import useSetMilestoneAge from './useSetMilestoneAge';
 
 // type ChecklistData = SkillSection & {section: keyof Milestones};
-
-type QuestionAnswerKey = Required<Pick<MilestoneAnswer, 'childId' | 'questionId' | 'milestoneId'>>;
 
 interface ConcernAnswer {
   concernId: number;
@@ -99,8 +105,8 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: anotherChild} = useGetChild({id: childId});
   const {t} = useTranslation('milestones');
-
   const child = anotherChild || currentChild;
+  const enabled = Boolean(milestoneAge && child);
 
   return useQuery(
     ['questions', {childId: child?.id, childGender: child?.gender, milestoneAge}],
@@ -159,26 +165,38 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
         answeredQuestionsCount: answersIds.length,
       };
     },
+    {
+      enabled,
+    },
   );
 }
 
 export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
-  return useQuery(['answers', {milestoneId, childId}], async (key, variables) => {
-    const answers =
-      (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
-      undefined;
+  const enabled = Boolean(milestoneId && childId);
 
-    const questions = checklistMap.get(Number(milestoneId))?.milestones ?? [];
-    const questionsIds = questions.map((value) => value.id);
-    const answerIds = answers?.map((value) => value.questionId) || [];
-    const unansweredIds = _.difference(questionsIds, answerIds);
-    const unansweredData = questions.filter((value) => unansweredIds.includes(value.id));
+  return useQuery(
+    ['answers', {milestoneId, childId}],
+    async (key, variables) => {
+      const answers =
+        (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
+        undefined;
 
-    const complete = unansweredIds.length === 0; //answers && variables.ids && answers.length === variables.ids.length;
-    return {answers, complete, unansweredData};
-  });
+      const questions = checklistMap.get(Number(milestoneId))?.milestones ?? [];
+      const questionsIds = questions.map((value) => value.id);
+      const answerIds = answers?.map((value) => value.questionId) || [];
+      const unansweredIds = _.difference(questionsIds, answerIds);
+      const unansweredData = questions.filter((value) => unansweredIds.includes(value.id));
+
+      const complete = unansweredIds.length === 0; //answers && variables.ids && answers.length === variables.ids.length;
+      return {answers, complete, unansweredData};
+    },
+    {
+      enabled,
+    },
+  );
 }
 
+// todo: It could be improved
 export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone(childId);
@@ -201,19 +219,16 @@ export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | un
   return {progress, complete, hasNotYet};
 }
 
-export function useGetQuestion(data: QuestionAnswerKey) {
-  return useQuery<MilestoneAnswer, [string, typeof data]>(['question', data], async (key, variables) => {
-    if (!variables.childId || !variables.questionId || !variables.milestoneId) {
-      throw new Error('No key');
-    }
+export function useGetQuestionAnswer(data: QuestionAnswerKey) {
+  const enabled = Boolean(data.milestoneId && data.childId && data.questionId);
 
-    const result = await sqLiteClient.dB?.executeSql(
-      'select * from milestones_answers where childId=? and questionId = ?',
-      [variables.childId, variables.questionId],
-    );
-
-    return result?.[0].rows.item(0);
-  });
+  return useQuery<MilestoneAnswer | undefined, [string, typeof data]>(
+    ['question', data],
+    async (key, variables) => getChecklistAnswer(variables),
+    {
+      enabled,
+    },
+  );
 }
 
 export function useSetQuestionAnswer() {
@@ -281,18 +296,20 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
   const {data: {id: currentChildId, gender} = {}} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone(childId);
   const {t} = useTranslation('milestones');
+  const childIdResult = childId ?? currentChildId;
+  const enabled = Boolean(childIdResult && Number(milestoneAge) > 0);
 
   return useQuery(
-    ['concerns', {childId: childId || currentChildId, milestoneAge, gender}],
+    ['concerns', {childId: childIdResult, milestoneAge, gender}],
     async (key, variables) => {
       // console.log(variables);
       if (!variables.childId || !variables.milestoneAge || variables.gender === undefined) {
         return;
       }
 
-      __DEV__ && (await slowdown(Promise.resolve(), 3000));
+      // __DEV__ && (await slowdown(Promise.resolve(), 3000));
 
-      const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where childId=?', [
+      const result = await sqLiteClient.dB?.executeSql('SELECT * FROM concern_answers WHERE childId=?', [
         variables.childId,
       ]);
 
@@ -338,6 +355,7 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
     },
     {
       staleTime: 0,
+      enabled,
     },
   );
 }
@@ -408,6 +426,8 @@ export function useGetTips() {
   const {t} = useTranslation('milestones');
   const {data: child} = useGetCurrentChild();
 
+  const enabled = Boolean(milestoneAge && child);
+
   return useQuery<Tip[], [string, {milestoneAge?: number; childId?: number}]>(
     ['tips', {milestoneAge, childId: child?.id}],
     async (key, variables) => {
@@ -436,6 +456,9 @@ export function useGetTips() {
       );
       return mergedArray;
     },
+    {
+      enabled,
+    },
   );
 }
 
@@ -443,12 +466,15 @@ export function useGetTipValue(variables: {childId?: number; hintId?: number}) {
   return useQuery<Pick<Tip, 'remindMe' | 'like'> | undefined, [string, typeof variables]>(
     ['tip', {childId: variables.childId, hintId: variables.hintId}],
     async () => {
-      const result = await sqLiteClient.dB?.executeSql('select * from tips_status where childId=? and hintId =?', [
+      const result = await sqLiteClient.dB?.executeSql('SELECT * FROM tips_status WHERE childId=? AND hintId =?', [
         variables.childId,
         variables.hintId,
       ]);
 
       return result && result[0].rows.item(0);
+    },
+    {
+      enabled: Boolean(variables.childId && variables.hintId),
     },
   );
 }
@@ -488,22 +514,31 @@ export function useSetTip() {
 }
 
 export function useGetMonthProgress(predicate: {childId?: number; milestone?: number}) {
-  return useQuery<number, [string, typeof predicate]>(['monthProgress', predicate], async (key, variables) => {
-    if (!variables.childId || !variables.milestone) {
-      return 0;
-    }
-    const questions = checklistMap.get(variables.milestone)?.milestones;
-    const result = await sqLiteClient.dB?.executeSql(
-      'SELECT count(questionId) cnt from milestones_answers where milestoneId=?1 and childId=?2',
-      [variables.milestone, variables.childId],
-    );
+  const enabled = Boolean(predicate.childId && predicate.milestone);
 
-    const answeredQuestionsCount = result?.[0].rows.item(0)?.cnt ?? 0;
-    return (answeredQuestionsCount / Number(questions?.length)) * 100 ?? 0;
-  });
+  return useQuery<number, [string, typeof predicate]>(
+    ['monthProgress', predicate],
+    async (key, variables) => {
+      if (!variables.childId || !variables.milestone) {
+        return 0;
+      }
+      const questions = checklistMap.get(variables.milestone)?.milestones;
+      const result = await sqLiteClient.dB?.executeSql(
+        'SELECT count(questionId) cnt FROM milestones_answers WHERE milestoneId=?1 AND childId=?2',
+        [variables.milestone, variables.childId],
+      );
+
+      const answeredQuestionsCount = result?.[0].rows.item(0)?.cnt ?? 0;
+      return (answeredQuestionsCount / Number(questions?.length)) * 100 ?? 0;
+    },
+    {
+      enabled,
+    },
+  );
 }
 
 export function useGetMilestoneGotStarted(predicate: {childId?: number; milestoneId?: number}) {
+  const enabled = Boolean(predicate.childId && predicate.milestoneId);
   return useQuery(
     ['milestoneGotStarted', predicate],
     async (key, {childId, milestoneId}) => {
@@ -511,13 +546,13 @@ export function useGetMilestoneGotStarted(predicate: {childId?: number; mileston
         return false;
       }
       const result = await sqLiteClient.dB?.executeSql(
-        'SELECT * from milestone_got_started where childId=? and milestoneId=? limit 1',
+        'SELECT * FROM milestone_got_started WHERE childId=? AND milestoneId=? LIMIT 1',
         [childId, milestoneId],
       );
 
       return !!result && result[0].rows.length > 0;
     },
-    {staleTime: 0},
+    {staleTime: 0, enabled},
   );
 }
 

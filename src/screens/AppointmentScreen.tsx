@@ -24,11 +24,13 @@ const AppointmentScreen: React.FC = () => {
   const navigation = useNavigation<DashboardDrawerNavigationProp>();
   const {data: appointment, status: loadStatus} = useGetAppointmentById(route.params.appointmentId);
   const [deleteAppointment, {status: deleteStatus}] = useDeleteAppointment();
-  const {compose: composeMail, loading: composeLoading} = useGetComposeSummaryMail({
+
+  const childData = {
     id: appointment?.childId,
     name: appointment?.childName,
     gender: appointment?.childGender,
-  });
+  };
+  const {compose: composeMail, loading: composeLoading} = useGetComposeSummaryMail(childData);
 
   const loading = loadStatus === 'loading' || deleteStatus === 'loading' || composeLoading;
 
