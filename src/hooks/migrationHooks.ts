@@ -3,6 +3,7 @@ import {formatISO, fromUnixTime, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {useCallback} from 'react';
 import {Platform} from 'react-native';
+import RNFS from 'react-native-fs';
 import {queryCache} from 'react-query';
 
 import {sqLiteClient} from '../db';
@@ -40,11 +41,11 @@ export function useTransferDataFromOldDb() {
 
   const func = useCallback(async () => {
     try {
-      const migrated = await Storage.getItemTyped('migrated');
+      const migrated = await Storage.getItemTyped('migrationStatus');
 
-      if (migrated) {
-        return;
-      }
+      // if (migrated) {
+      //   return;
+      // }
 
       const dbName = Platform.select({
         ios: 'act_early',
@@ -105,7 +106,15 @@ export function useTransferDataFromOldDb() {
         throw new Error('Platform is not supported');
       }
 
-      const oldDbClient = await new SQLiteClient(dbName, []).connect();
+      //FIXME android
+      const oldDbExists = await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${dbName}`);
+
+      if (!oldDbExists) {
+        await Storage.setItemTyped('migrationStatus', 'notRequired');
+        return;
+      }
+
+      const oldDbClient = await new SQLiteClient(dbName, []).connect({readOnly: true});
 
       const res = await oldDbClient.executeSql(childrenQueryStatement);
       const children: ChildIOSDB[] = (res && res[0].rows.raw()) || [];
@@ -165,11 +174,10 @@ export function useTransferDataFromOldDb() {
       );
 
       await queryCache.invalidateQueries(['appointment']);
+      await Storage.setItemTyped('migrationStatus', 'done');
     } catch (e) {
       crashlytics().recordError(e);
-      await Storage.setItemTyped('migrationFailed', true);
-    } finally {
-      await Storage.setItemTyped('migrated', true);
+      await Storage.setItemTyped('migrationStatus', 'error');
     }
   }, [setAppointmentNotifications, setMilestoneNotifications]);
 

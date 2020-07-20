@@ -19,7 +19,7 @@ import {
 import emailSummaryContent from '../../resources/EmailChildSummary';
 import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
 import {trackChecklistAnswer} from '../../utils/analytics';
-import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
+import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, slowdown, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
 import {useGetChild} from '../childrenHooks/useGetChild';
@@ -108,8 +108,6 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       if (!variables.childId || !variables.milestoneAge) {
         return;
       }
-
-      // __DEV__ && (await slowdown(Promise.resolve(), 3000));
 
       const data = await getAnswers(variables.milestoneAge, variables.childId);
       const answersIds = data.map((value) => value.questionId);
@@ -291,6 +289,9 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
       if (!variables.childId || !variables.milestoneAge || variables.gender === undefined) {
         return;
       }
+
+      __DEV__ && (await slowdown(Promise.resolve(), 3000));
+
       const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where childId=?', [
         variables.childId,
       ]);

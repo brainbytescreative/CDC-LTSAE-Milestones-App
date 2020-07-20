@@ -8,23 +8,25 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
-import {NavigationContainer} from '@react-navigation/native';
-import Navigator from './src/components/Navigator';
-import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
-import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
-import {colors} from './src/resources/constants';
+
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
-import {YellowBox} from 'react-native';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
-import * as Notifications from 'expo-notifications';
-import {NavigationContainerRef} from '@react-navigation/core';
-import AppStateManager from './src/components/AppStateManager';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {NavigationContainerRef} from '@react-navigation/core';
+import {NavigationContainer} from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
+import React, {useEffect} from 'react';
+import {YellowBox} from 'react-native';
+import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper';
 // Before rendering any navigation stack
 import {enableScreens} from 'react-native-screens';
+import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
+
+import AppStateManager from './src/components/AppStateManager';
+import Navigator from './src/components/Navigator';
+import {colors} from './src/resources/constants';
 import {
   currentScreen,
   trackInteractionByType,

@@ -7,8 +7,7 @@ import {ParentProfileSelectorValues} from '../resources/constants';
 type Key = keyof ParsedValue;
 
 type ParsedValue = {
-  migrated: boolean;
-  migrationFailed: boolean;
+  migrationStatus: 'done' | 'error' | 'notRequired';
   selectedChild: number;
   notificationSettings: NotificationSettings;
   onboarding: boolean;

@@ -6,6 +6,7 @@ import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Linking,
@@ -18,6 +19,7 @@ import {
 } from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {queryCache} from 'react-query';
 
 import ChildPhoto from '../components/ChildPhoto';
 import ChildSelectorModal from '../components/ChildSelectorModal';
@@ -38,7 +40,7 @@ import {
 } from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
-import {PropType, colors, missingConcerns, sharedStyle} from '../resources/constants';
+import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
@@ -170,127 +172,247 @@ export type ChildSummaryStackNavigationProp = CompositeNavigationProp<
   StackNavigationProp<ChildSummaryParamList>
 >;
 
+const SummaryItems = withSuspense(
+  () => {
+    const {t} = useTranslation('childSummary');
+    const {data: child} = useGetCurrentChild();
+    const {data: {milestoneAge} = {}} = useGetMilestone();
+    const {data, refetch} = useGetChecklistQuestions();
+    const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
+    const [answerQuestion] = useSetQuestionAnswer();
+    const [setConcern] = useSetConcern();
+
+    const {showActionSheetWithOptions} = useActionSheet();
+
+    const onEditQuestionPress = useCallback<NonNullable<ItemProps['onEditAnswerPress']>>(
+      (id, note) => {
+        const options = [
+          t('milestoneChecklist:answer_yes'),
+          t('milestoneChecklist:answer_unsure'),
+          t('milestoneChecklist:answer_not_yet'),
+          t('common:cancel'),
+        ].map((val) => _.upperFirst(val));
+
+        showActionSheetWithOptions(
+          {
+            message: t('changeYourAnswerTitle'),
+            cancelButtonIndex: options.length - 1,
+            options,
+            textStyle: {...sharedStyle.regularText},
+            titleTextStyle: {...sharedStyle.regularText},
+            messageTextStyle: {...sharedStyle.regularText},
+          },
+          (index) => {
+            if (Object.values(Answer).includes(index) && child?.id && milestoneAge) {
+              answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
+                () => {
+                  refetch();
+                },
+              );
+              trackSelectSummary(index);
+            }
+          },
+        );
+      },
+      [t, showActionSheetWithOptions, child?.id, milestoneAge, answerQuestion, refetch],
+    );
+
+    const onEditConcernPress = useCallback<NonNullable<ItemProps['onEditAnswerPress']>>(
+      (id, note) => {
+        const options = [
+          t('milestoneChecklist:answer_yes'),
+          t('milestoneChecklist:answer_no'),
+
+          t('common:cancel'),
+        ].map((val) => _.upperFirst(val));
+
+        showActionSheetWithOptions(
+          {
+            message: t('changeYourAnswerTitle'),
+            cancelButtonIndex: options.length - 1,
+            options,
+            textStyle: {...sharedStyle.regularText},
+            titleTextStyle: {...sharedStyle.regularText},
+            messageTextStyle: {...sharedStyle.regularText},
+          },
+          (index) => {
+            [0, 1].includes(index) &&
+              child?.id &&
+              milestoneAge &&
+              setConcern({
+                concernId: id,
+                answer: !index,
+                childId: child?.id,
+                note: note,
+                milestoneId: milestoneAge,
+              }).then(() => {
+                return refetchConcerns();
+              });
+          },
+        );
+      },
+      [t, showActionSheetWithOptions, child?.id, milestoneAge, setConcern, refetchConcerns],
+    );
+
+    const onSaveQuestionNotePress = useCallback<NonNullable<ItemProps['onEditNotePress']>>(
+      (id, note, answer) => {
+        child?.id &&
+          milestoneAge &&
+          answerQuestion({questionId: id, childId: child?.id, note, answer, milestoneId: milestoneAge}).then(() => {
+            return refetch();
+          });
+      },
+      [child?.id, milestoneAge, answerQuestion, refetch],
+    );
+
+    const onSaveConcernNotePress = useCallback<NonNullable<ItemProps['onEditNotePress']>>(
+      (id, note, answer) => {
+        child?.id &&
+          milestoneAge &&
+          setConcern({
+            concernId: id,
+            answer,
+            childId: child?.id,
+            note,
+            milestoneId: milestoneAge,
+          }).then(() => {
+            // refetchConcerns(); // fixme
+          });
+      },
+      [child?.id, setConcern, milestoneAge],
+    );
+
+    const unanswered = data?.groupedByAnswer['undefined'] || [];
+    const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
+    const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
+    const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
+
+    return (
+      <View style={{marginHorizontal: 32}}>
+        <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
+          <Text style={styles.blockText}>{t('unanswered')}</Text>
+        </View>
+        {unanswered.map((item) => (
+          <Item
+            answer={null}
+            key={`answer-${item.id}`}
+            onEditAnswerPress={onEditQuestionPress}
+            onEditNotePress={onSaveQuestionNotePress}
+            value={item.value}
+            id={item.id}
+            note={item.note}
+          />
+        ))}
+        <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
+          <Text style={styles.blockText}>{t('concerns')}</Text>
+        </View>
+        {concerns?.concerned?.map((item) => (
+          <Item
+            answer={true}
+            key={`concern-${item.id}`}
+            onEditAnswerPress={onEditConcernPress}
+            onEditNotePress={onSaveConcernNotePress}
+            hideControls={!!item.id && missingConcerns.includes(item.id)}
+            value={item.value}
+            note={item.note}
+            id={item.id}
+          />
+        ))}
+        <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+          <Text style={styles.blockText}>{t('notSure')}</Text>
+        </View>
+        {unsure.map((item) => (
+          <Item
+            answer={Answer.UNSURE}
+            key={`answer-${item.id}`}
+            onEditAnswerPress={onEditQuestionPress}
+            onEditNotePress={onSaveQuestionNotePress}
+            value={item.value}
+            note={item.note}
+            id={item.id}
+          />
+        ))}
+        <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
+          <Text style={styles.blockText}>{t('notYet')}</Text>
+        </View>
+        {notYet.map((item) => (
+          <Item
+            answer={Answer.NOT_YET}
+            key={`answer-${item.id}`}
+            onEditAnswerPress={onEditQuestionPress}
+            onEditNotePress={onSaveQuestionNotePress}
+            value={item.value}
+            note={item.note}
+            id={item.id}
+          />
+        ))}
+        <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+          <Text style={styles.blockText}>{t('yes')}</Text>
+        </View>
+        {yes.map((item) => (
+          <Item
+            key={`answer-${item.id}`}
+            answer={Answer.YES}
+            onEditAnswerPress={onEditQuestionPress}
+            onEditNotePress={onSaveQuestionNotePress}
+            value={item.value}
+            note={item.note}
+            id={item.id}
+          />
+        ))}
+      </View>
+    );
+  },
+  suspenseEnabled,
+  <ActivityIndicator style={{marginTop: 32}} size={'large'} />,
+);
+
+const DisabledSummary = () => {
+  const {t} = useTranslation('childSummary');
+  return (
+    <AEButtonRounded disabled style={{marginBottom: 0}}>
+      {t('emailSummary')}
+    </AEButtonRounded>
+  );
+};
+
+const ComposeEmailButton = withSuspense(
+  () => {
+    const {compose: composeMail} = useGetComposeSummaryMail();
+    const {t} = useTranslation('childSummary');
+    return (
+      <AEButtonRounded
+        onPress={() => {
+          composeMail().catch((e) => {
+            Alert.alert('', e.message);
+          });
+        }}
+        style={{marginBottom: 0}}>
+        {t('emailSummary')}
+      </AEButtonRounded>
+    );
+  },
+  suspenseEnabled,
+  <DisabledSummary />,
+);
+
 const ChildSummaryScreen: React.FC = () => {
   const {t} = useTranslation('childSummary');
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
-  const {data, refetch} = useGetChecklistQuestions();
-  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
-  const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
+
   const {data: child} = useGetCurrentChild();
+  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
-  const [answerQuestion] = useSetQuestionAnswer();
-  const [setConcern] = useSetConcern();
-  const {compose: composeMail, loading} = useGetComposeSummaryMail();
 
   useFocusEffect(
     React.useCallback(() => {
-      refetch();
-      refetchConcerns();
-    }, [refetch, refetchConcerns]),
+      queryCache.invalidateQueries((query) => {
+        const key = query.queryKey?.[0] as string | undefined;
+        return Boolean(key?.startsWith('concerns') || key?.startsWith('questions'));
+      });
+      queryCache.invalidateQueries('questions');
+    }, []),
   );
-
-  const {showActionSheetWithOptions} = useActionSheet();
-
-  const onEditQuestionPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(
-    (id, note) => {
-      const options = [
-        t('milestoneChecklist:answer_yes'),
-        t('milestoneChecklist:answer_unsure'),
-        t('milestoneChecklist:answer_not_yet'),
-        t('common:cancel'),
-      ].map((val) => _.upperFirst(val));
-
-      showActionSheetWithOptions(
-        {
-          message: t('changeYourAnswerTitle'),
-          cancelButtonIndex: options.length - 1,
-          options,
-          textStyle: {...sharedStyle.regularText},
-          titleTextStyle: {...sharedStyle.regularText},
-          messageTextStyle: {...sharedStyle.regularText},
-        },
-        (index) => {
-          if (Object.values(Answer).includes(index) && child?.id && milestoneAge) {
-            answerQuestion({answer: index, childId: child?.id, note, questionId: id, milestoneId: milestoneAge}).then(
-              () => {
-                refetch();
-              },
-            );
-            trackSelectSummary(index);
-          }
-        },
-      );
-    },
-    [refetch, t, answerQuestion, child?.id, showActionSheetWithOptions, milestoneAge],
-  );
-
-  const onEditConcernPress = useCallback<NonNullable<PropType<ItemProps, 'onEditAnswerPress'>>>(
-    (id, note) => {
-      const options = [
-        t('milestoneChecklist:answer_yes'),
-        t('milestoneChecklist:answer_no'),
-
-        t('common:cancel'),
-      ].map((val) => _.upperFirst(val));
-
-      showActionSheetWithOptions(
-        {
-          message: t('changeYourAnswerTitle'),
-          cancelButtonIndex: options.length - 1,
-          options,
-          textStyle: {...sharedStyle.regularText},
-          titleTextStyle: {...sharedStyle.regularText},
-          messageTextStyle: {...sharedStyle.regularText},
-        },
-        (index) => {
-          [0, 1].includes(index) &&
-            child?.id &&
-            milestoneAge &&
-            setConcern({
-              concernId: id,
-              answer: !index,
-              childId: child?.id,
-              note: note,
-              milestoneId: milestoneAge,
-            }).then(() => refetchConcerns());
-        },
-      );
-    },
-    [refetchConcerns, t, child?.id, showActionSheetWithOptions, setConcern, milestoneAge],
-  );
-
-  const onSaveQuestionNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
-    (id, note, answer) => {
-      child?.id &&
-        milestoneAge &&
-        answerQuestion({questionId: id, childId: child?.id, note, answer, milestoneId: milestoneAge}).then(() =>
-          refetch(),
-        );
-    },
-    [child?.id, answerQuestion, refetch, milestoneAge],
-  );
-
-  const onSaveConcernNotePress = useCallback<NonNullable<PropType<ItemProps, 'onEditNotePress'>>>(
-    (id, note, answer) => {
-      child?.id &&
-        milestoneAge &&
-        setConcern({
-          concernId: id,
-          answer,
-          childId: child?.id,
-          note,
-          milestoneId: milestoneAge,
-        }).then(() => {
-          refetchConcerns();
-        });
-    },
-    [child?.id, refetchConcerns, setConcern, milestoneAge],
-  );
-
-  const unanswered = data?.groupedByAnswer['undefined'] || [];
-  const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
-  const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
-  const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
 
   return (
     <View style={{backgroundColor: colors.white}}>
@@ -342,16 +464,7 @@ const ChildSummaryScreen: React.FC = () => {
           <View style={{marginTop: 35}}>
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-              <AEButtonRounded
-                disabled={loading}
-                onPress={() => {
-                  composeMail().catch((e) => {
-                    Alert.alert('', e.message);
-                  });
-                }}
-                style={{marginBottom: 0}}>
-                {t('emailSummary')}
-              </AEButtonRounded>
+              <ComposeEmailButton />
               <AEButtonRounded
                 onPress={() => {
                   navigation.navigate('Revisit');
@@ -362,86 +475,13 @@ const ChildSummaryScreen: React.FC = () => {
               <LanguageSelector
                 onLanguageChange={(lng) => {
                   trackSelectLanguage(lng);
-                  return refetch();
+                  queryCache.invalidateQueries('questions');
                 }}
                 style={{marginHorizontal: 32}}
               />
             </View>
           </View>
-
-          <View style={{marginHorizontal: 32}}>
-            <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
-              <Text style={styles.blockText}>{t('unanswered')}</Text>
-            </View>
-            {unanswered.map((item) => (
-              <Item
-                answer={null}
-                key={`answer-${item.id}`}
-                onEditAnswerPress={onEditQuestionPress}
-                onEditNotePress={onSaveQuestionNotePress}
-                value={item.value}
-                id={item.id}
-                note={item.note}
-              />
-            ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
-              <Text style={styles.blockText}>{t('concerns')}</Text>
-            </View>
-            {concerns?.concerned?.map((item) => (
-              <Item
-                answer={true}
-                key={`concern-${item.id}`}
-                onEditAnswerPress={onEditConcernPress}
-                onEditNotePress={onSaveConcernNotePress}
-                hideControls={!!item.id && missingConcerns.includes(item.id)}
-                value={item.value}
-                note={item.note}
-                id={item.id}
-              />
-            ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
-              <Text style={styles.blockText}>{t('notSure')}</Text>
-            </View>
-            {unsure.map((item) => (
-              <Item
-                answer={Answer.UNSURE}
-                key={`answer-${item.id}`}
-                onEditAnswerPress={onEditQuestionPress}
-                onEditNotePress={onSaveQuestionNotePress}
-                value={item.value}
-                note={item.note}
-                id={item.id}
-              />
-            ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
-              <Text style={styles.blockText}>{t('notYet')}</Text>
-            </View>
-            {notYet.map((item) => (
-              <Item
-                answer={Answer.NOT_YET}
-                key={`answer-${item.id}`}
-                onEditAnswerPress={onEditQuestionPress}
-                onEditNotePress={onSaveQuestionNotePress}
-                value={item.value}
-                note={item.note}
-                id={item.id}
-              />
-            ))}
-            <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
-              <Text style={styles.blockText}>{t('yes')}</Text>
-            </View>
-            {yes.map((item) => (
-              <Item
-                key={`answer-${item.id}`}
-                answer={Answer.YES}
-                onEditAnswerPress={onEditQuestionPress}
-                onEditNotePress={onSaveQuestionNotePress}
-                value={item.value}
-                note={item.note}
-                id={item.id}
-              />
-            ))}
-          </View>
+          <SummaryItems />
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -463,4 +503,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withSuspense(ChildSummaryScreen, {shared: {suspense: true}});
+export default ChildSummaryScreen;

@@ -51,7 +51,7 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
-  public async connect(): Promise<SQLiteDatabase> {
+  public async connect(options?: Pick<SQLite.DatabaseParams, 'readOnly'>): Promise<SQLiteDatabase> {
     if (this.privateConnected && this.privateDb) {
       return this.privateDb;
     }
@@ -62,6 +62,7 @@ export default class SQLiteClient {
           ios: 'Documents',
           default: 'default',
         }),
+        ...(options?.readOnly && {readOnly: options.readOnly}),
       });
 
       // MIGRATIONS
