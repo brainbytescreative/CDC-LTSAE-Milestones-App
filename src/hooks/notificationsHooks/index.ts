@@ -15,13 +15,12 @@ import {getAppointmentById} from '../../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../../db/notificationQueries';
 import {PropType, WellChildCheckUpAppointmentAgesEnum, milestonesIds} from '../../resources/constants';
 import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../../utils/helpers';
-import {Appointment, AppointmentDb} from '../appointmentsHooks';
 import useSetMilestoneAge from '../checklistHooks/useSetMilestoneAge';
 import {ChildDbRecord} from '../childrenHooks';
 // noinspection ES6PreferShortImport
 import {useSetSelectedChild} from '../childrenHooks/useSetSelectedChild';
 import {NotificationsSettingType, getNotificationSettings} from '../settingsHooks';
-import {Answer, ChildResult, MilestoneAnswer} from '../types';
+import {Answer, AppointmentDb, ChildResult, MilestoneAnswer} from '../types';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -55,7 +54,7 @@ interface MilestoneNotificationsPayload {
 
 interface AppointmentNotificationsPayload {
   // child: ChildResult;
-  appointmentId: PropType<Appointment, 'id'>;
+  appointmentId: AppointmentDb['id'];
 }
 
 interface RecommendationNotificationsPayload {
@@ -76,7 +75,6 @@ interface RecommendationNotificationsDeletePayload extends Omit<RecommendationNo
 export enum NotificationCategory {
   Recommendation = 0,
   Milestone = 1,
-  // eslint-disable-next-line no-shadow
   Appointment = 2,
   TipsAndActivities = 3,
   WellCheckUp,

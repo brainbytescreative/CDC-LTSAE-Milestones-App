@@ -1,6 +1,5 @@
-import {AppointmentDb} from '../hooks/appointmentsHooks';
 import {NotificationDB} from '../hooks/notificationsHooks';
-import {PropType} from '../resources/constants';
+import {AppointmentDb} from '../hooks/types';
 import {sqLiteClient} from './index';
 
 export async function getNotificationById(id: string): Promise<NotificationDB | undefined> {
@@ -15,7 +14,7 @@ export async function getNotificationById(id: string): Promise<NotificationDB | 
 }
 
 export async function deleteNotificationsByAppointmentId(
-  id: PropType<AppointmentDb, 'id'>,
+  id: AppointmentDb['id'],
 ): Promise<{rowsAffected: number} | undefined> {
   return sqLiteClient.dB
     ?.executeSql(

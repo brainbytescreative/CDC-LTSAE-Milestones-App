@@ -1,49 +1,39 @@
 import {formatISO, parseISO} from 'date-fns';
+import _ from 'lodash';
 import {QueryOptions, queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../db';
-import {deleteAppointmentById, getAppointmentById, getAppointmentsByChildId} from '../db/appoinmetQueries';
+import {
+  deleteAppointmentById,
+  getAppointmentById,
+  getAppointmentsByChildId,
+  updateAppointmentById,
+} from '../db/appoinmetQueries';
 import {PropType} from '../resources/constants';
 import {objectToQuery} from '../utils/helpers';
 import {ChildDbRecord} from './childrenHooks';
 import {useDeleteNotificationsByAppointmentId, useSetAppointmentNotifications} from './notificationsHooks';
-import {ChildResult} from './types';
-
-export interface AppointmentDb {
-  id: number;
-  childId: PropType<ChildResult, 'id'>;
-  childName: PropType<ChildResult, 'name'>;
-  childGender: PropType<ChildResult, 'gender'>;
-  date: string;
-  notes?: string;
-  apptType: string;
-  doctorName?: string;
-  questions?: string;
-}
-type JoinedChildFields = 'childName' | 'childGender';
-export type Appointment = Omit<AppointmentDb, 'date'> & {date: Date};
-export type UpdateAppointment = Omit<Appointment, JoinedChildFields>;
-export type NewAppointment = Omit<UpdateAppointment, 'id'>;
+import {Appointment, ChildJoin, NewAppointment, UpdateAppointment} from './types';
 
 export function useUpdateAppointment() {
   const [setAppointmentNotifications] = useSetAppointmentNotifications();
   return useMutation<number, UpdateAppointment>(
     async (variables) => {
-      const [query, values] = objectToQuery(
-        {
-          ...variables,
-          date: formatISO(variables.date),
-        },
-        'appointments',
-        'updateById',
-      );
-      const res = await sqLiteClient.dB?.executeSql(query, values);
-      const rowsAffected = res && res[0].rowsAffected;
-      if (!rowsAffected || rowsAffected === 0) {
-        throw new Error('Update appointment failed');
-      }
-
-      return rowsAffected;
+      await updateAppointmentById(variables.id, _.omit(variables, ['id']));
+      return variables.id;
+      // const [query, values] = objectToQuery(
+      //   {
+      //     ...variables,
+      //     date: formatISO(variables.date),
+      //   },
+      //   'appointments',
+      //   'updateById',
+      // );
+      // const res = await sqLiteClient.dB?.executeSql(query, values);
+      // const rowsAffected = res && res[0].rowsAffected;
+      // if (!rowsAffected || rowsAffected === 0) {
+      //   throw new Error('Update appointment failed');
+      // }
     },
     {
       onSuccess: (data, variables) => {
@@ -87,7 +77,7 @@ export function useAddAppointment() {
 
 export function useDeleteAppointment() {
   const [deleteNotificationsByAppointmentId] = useDeleteNotificationsByAppointmentId();
-  return useMutation<void, PropType<AppointmentDb, 'id'>>(
+  return useMutation<void, Appointment['id']>(
     async (id) => {
       const rowsAffected = await deleteAppointmentById(id);
 
@@ -105,8 +95,8 @@ export function useDeleteAppointment() {
   );
 }
 
-export function useGetAppointmentById(id?: PropType<Appointment, 'id'>) {
-  return useQuery<(Appointment & {childName?: string}) | undefined, [string, {id: typeof id}]>(
+export function useGetAppointmentById(id?: Appointment['id']) {
+  return useQuery<(Appointment & ChildJoin) | undefined, [string, {id: typeof id}]>(
     ['appointment', {id}],
     async (key, variables) => {
       if (!variables.id) {
@@ -125,7 +115,7 @@ export function useGetAppointmentById(id?: PropType<Appointment, 'id'>) {
       return {
         ...appointment,
         date: parseISO(appointment.date),
-      } as Appointment;
+      };
     },
   );
 }

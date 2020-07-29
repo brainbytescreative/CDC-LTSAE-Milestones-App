@@ -5,9 +5,8 @@ import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
 import {sqLiteClient} from '../db';
-import {AppointmentDb} from '../hooks/appointmentsHooks';
-import {Answer} from '../hooks/types';
-import {PropType, milestonesIds, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {Answer, Appointment, AppointmentDb} from '../hooks/types';
+import {NoExtraProperties, PropType, milestonesIds, missingConcerns, tooYongAgeDays} from '../resources/constants';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import i18next from '../resources/l18n';
 
@@ -95,6 +94,33 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
 
 type TableNames = 'children' | 'appointments' | 'milestones_answers';
 type QueryType = 'insert' | 'updateById';
+
+export interface UpdateTableTypes {
+  appointments: Omit<Partial<Appointment>, 'id'>;
+}
+
+export async function updateByIdQuery<K extends keyof UpdateTableTypes, T>(
+  id: number,
+  table: K,
+  updateData: NoExtraProperties<UpdateTableTypes[K], T>,
+) {
+  const keys = Object.keys(updateData);
+  const values = Object.values(updateData);
+
+  if (values.length === 0) {
+    throw new Error('Nothing to update');
+  }
+
+  const query = `UPDATE ${table} SET ${keys.map((value, index) => ` ${value}=?${index + 2}`).join(', ')} WHERE id=?1`;
+
+  const [result] = await sqLiteClient.db.executeSql(query, [id, ...values]);
+
+  if (result.rowsAffected === 0) {
+    throw new Error('Update failed');
+  }
+
+  return result.rowsAffected;
+}
 
 export function objectToQuery<T extends Record<string, any>>(
   object: T,
