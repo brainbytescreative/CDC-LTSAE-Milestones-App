@@ -126,8 +126,8 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
             value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
           }))
           ?.sort((a, b) => {
-            const aIsAnswered = answersIds.includes(a.id!);
-            const bIsAbswered = answersIds.includes(b.id!);
+            const aIsAnswered = answersIds.includes(a.id);
+            const bIsAbswered = answersIds.includes(b.id);
             if (aIsAnswered && !bIsAbswered) {
               return 1;
             } else if (bIsAbswered && !aIsAnswered) {

@@ -43,9 +43,9 @@ export function useTransferDataFromOldDb() {
     try {
       const migrated = await Storage.getItemTyped('migrationStatus');
 
-      // if (migrated) {
-      //   return;
-      // }
+      if (migrated) {
+        return;
+      }
 
       const dbName = Platform.select({
         ios: 'act_early',
@@ -106,8 +106,16 @@ export function useTransferDataFromOldDb() {
         throw new Error('Platform is not supported');
       }
 
-      //FIXME android
-      const oldDbExists = await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${dbName}`);
+      const dbPath = Platform.select({
+        ios: dbName,
+        android: ['..', 'databases', dbName].join('/'),
+      });
+
+      if (!dbPath) {
+        throw new Error('Platform is not supported');
+      }
+
+      const oldDbExists = await RNFS.exists([RNFS.DocumentDirectoryPath, dbPath].join('/'));
 
       if (!oldDbExists) {
         await Storage.setItemTyped('migrationStatus', 'notRequired');

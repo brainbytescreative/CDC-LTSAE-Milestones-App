@@ -1,34 +1,34 @@
 import {MilestoneIdType} from './constants';
 
 export interface Concern {
-  id?: number;
-  value?: string;
+  id: number;
+  value: string;
 }
 
 export interface Milestones {
-  social?: SkillSection[];
-  language?: SkillSection[];
-  cognitive?: SkillSection[];
-  movement?: SkillSection[];
+  social: SkillSection[];
+  language: SkillSection[];
+  cognitive: SkillSection[];
+  movement: SkillSection[];
 }
 
 export interface SkillSection {
   id: number;
-  value?: string;
-  photos?: Photo[];
-  videos?: Photo[];
+  value: string;
+  photos: SkillMedia[];
+  videos: SkillMedia[];
 }
 
-export interface Photo {
-  name?: string;
-  alt?: string;
+export interface SkillMedia {
+  name: string;
+  alt: string;
 }
 
 export interface MilestoneChecklist {
-  concerns?: Concern[];
-  helpful_hints?: Concern[];
+  concerns: Concern[];
+  helpful_hints: Concern[];
   id: MilestoneIdType;
-  milestones?: Record<keyof Milestones | string, SkillSection[]>;
+  milestones: Record<keyof Milestones | string, SkillSection[] | undefined>;
   title?: string;
 }
 

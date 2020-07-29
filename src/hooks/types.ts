@@ -1,9 +1,9 @@
 import {ChildDbRecord} from './childrenHooks';
 
 export enum Answer {
-  YES,
-  UNSURE,
-  NOT_YET,
+  YES = 0,
+  UNSURE = 1,
+  NOT_YET = 2,
 }
 
 export interface MilestoneAnswer {
