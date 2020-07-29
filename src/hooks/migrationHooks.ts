@@ -102,16 +102,12 @@ export function useTransferDataFromOldDb() {
         `,
       });
 
-      if (!dbName || !childrenQueryStatement || !milestonesQueryStatement || !appointmentsQueryStatement) {
-        throw new Error('Platform is not supported');
-      }
-
       const dbPath = Platform.select({
         ios: dbName,
         android: ['..', 'databases', dbName].join('/'),
       });
 
-      if (!dbPath) {
+      if (!dbName || !childrenQueryStatement || !milestonesQueryStatement || !appointmentsQueryStatement || !dbPath) {
         throw new Error('Platform is not supported');
       }
 
