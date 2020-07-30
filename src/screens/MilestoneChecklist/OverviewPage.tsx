@@ -5,8 +5,8 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonRounded from '../../components/AEButtonRounded';
 import AEScrollView from '../../components/AEScrollView';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';

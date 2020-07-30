@@ -7,8 +7,8 @@ import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonMultiline from '../../components/AEButtonMultiline';
 import CancelDoneTopControl from '../../components/CancelDoneTopControl';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {RootStackParamList} from '../../components/Navigator/types';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
@@ -88,12 +88,12 @@ const OnboardingHowToUseScreen: React.FC = () => {
               />
             ))}
           </View>
-          <AEButtonRounded
+          <AEButtonMultiline
             onPress={() => {
               navigation.navigate('Dashboard');
             }}>
             {t('common:getStartedBtn')}
-          </AEButtonRounded>
+          </AEButtonMultiline>
         </View>
       </View>
     </View>

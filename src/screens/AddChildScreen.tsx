@@ -19,12 +19,12 @@ import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonRounded from '../components/AEButtonRounded';
 import AERadioButton from '../components/AERadioButton';
 import AEScrollView from '../components/AEScrollView';
 import AETextInput from '../components/AETextInput';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import DatePicker from '../components/DatePicker';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import PlusIcon from '../components/Svg/PlusIcon';

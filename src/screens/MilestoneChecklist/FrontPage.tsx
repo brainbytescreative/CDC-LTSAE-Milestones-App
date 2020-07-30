@@ -4,8 +4,8 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonMultiline from '../../components/AEButtonMultiline';
 import AEScrollView from '../../components/AEScrollView';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
 
@@ -43,7 +43,7 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
       <View>
         <PurpleArc width={'100%'} />
         <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom, paddingTop: 32}}>
-          <AEButtonRounded onPress={onGetStarted}>{t('common:getStartedBtn')}</AEButtonRounded>
+          <AEButtonMultiline onPress={onGetStarted}>{t('common:getStartedBtn')}</AEButtonMultiline>
         </View>
       </View>
     </AEScrollView>

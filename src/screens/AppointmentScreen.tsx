@@ -4,9 +4,9 @@ import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 
+import AEButtonRounded from '../components/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import ChildSelectorModal from '../components/ChildSelectorModal';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import PurpleArc from '../components/Svg/PurpleArc';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';

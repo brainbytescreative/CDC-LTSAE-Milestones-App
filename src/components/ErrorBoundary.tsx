@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import {colors} from '../resources/constants';
-import AEButtonRounded from './Navigator/AEButtonRounded';
+import AEButtonRounded from './AEButtonRounded';
 
 type StateType = {
   error?: Error | null;

@@ -7,11 +7,11 @@ import {useTranslation} from 'react-i18next';
 import {ScrollView, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
+import AEButtonRounded from '../components/AEButtonRounded';
 import AEKeyboardAvoidingView from '../components/AEKeyboardAvoidingView';
 import AETextInput from '../components/AETextInput';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import DatePicker from '../components/DatePicker';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import PurpleArc from '../components/Svg/PurpleArc';

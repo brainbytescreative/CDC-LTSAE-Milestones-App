@@ -5,9 +5,9 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modal, Portal, Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonMultiline from '../../components/AEButtonMultiline';
 import AEScrollView from '../../components/AEScrollView';
 import LanguageSelector from '../../components/LanguageSelector';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
 import CDCLogo from '../../components/Svg/CDCLogo';
 import IceColdArc from '../../components/Svg/IceColdArc';
@@ -83,13 +83,13 @@ const OnboardingInfoScreen: React.FC = () => {
                 </Text>
               ))}
             </View>
-            <AEButtonRounded
+            <AEButtonMultiline
               onPress={() => {
                 navigation.navigate('OnboardingParentProfile');
                 trackStartTracking();
               }}>
               {t('getStartedBtn')}
-            </AEButtonRounded>
+            </AEButtonMultiline>
           </View>
         </View>
 

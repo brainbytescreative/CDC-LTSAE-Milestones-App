@@ -21,10 +21,10 @@ import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryCache} from 'react-query';
 
+import AEButtonRounded from '../components/AEButtonRounded';
 import ChildPhoto from '../components/ChildPhoto';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import LanguageSelector from '../components/LanguageSelector';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
 import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
