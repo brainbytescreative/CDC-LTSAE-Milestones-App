@@ -189,7 +189,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
               }}
               style={styles.actionItem}>
               <ActEarlySign />
-              <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+              <Text numberOfLines={3} adjustsFontSizeToFit style={styles.actionItemText}>
                 {t('whenToActEarly')}
               </Text>
             </TouchableOpacity>
@@ -201,7 +201,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
                   navigation.navigate('ChildSummary');
                 }}>
                 <MilestoneSummarySign />
-                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                <Text numberOfLines={3} adjustsFontSizeToFit style={styles.actionItemText}>
                   {t('milestoneSummary')}
                 </Text>
               </TouchableOpacity>
