@@ -105,6 +105,7 @@ export type SelectEventType =
   | 'Dashboard'
   | 'How to Use App'
   | 'Add Child'
+  | 'Appointments'
   | 'Add Appointment'
   | 'Milestone Checklist'
   | 'Milestone Quickview'
@@ -144,6 +145,7 @@ export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEv
   TipsAndActivitiesStack: 'Tips',
   WhenToActEarly: 'When to Act Early',
   MilestoneChecklistStack: 'Milestone Checklist',
+  AppointmentsStub: 'Appointments',
 };
 
 export const colors = Object.freeze({

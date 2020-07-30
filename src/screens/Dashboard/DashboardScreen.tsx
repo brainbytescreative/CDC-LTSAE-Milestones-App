@@ -1,8 +1,8 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {differenceInWeeks, format} from 'date-fns';
-import React, {useEffect, useMemo} from 'react';
+import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -49,6 +49,7 @@ interface SkeletonProps {
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
   ageLessTwoMonth: boolean;
+  scrollViewRef?: RefObject<ScrollView>;
 }
 
 const styles = StyleSheet.create({
@@ -140,8 +141,19 @@ const AppointmentsList: React.FC = withSuspense(
   <View />,
 );
 
-const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLessTwoMonth}) => {
-  const navigation = useNavigation<DashboardStackNavigationProp>();
+const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLessTwoMonth, scrollViewRef}) => {
+  const navigation = useNavigation<Props['navigation']>();
+  const route = useRoute<Props['route']>();
+  const appointmentsParam = route.params?.appointments;
+  const [appointmentsPosition, setAppointmentsPosition] = useState(0);
+
+  useLayoutEffect(() => {
+    if (appointmentsParam && appointmentsPosition) {
+      navigation.setParams({appointments: undefined});
+      scrollViewRef?.current?.scrollTo({y: Number(appointmentsPosition) + 100});
+    }
+  }, [appointmentsParam, appointmentsPosition, navigation, scrollViewRef]);
+
   const {t} = useTranslation('dashboard');
   return (
     <View>
@@ -209,7 +221,11 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
             </View>
           </View>
         </View>
-        <View style={[styles.appointmentsHeaderContainer]}>
+        <View
+          onLayout={(event) => {
+            setAppointmentsPosition(event.nativeEvent.layout.y);
+          }}
+          style={[styles.appointmentsHeaderContainer]}>
           <Text
             style={{
               fontSize: 22,
@@ -252,8 +268,8 @@ const ChildName: React.FC = withSuspense(
   </View>,
 );
 
-const DashboardContainer: React.FC = withSuspense(
-  () => {
+const DashboardContainer: React.FC<{scrollViewRef?: RefObject<ScrollView>}> = withSuspense(
+  ({scrollViewRef}) => {
     const {data: child} = useGetCurrentChild();
     const {data: {milestoneAge} = {}} = useGetMilestone();
     useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
@@ -284,6 +300,7 @@ const DashboardContainer: React.FC = withSuspense(
 
     return (
       <DashboardSkeleton
+        scrollViewRef={scrollViewRef}
         ageLessTwoMonth={ageLessTwoMonth}
         // childNameComponent={
         //   <View style={{alignItems: 'center'}}>
@@ -308,9 +325,11 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   // const {refetch} = useGetChecklistQuestions();
 
   const addChildParam = route.params?.addChild;
+  const scrollViewRef = useRef<ScrollView>(null);
+
   useEffect(() => {
     if (addChildParam) {
-      navigation.setParams({addChild: false});
+      navigation.setParams({addChild: undefined});
     }
   }, [addChildParam, navigation]);
 
@@ -318,6 +337,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
     <>
       <ChildSelectorModal visible={addChildParam} />
       <ScrollView
+        ref={scrollViewRef}
         scrollIndicatorInsets={{right: 0.1}}
         bounces={false}
         style={{backgroundColor: '#fff'}}
@@ -330,7 +350,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
           <View style={{backgroundColor: colors.iceCold, height: 40}} />
           <NavBarBackground width={'100%'} />
         </View>
-        <DashboardContainer />
+        <DashboardContainer scrollViewRef={scrollViewRef} />
       </ScrollView>
     </>
   );
