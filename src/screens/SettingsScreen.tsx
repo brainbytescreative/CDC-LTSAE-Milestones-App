@@ -1,7 +1,8 @@
 import {Formik, useField} from 'formik';
 import {FormikProps} from 'formik/dist/types';
+import i18next from 'i18next';
 import _ from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -46,20 +47,20 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         marginTop: 21,
       }}>
       <Text
-        numberOfLines={1}
+        numberOfLines={3}
         onLayout={onLayout}
-        adjustsFontSizeToFit
         style={[
           {
             fontSize: 15,
             textTransform: 'capitalize',
-            width: '75%',
+            maxWidth: i18next.language === 'es' ? '65%' : '70%',
           },
           textStyle,
         ]}>
         {t(name)}
       </Text>
       <AESwitch
+        style={{marginLeft: 8}}
         value={field.value}
         onValueChange={(value) => {
           helpers.setValue(value);
@@ -86,7 +87,6 @@ const SettingsScreen: React.FC = () => {
   const [setSettings] = useSetNotificationSettings();
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
-  const [height, setHeight] = useState<number | undefined>();
   const [scheduleNotifications] = useScheduleNotifications();
 
   useEffect(() => {
@@ -130,14 +130,7 @@ const SettingsScreen: React.FC = () => {
                 return (
                   <View style={{marginHorizontal: 32}}>
                     {notificationPreferences.map((value, index) => (
-                      <NotificationSetting
-                        key={`notif-${index}`}
-                        onLayout={(e) => {
-                          e.nativeEvent.layout.height < (height || 100) && setHeight(e.nativeEvent.layout.height);
-                        }}
-                        textStyle={!!height && {height}}
-                        name={value}
-                      />
+                      <NotificationSetting key={`notif-${index}`} name={value} />
                     ))}
                   </View>
                 );
