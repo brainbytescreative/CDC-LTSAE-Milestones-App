@@ -8,6 +8,7 @@ import {
   Alert,
   Image,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -144,7 +145,9 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
               form.setFieldValue(name, date);
             }}
           />
-          <Text style={{marginTop: 8}}>{t('addChild:dateHint')}</Text>
+          {Platform.select({
+            android: <Text style={{marginTop: 8}}>{t('addChild:dateHint')}</Text>,
+          })}
         </>
       )}
     </FastField>

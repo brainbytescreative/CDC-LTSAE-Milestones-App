@@ -57,7 +57,7 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>
         <AnimatedCircularProgress
           rotation={0}
-          size={isCurrentMilestone ? 68 : 44}
+          size={isCurrentMilestone ? 79 : 55}
           width={2}
           fill={progress}
           tintColor={colors.iceCold}
@@ -74,7 +74,7 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
               <Text
                 accessibilityLabel={unit}
                 style={{
-                  fontSize: 12,
+                  fontSize: isCurrentMilestone ? 13 : 11,
                   fontFamily: month === milestone ? 'Avenir-Heavy' : 'Avenir-light',
                 }}>
                 {isCurrentMilestone ? unit : unitShort}
