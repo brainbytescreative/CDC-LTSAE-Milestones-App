@@ -132,17 +132,20 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
   return (
     <FastField name={name}>
       {({field, form}: FastFieldProps<Date | undefined>) => (
-        <DatePicker
-          onPress={() => {
-            trackChildStartedChildDateOfBirth();
-          }}
-          value={field.value}
-          label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => {
-            trackChildCompletedChildDateOfBirth();
-            form.setFieldValue(name, date);
-          }}
-        />
+        <>
+          <DatePicker
+            onPress={() => {
+              trackChildStartedChildDateOfBirth();
+            }}
+            value={field.value}
+            label={t('fields:dateOfBirthPlaceholder')}
+            onChange={(date) => {
+              trackChildCompletedChildDateOfBirth();
+              form.setFieldValue(name, date);
+            }}
+          />
+          <Text style={{marginTop: 8}}>{t('addChild:dateHint')}</Text>
+        </>
       )}
     </FastField>
   );
