@@ -203,10 +203,10 @@
         "recommendationNotificationTitle": "Recommendation notification",
         "tipsAndActivitiesBody": "You asked to be reminded about tips and activities to help your child's development. Try one today! 💡",
         "tipsAndActivitiesTitle": "Tips & Activities",
-        "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Complete {{hisHersTag}} checklist today to share with the doctor. 🩺",
-        "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Schedule this appointment and write down any developmental concerns or questions to share with the doctor 📝.",
-        "wellCheckUpSR1": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for ALL children at this age.⚕️️",
-        "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}}-old well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
+        "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}} well-child checkup soon. Complete {{hisHersTag}} checklist today to share with the doctor. 🩺",
+        "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}} well-child checkup soon. Schedule this appointment and write down any developmental concerns or questions to share with the doctor 📝.",
+        "wellCheckUpSR1": "{{name}} is due for a {{milestoneAgeFormattedDashed}} well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for ALL children at this age.⚕️️",
+        "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}} well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
     },
     "onboardingHowToUse": {
         "howToUseApp": "How to use the app"
