@@ -47,7 +47,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
       />
       <DateTimePickerModal
         isVisible={modalVisible}
-        date={date}
+        date={date ?? new Date()}
         mode={mode}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
