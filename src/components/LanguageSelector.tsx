@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import React from 'react';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';

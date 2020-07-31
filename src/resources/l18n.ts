@@ -31,12 +31,15 @@ export function useGetLanguageCode() {
 
 export function useChangeLanguage() {
   const [mutate] = useMutation<void, any>(
-    (variables) => {
+    async (variables) => {
+      await queryCache.setQueryData([languageCode], variables);
       return setLanguageCode(variables);
     },
     {
-      onSuccess: () => {
-        return queryCache.invalidateQueries([languageCode]);
+      onSuccess: async () => {
+        // return queryCache.invalidateQueries([languageCode]);
+        // return queryCache.clear();
+        await queryCache.invalidateQueries(() => true, {refetchActive: false});
       },
     },
   );

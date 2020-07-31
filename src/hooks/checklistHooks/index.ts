@@ -1,5 +1,6 @@
 import {parseISO} from 'date-fns';
 import * as MailComposer from 'expo-mail-composer';
+import i18next from 'i18next';
 import _ from 'lodash';
 import nunjucks from 'nunjucks';
 import {useMemo} from 'react';
@@ -53,9 +54,10 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
+  const childBirthday = child?.birthday || currentChild?.birthday;
 
   return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
-    ['milestone', {childBirthday: child?.birthday || currentChild?.birthday}],
+    ['milestone', {childBirthday}],
     async (key, variables) => {
       if (!variables.childBirthday) {
         return;
@@ -84,6 +86,9 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
         isTooYong,
         betweenCheckList,
       };
+    },
+    {
+      enabled: Boolean(childBirthday),
     },
   );
 }
