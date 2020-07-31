@@ -83,6 +83,9 @@ export enum NotificationCategory {
 function at8AM(date: Date) {
   return setHours(startOfDay(date), 8);
 }
+function at8PM(date: Date) {
+  return setHours(startOfDay(date), 20);
+}
 
 /**
  * Trigger time getter functions
@@ -107,21 +110,23 @@ function getMilestoneOnBirthDayTrigger({years, birthday}: {birthday: Date; years
  */
 function getWellCheckUpTrigger({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
   const before2weeks = sub(add(birthday, {months: milestoneId}), {weeks: 2});
-  return at8AM(before2weeks);
+  return at8PM(before2weeks);
 }
 
 /**
  * №7. If Not Yet or Not Sure is checked, fires 1 week later to revisit the milestones
  */
 function completeMilestoneReminderTrigger() {
-  return formatISO(add(new Date(), {weeks: 1}));
+  const date = add(new Date(), {weeks: 1});
+  return formatISO(at8PM(date));
 }
 
 /**
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
 function tipsAndActivitiesTrigger() {
-  return add(new Date(), __DEV__ ? {seconds: 5} : {weeks: 1});
+  const date = add(new Date(), __DEV__ ? {seconds: 5} : {weeks: 1});
+  return at8PM(date);
 }
 
 /**
@@ -129,28 +134,32 @@ function tipsAndActivitiesTrigger() {
  * @param appointmentDate
  */
 function appointment1daysBeforeTrigger(appointmentDate: Date) {
-  return add(appointmentDate, {days: 1});
+  const date = add(appointmentDate, {days: 1});
+  return at8AM(date);
 }
 
 /**
  * №6. Fires if more than 24 hours have passed after a not yet or Act Early item has been selected
  */
 function recommendation24HoursPassed() {
-  return add(new Date(), {hours: 24});
+  const date = add(new Date(), {hours: 24});
+  return at8PM(date);
 }
 
 /**
  * №8. Fires if more than 2 weeks has passed after a not yet/ Act Early item has been selected
  */
 function recommendation2weekPassed() {
-  return add(new Date(), {weeks: 2});
+  const date = add(new Date(), {weeks: 2});
+  return at8PM(date);
 }
 
 /**
  * №9. Fires if more than 4 weeks have passed after a not yet/not sure/Act Early item has been selected
  */
 function recommendation4weeksPassed() {
-  return add(new Date(), {weeks: 4});
+  const date = add(new Date(), {weeks: 4});
+  return at8PM(date);
 }
 
 /**
