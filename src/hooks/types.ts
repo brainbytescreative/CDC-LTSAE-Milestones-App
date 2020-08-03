@@ -21,7 +21,7 @@ export type MilestoneQueryResult =
       childAge: number | undefined;
       milestoneAgeFormatted: string | undefined;
       milestoneAgeFormattedDashes: string | undefined;
-      isTooYong: boolean;
+      // isTooYong: boolean;
       betweenCheckList: boolean;
     }
   | undefined;

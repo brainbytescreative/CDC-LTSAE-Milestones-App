@@ -1,12 +1,12 @@
 import {NavigationContainerProps} from '@react-navigation/native';
-import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
+import {add, differenceInDays, differenceInMonths, differenceInWeeks, format, formatDistanceStrict} from 'date-fns';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
 import {sqLiteClient} from '../db';
 import {Answer, Appointment, AppointmentDb} from '../hooks/types';
-import {NoExtraProperties, PropType, milestonesIds, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {NoExtraProperties, PropType, milestonesIds, missingConcerns} from '../resources/constants';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import i18next from '../resources/l18n';
 
@@ -46,27 +46,67 @@ export const formatAge = (childBirth: Date | undefined): string => {
 };
 
 export function calcChildAge(birthDay: Date | undefined) {
-  let isTooYong = false;
+  // let isTooYong = false;
   let milestoneAge;
   let ageMonth: number;
-  if (birthDay) {
+  let ageDay: number;
+  // let nextMilestone: Date | undefined;
+  let betweenCheckList = false;
+
+  if (birthDay && _.isDate(birthDay)) {
     ageMonth = differenceInMonths(new Date(), birthDay);
+    ageDay = differenceInDays(new Date(), birthDay);
+
+    // Current age in date format
+    const baseDate = add(birthDay, {days: ageDay});
     const minAge = _.min(milestonesIds) || 0;
     const maxAge = _.max(milestonesIds) || Infinity;
 
     if (ageMonth <= minAge) {
       milestoneAge = minAge;
-      const ageDays = differenceInDays(new Date(), birthDay);
-      isTooYong = ageDays < tooYongAgeDays;
+      // const ageDays = differenceInDays(new Date(), birthDay);
+      // isTooYong = ageDays < tooYongAgeDays;
     } else if (ageMonth >= maxAge) {
       milestoneAge = maxAge;
     } else {
       const milestones = milestonesIds.filter((value) => value <= ageMonth);
       milestoneAge = _.last(milestones);
     }
-    return {milestoneAge, isTooYong, ageMonth};
+
+    const currentIndex = milestonesIds.indexOf(milestoneAge as never);
+    const nextMilestoneId = milestonesIds[currentIndex + 1];
+
+    if (nextMilestoneId) {
+      /**
+       * If the selected child's age is greater than or equal to 2 weeks before
+       * next milestone age and less than 1 month minus 1 day before next milestone,
+       * no message will be displayed.
+       */
+      const nextMilestoneDate = add(birthDay, {months: nextMilestoneId});
+      const inWeeks = differenceInWeeks(nextMilestoneDate, baseDate);
+
+      betweenCheckList = inWeeks >= 2;
+      console.log(inWeeks, betweenCheckList);
+      // // less than 1 month minus 1 day before next milestone
+      // const leftSide = add(birthDay, {months: milestoneAge - 1, days: -1});
+      // // basedate < less than: leftCompare = -1
+      // const leftCompare = compareAsc(baseDate, leftSide);
+      // // greater than or equal to 2 weeks before next milestone
+      // const rightSide = add(birthDay, {months: milestoneAge, weeks: -2});
+      // // rightCompare == 0 || rightCompare == 1
+      // const rightCompare = compareAsc(baseDate, rightSide);
+      // betweenCheckList = leftCompare < 0 && rightCompare >= 0;
+      // console.log(leftSide, rightSide, baseDate);
+      // // console.log(leftCompare, rightCompare, baseDate, leftSide, birthDay);
+      // console.log(baseDate, betweenCheckList);
+      // console.log(add(new Date(), {years: -4, weeks: 1}));
+    }
+
+    // console.log(betweenCheckList);
+
+    return {milestoneAge, ageMonth, betweenCheckList};
   }
-  return {isTooYong: false};
+  return {isTooYong: false, betweenCheckList};
 }
 
 export async function checkMissingMilestones(milestoneId: number, childId: number) {

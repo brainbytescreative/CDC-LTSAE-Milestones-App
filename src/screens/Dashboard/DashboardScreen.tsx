@@ -23,7 +23,7 @@ import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistH
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Appointment} from '../../hooks/types';
-import {colors, sharedStyle} from '../../resources/constants';
+import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
 import {trackSelectByType} from '../../utils/analytics';
@@ -48,7 +48,7 @@ interface SkeletonProps {
   milestoneChecklistWidgetComponent?: any;
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
-  ageLessTwoMonth: boolean;
+  // ageLessTwoMonth: boolean;
   scrollViewRef?: RefObject<ScrollView>;
 }
 
@@ -141,7 +141,24 @@ const AppointmentsList: React.FC = withSuspense(
   <View />,
 );
 
-const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLessTwoMonth, scrollViewRef}) => {
+const YellowBoxSuspended: React.FC = withSuspense(
+  () => {
+    const {t} = useTranslation('dashboard');
+    const {data: child} = useGetCurrentChild();
+    const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    const ageLessTwoMonth = Number(ageInWeeks) < 6;
+    const {data: {betweenCheckList = false} = {}} = useGetMilestone();
+    return betweenCheckList || ageLessTwoMonth ? (
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>
+        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
+      </AEYellowBox>
+    ) : null;
+  },
+  suspenseEnabled,
+  <View />,
+);
+
+const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scrollViewRef}) => {
   const navigation = useNavigation<Props['navigation']>();
   const route = useRoute<Props['route']>();
   const appointmentsParam = route.params?.appointments;
@@ -160,9 +177,10 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
       {childPhotoComponent}
       <ChildName />
       <MonthCarousel />
-      <AEYellowBox containerStyle={styles.yellowTipContainer}>
-        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
-      </AEYellowBox>
+      <YellowBoxSuspended />
+      {/*<AEYellowBox containerStyle={styles.yellowTipContainer}>*/}
+      {/*  {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}*/}
+      {/*</AEYellowBox>*/}
       <PurpleArc width={'100%'} />
       <View
         style={{
@@ -274,8 +292,8 @@ const DashboardContainer: React.FC<{scrollViewRef?: RefObject<ScrollView>}> = wi
     const {data: {milestoneAge} = {}} = useGetMilestone();
     useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
     const [setOnboarding] = useSetOnboarding();
-    const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
-    const ageLessTwoMonth = Number(ageInWeeks) < 6;
+    // const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    // const ageLessTwoMonth = Number(ageInWeeks) < 6;
 
     // useEffect(() => {
     //   child && setMilestoneNotifications({child});
@@ -301,7 +319,7 @@ const DashboardContainer: React.FC<{scrollViewRef?: RefObject<ScrollView>}> = wi
     return (
       <DashboardSkeleton
         scrollViewRef={scrollViewRef}
-        ageLessTwoMonth={ageLessTwoMonth}
+        // ageLessTwoMonth={ageLessTwoMonth}
         // childNameComponent={
         //   <View style={{alignItems: 'center'}}>
         //     <Text style={styles.childNameText}>{childName}</Text>
@@ -317,7 +335,10 @@ const DashboardContainer: React.FC<{scrollViewRef?: RefObject<ScrollView>}> = wi
     );
   },
   {shared: {suspense: false}},
-  <DashboardSkeleton ageLessTwoMonth={false} childPhotoComponent={<ChildPhoto />} />,
+  <DashboardSkeleton
+    // ageLessTwoMonth={false}
+    childPhotoComponent={<ChildPhoto />}
+  />,
 );
 
 const DashboardScreen: React.FC<Props> = ({navigation, route}) => {

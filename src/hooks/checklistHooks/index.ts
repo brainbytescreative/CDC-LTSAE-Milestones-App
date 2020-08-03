@@ -1,6 +1,5 @@
 import {parseISO} from 'date-fns';
 import * as MailComposer from 'expo-mail-composer';
-import i18next from 'i18next';
 import _ from 'lodash';
 import nunjucks from 'nunjucks';
 import {useMemo} from 'react';
@@ -62,12 +61,11 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
       if (!variables.childBirthday) {
         return;
       }
-      const betweenCheckList = false;
 
       const birthDay =
         typeof variables.childBirthday === 'string' ? parseISO(variables.childBirthday) : variables.childBirthday;
 
-      const {milestoneAge, isTooYong} = calcChildAge(birthDay);
+      const {milestoneAge, isTooYong, betweenCheckList} = calcChildAge(birthDay);
 
       let milestoneAgeFormatted;
       let milestoneAgeFormattedDashes;
