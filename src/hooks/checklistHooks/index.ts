@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
-import {getChecklistAnswer} from '../../db/checklistQueries';
+import {getChecklistAnswer, setAnswer} from '../../db/checklistQueries';
 import {
   MilestoneIdType,
   PropType,
@@ -239,55 +239,30 @@ export function useSetQuestionAnswer() {
   const [checkMissing] = useCheckMissingMilestones();
   const [setReminder] = useSetCompleteMilestoneReminder();
 
-  return useMutation<Answer | undefined, MilestoneAnswer>(
+  return useMutation<void, MilestoneAnswer>(
     async (variables) => {
       const {answer, childId, note, questionId, milestoneId} = variables;
       answer && trackChecklistAnswer(answer);
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
-      const prevAnswerRes = await sqLiteClient.dB?.executeSql(
-        `
-          SELECT answer
-          FROM milestones_answers
-          WHERE childId = ?1
-            AND milestoneId = ?2
-            AND questionId = ?3
-          LIMIT 1
-      `,
-        [childId, milestoneId, questionId],
-      );
-      const prevAnswer = prevAnswerRes && prevAnswerRes[0].rows.item(0)?.answer;
-
-      const result = await sqLiteClient.dB?.executeSql(
-        `
-                  INSERT OR
-                  REPLACE
-                  INTO milestones_answers (childId, questionId, answer, milestoneId, note)
-                  VALUES (?1, ?2, ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM milestones_answers WHERE questionId = ?2 AND childId = ?1)))
-        `,
-        [childId, questionId, answer, milestoneId, note],
-      );
-
-      if (!result || result[0].rowsAffected === 0) {
-        throw new Error('Update failed');
-      }
-
-      return prevAnswer;
+      await setAnswer({childId, questionId, answer, milestoneId, note});
     },
     {
       throwOnError: false,
-      onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
+      onSuccess: async (data, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
         // queryCache.invalidateQueries(['question', {childId, questionId, milestoneId}]).then();
         // todo optimistic
-        queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
+        await queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
         if (milestoneAge) {
-          queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
+          await queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
         } else {
-          queryCache.invalidateQueries('monthProgress');
+          await queryCache.invalidateQueries('monthProgress');
         }
-
-        prevAnswer !== answer && setReminder({childId, questionId, milestoneId, answer, prevAnswer});
+        // const prevAnswer = await getAnswerValue({childId, milestoneId, questionId});
+        // console.log(prevAnswer);
+        // if (prevAnswer !== answer) {
+        await setReminder({childId, questionId, milestoneId, answer});
+        // }
       },
     },
   );

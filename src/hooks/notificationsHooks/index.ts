@@ -20,7 +20,7 @@ import {ChildDbRecord} from '../childrenHooks';
 // noinspection ES6PreferShortImport
 import {useSetSelectedChild} from '../childrenHooks/useSetSelectedChild';
 import {NotificationsSettingType, getNotificationSettings} from '../settingsHooks';
-import {Answer, AppointmentDb, ChildResult, MilestoneAnswer} from '../types';
+import {AppointmentDb, ChildResult, MilestoneAnswer} from '../types';
 
 interface TipsAndActivitiesNotification {
   notificationId?: string;
@@ -126,7 +126,7 @@ function completeMilestoneReminderTrigger() {
  */
 function tipsAndActivitiesTrigger() {
   const date = add(new Date(), __DEV__ ? {seconds: 5} : {weeks: 1});
-  return at8PM(date);
+  return __DEV__ ? date : at8PM(date);
 }
 
 /**
@@ -252,80 +252,87 @@ export function useSetCompleteMilestoneReminder() {
   const [setRecommendationNotifications] = useSetRecommendationNotifications();
   const [deleteRecommendationNotifications] = useDeleteRecommendationNotifications();
 
-  return useMutation<void, NonNullable<Omit<MilestoneAnswer, 'note'>> & {prevAnswer?: Answer}>(
-    async ({prevAnswer, answer, childId, milestoneId}) => {
-      InteractionManager.runAfterInteractions(async () => {
-        const notificationId = `milestone_reminder_${childId}_${milestoneId}`;
+  return useMutation<void, NonNullable<Omit<MilestoneAnswer, 'note'>>>(async ({childId, milestoneId}) => {
+    InteractionManager.runAfterInteractions(async () => {
+      const notificationId = `milestone_reminder_${childId}_${milestoneId}`;
+      // if (answer === Answer.YES && (prevAnswer === Answer.NOT_YET || prevAnswer === Answer.UNSURE)) {
+      const {isNotSure, isNotYet} = await checkMissingMilestones(milestoneId, childId);
+      if (!isNotSure && !isNotYet) {
+        await sqLiteClient.dB?.executeSql(
+          `
+                    DELETE
+                    FROM notifications
+                    WHERE notificationId = ?1
+          `,
+          [notificationId],
+        );
+        await deleteRecommendationNotifications({milestoneId, childId, reschedule: false});
 
-        if (answer === Answer.YES && (prevAnswer === Answer.NOT_YET || prevAnswer === Answer.UNSURE)) {
-          const {isNotSure, isNotYet} = await checkMissingMilestones(milestoneId, childId);
-          if (!isNotSure && !isNotYet) {
-            await sqLiteClient.dB?.executeSql(
-              `
-                DELETE
-                FROM notifications
-                WHERE notificationId = ?1
-            `,
-              [notificationId],
-            );
-            await deleteRecommendationNotifications({milestoneId, childId, reschedule: false});
+        // FIXME early return
+        return reschedule();
+      }
 
-            return reschedule();
-          }
-        } else if (
-          (prevAnswer === Answer.YES || prevAnswer === undefined) &&
-          (answer === Answer.NOT_YET || answer === Answer.UNSURE)
-        ) {
-          const twoWeeksLater = completeMilestoneReminderTrigger();
-          const childResult = await sqLiteClient.dB?.executeSql('SELECT name, gender FROM children WHERE id=?1', [
-            childId,
-          ]);
-          const child: Pick<ChildDbRecord, 'name' | 'gender'> | undefined = _.first(childResult)?.rows.item(0);
-          const bodyArguments = JSON.stringify({
-            name: child?.name,
-            gender: child?.gender,
-          });
-          const titleLocalizedKey = 'notifications:milestoneNotificationTitle';
-          const bodyLocalizedKey = 'notifications:milestoneCompleteReminder';
-          await sqLiteClient.dB?.executeSql(
-            `
-                      INSERT OR
-                      REPLACE
-                      INTO notifications (notificationId,
-                                          fireDateTimestamp,
-                                          notificationCategoryType,
-                                          childId,
-                                          milestoneId,
-                                          bodyLocalizedKey,
-                                          titleLocalizedKey,
-                                          bodyArguments,
-                                          notificationRead)
-                      VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
-            `,
-            [
-              notificationId,
-              twoWeeksLater,
-              NotificationCategory.Milestone,
-              childId,
-              milestoneId,
-              bodyLocalizedKey,
-              titleLocalizedKey,
-              bodyArguments,
-              false,
-            ],
-          );
+      const [
+        notificationsIsSetQuery,
+      ] = await sqLiteClient.db.executeSql('SELECT notificationId FROM notifications WHERE notificationId=?1 LIMIT 1', [
+        notificationId,
+      ]);
 
-          await setRecommendationNotifications({
-            reschedule: false,
-            child: {id: childId},
-            milestoneId,
-          });
+      if (notificationsIsSetQuery.rows.length > 0) {
+        return;
+      }
 
-          return reschedule();
-        }
+      // } else if (
+      //   (prevAnswer === Answer.YES || prevAnswer === undefined) &&
+      //   (answer === Answer.NOT_YET || answer === Answer.UNSURE)
+      // ) {
+      const twoWeeksLater = completeMilestoneReminderTrigger();
+      const childResult = await sqLiteClient.dB?.executeSql('SELECT name, gender FROM children WHERE id=?1', [childId]);
+      const child: Pick<ChildDbRecord, 'name' | 'gender'> | undefined = _.first(childResult)?.rows.item(0);
+      const bodyArguments = JSON.stringify({
+        name: child?.name,
+        gender: child?.gender,
       });
-    },
-  );
+      const titleLocalizedKey = 'notifications:milestoneNotificationTitle';
+      const bodyLocalizedKey = 'notifications:milestoneCompleteReminder';
+      await sqLiteClient.dB?.executeSql(
+        `
+                  INSERT OR
+                  REPLACE
+                  INTO notifications (notificationId,
+                                      fireDateTimestamp,
+                                      notificationCategoryType,
+                                      childId,
+                                      milestoneId,
+                                      bodyLocalizedKey,
+                                      titleLocalizedKey,
+                                      bodyArguments,
+                                      notificationRead)
+                  VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
+        `,
+        [
+          notificationId,
+          twoWeeksLater,
+          NotificationCategory.Milestone,
+          childId,
+          milestoneId,
+          bodyLocalizedKey,
+          titleLocalizedKey,
+          bodyArguments,
+          false,
+        ],
+      );
+
+      await setRecommendationNotifications({
+        reschedule: false,
+        child: {id: childId},
+        milestoneId,
+      });
+
+      return reschedule();
+      // }
+    });
+  });
 }
 
 export function notificationDbToRequest(value: NotificationDB, t: TFunction): NotificationRequestInput | undefined {
@@ -647,6 +654,17 @@ export function useSetRecommendationNotifications() {
         body: 'notifications:recommendation4weeksPassedBody',
       },
     ];
+
+    //  fixme optimise rescheduling
+    //
+    //     const [isNotificationSetQuery] = await sqLiteClient.db.executeSql(
+    //       `
+    //         SELECT notificationId FROM notifications WHERE notificationId IN (${series.map(() => '?').join(',')})
+    // `,
+    //       series.map((value) => value.notificationId),
+    //     );
+    //
+    //     console.log(isNotificationSetQuery.rows.length === series.length);
 
     await sqLiteClient.dB?.transaction((tx) => {
       series.forEach(({notificationId, fireDateTimestamp, body}) => {

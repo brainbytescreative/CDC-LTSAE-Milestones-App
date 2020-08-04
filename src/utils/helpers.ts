@@ -86,7 +86,7 @@ export function calcChildAge(birthDay: Date | undefined) {
       const inWeeks = differenceInWeeks(nextMilestoneDate, baseDate);
 
       betweenCheckList = inWeeks >= 2;
-      console.log(inWeeks, betweenCheckList);
+      // console.log(inWeeks, betweenCheckList);
       // // less than 1 month minus 1 day before next milestone
       // const leftSide = add(birthDay, {months: milestoneAge - 1, days: -1});
       // // basedate < less than: leftCompare = -1

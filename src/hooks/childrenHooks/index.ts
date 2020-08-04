@@ -115,7 +115,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       const insertId = res?.[0].insertId;
 
       if (!variables.isAnotherChild && insertId) {
-        console.log(variables.isAnotherChild, insertId);
+        // console.log(variables.isAnotherChild, insertId);
         await setSelectedChild({id: insertId});
       }
 

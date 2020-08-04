@@ -40,7 +40,7 @@ const QuestionsList: React.FC<{
   onPressNextSection: () => void;
 }> = withSuspense(
   ({flatListRef, section, onPressNextSection}) => {
-    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped!;
+    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
     const milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted ?? '';
     const childId = useGetCurrentChild().data?.id;
     const {t} = useTranslation('milestoneChecklist');
@@ -74,7 +74,6 @@ const QuestionsList: React.FC<{
 const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = ({onSectionSet, section}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
-
   return (
     <FlatList
       extraData={sectionsProgress}
