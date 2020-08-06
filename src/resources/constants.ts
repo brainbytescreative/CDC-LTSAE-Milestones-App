@@ -8,6 +8,7 @@ import {Platform, StyleSheet} from 'react-native';
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
 export const states = [
+  'NonUs',
   'AL',
   'AK',
   'AS',
