@@ -73,9 +73,20 @@ export interface ParentProfileSelectorValues {
   guardian: string | undefined | null;
 }
 
-export type Guardian = 'guardian' | 'healthcareProvider';
+export type Guardian = typeof guardianTypes[number];
 
-export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
+export const guardianTypes = ['guardian', 'healthcareProvider'] as const;
+
+// export const guardianTypes = [
+//   'guardian',
+//   // 'headStartProvider',
+//   // 'teacher',
+//   // 'WICProvider',
+//   // 'homeVisitor',
+//   'healthcareProvider',
+//   // 'other',
+// ];
+
 export enum WellChildCheckUpAppointmentAgesEnum {
   Age1 = 1,
   Age9 = 9,
@@ -203,6 +214,15 @@ export const sharedStyle = StyleSheet.create({
   },
   boldText: {
     fontFamily: 'Montserrat-Bold',
+  },
+  required: {
+    fontSize: 15,
+  },
+  errorOutline: {
+    borderWidth: 2,
+    borderColor: colors.apricot,
+    borderRadius: 10,
+    margin: -2,
   },
   largeBoldText: {
     fontSize: 22,

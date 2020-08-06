@@ -19,3 +19,8 @@ export const addAppointmentSchema = yup.object({
   notes: yup.string().nullable(true),
   questions: yup.string().nullable(true),
 });
+
+export const editProfileSchema = yup.object({
+  guardian: yup.string(),
+  territory: yup.string().required(),
+});

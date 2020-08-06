@@ -23,6 +23,7 @@ import {
   useSetNotificationSettings,
 } from '../hooks/settingsHooks';
 import {colors, sharedStyle} from '../resources/constants';
+import {editProfileSchema} from '../resources/validationSchemas';
 import {trackSelectByType, trackSelectLanguage} from '../utils/analytics';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
@@ -151,12 +152,19 @@ const SettingsScreen: React.FC = () => {
               </Text>
               <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage')}</Text>
 
-              <ParentProfileSelector
-                value={profile}
-                onChange={(values) => {
-                  setProfile(values);
-                }}
-              />
+              {profile && (
+                <Formik
+                  initialValues={profile}
+                  validationSchema={editProfileSchema}
+                  validate={(values) => {
+                    setProfile(values);
+                  }}
+                  onSubmit={() => {
+                    return;
+                  }}>
+                  <ParentProfileSelector />
+                </Formik>
+              )}
               <Text style={{textAlign: 'right', marginTop: 10}}>{t('requiredForState')}</Text>
               <Text
                 style={[
