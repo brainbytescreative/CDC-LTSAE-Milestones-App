@@ -8,7 +8,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEButtonRounded from '../../components/AEButtonRounded';
 import AEScrollView from '../../components/AEScrollView';
-import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import LanguageSelector from '../../components/LanguageSelector';
 import {RootStackParamList} from '../../components/Navigator/types';
 import ParentProfileSelector from '../../components/ParentProfileSelector';
@@ -35,18 +34,18 @@ const OnboardingParentProfileScreen: React.FC = () => {
             <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
             <NavBarBackground width={'100%'} />
           </View>
-          <CancelDoneTopControl
-            onCancel={() => {
-              navigation.navigate(NextScreen, {onboarding: true});
-            }}
-            onDone={() => {
-              // navigation.navigate('Dashboard');
-              trackNext();
-              navigation.navigate(NextScreen, {
-                onboarding: true,
-              });
-            }}
-          />
+          {/*<CancelDoneTopControl*/}
+          {/*  onCancel={() => {*/}
+          {/*    navigation.navigate(NextScreen, {onboarding: true});*/}
+          {/*  }}*/}
+          {/*  onDone={() => {*/}
+          {/*    // navigation.navigate('Dashboard');*/}
+          {/*    trackNext();*/}
+          {/*    navigation.navigate(NextScreen, {*/}
+          {/*      onboarding: true,*/}
+          {/*    });*/}
+          {/*  }}*/}
+          {/*/>*/}
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
