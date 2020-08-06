@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Formik, FormikProps} from 'formik';
+import i18next from 'i18next';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -78,7 +79,6 @@ const OnboardingParentProfileScreen: React.FC = () => {
                     marginTop: 20,
                     textAlign: 'center',
                     marginHorizontal: 32,
-                    textTransform: 'capitalize',
                     marginBottom: 40,
                   },
                   sharedStyle.largeBoldText,
@@ -86,7 +86,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
                 {t('parentProfile')}
               </Text>
               <View style={{marginHorizontal: 32, zIndex: 20000, marginBottom: 56}}>
-                <ParentProfileSelector />
+                <ParentProfileSelector key={`ParentProfileSelector-${i18next.language}`} />
                 <Text style={[{textAlign: 'right', marginHorizontal: 50, marginTop: 10}, sharedStyle.required]}>
                   {t('common:required')}
                 </Text>
@@ -98,7 +98,6 @@ const OnboardingParentProfileScreen: React.FC = () => {
                     {
                       marginHorizontal: 32,
                       marginBottom: 16,
-                      textTransform: 'capitalize',
                     },
                     sharedStyle.largeBoldText,
                   ]}>

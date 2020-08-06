@@ -154,6 +154,7 @@ const SettingsScreen: React.FC = () => {
 
               {profile && (
                 <Formik
+                  key={`ParentProfileSelector-${i18next.language}`}
                   initialValues={profile}
                   validationSchema={editProfileSchema}
                   validate={(values) => {
@@ -170,7 +171,6 @@ const SettingsScreen: React.FC = () => {
                 style={[
                   {
                     marginBottom: 16,
-                    textTransform: 'capitalize',
                   },
                   sharedStyle.largeBoldText,
                 ]}>

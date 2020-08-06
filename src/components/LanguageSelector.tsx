@@ -1,5 +1,5 @@
-import i18next from 'i18next';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
@@ -15,6 +15,8 @@ interface Props {
 const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => {
   const changeLanguage = useChangeLanguage();
   const {data: lngCode} = useGetLanguageCode();
+  const {t} = useTranslation();
+
   return (
     <View style={[{backgroundColor: colors.white, borderRadius: 10}, style]}>
       {title && (
@@ -32,7 +34,7 @@ const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => 
             changeLanguage('en');
             onLanguageChange && onLanguageChange('en');
           }}>
-          <Text style={styles.btnText}>{'English'}</Text>
+          <Text style={styles.btnText}>{t('common:english')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
