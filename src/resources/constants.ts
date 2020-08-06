@@ -217,7 +217,7 @@ export const sharedStyle = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
   required: {
-    fontSize: 15,
+    fontSize: 16,
   },
   errorOutline: {
     borderWidth: 2,

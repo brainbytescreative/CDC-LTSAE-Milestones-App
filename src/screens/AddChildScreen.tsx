@@ -2,6 +2,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
 import {TFunction} from 'i18next';
+import _ from 'lodash';
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -179,7 +180,7 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
               titleStyle={{marginRight: 32}}
             />
           </View>
-          <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
+          <Text style={[{textAlign: 'right'}, sharedStyle.required]}>{t('common:required')}</Text>
         </View>
       )}
     </FastField>
@@ -234,6 +235,7 @@ const AddChildScreen: React.FC = () => {
   const isLoading = updateStatus === 'loading' || addStatus === 'loading';
 
   useLayoutEffect(() => {
+    formikRef.current?.validateForm();
     navigation.setOptions({
       title,
     });
@@ -271,7 +273,7 @@ const AddChildScreen: React.FC = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
-        innerRef={(ref) => (formikRef.current = ref)}
+        innerRef={formikRef}
         validateOnChange
         validateOnMount
         onSubmit={async (values) => {
@@ -314,11 +316,13 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              <CancelDoneTopControl
-                disabled={isLoading || !formikProps.isValid}
-                onCancel={route.params?.onboarding ? undefined : onCancel}
-                onDone={onDone}
-              />
+              {!_.isEmpty(formikProps.values.anotherChildren) && (
+                <CancelDoneTopControl
+                  disabled={isLoading || !formikProps.isValid}
+                  onCancel={route.params?.onboarding ? undefined : onCancel}
+                  onDone={onDone}
+                />
+              )}
               <Text
                 adjustsFontSizeToFit
                 style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
