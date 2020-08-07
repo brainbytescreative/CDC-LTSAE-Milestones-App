@@ -258,9 +258,9 @@
         "userProfile": "Configuraciones de la cuenta"
     },
     "skillTypes": {
-        "cognitive": "Movimiento",
+        "cognitive": "Cognitivas",
         "language": "Lenguaje",
-        "movement": "Cognitivas",
+        "movement": "Movimiento",
         "social": "Sociales"
     },
     "states": {
