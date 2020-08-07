@@ -55,7 +55,7 @@ const QuestionsList: React.FC<{
         renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
         keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
         ListHeaderComponent={() => (
-          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
+          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>{milestoneAgeFormatted}</Text>
         )}
         ListFooterComponent={() => (
           <View style={{marginTop: 50}}>
