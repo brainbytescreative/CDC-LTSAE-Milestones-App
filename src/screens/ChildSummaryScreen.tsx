@@ -21,6 +21,7 @@ import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryCache} from 'react-query';
 
+import AEButtonMultiline from '../components/AEButtonMultiline';
 import AEButtonRounded from '../components/AEButtonRounded';
 import ChildPhoto from '../components/ChildPhoto';
 import ChildSelectorModal from '../components/ChildSelectorModal';
@@ -381,7 +382,7 @@ const ComposeEmailButton = withSuspense(
     const {compose: composeMail} = useGetComposeSummaryMail();
     const {t} = useTranslation('childSummary');
     return (
-      <AEButtonRounded
+      <AEButtonMultiline
         onPress={() => {
           composeMail().catch((e) => {
             Alert.alert('', e.message);
@@ -389,7 +390,7 @@ const ComposeEmailButton = withSuspense(
         }}
         style={{marginBottom: 0}}>
         {t('emailSummary')}
-      </AEButtonRounded>
+      </AEButtonMultiline>
     );
   },
   suspenseEnabled,
@@ -437,12 +438,12 @@ const ChildSummaryScreen: React.FC = () => {
               {
                 textAlign: 'center',
                 marginTop: 20,
-                textTransform: 'capitalize',
+                // textTransform: 'capitalize',
                 marginHorizontal: 32,
               },
               sharedStyle.largeBoldText,
             ]}>
-            {`${t('childSummary:title', {name: child?.name ?? '', age: milestoneAgeFormatted ?? ''})}`}
+            {`${t('childSummary:title', {name: _.capitalize(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
           </Text>
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
@@ -465,13 +466,13 @@ const ChildSummaryScreen: React.FC = () => {
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
               <ComposeEmailButton />
-              <AEButtonRounded
+              <AEButtonMultiline
                 onPress={() => {
                   navigation.navigate('Revisit');
                 }}
                 style={{marginTop: 10, marginBottom: 30}}>
                 {t('showDoctor')}
-              </AEButtonRounded>
+              </AEButtonMultiline>
               <LanguageSelector
                 onLanguageChange={(lng) => {
                   trackSelectLanguage(lng);

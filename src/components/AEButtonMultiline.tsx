@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
+import {Text, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native';
 
 import {colors, sharedStyle} from '../resources/constants';
 
-type Props = Pick<TouchableOpacityProps, 'onPress'>;
+type Props = Pick<TouchableOpacityProps, 'onPress'> & {style?: ViewStyle};
 
-const AEButtonMultiline: React.FC<Props> = ({children, onPress}) => {
+const AEButtonMultiline: React.FC<Props> = ({children, onPress, style}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
@@ -17,11 +17,12 @@ const AEButtonMultiline: React.FC<Props> = ({children, onPress}) => {
             backgroundColor: colors.white,
             padding: 16,
           },
+          style,
           sharedStyle.shadow,
         ]}>
         <Text
           style={{
-            textTransform: 'capitalize',
+            // textTransform: 'capitalize',
             fontFamily: 'Montserrat-Bold',
             fontSize: 18,
             textAlign: 'center',
