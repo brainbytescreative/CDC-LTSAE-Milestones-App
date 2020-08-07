@@ -58,7 +58,7 @@ const MilestoneChecklistWidget: React.FC = withSuspense(
             marginVertical: 10,
           }}
           progress={totalProgressValue}
-          color={colors.lightGreen}
+          color={colors.darkGreen}
         />
         <Text>{t('milestonesAnswered', {progress: totalProgress})}</Text>
       </TouchableOpacity>

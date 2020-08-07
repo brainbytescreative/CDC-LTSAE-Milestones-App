@@ -162,6 +162,7 @@ export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEv
 
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
+  darkGreen: '#9DF786',
   blueLink: '#0645AD',
   purple: '#CEB9EF',
   iceCold: '#94F5EB',

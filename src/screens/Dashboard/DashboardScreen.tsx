@@ -58,11 +58,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   appointmentsHeaderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    // alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    marginHorizontal: 20,
+    marginHorizontal: 0,
   },
   appointmentsContainer: {
     backgroundColor: 'white',
@@ -252,12 +252,13 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
             {t('appointments')}
           </Text>
           <TouchableOpacity
+            style={{paddingTop: 12}}
             accessibilityRole={'button'}
             accessibilityLabel={t('addAppointment:title')}
             onPress={() => {
               navigation.navigate('AddAppointment');
             }}>
-            <Text style={{fontSize: 12}}>{t('addApt')}</Text>
+            <Text style={{fontSize: 14}}>{t('addApt')}</Text>
           </TouchableOpacity>
         </View>
         <AppointmentsList />
