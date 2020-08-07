@@ -27,7 +27,7 @@ const OnboardingInfoScreen: React.FC = () => {
         <View style={{flexGrow: 2}}>
           <View style={{backgroundColor: colors.iceCold, flexGrow: 1, justifyContent: 'space-around'}}>
             <View style={{alignItems: 'center', marginTop: 16 + top}}>
-              <Text style={{fontSize: 10, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
+              <Text style={{fontSize: 12, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
                 <CDCLogo />
                 <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
@@ -76,7 +76,7 @@ const OnboardingInfoScreen: React.FC = () => {
                 marginHorizontal: 32,
                 marginTop: 16,
               }}>
-              {Array.from(new Array(6)).map((value, index) => (
+              {Array.from(new Array(5)).map((value, index) => (
                 <Text style={[{fontSize: 15}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
                   <Text style={[sharedStyle.boldText]}>{'+   '}</Text>
                   {t('list', {context: `${index}`})}
