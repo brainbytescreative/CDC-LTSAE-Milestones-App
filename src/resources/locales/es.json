@@ -36,7 +36,6 @@
     "appointment": {
         "concernsOrNotesForDoctor": "Preguntas, inquietudes o notas para el proveedor",
         "deleteAppointment": "Borrar cita",
-        "emailChildsSummary": "Enviar el resumen del niño por correo electrónico",
         "showChildsSummary": "Mostrar el resumen del niño",
         "title": "Cita"
     },

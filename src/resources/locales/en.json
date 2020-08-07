@@ -36,7 +36,6 @@
     "appointment": {
         "concernsOrNotesForDoctor": "Questions/Concerns/Notes",
         "deleteAppointment": "Delete Appointment",
-        "emailChildsSummary": "Email Child's Summary",
         "showChildsSummary": "Show Child's Summary",
         "title": "Appointment"
     },

@@ -110,7 +110,7 @@ const AppointmentScreen: React.FC = () => {
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 30}}>
-              {t('emailChildsSummary')}
+              {t('common:emailSummary')}
             </AEButtonMultiline>
             <Button
               disabled={loading}
