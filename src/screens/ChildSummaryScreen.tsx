@@ -482,6 +482,13 @@ const ChildSummaryScreen: React.FC = () => {
             </View>
           </View>
           <SummaryItems />
+          <AEButtonRounded
+            style={{marginTop: 40}}
+            onPress={() => {
+              navigation.navigate('DashboardStack');
+            }}>
+            {t('common:done')}
+          </AEButtonRounded>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
