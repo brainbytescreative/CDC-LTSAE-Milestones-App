@@ -66,7 +66,9 @@
     },
     "common": {
         "appLanguage": "Idioma de la aplicación",
+        "baby": "bebé",
         "cancel": "Cancelar",
+        "child": "niño",
         "dateFormat": "MM/dd/yyyy",
         "dateTimeFormat": "MM/dd/yyyy h:mm a",
         "delete": "Eliminar",
@@ -327,7 +329,7 @@
         "like": "Me gusta",
         "nextSection": "Siguiente sección",
         "remindMe": "Recordarme",
-        "subtitle": "Puede ayudar a que su bebé / niño aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su bebé / niño {{childAge}} hoy",
+        "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} {{childAge}} hoy",
         "title": "Consejos y actividades"
     }
 }

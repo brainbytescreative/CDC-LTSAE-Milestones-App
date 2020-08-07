@@ -66,7 +66,9 @@
     },
     "common": {
         "appLanguage": "App language",
+        "baby": "baby",
         "cancel": "Cancel",
+        "child": "niño",
         "dateFormat": "MMMM dd, yyyy",
         "dateTimeFormat": "MM/dd/yyyy h:mm a",
         "delete": "Delete",
@@ -327,7 +329,7 @@
         "like": "Like",
         "nextSection": "Next section",
         "remindMe": "Remind me",
-        "subtitle": "You can help you baby/child learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old baby/child today.",
+        "subtitle": "You can help your {{babyOrChild}} learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old {{babyOrChild}} today.",
         "title": "Tips and Activities"
     }
 }
