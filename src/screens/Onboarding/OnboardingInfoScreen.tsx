@@ -77,10 +77,10 @@ const OnboardingInfoScreen: React.FC = () => {
                 marginTop: 16,
               }}>
               {Array.from(new Array(5)).map((value, index) => (
-                <Text style={[{fontSize: 15}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
-                  <Text style={[sharedStyle.boldText]}>{'+   '}</Text>
-                  {t('list', {context: `${index}`})}
-                </Text>
+                <View style={[{flexDirection: 'row'}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
+                  <Text style={[sharedStyle.boldText, {fontSize: 15}]}>{'+   '}</Text>
+                  <Text style={[{fontSize: 15}]}>{t('list', {context: `${index}`})}</Text>
+                </View>
               ))}
             </View>
             <AEButtonMultiline
