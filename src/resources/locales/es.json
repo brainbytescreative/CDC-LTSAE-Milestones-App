@@ -191,6 +191,7 @@
         "section-language": "$t(skillTypes:language)",
         "section-movement": "$t(skillTypes:movement)",
         "section-social": "$t(skillTypes:social)",
+        "togo": "{{count}} más",
         "whenToActEarly": "Cuándo reaccionar pronto"
     },
     "notifications": {

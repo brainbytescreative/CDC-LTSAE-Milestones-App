@@ -260,9 +260,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             sharedStyle.shadow,
             answer === Answer.YES ? {backgroundColor: colors.lightGreen} : undefined,
           ]}>
-          <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
-            {t('milestoneChecklist:answer_yes')}
-          </Text>
+          <Text numberOfLines={1}>{t('milestoneChecklist:answer_yes')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.UNSURE)}
@@ -272,9 +270,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             {marginHorizontal: 8},
             answer === Answer.UNSURE ? {backgroundColor: colors.yellow} : undefined,
           ]}>
-          <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
-            {t('milestoneChecklist:answer_unsure')}
-          </Text>
+          <Text numberOfLines={1}>{t('milestoneChecklist:answer_unsure')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.NOT_YET)}
@@ -283,7 +279,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             sharedStyle.shadow,
             answer === Answer.NOT_YET ? {backgroundColor: colors.tanHide} : undefined,
           ]}>
-          <Text numberOfLines={1} adjustsFontSizeToFit style={{textTransform: 'uppercase'}}>
+          <Text numberOfLines={1} adjustsFontSizeToFit>
             {t('milestoneChecklist:answer_not_yet')}
           </Text>
         </TouchableOpacity>

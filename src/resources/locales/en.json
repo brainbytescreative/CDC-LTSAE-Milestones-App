@@ -171,9 +171,9 @@
         "addANote": "Add a note",
         "addANoteLong": "Notes will save automatically, \nenter them here.",
         "answer_no": "no",
-        "answer_not_yet": "not yet",
-        "answer_unsure": "Not Sure",
-        "answer_yes": "yes",
+        "answer_not_yet": "Not yet",
+        "answer_unsure": "Not sure",
+        "answer_yes": "Yes",
         "complete": "Complete",
         "drawerLabel": "Milestone Checklist",
         "incomplete": "Incomplete",
@@ -191,6 +191,7 @@
         "section-language": "$t(skillTypes:language)",
         "section-movement": "$t(skillTypes:movement)",
         "section-social": "$t(skillTypes:social)",
+        "togo": "{{count}} to go",
         "whenToActEarly": "When to Act Early"
     },
     "notifications": {

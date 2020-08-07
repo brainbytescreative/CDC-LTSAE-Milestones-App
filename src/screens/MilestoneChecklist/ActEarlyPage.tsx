@@ -174,8 +174,8 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       <FlatList
         ListHeaderComponent={
           <View style={{marginBottom: 50}}>
-            <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
-            <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
+            <Text style={[styles.largeText, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
+            <Text style={[styles.largeText]}>{t('milestoneChecklist')}</Text>
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
               {totalProgressValue === 1 ? t('complete') : t('incomplete')}
             </Text>
@@ -240,6 +240,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     textTransform: 'capitalize',
+    marginTop: 5,
+    fontFamily: 'Montserrat-Bold',
+  },
+  largeText: {
+    textAlign: 'center',
+    fontSize: 22,
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },

@@ -61,7 +61,7 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
               color: 'black',
               fontFamily: 'Avenir-Light',
             }}>
-            {`${toGo} to go`}
+            {t('togo', {count: toGo})}
           </Text>
         )}
       </View>
