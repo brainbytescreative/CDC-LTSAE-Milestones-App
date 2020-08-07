@@ -91,7 +91,7 @@
         "month": "{{count}} mes",
         "monthDash": "{{count}}-mes de vida",
         "monthDash_plural": "{{count}}-meses de vida",
-        "monthShort": "{{count}} meses",
+        "monthShort": "{{count}}",
         "monthSingular": "{{count}} mes",
         "month_plural": "{{count}} meses",
         "next": "Siguiente",

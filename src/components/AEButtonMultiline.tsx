@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 're
 
 import {colors, sharedStyle} from '../resources/constants';
 
-type Props = Pick<TouchableOpacityProps, 'onPress'> & {style?: ViewStyle};
+type Props = Pick<TouchableOpacityProps, 'onPress' | 'disabled'> & {style?: ViewStyle};
 
 const AEButtonMultiline: React.FC<Props> = ({children, onPress, style}) => {
   return (

@@ -112,6 +112,7 @@ export type SelectEventType =
   | 'Movement'
   | 'When to Act Early'
   | 'My Child Summary'
+  | 'Show Doctor'
   | "Email Child's Summary"
   | 'Delete'
   | 'Dashboard'

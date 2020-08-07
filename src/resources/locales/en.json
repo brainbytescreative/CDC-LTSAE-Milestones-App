@@ -15,7 +15,7 @@
     },
     "addAppointment": {
         "edit-title": "Edit appointment",
-        "title": "Add an Appointment"
+        "title": "Add Appointment"
     },
     "addChild": {
         "addAnotherChild": "+ Add another child",
@@ -36,8 +36,8 @@
     "appointment": {
         "concernsOrNotesForDoctor": "Questions/Concerns/Notes",
         "deleteAppointment": "Delete Appointment",
-        "emailChildsSummary": "Email child's summary",
-        "showChildsSummary": "Show child's summary",
+        "emailChildsSummary": "Email Child's Summary",
+        "showChildsSummary": "Show Child's Summary",
         "title": "Appointment"
     },
     "childSelector": {

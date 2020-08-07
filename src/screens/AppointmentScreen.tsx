@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 
-import AEButtonRounded from '../components/AEButtonRounded';
+import AEButtonMultiline from '../components/AEButtonMultiline';
 import AEScrollView from '../components/AEScrollView';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import {DashboardDrawerNavigationProp, DashboardStackParamList} from '../components/Navigator/types';
@@ -82,7 +82,7 @@ const AppointmentScreen: React.FC = () => {
         <View style={{marginTop: 47}}>
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
-            <AEButtonRounded
+            <AEButtonMultiline
               onPress={() => {
                 trackInteractionByType('Edit Appointment');
                 navigation.replace('AddAppointment', {
@@ -91,17 +91,17 @@ const AppointmentScreen: React.FC = () => {
               }}
               style={{marginBottom: 0}}>
               {t('common:edit')}
-            </AEButtonRounded>
-            <AEButtonRounded
+            </AEButtonMultiline>
+            <AEButtonMultiline
               onPress={() => {
-                trackSelectByType('My Child Summary');
-                navigation.navigate('ChildSummary');
+                trackSelectByType('Show Doctor');
+                navigation.navigate('Revisit');
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 0}}>
-              {t('showChildsSummary')}
-            </AEButtonRounded>
-            <AEButtonRounded
+              {t('childSummary:showDoctor')}
+            </AEButtonMultiline>
+            <AEButtonMultiline
               onPress={() => {
                 trackSelectByType("Email Child's Summary");
                 composeMail().catch((e) => {
@@ -111,7 +111,7 @@ const AppointmentScreen: React.FC = () => {
               disabled={loading}
               style={{marginTop: 10, marginBottom: 30}}>
               {t('emailChildsSummary')}
-            </AEButtonRounded>
+            </AEButtonMultiline>
             <Button
               disabled={loading}
               onPress={() => {
@@ -121,7 +121,7 @@ const AppointmentScreen: React.FC = () => {
                 }
                 navigation.navigate('Dashboard');
               }}
-              labelStyle={{textTransform: 'capitalize', textDecorationLine: 'underline'}}
+              labelStyle={{textDecorationLine: 'underline', textTransform: 'none'}}
               mode={'text'}>
               {t('deleteAppointment')}
             </Button>
