@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useEffect, useRef} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Trans, useTranslation} from 'react-i18next';
+import {Linking, ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -47,11 +47,23 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
         <View style={{flexGrow: 1}}>
           <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
           <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
-          <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
-            {isBirthday
-              ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted})
-              : t('quickViewMessage', {milestone: milestoneAgeFormatted})}
-          </Text>
+          {section !== 'actEarly' ? (
+            <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+              {isBirthday
+                ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted, section})
+                : t('quickViewMessage', {milestone: milestoneAgeFormatted, section})}
+            </Text>
+          ) : (
+            <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+              <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('childSummary:concernedLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
+              </Trans>
+            </Text>
+          )}
 
           {questionsGrouped?.get(section)?.map((item, index) => (
             <View

@@ -50,7 +50,6 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
             color: 'black',
             textAlign: 'center',
             fontSize: 13,
-            textTransform: 'lowercase',
             fontFamily: 'Avenir-Heavy',
           }}>
           {t(`section-${section}`)}

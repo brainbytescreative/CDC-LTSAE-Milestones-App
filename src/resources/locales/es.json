@@ -184,6 +184,7 @@
         "myChildSummary": "El resumen de mi hijo",
         "nextSection": "Siguiente sección",
         "quickViewMessage": "A continuación se incluye una descripción breve do todos los indicadores del desarrollo que alcanzan la mayoria de los niños para la edad de {{milestone}} meses.",
+        "quickViewMessageActEarly": "If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening. Don't wait. Acting early can make a real difference! For more information, visit <0>www.cdc.gov/Concerned</0>",
         "quickViewMessageBirthDay": "Aquí están todos los indicadores del desarrollo que la mayoría de los niños alcanzan en su {{milestone}} cumpleaños",
         "section-actEarly": "Cuándo\nreaccionar\npronto",
         "section-cognitive": "$t(skillTypes:cognitive)",
