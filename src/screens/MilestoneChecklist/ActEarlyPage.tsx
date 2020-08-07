@@ -175,20 +175,21 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
         ListHeaderComponent={
           <View style={{marginBottom: 50}}>
             <Text style={[styles.largeText, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
-            <Text style={[styles.largeText]}>{t('milestoneChecklist')}</Text>
+            {/*<Text style={[styles.largeText]}>{t('milestoneChecklist')}</Text>*/}
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
               {totalProgressValue === 1 ? t('complete') : t('incomplete')}
             </Text>
             <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
-            <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
-              <Trans t={t} i18nKey={'actEarlyMessage1'}>
+            <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
+              <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => {
                     Linking.openURL(t('actEarlyMessageLink'));
                   }}
-                  style={{textDecorationLine: 'underline'}}
+                  style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
                 />
+                <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
               </Trans>
             </Text>
             {(isMissingConcern || isNotYet) && (
@@ -221,7 +222,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                     },
                     sharedStyle.shadow,
                   ]}>
-                  <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
+                  <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold', fontSize: 18}}>
                     {t('myChildSummary')}
                   </Text>
                   <ChevronRightBig width={10} height={20} />

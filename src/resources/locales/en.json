@@ -184,7 +184,7 @@
         "myChildSummary": "My Child’s Summary",
         "nextSection": "Next Section",
         "quickViewMessage": "Here’s a quick look at all of the {{section}} milestones most children reach by {{milestone}}.",
-        "quickViewMessageActEarly": "If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening. Don't wait. Acting early can make a real difference! For more information, visit <0>www.cdc.gov/Concerned</0>",
+        "quickViewMessageActEarly": "<1>If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening.</1> Don't wait. Acting early can make a real difference! For more information, visit <0>www.cdc.gov/Concerned</0>",
         "quickViewMessageBirthDay": "Here's a quick look at all of the {{section}} milestones most children reach by their {{milestone}} birthday",
         "section-actEarly": "When to\nact early",
         "section-cognitive": "$t(skillTypes:cognitive)",
