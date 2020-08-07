@@ -46,6 +46,12 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
     }, [gotStarted, gotStartedStatus, navigation]),
   );
 
+  const onGetStarted = () => {
+    setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
+      navigation.navigate('MilestoneChecklist');
+      trackInteractionByType('Get Started');
+    });
+  };
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <ChildSelectorModal />
@@ -54,19 +60,13 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
           showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
-          renderItem={({item}) => <SectionItem progress={sectionsProgress?.get(item)} section={item} />}
+          renderItem={({item}) => (
+            <SectionItem onSectionSet={onGetStarted} progress={sectionsProgress?.get(item)} section={item} />
+          )}
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      <FrontPage
-        milestoneAgeFormatted={milestoneAgeFormatted}
-        onGetStarted={() => {
-          setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
-            navigation.navigate('MilestoneChecklist');
-            trackInteractionByType('Get Started');
-          });
-        }}
-      />
+      <FrontPage milestoneAgeFormatted={milestoneAgeFormatted} onGetStarted={onGetStarted} />
     </View>
   );
 };
