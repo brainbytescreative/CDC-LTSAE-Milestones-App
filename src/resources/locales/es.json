@@ -109,7 +109,7 @@
         "actionItemsTitle": " ",
         "addApt": "+ Agregar cita",
         "appointments": "Cita",
-        "childAge": "¡tiene {{value}} años!",
+        "childAge": "¡tiene {{value}}!",
         "drawerLabel": "$t(dashboard:title)",
         "milestoneCheckList": "Lista de indicadores",
         "milestoneSummary": "Resumen de los indicadore",

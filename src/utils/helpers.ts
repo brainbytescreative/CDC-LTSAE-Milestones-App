@@ -33,11 +33,22 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
   }
 };
 
+type UnitsType = NonNullable<Parameters<typeof formatDistanceStrict>[2]>['unit'];
+
 export const formatAge = (childBirth: Date | undefined): string => {
   const birthDay = childBirth ?? new Date();
   const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
+  const months = (birthDay && differenceInMonths(new Date(), birthDay)) || 0;
+  let unit: UnitsType; //= days > 0 ? undefined : 'day';
+
+  if (months < 2) {
+    unit = 'day';
+  } else if (months < 24) {
+    unit = 'month';
+  }
+
   const childAge = formatDistanceStrict(days < 1 ? birthDay : new Date(), birthDay, {
-    unit: days > 0 ? undefined : 'day',
+    unit,
     roundingMethod: 'floor',
     locale: dateFnsLocales[i18next.language],
   });
