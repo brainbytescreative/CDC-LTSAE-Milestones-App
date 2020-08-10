@@ -1,5 +1,5 @@
 import {NavigationContainerProps} from '@react-navigation/native';
-import {add, differenceInDays, differenceInMonths, differenceInWeeks, format, formatDistanceStrict} from 'date-fns';
+import {add, differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
@@ -94,9 +94,20 @@ export function calcChildAge(birthDay: Date | undefined) {
        * no message will be displayed.
        */
       const nextMilestoneDate = add(birthDay, {months: nextMilestoneId});
-      const inWeeks = differenceInWeeks(nextMilestoneDate, baseDate);
+      const inWeeks = differenceInDays(nextMilestoneDate, baseDate);
 
-      betweenCheckList = inWeeks >= 2;
+      betweenCheckList = inWeeks > 13;
+
+      /**
+       * Ensure checklist functionality is as follows:
+       *    Within two weeks of child's next birthday,
+       *    they should be served the next age checklist.
+       */
+      if (inWeeks < 14) {
+        milestoneAge = nextMilestoneId;
+      }
+      // console.log('<<<inWeeks', inWeeks, baseDate);
+
       // console.log(inWeeks, betweenCheckList);
       // // less than 1 month minus 1 day before next milestone
       // const leftSide = add(birthDay, {months: milestoneAge - 1, days: -1});
@@ -113,7 +124,7 @@ export function calcChildAge(birthDay: Date | undefined) {
       // console.log(add(new Date(), {years: -4, weeks: 1}));
     }
 
-    // console.log(betweenCheckList);
+    // console.log(add(startOfDay(new Date()), {months: -12, days: 14}));
 
     return {milestoneAge, ageMonth, betweenCheckList};
   }
