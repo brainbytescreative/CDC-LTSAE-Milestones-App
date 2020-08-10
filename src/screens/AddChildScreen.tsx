@@ -316,7 +316,7 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              {!_.isEmpty(formikProps.values.anotherChildren) && (
+              {(!route.params?.onboarding || !_.isEmpty(formikProps.values.anotherChildren)) && (
                 <CancelDoneTopControl
                   disabled={isLoading || !formikProps.isValid}
                   onCancel={route.params?.onboarding ? undefined : onCancel}
