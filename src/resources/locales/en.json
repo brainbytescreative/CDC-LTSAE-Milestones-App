@@ -88,8 +88,8 @@
         "hisHersTag_1": "her",
         "menu": "Menu",
         "month": "{{count}} month",
-        "monthDash": "{{count}}-Month-old",
-        "monthDash_plural": "{{count}}-Months-old",
+        "monthDash": "{{count}}-month-old",
+        "monthDash_plural": "{{count}}-months-old",
         "monthShort": "{{count}} mo",
         "monthSingular": "{{count}} month",
         "month_plural": "{{count}} months",
@@ -129,7 +129,7 @@
         "emailSubject": "{{name}}'s {{milestone}} Milestones Summary"
     },
     "fields": {
-        "appointmentNotifications": "Appointment notifications",
+        "appointmentNotifications": "Appointment Notifications",
         "apptTypePlaceholder": "Appointment type / description",
         "childNamePlaceholder": "Child's Name *",
         "dateOfBirthPlaceholder": "Date of Birth *",
@@ -141,11 +141,11 @@
         "offLabel": "Off",
         "onLabel": "On",
         "questionsPlaceholder": "Questions, concerns, or notes for provider",
-        "recommendationNotifications": "Recommendation notifications",
+        "recommendationNotifications": "Recommendation Notifications",
         "requiredFieldsError": "Please fill out required fields",
         "territoryPlaceholder": "State or Territory *",
         "timePlaceholder": "Time",
-        "tipsAndActivitiesNotification": "Tips & Activities notifications"
+        "tipsAndActivitiesNotification": "Tips & Activities Notifications"
     },
     "guardianTypes": {
         "WICProvider": "WIC Provider",

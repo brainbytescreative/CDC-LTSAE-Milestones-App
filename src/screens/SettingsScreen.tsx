@@ -53,7 +53,7 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         style={[
           {
             fontSize: 15,
-            textTransform: 'capitalize',
+            // textTransform: 'capitalize',
             maxWidth: i18next.language === 'es' ? '65%' : '70%',
           },
           textStyle,
