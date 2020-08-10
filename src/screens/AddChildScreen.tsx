@@ -389,13 +389,13 @@ const AddChildScreen: React.FC = () => {
                               name: '',
                             });
                           }}>
-                          {t('addAnotherChild').toUpperCase()}
+                          {t('addAnotherChild')}
                         </AEButtonRounded>
                         <AEButtonRounded
                           disabled={isLoading || !formikProps.isValid}
                           style={{marginBottom: 24}}
                           onPress={onDone}>
-                          {t('common:done').toUpperCase()}
+                          {t('common:done')}
                         </AEButtonRounded>
                       </View>
                       <View

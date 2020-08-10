@@ -22,7 +22,7 @@ const AEButtonMultiline: React.FC<Props> = ({children, onPress, style}) => {
         ]}>
         <Text
           style={{
-            // textTransform: 'capitalize',
+            textTransform: 'none',
             fontFamily: 'Montserrat-Bold',
             fontSize: 18,
             textAlign: 'center',
