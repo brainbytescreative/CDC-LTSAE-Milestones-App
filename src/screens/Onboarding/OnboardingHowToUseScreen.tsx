@@ -8,7 +8,6 @@ import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEButtonMultiline from '../../components/AEButtonMultiline';
-import CancelDoneTopControl from '../../components/CancelDoneTopControl';
 import {RootStackParamList} from '../../components/Navigator/types';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
@@ -16,7 +15,7 @@ import {colors, sharedStyle} from '../../resources/constants';
 
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 
-const NextScreen: keyof RootStackParamList = 'Dashboard';
+// const NextScreen: keyof RootStackParamList = 'Dashboard';
 const stubArray = Array.from(new Array(5));
 
 const OnboardingHowToUseScreen: React.FC = () => {
@@ -32,14 +31,14 @@ const OnboardingHowToUseScreen: React.FC = () => {
           <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
           <NavBarBackground width={'100%'} />
         </View>
-        <CancelDoneTopControl
-          onCancel={() => {
-            navigation.navigate(NextScreen);
-          }}
-          onDone={() => {
-            navigation.navigate('Dashboard');
-          }}
-        />
+        {/*<CancelDoneTopControl*/}
+        {/*  onCancel={() => {*/}
+        {/*    navigation.navigate(NextScreen);*/}
+        {/*  }}*/}
+        {/*  onDone={() => {*/}
+        {/*    navigation.navigate('Dashboard');*/}
+        {/*  }}*/}
+        {/*/>*/}
         <Text
           style={[
             {
