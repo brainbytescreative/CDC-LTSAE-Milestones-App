@@ -44,7 +44,7 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         marginTop: 21,
       }}>
       <Text
@@ -54,7 +54,7 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
           {
             fontSize: 15,
             // textTransform: 'capitalize',
-            maxWidth: i18next.language === 'es' ? '65%' : '70%',
+            width: i18next.language === 'es' ? '60%' : '70%',
           },
           textStyle,
         ]}>
