@@ -289,8 +289,8 @@ const AddChildScreen: React.FC = () => {
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
         innerRef={formikRef}
-        validateOnChange
-        validateOnMount
+        validateOnChange={false}
+        // validateOnMount
         onSubmit={async (values) => {
           const childInput = {
             ...values.firstChild,
