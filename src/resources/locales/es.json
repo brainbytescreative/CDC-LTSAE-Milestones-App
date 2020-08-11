@@ -125,9 +125,9 @@
         "yellowTipLessTwoMonth": "La primera es la de los 2 meses. ¡Haga clic en el botón Menú para ver la Vista rápida de los indicadores que le muestra un adelanto de lo que viene!"
     },
     "dialog": {
-        "deleteMessage": "Are you sure you want to delete{{subject}}?",
+        "deleteMessage": "¿Está seguro de que desea borrar {{subject}}?",
         "no": "No",
-        "yes": "Yes"
+        "yes": "Sí"
     },
     "email": {
         "emailSubject": "Resumen de los indicadores del desarrollo de los {{milestone}} de {{name}}"

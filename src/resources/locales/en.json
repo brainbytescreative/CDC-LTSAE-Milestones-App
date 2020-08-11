@@ -125,7 +125,7 @@
         "yellowTipLessTwoMonth": "The first checklist is for age 2 months. Click the menu button to take a look at the Milestone Overview for a peek ahead!"
     },
     "dialog": {
-        "deleteMessage": "Are you sure you want to delete{{subject}}?",
+        "deleteMessage": "Are you sure you want to delete {{subject}}?",
         "no": "No",
         "yes": "Yes"
     },
