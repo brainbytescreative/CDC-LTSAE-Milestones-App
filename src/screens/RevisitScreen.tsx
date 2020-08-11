@@ -77,15 +77,7 @@ const RevisitScreen: React.FC = () => {
           }}
           style={{marginHorizontal: 32, marginTop: 16}}
         />
-        <Text
-          style={[
-            sharedStyle.screenTitle,
-            {
-              textTransform: 'none',
-            },
-          ]}>
-          {t('thankYouText', {childName: child?.name})}
-        </Text>
+        <Text style={[sharedStyle.screenTitle]}>{t('thankYouText', {childName: child?.name})}</Text>
         <View style={styles.logosRow}>
           <CDCLogo />
           <LTSAELogo />

@@ -53,7 +53,6 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         style={[
           {
             fontSize: 15,
-            // textTransform: 'capitalize',
             width: i18next.language === 'es' ? '60%' : '70%',
           },
           textStyle,
@@ -141,15 +140,7 @@ const SettingsScreen: React.FC = () => {
           <View style={{marginTop: 47}}>
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
-              <Text
-                style={[
-                  {
-                    textTransform: 'capitalize',
-                  },
-                  sharedStyle.largeBoldText,
-                ]}>
-                {t('userProfile')}
-              </Text>
+              <Text style={[sharedStyle.largeBoldText]}>{t('userProfile')}</Text>
               <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage')}</Text>
 
               {profile && (

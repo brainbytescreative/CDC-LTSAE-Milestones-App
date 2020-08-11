@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
     fontSize: 20,
-    textTransform: 'capitalize',
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },

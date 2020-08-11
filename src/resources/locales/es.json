@@ -116,7 +116,7 @@
         "childAge": "¡tiene {{value}}!",
         "drawerLabel": "$t(dashboard:title)",
         "milestoneCheckList": "Lista de indicadores",
-        "milestoneSummary": "Resumen de los indicadore",
+        "milestoneSummary": "El resumen de mi hijo",
         "milestonesAnswered": "{{progress}} Indicadores con respuestas ingresadas",
         "tipsAndActivities": "Consejos y actividades",
         "title": "Panel visual",
@@ -330,7 +330,6 @@
         "all": "Todos",
         "drawerLabel": "$t(tipsAndActivities:title)",
         "like": "Me gusta",
-        "nextSection": "Siguiente sección",
         "remindMe": "Recordarme",
         "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} {{childAge}} hoy",
         "title": "Consejos y actividades"

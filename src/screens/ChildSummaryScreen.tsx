@@ -438,12 +438,11 @@ const ChildSummaryScreen: React.FC = () => {
               {
                 textAlign: 'center',
                 marginTop: 20,
-                // textTransform: 'capitalize',
                 marginHorizontal: 32,
               },
               sharedStyle.largeBoldText,
             ]}>
-            {`${t('childSummary:title', {name: _.capitalize(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
+            {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
           </Text>
           <View style={{paddingHorizontal: 32}}>
             <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
@@ -507,7 +506,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 10,
     fontFamily: 'Montserrat-Bold',
-    textTransform: 'capitalize',
   },
 });
 

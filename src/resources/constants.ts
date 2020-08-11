@@ -211,7 +211,6 @@ export const sharedStyle = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Montserrat-Bold',
     textAlign: 'center',
-    textTransform: 'capitalize',
     marginHorizontal: 32,
     marginTop: 36,
   },

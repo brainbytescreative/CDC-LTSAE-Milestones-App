@@ -99,7 +99,6 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    textTransform: 'capitalize',
     marginTop: 5,
     marginHorizontal: 48,
     ...sharedStyle.largeBoldText,

@@ -30,7 +30,7 @@ const ButtonWithChevron: React.FC<Props> = ({children, containerStyle, ...props}
             flexGrow: 1,
             textAlign: 'center',
             fontFamily: 'Montserrat-Bold',
-            textTransform: 'capitalize',
+            textTransform: 'none',
           }}>
           {children}
         </Text>
