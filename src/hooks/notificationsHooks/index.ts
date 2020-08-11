@@ -1,5 +1,5 @@
 import {NavigationContainerRef} from '@react-navigation/core';
-import {add, differenceInMonths, formatISO, parseISO, setHours, startOfDay, sub} from 'date-fns';
+import {add, differenceInMonths, formatISO, isPast, parseISO, setHours, startOfDay, sub} from 'date-fns';
 import * as Notifications from 'expo-notifications';
 import {NotificationRequestInput} from 'expo-notifications';
 import {TFunction} from 'i18next';
@@ -188,23 +188,28 @@ export function useSetMilestoneNotifications() {
   return useMutation<void, MilestoneNotificationsPayload>(
     async (variables) => {
       const years = Array.from(new Array(5)).map((value, index) => index + 1);
-      const queriesParams = years.map((value) => {
-        const milestoneId = value ? value * 12 : milestonesIds[0];
-        const at8am = getMilestoneOnBirthDayTrigger({birthday: variables.child.birthday, years: value});
-        return {
-          notificationId: `milestone_birthday_${value}_years_child_${variables.child.id}`,
-          fireDateTimestamp: formatISO(at8am),
-          notificationCategoryType: NotificationCategory.Milestone,
-          childId: variables.child.id,
-          milestoneId,
-          bodyLocalizedKey: 'notifications:nextMilestoneBirthdayNotificationBody',
-          titleLocalizedKey: 'notifications:milestoneNotificationTitle',
-          bodyArguments: {
-            name: variables.child.name,
-            gender: variables.child.gender,
-          },
-        };
-      });
+      const queriesParams = years
+        .map((value) => {
+          const milestoneId = value * 12;
+          const at8am = getMilestoneOnBirthDayTrigger({birthday: variables.child.birthday, years: value});
+          if (isPast(at8am)) {
+            return undefined;
+          }
+          return {
+            notificationId: `milestone_birthday_${value}_years_child_${variables.child.id}`,
+            fireDateTimestamp: formatISO(at8am),
+            notificationCategoryType: NotificationCategory.Milestone,
+            childId: variables.child.id,
+            milestoneId,
+            bodyLocalizedKey: 'notifications:nextMilestoneBirthdayNotificationBody',
+            titleLocalizedKey: 'notifications:milestoneNotificationTitle',
+            bodyArguments: {
+              name: variables.child.name,
+              gender: variables.child.gender,
+            },
+          };
+        })
+        .filter((v) => v !== undefined);
 
       await sqLiteClient.dB?.transaction((tx) => {
         queriesParams.forEach((value) => {
@@ -224,14 +229,14 @@ export function useSetMilestoneNotifications() {
                 values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8,
                         coalesce(?9, (select notificationRead from notifications where notificationId = ?1)))`,
             [
-              value.notificationId,
-              value.fireDateTimestamp,
-              value.notificationCategoryType,
-              value.childId,
-              value.milestoneId,
-              value.bodyLocalizedKey,
-              value.titleLocalizedKey,
-              JSON.stringify(value.bodyArguments),
+              value!.notificationId,
+              value!.fireDateTimestamp,
+              value!.notificationCategoryType,
+              value!.childId,
+              value!.milestoneId,
+              value!.bodyLocalizedKey,
+              value!.titleLocalizedKey,
+              JSON.stringify(value!.bodyArguments),
             ],
           );
         });
@@ -239,9 +244,9 @@ export function useSetMilestoneNotifications() {
     },
     {
       onSuccess: async (data, {child}) => {
-        queryCache.invalidateQueries('unreadNotifications');
+        await queryCache.invalidateQueries('unreadNotifications');
         await setWellChildCheckUpAppointments({child, reschedule: false});
-        reschedule();
+        await reschedule();
       },
     },
   );
@@ -735,50 +740,80 @@ export function useSetWellChildCheckUpAppointments() {
         ageMonth,
       );
 
-      const noCheckListData = noChecklistMonths.map((value) => ({
-        notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
-        fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
-        body: 'notifications:wellCheckUpNoChecklist',
-        milestoneId: Math.abs(value),
-      }));
+      const noCheckListData = noChecklistMonths.map((value) => {
+        const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
+        if (isPast(fireDateTimestamp)) {
+          return undefined;
+        }
+        return {
+          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          fireDateTimestamp,
+          body: 'notifications:wellCheckUpNoChecklist',
+          milestoneId: Math.abs(value),
+        };
+      });
 
       const screeningReminders1 = futureAges(
         [WellChildCheckUpAppointmentAgesEnum.Age9, WellChildCheckUpAppointmentAgesEnum.Age30],
         ageMonth,
       );
 
-      const screeningReminders1Data = screeningReminders1.map((value) => ({
-        notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
-        fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
-        body: 'notifications:wellCheckUpSR1',
-        milestoneId: Math.abs(value),
-      }));
+      const screeningReminders1Data = screeningReminders1.map((value) => {
+        const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
+        if (isPast(fireDateTimestamp)) {
+          return undefined;
+        }
+        return {
+          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          fireDateTimestamp,
+          body: 'notifications:wellCheckUpSR1',
+          milestoneId: Math.abs(value),
+        };
+      });
 
       const screeningReminders2 = futureAges(
         [WellChildCheckUpAppointmentAgesEnum.Age18, WellChildCheckUpAppointmentAgesEnum.Age24],
         ageMonth,
       );
 
-      const screeningReminders2Data = screeningReminders2.map((value) => ({
-        notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
-        fireDateTimestamp: wellCheckUpMilestoneReminder(child.birthday, value),
-        body: 'notifications:wellCheckUpSR2',
-        milestoneId: Math.abs(value),
-      }));
+      const screeningReminders2Data = screeningReminders2.map((value) => {
+        const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
+        if (isPast(fireDateTimestamp)) {
+          return undefined;
+        }
+        return {
+          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          fireDateTimestamp,
+          body: 'notifications:wellCheckUpSR2',
+          milestoneId: Math.abs(value),
+        };
+      });
 
       const remainingMilestones = futureAges([...milestonesIds], ageMonth);
 
-      const before2WeeksData = remainingMilestones.map((value) => ({
-        notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
-        fireDateTimestamp: getWellCheckUpTrigger({milestoneId: value, birthday: child.birthday}),
-        body: 'notifications:wellCheckUp5DaysAfterBirthday',
-        milestoneId: Math.abs(value),
-      }));
+      const before2WeeksData = remainingMilestones.map((value) => {
+        const fireDateTimestamp = getWellCheckUpTrigger({milestoneId: value, birthday: child.birthday});
+        if (isPast(fireDateTimestamp)) {
+          return undefined;
+        }
+        return {
+          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          fireDateTimestamp,
+          body: 'notifications:wellCheckUp5DaysAfterBirthday',
+          milestoneId: Math.abs(value),
+        };
+      });
 
-      const series = [...noCheckListData, ...screeningReminders1Data, ...screeningReminders2Data, ...before2WeeksData];
+      const series = [
+        ...noCheckListData,
+        ...screeningReminders1Data,
+        ...screeningReminders2Data,
+        ...before2WeeksData,
+      ].filter((v) => v !== undefined);
 
       await sqLiteClient.dB?.transaction((tx) => {
-        series.forEach(({notificationId, fireDateTimestamp, body, milestoneId}) => {
+        series.forEach((val) => {
+          const {notificationId, fireDateTimestamp, body, milestoneId} = val!;
           tx.executeSql(
             `INSERT OR
              REPLACE
