@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
+import {sharedStyle} from '../resources/constants';
 import {formatDate} from '../utils/helpers';
 import AETextInput from './AETextInput';
 
@@ -12,9 +13,10 @@ interface PageProps {
   value?: Date;
   mode?: DateTimePickerProps['mode'];
   style?: StyleProp<ViewStyle>;
+  error?: boolean;
 }
 
-const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style, onPress}) => {
+const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style, onPress, error}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
 
@@ -38,7 +40,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
   return (
     <>
       <AETextInput
-        style={style}
+        style={[style, error === true && sharedStyle.errorOutline]}
         onPress={showDatePicker}
         editable={false}
         autoCorrect={false}

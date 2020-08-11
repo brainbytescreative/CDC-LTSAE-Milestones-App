@@ -27,11 +27,15 @@
         "drawerLabel": "Niños y agregar un niño",
         "edit-title": "Editar niño",
         "girl": "Niña",
-        "note": "Si su hijo nació prematuramente, ingrese la fecha en que nació, pero use la lista de verificación con base en la edad corregida. Si la edad corregida se encuentra entre dos listas de verificación, use la de la edad menor. ",
+        "note": "Si su hijo nació prematuramente, ingrese la fecha en que nació, pero use la lista de verificación con base en la edad corregida. Si la edad corregida se encuentra entre dos listas de verificación, use la de la edad menor.",
         "noteClick": "Haga clic aquí para obtener información sobre cómo calcular la edad corregida.",
         "prematureQuestion": "¿Nació prematuramente?",
         "selectOne": "Seleccionar una opción",
         "title": "Agregar un niño"
+    },
+    "alert": {
+        "enterChildInformation": "Por favor incluya la información de su hijo",
+        "selectStateTerritory": "Por favor seleccione un estado o territorio"
     },
     "appointment": {
         "concernsOrNotesForDoctor": "Preguntas, inquietudes o notas para el proveedor",

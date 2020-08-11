@@ -33,6 +33,10 @@
         "selectOne": "Select One*",
         "title": "Add a Child"
     },
+    "alert": {
+        "enterChildInformation": "Please enter your child’s information",
+        "selectStateTerritory": "Please select a state or territory"
+    },
     "appointment": {
         "concernsOrNotesForDoctor": "Questions/Concerns/Notes",
         "deleteAppointment": "Delete Appointment",

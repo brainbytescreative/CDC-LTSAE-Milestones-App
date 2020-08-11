@@ -120,7 +120,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
                   onPress={async () => {
                     formik.handleSubmit();
                     formik.validateForm().then((errors) => {
-                      !_.isEmpty(errors) && Alert.alert('', t('fields:requiredFieldsError'));
+                      !_.isEmpty(errors) && Alert.alert('', t('alert:selectStateTerritory'));
                     });
                   }}>
                   {t('common:next')}

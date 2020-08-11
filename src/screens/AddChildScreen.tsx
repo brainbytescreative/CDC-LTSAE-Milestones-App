@@ -112,7 +112,7 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
 const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<string>) => (
+      {({field, form, meta}: FastFieldProps<string>) => (
         <AETextInput
           onFocus={() => {
             trackChildAddChildName();
@@ -120,6 +120,7 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
           onBlur={() => {
             trackChildCompletedAddChildName();
           }}
+          style={[Boolean(meta.error) && sharedStyle.errorOutline]}
           autoCorrect={false}
           value={field.value}
           onChangeText={form.handleChange(field.name) as any}
@@ -133,9 +134,10 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
 const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<Date | undefined>) => (
+      {({field, form, meta}: FastFieldProps<Date | undefined>) => (
         <>
           <DatePicker
+            error={Boolean(meta.error)}
             onPress={() => {
               trackChildStartedChildDateOfBirth();
             }}
@@ -158,27 +160,35 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
 const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<0 | 1 | undefined>) => (
+      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
         <View style={{marginTop: 20, marginBottom: 16}}>
           <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
           <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <AERadioButton
-              onChange={() => form.setFieldValue(field.name, 0)}
-              value={field.value === 0}
-              title={t('boy')}
-              titleStyle={{marginRight: 32}}
-            />
-            <AERadioButton
-              onChange={() => form.setFieldValue(field.name, 1)}
-              value={field.value === 1}
-              title={`${t('girl')}`}
-              titleStyle={{marginRight: 32}}
-            />
+            style={[
+              {
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'flex-start',
+              },
+            ]}>
+            <View
+              style={[
+                {flexDirection: 'row'},
+                Boolean(meta.error) && {...sharedStyle.errorOutline, paddingVertical: 1},
+              ]}>
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, 0)}
+                value={field.value === 0}
+                title={t('boy')}
+                titleStyle={{marginRight: 32}}
+              />
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, 1)}
+                value={field.value === 1}
+                title={`${t('girl')}`}
+                titleStyle={{marginRight: 0}}
+              />
+            </View>
           </View>
           <Text style={[{textAlign: 'right'}, sharedStyle.required]}>{t('common:required')}</Text>
         </View>
@@ -235,7 +245,6 @@ const AddChildScreen: React.FC = () => {
   const isLoading = updateStatus === 'loading' || addStatus === 'loading';
 
   useLayoutEffect(() => {
-    formikRef.current?.validateForm();
     navigation.setOptions({
       title,
     });
@@ -246,15 +255,21 @@ const AddChildScreen: React.FC = () => {
   }, [child]);
 
   const onDone = () => {
-    formikRef.current?.handleSubmit();
-    if (route.params?.onboarding) {
-      navigation.navigate('OnboardingHowToUse');
-      // setOnboarding(true);
-    } else {
-      // navigation.navigate('Dashboard');
-      navigation.goBack();
-    }
-    trackChildDone();
+    formikRef.current?.validateForm().then((errors) => {
+      if (_.isEmpty(errors)) {
+        formikRef.current?.handleSubmit();
+        if (route.params?.onboarding) {
+          navigation.navigate('OnboardingHowToUse');
+          // setOnboarding(true);
+        } else {
+          // navigation.navigate('Dashboard');
+          navigation.goBack();
+        }
+        trackChildDone();
+      } else {
+        Alert.alert('', t('alert:enterChildInformation'));
+      }
+    });
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -381,20 +396,23 @@ const AddChildScreen: React.FC = () => {
                     <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
                       <View style={{marginTop: 50}}>
                         <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
+                          disabled={isLoading}
                           style={{marginVertical: 0}}
-                          onPress={() => {
-                            trackAddAnotherChild();
-                            arrayHelpers.push({
-                              name: '',
+                          onPress={async () => {
+                            await formikProps.validateForm().then((errors) => {
+                              if (_.isEmpty(errors)) {
+                                trackAddAnotherChild();
+                                arrayHelpers.push({
+                                  name: '',
+                                });
+                              } else {
+                                Alert.alert('', t('alert:enterChildInformation'));
+                              }
                             });
                           }}>
                           {t('addAnotherChild')}
                         </AEButtonRounded>
-                        <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
-                          style={{marginBottom: 24}}
-                          onPress={onDone}>
+                        <AEButtonRounded disabled={isLoading} style={{marginBottom: 24}} onPress={onDone}>
                           {t('common:done')}
                         </AEButtonRounded>
                       </View>
