@@ -1,13 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modal, Portal, Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEButtonMultiline from '../../components/AEButtonMultiline';
 import AEScrollView from '../../components/AEScrollView';
 import LanguageSelector from '../../components/LanguageSelector';
+import LTSAELogo from '../../components/LTSAELogo';
 import {OnboardingNavigationProp} from '../../components/Navigator/types';
 import CDCLogo from '../../components/Svg/CDCLogo';
 import IceColdArc from '../../components/Svg/IceColdArc';
@@ -30,7 +31,7 @@ const OnboardingInfoScreen: React.FC = () => {
               <Text style={{fontSize: 12, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
                 <CDCLogo />
-                <Image style={{marginLeft: 24}} source={require('../../resources/images/LTSAE_Logo.png')} />
+                <LTSAELogo />
               </View>
             </View>
             <Text style={[{fontSize: 20, textAlign: 'center', marginBottom: 16}, sharedStyle.boldText]}>

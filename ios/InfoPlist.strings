@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  ActEarly
+
+  Created by Oleksandr Malyarenko on 9/11/18.
+  Copyright © 2018 BrainBytes. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "Milestones";
+"CFBundleName" = "Milestones";

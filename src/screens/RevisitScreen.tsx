@@ -1,12 +1,13 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Image, Linking, StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import AEScrollView from '../components/AEScrollView';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import LanguageSelector from '../components/LanguageSelector';
+import LTSAELogo from '../components/LTSAELogo';
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
@@ -87,7 +88,7 @@ const RevisitScreen: React.FC = () => {
         </Text>
         <View style={styles.logosRow}>
           <CDCLogo />
-          <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
+          <LTSAELogo />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
           <Trans t={t} i18nKey={'description'} tOptions={{name: child?.name}}>

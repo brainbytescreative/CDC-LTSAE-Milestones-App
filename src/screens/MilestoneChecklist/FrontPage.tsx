@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
     fontSize: 22,
-    textTransform: 'capitalize',
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },

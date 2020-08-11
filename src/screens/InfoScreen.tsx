@@ -1,11 +1,12 @@
 import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Image, Linking, StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEScrollView from '../components/AEScrollView';
+import LTSAELogo from '../components/LTSAELogo';
 import {InfoStackParamList} from '../components/Navigator/types';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
@@ -45,7 +46,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
         </Text>
         <View style={styles.logosRow}>
           <CDCLogo />
-          <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
+          <LTSAELogo />
         </View>
         <Text
           onPress={() => {
