@@ -1,4 +1,5 @@
 import {formatISO, parseISO} from 'date-fns';
+import _ from 'lodash';
 import {MutateOptions, QueryOptions, queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
@@ -36,6 +37,7 @@ export function useUpdateChild() {
       const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
+          name: _.upperFirst(variables.name),
           photo: pathToDB(variables.photo),
           birthday: formatISO(variables.birthday, {
             representation: 'date',
@@ -104,6 +106,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
+          name: _.upperFirst(variables.data.name),
           photo: pathToDB(variables.data.photo),
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
