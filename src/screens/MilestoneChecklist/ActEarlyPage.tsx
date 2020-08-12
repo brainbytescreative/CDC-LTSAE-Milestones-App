@@ -47,11 +47,39 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
   const onPress = isMissingAnswerConcern
     ? undefined
     : () => {
-        id &&
-          childId &&
-          milestoneId &&
+        if (id && childId && milestoneId) {
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
+        }
         !concern?.answer && trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
+
+        // if (id && childId && milestoneId && !concern?.answer) {
+        //   setConcern({concernId: id, answer: true, childId: childId, note: concern?.note, milestoneId});
+        // }
+        //
+        // if (concern?.answer) {
+        //   Alert.alert(
+        //     '',
+        //     t('alert:concernUncheck'),
+        //     [
+        //       {
+        //         text: t('dialog:no'),
+        //         style: 'cancel',
+        //       },
+        //       {
+        //         text: t('dialog:yes'),
+        //         style: 'default',
+        //         onPress: () => {
+        //           if (id && childId && milestoneId) {
+        //             setConcern({concernId: id, answer: false, childId: childId, note: null, milestoneId});
+        //           }
+        //         },
+        //       },
+        //     ],
+        //     {cancelable: false},
+        //   );
+        // } else {
+        //   trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
+        // }
       };
 
   const saveNote = useRef(

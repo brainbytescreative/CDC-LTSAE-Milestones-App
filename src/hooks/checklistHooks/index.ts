@@ -364,7 +364,11 @@ export function useSetConcern() {
                   REPLACE
                   INTO concern_answers (concernId, answer, childId, milestoneId, note)
                   VALUES (?1, coalesce(?2, coalesce((SELECT answer FROM concern_answers WHERE concernId=?1 AND childId=?3), 0)), ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3)))
+                          ${
+                            note === undefined
+                              ? 'COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3))'
+                              : '?5'
+                          })
         `,
         [concernId, answer, childId, milestoneId, note],
       );

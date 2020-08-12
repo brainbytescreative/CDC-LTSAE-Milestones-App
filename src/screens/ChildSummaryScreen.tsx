@@ -220,39 +220,67 @@ const SummaryItems = withSuspense(
 
     const onEditConcernPress = useCallback<NonNullable<ItemProps['onEditAnswerPress']>>(
       (id, note) => {
-        const options = [
-          t('milestoneChecklist:answer_yes'),
-          t('milestoneChecklist:answer_no'),
-
-          t('common:cancel'),
-        ].map((val) => _.upperFirst(val));
-
-        showActionSheetWithOptions(
-          {
-            message: t('changeYourAnswerTitle'),
-            cancelButtonIndex: options.length - 1,
-            options,
-            textStyle: {...sharedStyle.regularText},
-            titleTextStyle: {...sharedStyle.regularText},
-            messageTextStyle: {...sharedStyle.regularText},
-          },
-          (index) => {
-            [0, 1].includes(index) &&
-              child?.id &&
-              milestoneAge &&
-              setConcern({
-                concernId: id,
-                answer: !index,
-                childId: child?.id,
-                note: note,
-                milestoneId: milestoneAge,
-              }).then(() => {
-                return refetchConcerns();
-              });
-          },
+        // const options = [
+        //   t('milestoneChecklist:answer_yes'),
+        //   t('milestoneChecklist:answer_no'),
+        //
+        //   t('common:cancel'),
+        // ].map((val) => _.upperFirst(val));
+        //
+        // showActionSheetWithOptions(
+        //   {
+        //     message: t('changeYourAnswerTitle'),
+        //     cancelButtonIndex: options.length - 1,
+        //     options,
+        //     textStyle: {...sharedStyle.regularText},
+        //     titleTextStyle: {...sharedStyle.regularText},
+        //     messageTextStyle: {...sharedStyle.regularText},
+        //   },
+        //   (index) => {
+        //     [0, 1].includes(index) &&
+        //       child?.id &&
+        //       milestoneAge &&
+        //       setConcern({
+        //         concernId: id,
+        //         answer: !index,
+        //         childId: child?.id,
+        //         note: note,
+        //         milestoneId: milestoneAge,
+        //       }).then(() => {
+        //         return refetchConcerns();
+        //       });
+        //   },
+        // );
+        Alert.alert(
+          '',
+          t('alert:concernUncheck'),
+          [
+            {
+              text: t('dialog:no'),
+              style: 'cancel',
+            },
+            {
+              text: t('common:delete'),
+              style: 'default',
+              onPress: () => {
+                if (child?.id && milestoneAge) {
+                  setConcern({
+                    concernId: id,
+                    answer: false,
+                    childId: child?.id,
+                    note: note,
+                    milestoneId: milestoneAge,
+                  }).then(() => {
+                    return refetchConcerns();
+                  });
+                }
+              },
+            },
+          ],
+          {cancelable: false},
         );
       },
-      [t, showActionSheetWithOptions, child?.id, milestoneAge, setConcern, refetchConcerns],
+      [t, child?.id, milestoneAge, setConcern, refetchConcerns],
     );
 
     const onSaveQuestionNotePress = useCallback<NonNullable<ItemProps['onEditNotePress']>>(

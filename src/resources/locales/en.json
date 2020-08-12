@@ -34,6 +34,7 @@
         "title": "Add a Child"
     },
     "alert": {
+        "concernUncheck": "Are you sure you want to uncheck this concern? The note will be removed as well",
         "enterChildInformation": "Please enter your child’s information",
         "selectStateTerritory": "Please select a state or territory"
     },
