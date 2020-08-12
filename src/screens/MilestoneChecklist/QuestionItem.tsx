@@ -114,6 +114,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const answer = data?.answer;
 
   const {t} = useTranslation('milestones');
+  const height = (Dimensions.get('window').width - 64) * 0.595;
 
   const video =
     videos?.map((item) => {
@@ -121,21 +122,27 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       if (!code) {
         return null;
       }
+
       return (
-        <WebView
-          onMessage={(event) => {
-            event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
-          }}
-          originWhitelist={['*']}
-          allowsInlineMediaPlayback={true}
-          key={`video-${item.name}`}
-          style={{alignSelf: 'stretch', height}}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          startInLoadingState
-          scrollEnabled={false}
-          source={{html: getVideoHtml(code)}}
-        />
+        <View>
+          <WebView
+            onLayout={(event) => {
+              console.log('event.nativeEvent.layout.height', event.nativeEvent.layout.height, code, height);
+            }}
+            onMessage={(event) => {
+              event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
+            }}
+            originWhitelist={['*']}
+            allowsInlineMediaPlayback={true}
+            key={`video-${code}`}
+            style={{width: '100%', height}}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState
+            scrollEnabled={false}
+            source={{html: getVideoHtml(code)}}
+          />
+        </View>
       );
     }) || [];
 
@@ -154,8 +161,6 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         />
       );
     }) as any) || [];
-
-  const height = (Dimensions.get('window').width - 64) * 0.595;
 
   const doAnswer = (answerValue: Answer) => () => {
     id &&
@@ -209,8 +214,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
               {/*      );*/}
               {/*    })*/}
               {/*  : photo}*/}
-              {photo}
-              {video}
+              {/*{photo}*/}
+              {/*{video}*/}
+              {mediaItems}
             </ViewPager>
             {mediaItems && mediaItems?.length > 1 && (
               <>
