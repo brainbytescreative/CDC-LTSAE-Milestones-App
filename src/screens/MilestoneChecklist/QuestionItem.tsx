@@ -182,6 +182,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
 
   const mediaItems = [...photo, ...video];
 
+  // noinspection ConstantConditionalExpressionJS
   return (
     <View style={{flex: 1, marginTop: 38, marginHorizontal: 32}}>
       <View style={{backgroundColor: colors.purple, borderRadius: 10, overflow: 'hidden'}}>
@@ -196,18 +197,19 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
               ref={viewPagerRef}
               style={{flex: 1, height}}
               initialPage={0}>
-              {__DEV__
-                ? photo.map((item: any, index: number) => {
-                    return (
-                      <View key={index}>
-                        <Text accessible={false}>{`${photos?.[index].alt}\n${t(
-                          `milestones:alts:${photos?.[index].alt}`,
-                        )}`}</Text>
-                        {item}
-                      </View>
-                    );
-                  })
-                : photo}
+              {/*{__DEV__*/}
+              {/*  ? photo.map((item: any, index: number) => {*/}
+              {/*      return (*/}
+              {/*        <View key={index}>*/}
+              {/*          <Text accessible={false}>{`${photos?.[index].alt}\n${t(*/}
+              {/*            `milestones:alts:${photos?.[index].alt}`,*/}
+              {/*          )}`}</Text>*/}
+              {/*          {item}*/}
+              {/*        </View>*/}
+              {/*      );*/}
+              {/*    })*/}
+              {/*  : photo}*/}
+              {photo}
               {video}
             </ViewPager>
             {mediaItems && mediaItems?.length > 1 && (
@@ -270,7 +272,13 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             {marginHorizontal: 8},
             answer === Answer.UNSURE ? {backgroundColor: colors.yellow} : undefined,
           ]}>
-          <Text numberOfLines={1}>{t('milestoneChecklist:answer_unsure')}</Text>
+          {i18next.language === 'es' ? (
+            <Text style={{width: 70, textAlign: 'center'}} numberOfLines={2}>
+              {t('milestoneChecklist:answer_unsure')}
+            </Text>
+          ) : (
+            <Text numberOfLines={1}>{t('milestoneChecklist:answer_unsure')}</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.NOT_YET)}
