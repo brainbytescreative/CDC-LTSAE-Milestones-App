@@ -8,6 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {Alert, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useQuery} from 'react-query';
 
 import AEButtonRounded from '../../components/AEButtonRounded';
 import AEScrollView from '../../components/AEScrollView';
@@ -16,12 +17,12 @@ import {RootStackParamList} from '../../components/Navigator/types';
 import ParentProfileSelector from '../../components/ParentProfileSelector';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {getChildrenCount} from '../../db/childQueries';
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {editProfileSchema} from '../../resources/validationSchemas';
 import {trackNext, trackSelectLanguage} from '../../utils/analytics';
 
-const NextScreen: keyof RootStackParamList = 'AddChild';
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
 
 const OnboardingParentProfileScreen: React.FC = () => {
@@ -30,6 +31,12 @@ const OnboardingParentProfileScreen: React.FC = () => {
   const [saveProfile, {isLoading: saveInProgress}] = useSetParentProfile();
   const {top} = useSafeAreaInsets();
   const formikRef = useRef<FormikProps<any>>(null);
+  const childrenCount = useQuery('childrenCount', getChildrenCount).data!;
+  let nextScreen: keyof RootStackParamList = 'AddChild';
+
+  if (childrenCount > 0) {
+    nextScreen = 'OnboardingHowToUse';
+  }
   //
   // useLayoutEffect(() => {
   //   formikRef.current?.validateForm();
@@ -48,7 +55,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
         onSubmit={async (values) => {
           await saveProfile(values);
           trackNext();
-          navigation.navigate(NextScreen, {
+          navigation.navigate(nextScreen, {
             onboarding: true,
           });
         }}>
