@@ -18,7 +18,6 @@
 		2DCD954D1E0B4F2C00145EB5 /* brainbytescreativeactearlyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* brainbytescreativeactearlyTests.m */; };
 		344C8BB42481096A00CC73F6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 344C8BB32481096A00CC73F6 /* GoogleService-Info.plist */; };
 		348422F524E2B13900D0C171 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 348422F424E2B13900D0C171 /* InfoPlist.strings */; };
-		348422F724E2B1F900D0C171 /* ActEarly in Resources */ = {isa = PBXBuildFile; fileRef = 348422F624E2B1F900D0C171 /* ActEarly */; };
 		348422F924E2B25500D0C171 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 348422F824E2B25500D0C171 /* LaunchScreen.storyboard */; };
 		34D2BA04244F24D20016333D /* bootstrap.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 34D2BA03244F24D20016333D /* bootstrap.min.css */; };
 		406FD4A1713B40A1BDAEB487 /* Avenir-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A51E533142D7479CBFBB5A9D /* Avenir-Heavy.ttf */; };
@@ -63,7 +62,6 @@
 		2D02E4901E0B4A5D006451C7 /* brainbytescreativeactearly-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "brainbytescreativeactearly-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C8BB32481096A00CC73F6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		348422F424E2B13900D0C171 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
-		348422F624E2B1F900D0C171 /* ActEarly */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ActEarly; path = "../../../native/ios-native-application/ActEarly/ActEarly"; sourceTree = "<group>"; };
 		348422F824E2B25500D0C171 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34D2BA03244F24D20016333D /* bootstrap.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = bootstrap.min.css; sourceTree = "<group>"; };
 		4DAC9463E8C77B70B8EF048F /* Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOSTests/Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 				348422F424E2B13900D0C171 /* InfoPlist.strings */,
 				348422F824E2B25500D0C171 /* LaunchScreen.storyboard */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				348422F624E2B1F900D0C171 /* ActEarly */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = brainbytescreativeactearly;
@@ -384,7 +381,6 @@
 				4FDE57FF0F5140AB89C0103F /* Montserrat-Bold.ttf in Resources */,
 				348422F524E2B13900D0C171 /* InfoPlist.strings in Resources */,
 				F5948894FF514B529A851B6D /* Montserrat-Regular.ttf in Resources */,
-				348422F724E2B1F900D0C171 /* ActEarly in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
