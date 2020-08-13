@@ -124,10 +124,19 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       const questionsData =
         checklistMap
           .get(variables.milestoneAge)
-          ?.milestones?.map((item) => ({
-            ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
-          }))
+          ?.milestones?.map((item) => {
+            const value =
+              item.value && __DEV__
+                ? [
+                    t(item.value, {lng: 'en', ...tOpt({t, gender: variables.childGender})}),
+                    t(item.value, {lng: 'es', ...tOpt({t, gender: variables.childGender})}),
+                  ].join('\n\n')
+                : t(item.value, tOpt({t, gender: variables.childGender}));
+            return {
+              ...item,
+              value,
+            };
+          })
           ?.sort((a, b) => {
             const aIsAnswered = answersIds.includes(a.id);
             const bIsAbswered = answersIds.includes(b.id);

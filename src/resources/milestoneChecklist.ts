@@ -357,17 +357,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 17,
-          value: 'milestone_4_skill_17',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_4_skill_17_video_3',
-              alt: 'milestone_4_skill_17_alt_13',
-            },
-          ],
-        },
-        {
           id: 16,
           value: 'milestone_4_skill_16',
           photos: [],
@@ -375,6 +364,17 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_4_skill_16_video_4',
               alt: 'milestone_4_skill_16_alt_14',
+            },
+          ],
+        },
+        {
+          id: 17,
+          value: 'milestone_4_skill_17',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_4_skill_17_video_3',
+              alt: 'milestone_4_skill_17_alt_13',
             },
           ],
         },
