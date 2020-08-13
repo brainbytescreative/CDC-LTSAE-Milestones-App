@@ -79,10 +79,10 @@ const Item: React.FC<ItemProps> = ({
       <Text style={{fontSize: 15}}>{value}</Text>
       {!!note && noteLocal === undefined && (
         <Text style={{fontSize: 15}}>
-          <Text style={{fontFamily: 'Montserrat-Bold'}}>
+          <Text style={[sharedStyle.boldText]}>
             {t('note')}
             {': '}
-          </Text>{' '}
+          </Text>
           {note}
         </Text>
       )}
@@ -90,7 +90,7 @@ const Item: React.FC<ItemProps> = ({
       {noteLocal !== undefined && (
         <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
           <TextInput
-            value={noteLocal || note || ''}
+            value={noteLocal}
             onChange={(e) => {
               setNote(e.nativeEvent.text);
               // saveNote(e.nativeEvent.text);
@@ -220,67 +220,79 @@ const SummaryItems = withSuspense(
 
     const onEditConcernPress = useCallback<NonNullable<ItemProps['onEditAnswerPress']>>(
       (id, note) => {
-        // const options = [
-        //   t('milestoneChecklist:answer_yes'),
-        //   t('milestoneChecklist:answer_no'),
-        //
-        //   t('common:cancel'),
-        // ].map((val) => _.upperFirst(val));
-        //
-        // showActionSheetWithOptions(
-        //   {
-        //     message: t('changeYourAnswerTitle'),
-        //     cancelButtonIndex: options.length - 1,
-        //     options,
-        //     textStyle: {...sharedStyle.regularText},
-        //     titleTextStyle: {...sharedStyle.regularText},
-        //     messageTextStyle: {...sharedStyle.regularText},
-        //   },
-        //   (index) => {
-        //     [0, 1].includes(index) &&
-        //       child?.id &&
-        //       milestoneAge &&
-        //       setConcern({
-        //         concernId: id,
-        //         answer: !index,
-        //         childId: child?.id,
-        //         note: note,
-        //         milestoneId: milestoneAge,
-        //       }).then(() => {
-        //         return refetchConcerns();
-        //       });
-        //   },
-        // );
-        Alert.alert(
-          '',
-          t('alert:concernUncheck'),
-          [
-            {
-              text: t('dialog:no'),
-              style: 'cancel',
-            },
-            {
-              text: t('common:delete'),
-              style: 'default',
-              onPress: () => {
-                if (child?.id && milestoneAge) {
-                  setConcern({
-                    concernId: id,
-                    answer: false,
-                    childId: child?.id,
-                    note: note,
-                    milestoneId: milestoneAge,
-                  }).then(() => {
-                    return refetchConcerns();
-                  });
-                }
-              },
-            },
-          ],
-          {cancelable: false},
+        const options = [
+          t('common:delete'),
+          // t('milestoneChecklist:answer_no'),
+
+          t('common:cancel'),
+        ].map((val) => _.upperFirst(val));
+
+        showActionSheetWithOptions(
+          {
+            message: t('alert:concernUncheck'),
+            cancelButtonIndex: options.length - 1,
+            destructiveButtonIndex: 0,
+            options,
+            textStyle: {...sharedStyle.regularText},
+            titleTextStyle: {...sharedStyle.regularText},
+            messageTextStyle: {...sharedStyle.regularText},
+          },
+          (index) => {
+            // [0, 1].includes(index) &&
+            //   child?.id &&
+            //   milestoneAge &&
+            //   setConcern({
+            //     concernId: id,
+            //     answer: !index,
+            //     childId: child?.id,
+            //     note: note,
+            //     milestoneId: milestoneAge,
+            //   }).then(() => {
+            //     return refetchConcerns();
+            //   });
+            if (index === 0 && child?.id && milestoneAge) {
+              setConcern({
+                concernId: id,
+                answer: false,
+                childId: child?.id,
+                note: note,
+                milestoneId: milestoneAge,
+              }).then(() => {
+                return refetchConcerns();
+              });
+            }
+          },
         );
+        // Alert.alert(
+        //   '',
+        //   t('alert:concernUncheck'),
+        //   [
+        //     {
+        //       text: t('dialog:no'),
+        //       style: 'cancel',
+        //     },
+        //     {
+        //       text: t('common:delete'),
+        //       style: 'default',
+        //       onPress: () => {
+        //         if (child?.id && milestoneAge) {
+        //           setConcern({
+        //             concernId: id,
+        //             answer: false,
+        //             childId: child?.id,
+        //             note: note,
+        //             milestoneId: milestoneAge,
+        //           }).then(() => {
+        //             return refetchConcerns();
+        //           });
+        //         }
+        //       },
+        //     },
+        //   ],
+        //   {cancelable: false},
+        // );
       },
-      [t, child?.id, milestoneAge, setConcern, refetchConcerns],
+      [t, showActionSheetWithOptions, child?.id, milestoneAge, setConcern, refetchConcerns],
     );
 
     const onSaveQuestionNotePress = useCallback<NonNullable<ItemProps['onEditNotePress']>>(
@@ -305,10 +317,10 @@ const SummaryItems = withSuspense(
             note,
             milestoneId: milestoneAge,
           }).then(() => {
-            // refetchConcerns(); // fixme
+            return refetchConcerns();
           });
       },
-      [child?.id, setConcern, milestoneAge],
+      [child?.id, milestoneAge, setConcern, refetchConcerns],
     );
 
     const unanswered = data?.groupedByAnswer['undefined'] || [];

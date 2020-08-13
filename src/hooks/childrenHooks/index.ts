@@ -37,7 +37,7 @@ export function useUpdateChild() {
       const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
-          name: _.upperFirst(variables.name),
+          name: _.upperFirst(_.trim(variables.name)),
           photo: pathToDB(variables.photo),
           birthday: formatISO(variables.birthday, {
             representation: 'date',
@@ -106,7 +106,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
-          name: _.upperFirst(variables.data.name),
+          name: _.upperFirst(_.trim(variables.data.name)),
           photo: pathToDB(variables.data.photo),
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
