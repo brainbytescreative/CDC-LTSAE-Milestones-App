@@ -10,7 +10,6 @@ import {
   Image,
   Linking,
   Platform,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -18,12 +17,12 @@ import {
   View,
 } from 'react-native';
 import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEButtonRounded from '../components/AEButtonRounded';
 import AERadioButton from '../components/AERadioButton';
-import AEScrollView from '../components/AEScrollView';
 import AETextInput from '../components/AETextInput';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import DatePicker from '../components/DatePicker';
@@ -228,7 +227,7 @@ const AddChildScreen: React.FC = () => {
   const title = t(`${prefix}title`);
 
   const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const firstChild = {
     name: '',
@@ -284,7 +283,15 @@ const AddChildScreen: React.FC = () => {
   }, [scrollViewRef]);
 
   return (
-    <AEScrollView innerRef={scrollViewRef}>
+    <KeyboardAwareScrollView
+      innerRef={(ref) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        scrollViewRef.current = ref;
+      }}
+      enableOnAndroid={Platform.OS === 'android'}
+      bounces={false}
+      style={{flex: 1}}>
       <Formik
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
@@ -437,7 +444,7 @@ const AddChildScreen: React.FC = () => {
           </View>
         )}
       </Formik>
-    </AEScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 
