@@ -5,7 +5,6 @@ import {Trans, useTranslation} from 'react-i18next';
 import {
   Dimensions,
   FlatList,
-  KeyboardAvoidingView,
   Linking,
   Platform,
   StyleSheet,
@@ -14,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 
 import AEYellowBox from '../../components/AEYellowBox';
@@ -198,7 +198,12 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
 
   const {t} = useTranslation('milestoneChecklist');
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>
+    <KeyboardAwareScrollView
+      enableOnAndroid={Platform.OS === 'android'}
+      extraHeight={Platform.select({
+        ios: 150,
+      })}
+      style={{flex: 1}}>
       <FlatList
         ListHeaderComponent={
           <View style={{marginBottom: 50}}>
@@ -260,7 +265,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
           </View>
         )}
       />
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 

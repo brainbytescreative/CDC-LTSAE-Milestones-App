@@ -52,6 +52,7 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-get-random-values": "^1.4.0",
     "react-native-image-picker": "^2.3.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.2",
     "react-native-keyboard-input": "^6.0.2",
     "react-native-modal-datetime-picker": "^8.7.1",
     "react-native-nested-scroll-view": "^9.0.0",

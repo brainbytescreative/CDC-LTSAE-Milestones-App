@@ -8,15 +8,14 @@ import {Trans, useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
   Linking,
-  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryCache} from 'react-query';
@@ -465,7 +464,7 @@ const ChildSummaryScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <KeyboardAvoidingView behavior={Platform.select({ios: 'padding'})}>
+      <KeyboardAwareScrollView enableOnAndroid={true}>
         <ScrollView
           bounces={false}
           contentContainerStyle={{
@@ -530,7 +529,7 @@ const ChildSummaryScreen: React.FC = () => {
             {t('common:done')}
           </AEButtonRounded>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
