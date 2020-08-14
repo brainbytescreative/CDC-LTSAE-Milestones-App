@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -464,7 +465,11 @@ const ChildSummaryScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <KeyboardAwareScrollView enableOnAndroid={true}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={Platform.OS === 'android'}
+        extraHeight={Platform.select({
+          ios: 200,
+        })}>
         <ScrollView
           bounces={false}
           contentContainerStyle={{
