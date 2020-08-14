@@ -46,7 +46,7 @@ const ParentProfileSelector: React.FC = () => {
       <FastField name={'territory'}>
         {({field, form, meta}: FastFieldProps<ParentProfileSelectorValues['territory']>) => (
           <DropDownPicker
-            containerStyle={[meta.error ? sharedStyle.errorOutline : null]}
+            containerStyle={[meta.error && meta.touched ? sharedStyle.errorOutline : null]}
             customArrowDown={<Chevron direction={'up'} />}
             customArrowUp={<Chevron direction={'down'} />}
             labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}

@@ -28,15 +28,15 @@ const OnboardingInfoScreen: React.FC = () => {
         <View style={{flexGrow: 2}}>
           <View style={{backgroundColor: colors.iceCold, flexGrow: 1, justifyContent: 'space-around'}}>
             <View style={{alignItems: 'center', marginTop: 16 + top}}>
-              <Text style={{fontSize: 12, marginBottom: 7}}>{t('broughtToYouBy')}</Text>
+              <Text style={[{fontSize: 20, textAlign: 'center', marginBottom: 8}, sharedStyle.boldText]}>
+                {t('welcome')}
+              </Text>
+              <Text style={{fontSize: 12, marginBottom: 24}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
                 <CDCLogo />
                 <LTSAELogo />
               </View>
             </View>
-            <Text style={[{fontSize: 20, textAlign: 'center', marginBottom: 16}, sharedStyle.boldText]}>
-              {t('welcome')}
-            </Text>
           </View>
           <IceColdArc width={'100%'} />
         </View>
@@ -61,6 +61,7 @@ const OnboardingInfoScreen: React.FC = () => {
               backgroundColor: colors.purple,
               paddingBottom: bottom,
               justifyContent: 'space-around',
+              paddingTop: 20,
             }}>
             <Text
               style={[

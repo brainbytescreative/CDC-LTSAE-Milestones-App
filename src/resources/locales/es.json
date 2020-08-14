@@ -100,7 +100,7 @@
         "month_plural": "{{count}} meses",
         "next": "Siguiente",
         "notifications": "Notificaciones",
-        "required": "* Requerido",
+        "required": "* requerido",
         "timeFormat": "h:mm a",
         "year": "{{count}} año",
         "yearDash": "{{count}}-año de vida",
@@ -230,8 +230,8 @@
         "list_3": "Ver consejos y actividades",
         "list_4": "Agregar cita y recibir recordatorios",
         "list_5": "Más información",
-        "welcome": "Sigamos el desarrollo...",
-        "welcome1p": "porque los indicadores del desarorollo con importantes",
+        "welcome": "Sigamos el Desarrollo",
+        "welcome1p": "...porque los indicadores del desarorollo con importantes",
         "welcome2p": "La aplicacion \"sigamos el desarollo\" de los CDC hace que el seguimiento del desarrollo de su hijo sea fácil y divertido"
     },
     "onboardingParentProfile": {

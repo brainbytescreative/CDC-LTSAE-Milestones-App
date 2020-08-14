@@ -47,7 +47,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
       <Formik
         innerRef={formikRef}
         validationSchema={editProfileSchema}
-        validateOnChange={false}
+        validateOnChange
         initialValues={{
           territory: undefined,
           guardian: undefined,

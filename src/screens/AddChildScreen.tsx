@@ -120,7 +120,7 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
           onBlur={() => {
             trackChildCompletedAddChildName();
           }}
-          style={[Boolean(meta.error) && sharedStyle.errorOutline]}
+          style={[Boolean(meta.error && meta.touched) && sharedStyle.errorOutline]}
           autoCorrect={false}
           value={field.value}
           onChangeText={form.handleChange(field.name) as any}
@@ -137,7 +137,7 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
       {({field, form, meta}: FastFieldProps<Date | undefined>) => (
         <>
           <DatePicker
-            error={Boolean(meta.error)}
+            error={Boolean(meta.error && meta.touched)}
             onPress={() => {
               trackChildStartedChildDateOfBirth();
             }}
@@ -174,7 +174,7 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
             <View
               style={[
                 {flexDirection: 'row'},
-                Boolean(meta.error) && {...sharedStyle.errorOutline, paddingVertical: 1},
+                Boolean(meta.error && meta.touched) && {...sharedStyle.errorOutline, paddingVertical: 1},
               ]}>
               <AERadioButton
                 onChange={() => form.setFieldValue(field.name, 0)}
@@ -289,7 +289,7 @@ const AddChildScreen: React.FC = () => {
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
         innerRef={formikRef}
-        validateOnChange={false}
+        validateOnChange
         // validateOnMount
         onSubmit={async (values) => {
           const childInput = {

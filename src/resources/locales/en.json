@@ -100,7 +100,7 @@
         "month_plural": "{{count}} Months",
         "next": "Next",
         "notifications": "Notifications",
-        "required": "* Required",
+        "required": "* required",
         "timeFormat": "h:mm a",
         "year": "{{count}} year",
         "yearDash": "{{count}}-Year-old",
@@ -219,7 +219,7 @@
         "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}} well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
     },
     "onboardingHowToUse": {
-        "howToUseApp": "How to use the app"
+        "howToUseApp": "How to Use the App"
     },
     "onboardingInfo": {
         "broughtToYouBy": "brought to you by",
@@ -235,7 +235,7 @@
         "welcome2p": "CDC’s Milestone Tracker makes tracking your child’s development easy and fun!"
     },
     "onboardingParentProfile": {
-        "parentProfile": "Parent/Caregiver profile",
+        "parentProfile": "User/Caregiver Profile ",
         "territoryInfo": "Milestone Tracker asks for state and territory to learn where the app is being used. \n\nIt does not collect or share any personal information that could be used to identify you or your child."
     },
     "privacyPolicy": {
