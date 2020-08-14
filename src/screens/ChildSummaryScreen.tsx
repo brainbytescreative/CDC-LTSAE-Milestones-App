@@ -5,17 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Alert,
-  Linking,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Alert, Linking, Platform, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -467,73 +457,71 @@ const ChildSummaryScreen: React.FC = () => {
       </View>
       <KeyboardAwareScrollView
         enableOnAndroid={Platform.OS === 'android'}
+        bounces={false}
+        contentContainerStyle={{
+          paddingBottom: bottom ? bottom + 32 : 72,
+        }}
         extraHeight={Platform.select({
           ios: 200,
         })}>
-        <ScrollView
-          bounces={false}
-          contentContainerStyle={{
-            paddingBottom: bottom ? bottom + 76 : 100,
-          }}>
-          <ChildSelectorModal />
-          <ChildPhoto photo={child?.photo} />
-          <Text
-            style={[
-              {
-                textAlign: 'center',
-                marginTop: 20,
-                marginHorizontal: 32,
-              },
-              sharedStyle.largeBoldText,
-            ]}>
-            {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
-          </Text>
-          <View style={{paddingHorizontal: 32}}>
-            <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('findElLink'))}
-                  style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
-                />
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('concernedLink'))}
-                  style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
-                />
-              </Trans>
-            </Text>
-            {/*<Text>Show your doctor or email summary</Text>*/}
-          </View>
-          <View style={{marginTop: 35}}>
-            <PurpleArc width={'100%'} />
-            <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-              <ComposeEmailButton />
-              <AEButtonMultiline
-                onPress={() => {
-                  navigation.navigate('Revisit');
-                }}
-                style={{marginTop: 10, marginBottom: 30}}>
-                {t('showDoctor')}
-              </AEButtonMultiline>
-              <LanguageSelector
-                onLanguageChange={(lng) => {
-                  trackSelectLanguage(lng);
-                  queryCache.invalidateQueries('questions');
-                }}
-                style={{marginHorizontal: 32}}
+        <ChildSelectorModal />
+        <ChildPhoto photo={child?.photo} />
+        <Text
+          style={[
+            {
+              textAlign: 'center',
+              marginTop: 20,
+              marginHorizontal: 32,
+            },
+            sharedStyle.largeBoldText,
+          ]}>
+          {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
+        </Text>
+        <View style={{paddingHorizontal: 32}}>
+          <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
+            <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
+              <Text
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('findElLink'))}
+                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
               />
-            </View>
+              <Text
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('concernedLink'))}
+                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
+              />
+            </Trans>
+          </Text>
+          {/*<Text>Show your doctor or email summary</Text>*/}
+        </View>
+        <View style={{marginTop: 35}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
+            <ComposeEmailButton />
+            <AEButtonMultiline
+              onPress={() => {
+                navigation.navigate('Revisit');
+              }}
+              style={{marginTop: 10, marginBottom: 30}}>
+              {t('showDoctor')}
+            </AEButtonMultiline>
+            <LanguageSelector
+              onLanguageChange={(lng) => {
+                trackSelectLanguage(lng);
+                queryCache.invalidateQueries('questions');
+              }}
+              style={{marginHorizontal: 32}}
+            />
           </View>
-          <SummaryItems />
-          <AEButtonRounded
-            style={{marginTop: 40}}
-            onPress={() => {
-              navigation.navigate('DashboardStack');
-            }}>
-            {t('common:done')}
-          </AEButtonRounded>
-        </ScrollView>
+        </View>
+        <SummaryItems />
+        <AEButtonRounded
+          style={{marginTop: 40}}
+          onPress={() => {
+            navigation.navigate('DashboardStack');
+          }}>
+          {t('common:done')}
+        </AEButtonRounded>
       </KeyboardAwareScrollView>
     </View>
   );

@@ -203,6 +203,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       extraHeight={Platform.select({
         ios: 150,
       })}
+      bounces={false}
       style={{flex: 1}}>
       <FlatList
         ListHeaderComponent={
