@@ -102,6 +102,8 @@
         "notifications": "Notifications",
         "required": "* required",
         "timeFormat": "h:mm a",
+        "week": "{{count}} week",
+        "week_plural": "{{count}} weeks",
         "year": "{{count}} year",
         "yearDash": "{{count}}-Year-old",
         "yearDash_plural": "{{count}}-Years-old",

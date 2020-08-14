@@ -1,5 +1,5 @@
 import {NavigationContainerProps} from '@react-navigation/native';
-import {add, differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
+import {add, differenceInDays, differenceInMonths, differenceInWeeks, format, formatDistanceStrict} from 'date-fns';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
@@ -39,10 +39,14 @@ export const formatAge = (childBirth: Date | undefined): string => {
   const birthDay = childBirth ?? new Date();
   const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
   const months = (birthDay && differenceInMonths(new Date(), birthDay)) || 0;
+
   let unit: UnitsType; //= days > 0 ? undefined : 'day';
 
-  if (months < 2) {
+  if (days < 7) {
     unit = 'day';
+  } else if (months < 2) {
+    const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
+    return i18next.t('common:week', {count: weeks});
   } else if (months < 24) {
     unit = 'month';
   }
