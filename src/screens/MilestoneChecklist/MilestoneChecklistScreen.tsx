@@ -5,7 +5,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, View} from 'react-native';
+import {FlatList, Platform, View} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useQuery} from 'react-query';
 
@@ -46,26 +47,36 @@ const QuestionsList: React.FC<{
     const {t} = useTranslation('milestoneChecklist');
 
     return (
-      <FlatList
-        ref={flatListRef}
+      <KeyboardAwareScrollView
+        enableOnAndroid={Platform.OS === 'android'}
+        extraHeight={Platform.select({
+          ios: 200,
+        })}
         bounces={false}
-        initialNumToRender={1}
-        scrollIndicatorInsets={{right: 0.1}}
-        data={questionsGrouped?.get(section) || []}
-        renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
-        keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
-        ListHeaderComponent={() => (
-          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>{milestoneAgeFormatted}</Text>
-        )}
-        ListFooterComponent={() => (
-          <View style={{marginTop: 50}}>
-            <PurpleArc />
-            <View style={{backgroundColor: colors.purple}}>
-              <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
+        style={{flex: 1}}>
+        <FlatList
+          ref={flatListRef}
+          bounces={false}
+          initialNumToRender={1}
+          scrollIndicatorInsets={{right: 0.1}}
+          data={questionsGrouped?.get(section) || []}
+          renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
+          keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
+          ListHeaderComponent={() => (
+            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>
+              {milestoneAgeFormatted}
+            </Text>
+          )}
+          ListFooterComponent={() => (
+            <View style={{marginTop: 50}}>
+              <PurpleArc />
+              <View style={{backgroundColor: colors.purple}}>
+                <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </KeyboardAwareScrollView>
     );
   },
   {shared: {suspense: true}, queries: {staleTime: Infinity}},
