@@ -518,7 +518,6 @@ const ChildSummaryScreen: React.FC = () => {
         <AEButtonRounded
           style={{marginTop: 40}}
           onPress={() => {
-            // console.log(navigation.dangerouslyGetParent().)
             navigation.reset({
               index: 0,
               routes: [
