@@ -152,6 +152,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       const image = images[name];
       return (
         <Image
+          // resizeMode={'contain'}
           key={`photo-${index}-${id}`}
           accessibilityLabel={item.alt && t(`milestones:alts:${item.alt}`)}
           accessibilityRole={'image'}

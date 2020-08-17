@@ -101,7 +101,11 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
               <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
               <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
               <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
-              <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
+              <Stack.Screen
+                name={'OnboardingHowToUse'}
+                component={OnboardingHowToUseScreen}
+                options={{gestureEnabled: false}}
+              />
             </>
           )}
           <Stack.Screen name={'Dashboard'} component={RootDrawer} />

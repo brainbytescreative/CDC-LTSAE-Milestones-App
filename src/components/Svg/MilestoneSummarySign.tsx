@@ -5,7 +5,7 @@ import {colors} from '../../resources/constants';
 
 const MilestoneSummarySign: React.FC<SvgProps> = (props) => (
   <Svg width={42.566} height={42.568} viewBox="0 0 42.566 42.568" {...props}>
-    <G fill={colors.darkGreen} stroke={colors.darkGreen} strokeMiterlimit={10} strokeWidth={0.5}>
+    <G fill={colors.aquamarine} stroke={colors.aquamarine} strokeMiterlimit={10} strokeWidth={0.5}>
       <Path
         d="M-26.58 24.225a1.106 1.106 0 00-.881-.741l-6.29-.96-2.824-6.016a1.155 1.155 0 00-1.575-.427 1.167 1.167 0 00-.426.427l-2.824 6.016-6.291.96a1.107 1.107 0 00-.926 1.26 1.111 1.111 0 00.3.606l4.584 4.7-1.082 6.65a1.108 1.108 0 00.454 1.082 1.094 1.094 0 001.172.063l5.614-3.1 5.614 3.1a1.108 1.108 0 001.172-.063 1.11 1.11 0 00.454-1.082l-1.085-6.646 4.585-4.7a1.111 1.111 0 00.255-1.129zm-6.813 4.675a1.108 1.108 0 00-.3.949l.809 4.952-4.157-2.3a1.1 1.1 0 00-1.069 0l-4.157 2.3.809-4.952a1.108 1.108 0 00-.3-.949l-3.471-3.558 4.747-.725a1.112 1.112 0 00.829-.617l2.073-4.419L-35.502 24a1.108 1.108 0 00.832.622l4.747.725z"
         transform="translate(68.827 -15.611)"

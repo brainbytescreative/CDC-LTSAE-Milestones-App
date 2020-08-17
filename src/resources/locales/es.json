@@ -30,7 +30,7 @@
         "note": "Si su hijo nació prematuramente, ingrese la fecha en que nació, pero use la lista de verificación con base en la edad corregida. Si la edad corregida se encuentra entre dos listas de verificación, use la de la edad menor.",
         "noteClick": "Haga clic aquí para obtener información sobre cómo calcular la edad corregida.",
         "prematureQuestion": "¿Nació prematuramente?",
-        "selectOne": "Seleccionar una opción",
+        "selectOne": "Seleccionar una opción *",
         "title": "Agregar un niño"
     },
     "alert": {
@@ -95,15 +95,16 @@
         "month": "{{count}} mes",
         "monthDash": "{{count}}-mes de vida",
         "monthDash_plural": "{{count}}-meses de vida",
-        "monthShort": "{{count}}",
+        "monthShort": "{{count}} mes",
+        "monthShort_plural": "{{count}} meses",
         "monthSingular": "{{count}} mes",
         "month_plural": "{{count}} meses",
         "next": "Siguiente",
         "notifications": "Notificaciones",
-        "required": "* requerido",
+        "required": "* Requerido",
         "timeFormat": "h:mm a",
-        "week": "{{count}} week",
-        "week_plural": "{{count}} weeks",
+        "week": "{{count}} semana",
+        "week_plural": "{{count}} semanas",
         "year": "{{count}} año",
         "yearDash": "{{count}}-año de vida",
         "yearDash_plural": "{{count}}-años de vida",
@@ -122,13 +123,13 @@
         "milestoneSummary": "El resumen de mi hijo",
         "milestonesAnswered": "{{progress}} Indicadores con respuestas ingresadas",
         "tipsAndActivities": "Consejos y actividades",
-        "title": "Panel visual",
+        "title": "Inicio",
         "whenToActEarly": "Cuándo \nreaccionar pronto",
         "yellowTip": "Si la edad de su hijo está entre dos de las listas de verificación de arriba, recibirá la lista de la edad menor.",
         "yellowTipLessTwoMonth": "La primera es la de los 2 meses. ¡Haga clic en el botón Menú para ver la Vista rápida de los indicadores que le muestra un adelanto de lo que viene!"
     },
     "dialog": {
-        "deleteMessage": "¿Está seguro de que desea borrar {{subject}}?",
+        "deleteMessage": "¿Está seguro de que desea borrar{{subject}}?",
         "no": "No",
         "yes": "Sí"
     },
@@ -138,8 +139,8 @@
     "fields": {
         "appointmentNotifications": "Notificaciones de citas",
         "apptTypePlaceholder": "Tipo o descripción de la cita",
-        "childNamePlaceholder": "Nombre del niño",
-        "dateOfBirthPlaceholder": "Dia de nacimiento",
+        "childNamePlaceholder": "Nombre del niño *",
+        "dateOfBirthPlaceholder": "Dia de nacimiento *",
         "datePlaceholder": "Fecha",
         "doctorPlaceholder": "Nombre del proveedor",
         "guardianPlaceholder": "Padre/tutor legal",
@@ -260,7 +261,7 @@
     "settings": {
         "drawerLabel": "Notificaciones y configuraciones del usuario",
         "notificationSettings": "Configuración de la Notificacion",
-        "requiredForState": "*requerido",
+        "requiredForState": "* Requerido",
         "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. \nNo se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
         "userProfile": "Configuraciones de la cuenta"
     },

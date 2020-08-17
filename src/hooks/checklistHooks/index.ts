@@ -125,16 +125,18 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
         checklistMap
           .get(variables.milestoneAge)
           ?.milestones?.map((item) => {
-            const value =
-              item.value && __DEV__
-                ? [
-                    t(item.value, {lng: 'en', ...tOpt({t, gender: variables.childGender})}),
-                    t(item.value, {lng: 'es', ...tOpt({t, gender: variables.childGender})}),
-                  ].join('\n\n')
-                : t(item.value, tOpt({t, gender: variables.childGender}));
+            // const value =
+            //   item.value && __DEV__
+            //     ? [
+            //         t(item.value, {lng: 'en', ...tOpt({t, gender: variables.childGender})}),
+            //         t(item.value, {lng: 'es', ...tOpt({t, gender: variables.childGender})}),
+            //       ].join('\n\n')
+            //     : t(item.value, tOpt({t, gender: variables.childGender}));
+
+            const value = t(item.value, tOpt({t, gender: variables.childGender}));
             return {
               ...item,
-              value,
+              value: _.trim(value, '.'),
             };
           })
           ?.sort((a, b) => {
@@ -310,7 +312,7 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
         checklistMap.get(Number(milestoneAge))?.concerns?.map((item) => {
           return {
             ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
+            value: item.value && _.trim(t(item.value, tOpt({t, gender: variables.gender})), '.'),
           };
         }) ?? [];
 

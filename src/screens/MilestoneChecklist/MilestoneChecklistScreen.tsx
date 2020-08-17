@@ -49,6 +49,7 @@ const QuestionsList: React.FC<{
     return (
       <KeyboardAwareScrollView
         enableOnAndroid={Platform.OS === 'android'}
+        scrollIndicatorInsets={{right: 0.1}}
         extraHeight={Platform.select({
           ios: 200,
         })}

@@ -153,6 +153,7 @@ const itemStyles = StyleSheet.create({
   },
   buttonsContainer: {
     marginHorizontal: 32,
+    paddingHorizontal: 12,
     marginTop: -20,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -162,7 +163,7 @@ const itemStyles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 12,
     backgroundColor: 'white',
-    marginLeft: 30,
+    // marginLeft: 30,
     marginRight: 23,
     width: 58,
     height: 51,
@@ -177,7 +178,7 @@ const itemStyles = StyleSheet.create({
     // paddingHorizontal: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
+    // marginRight: 20,
     backgroundColor: 'white',
     borderRadius: 10,
     flexGrow: 1,
@@ -190,7 +191,7 @@ const itemStyles = StyleSheet.create({
 
 const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSummaryPress}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
@@ -208,8 +209,6 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       <FlatList
         ListHeaderComponent={
           <View style={{marginBottom: 50}}>
-            <Text style={[styles.largeText, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
-            {/*<Text style={[styles.largeText]}>{t('milestoneChecklist')}</Text>*/}
             <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
               {totalProgressValue === 1 ? t('complete') : t('incomplete')}
             </Text>
@@ -274,12 +273,6 @@ const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
     fontSize: 20,
-    marginTop: 5,
-    fontFamily: 'Montserrat-Bold',
-  },
-  largeText: {
-    textAlign: 'center',
-    fontSize: 22,
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },
