@@ -518,7 +518,23 @@ const ChildSummaryScreen: React.FC = () => {
         <AEButtonRounded
           style={{marginTop: 40}}
           onPress={() => {
-            navigation.navigate('DashboardStack');
+            // console.log(navigation.dangerouslyGetParent().)
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'DashboardStack',
+                  state: {
+                    index: 1,
+                    routes: [
+                      {
+                        name: 'Dashboard',
+                      },
+                    ],
+                  },
+                },
+              ],
+            });
           }}>
           {t('common:done')}
         </AEButtonRounded>
