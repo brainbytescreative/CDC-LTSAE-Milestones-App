@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import i18next from 'i18next';
 import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -23,7 +24,6 @@ import NoteIcon from '../../components/Svg/NoteIcon';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {
-  useGetChecklistQuestions,
   useGetConcern,
   useGetConcerns,
   useGetIsMissingMilestone,
@@ -110,7 +110,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           <Text style={{textAlign: 'center'}}>{value}</Text>
         </View>
       </View>
-      <View style={[itemStyles.buttonsContainer]}>
+      <View style={[itemStyles.buttonsContainer, i18next.language === 'es' && {paddingHorizontal: 8}]}>
         <TouchableOpacity
           accessible={!isMissingAnswerConcern}
           accessibilityRole={'button'}
@@ -153,7 +153,7 @@ const itemStyles = StyleSheet.create({
   },
   buttonsContainer: {
     marginHorizontal: 32,
-    paddingHorizontal: 12,
+    paddingHorizontal: 18,
     marginTop: -20,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -195,7 +195,6 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
-  const {data: {totalProgressValue} = {}} = useGetChecklistQuestions();
 
   const {t} = useTranslation('milestoneChecklist');
   return (
@@ -209,9 +208,9 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       <FlatList
         ListHeaderComponent={
           <View style={{marginBottom: 50}}>
-            <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
-              {totalProgressValue === 1 ? t('complete') : t('incomplete')}
-            </Text>
+            {/*<Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>*/}
+            {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
+            {/*</Text>*/}
             <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
             <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
               <Trans t={t} i18nKey={'quickViewMessageActEarly'}>

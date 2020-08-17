@@ -64,7 +64,7 @@
         "note": "Nota",
         "saveNote": "Guardar nota",
         "showDoctor": "Mostrar al médico",
-        "title": "Resumen de la {{age}} de {{name}}.",
+        "title": "Resumen de la {{age}} de {{name}}",
         "unanswered": "Sin respuesta",
         "yes": "Sí"
     },

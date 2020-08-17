@@ -10,7 +10,7 @@ export async function getChildById(childId: ChildDbRecord['id']): Promise<ChildR
   const child: ChildDbRecord | undefined = result[0].rows.item(0);
 
   if (!child) {
-    return undefined;
+    throw new Error(`There is no child with id: ${childId}`);
   }
 
   return {
@@ -27,5 +27,6 @@ export async function getSelectedChildIdFallback(): Promise<ChildDbRecord['id'] 
 
 export async function getChildrenCount() {
   const [res] = await sqLiteClient.db.executeSql('SELECT count(id) cnt FROM children');
-  return __DEV__ ? 0 : Number(res.rows.item(0)?.['cnt']);
+  return Number(res.rows.item(0)?.['cnt']);
+  // return __DEV__ ? 0 : Number(res.rows.item(0)?.['cnt']);
 }
