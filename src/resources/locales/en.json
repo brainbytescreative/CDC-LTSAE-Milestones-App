@@ -256,7 +256,8 @@
         "thankYouText2": "Thank you again for using CDC’s Milestone Tracker App!\n\nLearn more about developmental milestones and acting early on concerns at <0>cdc.gov/ActEarly.</0>",
         "timeToCelebrate": "Take time to CELEBRATE {{name}} having reached these important milestones:",
         "unanswered": "{{milestoneAge}} Milestones\nYou Skipped",
-        "yellowTip": "You know {{childName}} best. If {{heSheTag}} is missing milestones or you ever become concerned about {{hisHersTag}} development, talk with the doctor, share your concerns, and ask for developmental screening."
+        "yellowTip": "You know {{childName}} best. If {{heSheTag}} is missing milestones or you ever become concerned about {{hisHersTag}} development, talk with the doctor, share your concerns, and ask for developmental screening.",
+        "yes": "{{milestoneAge}} Milestones You\nMarked as “Yes”"
     },
     "settings": {
         "drawerLabel": "Notifications & User Settings ",

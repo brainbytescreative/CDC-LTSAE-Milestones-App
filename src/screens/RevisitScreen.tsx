@@ -125,6 +125,16 @@ const RevisitScreen: React.FC = () => {
             ]}>
             {t('timeToCelebrate', {name: child?.name})}
           </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+            <Text style={styles.blockText}>
+              {t('yes', {
+                milestoneAge: milestoneAgeFormattedDashes,
+              })}
+            </Text>
+          </View>
+          {data?.groupedByAnswer['0']?.map((item, index) => (
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
+          ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>
               {t('unanswered', {

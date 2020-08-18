@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, Platform, View} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useQuery} from 'react-query';
 
@@ -36,7 +36,7 @@ type NavigationProp = CompositeNavigationProp<
 >;
 
 const QuestionsList: React.FC<{
-  flatListRef: RefObject<FlatList>;
+  flatListRef: RefObject<KeyboardAwareFlatList>;
   section: Section;
   onPressNextSection: () => void;
 }> = withSuspense(
@@ -47,37 +47,30 @@ const QuestionsList: React.FC<{
     const {t} = useTranslation('milestoneChecklist');
 
     return (
-      <KeyboardAwareScrollView
-        enableOnAndroid={Platform.OS === 'android'}
-        scrollIndicatorInsets={{right: 0.1}}
+      <KeyboardAwareFlatList
+        // enableOnAndroid={Platform.OS === 'android'}
         extraHeight={Platform.select({
           ios: 200,
         })}
+        ref={flatListRef}
         bounces={false}
-        style={{flex: 1}}>
-        <FlatList
-          ref={flatListRef}
-          bounces={false}
-          initialNumToRender={1}
-          scrollIndicatorInsets={{right: 0.1}}
-          data={questionsGrouped?.get(section) || []}
-          renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
-          keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
-          ListHeaderComponent={() => (
-            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>
-              {milestoneAgeFormatted}
-            </Text>
-          )}
-          ListFooterComponent={() => (
-            <View style={{marginTop: 50}}>
-              <PurpleArc />
-              <View style={{backgroundColor: colors.purple}}>
-                <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
-              </View>
+        initialNumToRender={1}
+        scrollIndicatorInsets={{right: 0.1}}
+        data={questionsGrouped?.get(section) || []}
+        renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
+        keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
+        ListHeaderComponent={() => (
+          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>{milestoneAgeFormatted}</Text>
+        )}
+        ListFooterComponent={() => (
+          <View style={{marginTop: 50}}>
+            <PurpleArc />
+            <View style={{backgroundColor: colors.purple}}>
+              <ButtonWithChevron onPress={onPressNextSection}>{t('nextSection')}</ButtonWithChevron>
             </View>
-          )}
-        />
-      </KeyboardAwareScrollView>
+          </View>
+        )}
+      />
     );
   },
   {shared: {suspense: true}, queries: {staleTime: Infinity}},
@@ -138,7 +131,7 @@ const MilestoneChecklistScreen: React.FC<{
     }, [unansweredData, gotStarted]),
   );
 
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<KeyboardAwareFlatList>(null);
   const viewPagerRef = useRef<ViewPager | null>(null);
 
   useEffect(() => {
@@ -166,7 +159,15 @@ const MilestoneChecklistScreen: React.FC<{
     prevSection.name = section;
     setSection(val);
     viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
-    flatListRef.current?.scrollToOffset({animated: false, offset: 0});
+
+    // if (Platform.OS === 'android') {
+    //   flatListRef.current?.scrollForExtraHeightOnAndroid(-300);
+    // } else {
+    setTimeout(() => {
+      flatListRef.current?.scrollToPosition(0, 0);
+    }, 300);
+    // }
+
     switch (val) {
       case 'social':
         trackInteractionByType('Started Social Milestones');

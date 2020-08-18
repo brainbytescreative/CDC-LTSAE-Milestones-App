@@ -177,7 +177,7 @@
         "actEarlyMessage1": "Si selecciona cualquiera de las opciones siguientes, es importante que reaccione pronto al hablar con el médico de su hijo y pedirle pruebas del desarrollo. No espere. ¡Reaccionar pronto puede tener un gran impacto! Para obtener más información, visite <0>www.cdc.gov/Concerned</0>",
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_pronto",
         "actEarlyWarning": "Puede que sea el momento de reaccionar pronto, hable con el médico.",
-        "addANote": "Agregar una nota",
+        "addANote": "Agregar una\nnota",
         "addANoteLong": "Las notas se guardarán automáticamente; ingresarlas aquí",
         "answer_no": "no",
         "answer_not_yet": "Todavía no",
@@ -256,7 +256,8 @@
         "thankYouText2": "Gracias por usar la aplicación Milestone Tracker de los CDC.\n\nObtenga más información sobre los indicadores del desarrollo y sobre cómo reaccionar pronto si tiene inquietudes en <0>cdc.gov/ActEarly.</0>",
         "timeToCelebrate": "Tómese un tiempo para CELEBRAR que {{name}} alcanzó estos indicadores del desarrollo importantes:",
         "unanswered": "{{milestoneAge}} Indicadores que se saltó",
-        "yellowTip": "Usted es quien mejor conoce a {{childName}}. Si no alcanza algún indicador del desarrollo o en algún momento le preocupa su desarrollo, hable con el médico, coméntele sus inquietudes y pídale una evaluación del desarrollo."
+        "yellowTip": "Usted es quien mejor conoce a {{childName}}. Si no alcanza algún indicador del desarrollo o en algún momento le preocupa su desarrollo, hable con el médico, coméntele sus inquietudes y pídale una evaluación del desarrollo.",
+        "yes": "Indicadores del desarrollo para los {{milestoneAge}} \nque marcó  “Sí”"
     },
     "settings": {
         "drawerLabel": "Notificaciones y configuraciones del usuario",

@@ -126,9 +126,6 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       return (
         <View>
           <WebView
-            onLayout={(event) => {
-              console.log('event.nativeEvent.layout.height', event.nativeEvent.layout.height, code, height);
-            }}
             onMessage={(event) => {
               event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
             }}

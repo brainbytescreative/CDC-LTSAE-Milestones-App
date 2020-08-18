@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native';
-import i18next from 'i18next';
 import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -110,7 +109,7 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
           <Text style={{textAlign: 'center'}}>{value}</Text>
         </View>
       </View>
-      <View style={[itemStyles.buttonsContainer, i18next.language === 'es' && {paddingHorizontal: 8}]}>
+      <View style={[itemStyles.buttonsContainer]}>
         <TouchableOpacity
           accessible={!isMissingAnswerConcern}
           accessibilityRole={'button'}
