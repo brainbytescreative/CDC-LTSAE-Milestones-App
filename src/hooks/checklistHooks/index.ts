@@ -1,5 +1,6 @@
 import {parseISO} from 'date-fns';
 import * as MailComposer from 'expo-mail-composer';
+import i18next from 'i18next';
 import _ from 'lodash';
 import nunjucks from 'nunjucks';
 import {useMemo} from 'react';
@@ -575,7 +576,7 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
     compose: () => {
       return MailComposer.composeAsync({
         isHtml: true,
-        body: nunjucks.renderString(emailSummaryContent.en, {
+        body: nunjucks.renderString(emailSummaryContent[i18next.language]!, {
           childName: childData?.name || child?.name,
           concerns: concerns?.concerned,
           skippedItems: data?.groupedByAnswer[`${undefined}`],
