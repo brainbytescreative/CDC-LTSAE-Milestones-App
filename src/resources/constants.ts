@@ -76,17 +76,17 @@ export interface ParentProfileSelectorValues {
 
 export type Guardian = typeof guardianTypes[number];
 
-export const guardianTypes = ['guardian', 'healthcareProvider'] as const;
+// export const guardianTypes = ['guardian', 'healthcareProvider'] as const;
 
-// export const guardianTypes = [
-//   'guardian',
-//   // 'headStartProvider',
-//   // 'teacher',
-//   // 'WICProvider',
-//   // 'homeVisitor',
-//   'healthcareProvider',
-//   // 'other',
-// ];
+export const guardianTypes = [
+  'guardian',
+  'headStartProvider',
+  'teacher',
+  'WICProvider',
+  'homeVisitor',
+  'healthcareProvider',
+  'other',
+] as const;
 
 export enum WellChildCheckUpAppointmentAgesEnum {
   Age1 = 1,

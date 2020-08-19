@@ -26,7 +26,7 @@ const AETextInput: React.FC<Props> = ({rightIcon, ...props}) => {
       ]}>
       <TouchableWrapper onPress={props.onPress}>
         <View style={[styles.container, sharedStyle.shadow]}>
-          <TextInput allowFontScaling={true} {...props} style={[styles.input]} />
+          <TextInput placeholderTextColor={colors.gray} allowFontScaling={true} {...props} style={[styles.input]} />
           {rightIcon}
         </View>
       </TouchableWrapper>
