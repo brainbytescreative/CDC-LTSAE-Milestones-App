@@ -32,7 +32,7 @@ type PageType =
   | 'Notification and Account Settings'
   | 'Add a Child (Child Profile)';
 
-type OptionsType = Parameters<typeof trackState>[1];
+type OptionsType = Parameters<typeof trackAction>[1];
 
 const screeNameToPageName = (name: string): PageType | string => {
   switch (name) {
@@ -69,119 +69,123 @@ const screeNameToPageName = (name: string): PageType | string => {
   }
 };
 
-export function trackState(key: string, options?: {page?: PageType; eventname?: string; sectionname?: string}) {
+export function trackAction(key: string, options?: {page?: PageType; eventname?: string; sectionname?: string}) {
   const screenName =
     currentScreen.currentRouteName ?? getActiveRouteName(currentScreen.navigation?.current?.getRootState());
   const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
   // console.log('<<<', pageName, `,key: ${key}`);
 
-  ACPCore.trackState(key, {
-    'gov.cdc.appname': 'Mobile App Dev',
-    'gov.cdc.language': i18next.language, // t5 (Language)
-    'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
-    'gov.cdc.osname': Platform.OS, //t54 (OS Name)
-    'gov.cdc.osversion': `${Platform.Version}`, // t55 (OS Version)
-    'gov.cdc.devicetype': getModel(), // t56 (Device Type)
-    'gov.cdc.status': '1', // t57 (Status)
-    ...(options?.eventname && {'gov.cdc.eventname': options.eventname}),
-    ...(options?.sectionname && {'gov.cdc.sectionname': options.sectionname}),
-    ...(pageName && {'gov.cdc.page': pageName}),
-  });
+  // console.log(pageName, options?.sectionname, key);
+
+  pageName &&
+    ACPCore.trackState(pageName, {
+      'gov.cdc.appname': 'Mobile App Dev',
+      'gov.cdc.language': i18next.language, // t5 (Language)
+      'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
+      'gov.cdc.osname': Platform.OS, //t54 (OS Name)
+      'gov.cdc.osversion': `${Platform.Version}`, // t55 (OS Version)
+      'gov.cdc.devicetype': getModel(), // t56 (Device Type)
+      'gov.cdc.status': '1', // t57 (Status)
+      'gov.cdc.eventname': key,
+      // ...(options?.eventname && {'gov.cdc.eventname': options.eventname}),
+      ...(options?.sectionname && {'gov.cdc.sectionname': options.sectionname}),
+      ...(pageName && {'gov.cdc.page': pageName}),
+    });
 }
 
 export function trackAppLaunch(options?: OptionsType) {
-  trackState('Application: Launch', options);
+  trackAction('Application: Launch', options);
 }
 
 export function trackStartTracking(options?: OptionsType) {
-  trackState('Interaction: Start Tracking ', {page: 'Welcome Screen', ...options});
+  trackAction('Interaction: Start Tracking ', {page: 'Welcome Screen', ...options});
 }
 const lngDescr = {en: 'English', es: 'Spanish'};
 
 export function trackSelectLanguage(lng: LangCode) {
   const language = (lng ?? i18next.language) as keyof typeof lng;
-  trackState(`Select: Language: ${lngDescr[language]}`);
+  trackAction(`Select: Language: ${lngDescr[language]}`);
 }
 
 export function trackTopCancel(options?: OptionsType) {
-  trackState('Select: Cancel', options);
+  trackAction('Select: Cancel', options);
 }
 export function trackTopDone(options?: OptionsType) {
-  trackState('Select: Done', options);
+  trackAction('Select: Done', options);
 }
 
 export function trackSelectProfile(value: string) {
-  trackState(`Select: Profile: ${value}`);
+  trackAction(`Select: Profile: ${value}`);
 }
 
 export function trackSelectTerritory(trerritory: string) {
-  trackState(`Select: ${trerritory}`);
+  trackAction(`Select: ${trerritory}`);
 }
 export function trackNext(options?: OptionsType) {
-  trackState('Interaction: Next', options);
+  trackAction('Interaction: Next', options);
 }
 export function trackStartAddChild(options?: OptionsType) {
-  trackState('Interaction: Start Add Child', options);
+  trackAction('Interaction: Start Add Child', options);
 }
 
 export function trackCompleteAddChild(options?: OptionsType) {
-  trackState('Interaction: Completed Add Child', options);
+  trackAction('Interaction: Completed Add Child', options);
 }
 export function trackAddAnotherChild(options?: OptionsType) {
-  trackState('Interaction: Add Another Child', options);
+  trackAction('Interaction: Add Another Child', options);
 }
 
 export function trackChildAddAPhoto(options?: OptionsType) {
-  trackState('Interaction: Add a Photo', options);
+  trackAction('Interaction: Add a Photo', options);
 }
 // fixme
 export function trackChildAddPhotoFromLibrary() {
-  trackState('Interaction: Add Photo from Library');
+  trackAction('Interaction: Add Photo from Library');
 }
 // fixme
 export function trackChildAddPhotoTakePhoto() {
-  trackState('Interaction: Take Photo');
+  trackAction('Interaction: Take Photo');
 }
 export function trackChildCompletedAddPhoto(options?: OptionsType) {
-  trackState('Interaction: Completed Add Photo', options);
+  trackAction('Interaction: Completed Add Photo', options);
 }
 // fixme
 export function trackChildCompletedAddPhotoLibrary() {
-  trackState('Interaction: Completed Add Photo: Library');
+  trackAction('Interaction: Completed Add Photo: Library');
 }
 // fixme
 export function trackChildCompletedAddPhotoTake() {
-  trackState('Interaction: Completed Add Photo: Take');
+  trackAction('Interaction: Completed Add Photo: Take');
 }
 
 export function trackChildCompletedAddChildName(options?: OptionsType) {
-  trackState('Interaction: Completed Add Child Name', options);
+  trackAction('Interaction: Completed Add Child Name', options);
 }
 export function trackChildAddChildName(options?: OptionsType) {
-  trackState('Interaction: Add Child Name', options);
+  trackAction('Interaction: Add Child Name', options);
 }
 export function trackChildStartedChildDateOfBirth(options?: OptionsType) {
-  trackState('Interaction: Started Child Date of Birth', options);
+  trackAction('Interaction: Started Child Date of Birth', options);
 }
 export function trackChildCompletedChildDateOfBirth(options?: OptionsType) {
-  trackState('Interaction: Completed Child Date of Birth', options);
+  trackAction('Interaction: Completed Child Date of Birth', options);
 }
 export function trackChildAge(birthDay: Parameters<typeof formatAge>[0]) {
   const age = formatAge(birthDay);
-  trackState(`Child: Age ${age}`);
+  trackAction(`Child: Age ${age}`);
 }
 
 export function trackChildGender(gender: ChildResult['gender']) {
   const genders = ['Boy', 'Girl'];
-  trackState(`Child: ${genders[gender]}`);
+  trackAction(`Child: ${genders[gender]}`);
 }
 
 export function trackChildDone(options?: OptionsType) {
-  trackState('Interaction: Done', options);
+  trackAction('Interaction: Done', options);
 }
 
-export function trackSelectByType(type: SelectEventType, options?: Parameters<typeof trackState>[1]) {
-  trackState(`Select: ${type}`, options);
+export function trackSelectByType(type: SelectEventType, options?: Parameters<typeof trackAction>[1]) {
+  trackAction(`Select: ${type}`, options);
 }
 
 type InteractionType =
@@ -215,7 +219,7 @@ type InteractionType =
   | 'Completed When to Act Early';
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {
-  trackState(`Interaction: ${type}`, options);
+  trackAction(`Interaction: ${type}`, options);
 }
 
 export function trackChecklistSectionSelect(section: Section) {
@@ -227,22 +231,22 @@ export function trackDrawerSelect(name: keyof DashboardDrawerParamsList) {
   selectName && trackSelectByType(selectName, {page: 'Menu Page'});
 }
 
-export function trackSelectChild(childId: ChildResult['id'], options?: Parameters<typeof trackState>[1]) {
-  trackState(`Select: Child #${childId}`, options);
+export function trackSelectChild(childId: ChildResult['id'], options?: Parameters<typeof trackAction>[1]) {
+  trackAction(`Select: Child #${childId}`, options);
 }
 
 const AnswerToText = ['Yes', 'Not Sure', 'Not Yet'];
 
 export function trackChecklistAnswer(answer: Answer) {
-  trackState(`Answer: ${AnswerToText[answer]}`);
+  trackAction(`Answer: ${AnswerToText[answer]}`);
 }
 
 export function trackChecklistUnanswered(options?: OptionsType) {
-  trackState('Answer: Unanswered', options);
+  trackAction('Answer: Unanswered', options);
 }
 
 export function trackSelectSummary(answer: Answer) {
-  trackState(`Select: Summary: ${AnswerToText[answer]}`);
+  trackAction(`Select: Summary: ${AnswerToText[answer]}`);
 }
 
 export const currentScreen: {navigation?: RefObject<NavigationContainerRef>; currentRouteName?: string} = {};

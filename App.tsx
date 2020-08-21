@@ -29,10 +29,10 @@ import Navigator from './src/components/Navigator';
 import {colors} from './src/resources/constants';
 import {
   currentScreen,
+  trackAction,
   trackInteractionByType,
   trackSelectByType,
   trackStartAddChild,
-  trackState,
 } from './src/utils/analytics';
 import {getActiveRouteName} from './src/utils/helpers';
 
@@ -126,7 +126,7 @@ const App = () => {
                       trackSelectByType('How to Use App');
                       break;
                     case 'OnboardingParentProfile':
-                      trackState('Interaction: Parent/Caregiver Profile: Started');
+                      trackAction('Interaction: Parent/Caregiver Profile: Started');
                       break;
                     case 'AddChild': {
                       trackStartAddChild();
@@ -141,7 +141,7 @@ const App = () => {
                 }
 
                 if (previousRouteName === 'OnboardingParentProfile') {
-                  trackState('Interaction: Parent/Caregiver Profile: Complete');
+                  trackAction('Interaction: Parent/Caregiver Profile: Complete');
                 }
 
                 // Save the current route name for later comparision
