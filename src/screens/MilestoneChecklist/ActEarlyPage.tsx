@@ -4,7 +4,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {
   Dimensions,
-  FlatList,
   Linking,
   Platform,
   StyleSheet,
@@ -13,7 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 
 import AEYellowBox from '../../components/AEYellowBox';
@@ -197,73 +196,70 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
 
   const {t} = useTranslation('milestoneChecklist');
   return (
-    <KeyboardAwareScrollView
+    <KeyboardAwareFlatList
       enableOnAndroid={Platform.OS === 'android'}
       extraHeight={Platform.select({
-        ios: 150,
+        ios: 200,
       })}
       bounces={false}
-      style={{flex: 1}}>
-      <FlatList
-        ListHeaderComponent={
-          <View style={{marginBottom: 50}}>
-            {/*<Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>*/}
-            {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
-            {/*</Text>*/}
-            <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
-            <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
-              <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => {
-                    Linking.openURL(t('actEarlyMessageLink'));
-                  }}
-                  style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
-                />
-                <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
-              </Trans>
-            </Text>
-            {(isMissingConcern || isNotYet) && (
-              <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>
-            )}
-          </View>
-        }
-        data={concerns || []}
-        renderItem={({item}) => <Item {...item} childId={childId} />}
-        keyExtractor={(item) => `concern-${item.id}`}
-        ListFooterComponent={() => (
-          <View>
-            <PurpleArc width={'100%'} />
-            <View style={{backgroundColor: colors.purple}}>
-              <TouchableWithoutFeedback
-                accessibilityRole={'button'}
+      ListHeaderComponent={
+        <View style={{marginBottom: 50}}>
+          {/*<Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>*/}
+          {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
+          {/*</Text>*/}
+          <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
+          <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
+            <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+              <Text
+                accessibilityRole={'link'}
                 onPress={() => {
-                  onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
-                }}>
-                <View
-                  style={[
-                    {
-                      backgroundColor: colors.white,
-                      margin: 32,
-                      borderRadius: 10,
-                      flexDirection: 'row',
-                      padding: 16,
-                      height: 60,
-                      alignItems: 'center',
-                    },
-                    sharedStyle.shadow,
-                  ]}>
-                  <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold', fontSize: 18}}>
-                    {t('myChildSummary')}
-                  </Text>
-                  <ChevronRightBig width={10} height={20} />
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
+                  Linking.openURL(t('actEarlyMessageLink'));
+                }}
+                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
+              />
+              <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+            </Trans>
+          </Text>
+          {(isMissingConcern || isNotYet) && (
+            <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>
+          )}
+        </View>
+      }
+      data={concerns || []}
+      renderItem={({item}) => <Item {...item} childId={childId} />}
+      keyExtractor={(item) => `concern-${item.id}`}
+      ListFooterComponent={() => (
+        <View>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple}}>
+            <TouchableWithoutFeedback
+              accessibilityRole={'button'}
+              onPress={() => {
+                onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
+              }}>
+              <View
+                style={[
+                  {
+                    backgroundColor: colors.white,
+                    margin: 32,
+                    borderRadius: 10,
+                    flexDirection: 'row',
+                    padding: 16,
+                    height: 60,
+                    alignItems: 'center',
+                  },
+                  sharedStyle.shadow,
+                ]}>
+                <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold', fontSize: 18}}>
+                  {t('myChildSummary')}
+                </Text>
+                <ChevronRightBig width={10} height={20} />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        )}
-      />
-    </KeyboardAwareScrollView>
+        </View>
+      )}
+    />
   );
 };
 
