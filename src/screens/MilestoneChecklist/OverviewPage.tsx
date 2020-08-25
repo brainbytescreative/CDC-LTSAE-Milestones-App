@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -38,6 +38,10 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
       scrollViewRef.current?.scrollTo({y: 0, animated: false});
     }, []),
   );
+
+  useLayoutEffect(() => {
+    scrollViewRef.current?.scrollTo({y: 0, animated: false});
+  }, [section]);
 
   const isBirthday: boolean = Number(milestoneAge) % 12 === 0;
 
