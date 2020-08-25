@@ -163,10 +163,10 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
       questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey)!, ...answersById.get(mKey)}));
-      const groupedByAnswer: Record<string, {id: number; value?: string; note: string}[]> = _.groupBy(
-        Array.from(questionsById.values()),
-        'answer',
-      ) as any;
+      const groupedByAnswer: Record<
+        Answer | 'undefined' | string,
+        {id: number; value?: string; note: string}[]
+      > = _.groupBy(Array.from(questionsById.values()), 'answer') as any;
 
       groupedByAnswer.undefined = Array.from(_.merge(groupedByAnswer.undefined, groupedByAnswer.null));
 
@@ -353,14 +353,20 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
 type ConcernPredicate = Partial<Pick<ConcernAnswer, 'childId' | 'concernId' | 'milestoneId'>>;
 
 export function useGetConcern(predicate: ConcernPredicate) {
-  return useQuery<ConcernAnswer, [string, typeof predicate]>(['concern', predicate], async (key, variables) => {
-    const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where concernId=? and childId=?', [
-      variables.concernId,
-      variables.childId,
-    ]);
+  return useQuery<ConcernAnswer, [string, typeof predicate]>(
+    ['concern', predicate],
+    async (key, variables) => {
+      const [result] = await sqLiteClient.db.executeSql(
+        'select * from concern_answers where concernId=? and childId=?',
+        [variables.concernId, variables.childId],
+      );
 
-    return result && result[0].rows.item(0);
-  });
+      return result.rows.item(0);
+    },
+    {
+      enabled: Boolean(predicate.childId && predicate.milestoneId && predicate.concernId),
+    },
+  );
 }
 
 export function useSetConcern() {
@@ -393,13 +399,13 @@ export function useSetConcern() {
       onSuccess: async (data, {childId, concernId, milestoneId}) => {
         // const predicate = {childId, concernId};
         // console.log(predicate, answer);
+        await queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}], {exact: true});
         const {isMissingConcern} = await checkMissing({childId, milestoneId});
         if (isMissingConcern) {
           await setRecommendationNotifications({milestoneId, child: {id: childId}});
         } else {
           await deleteRecommendationNotifications({milestoneId, childId});
         }
-        await queryCache.invalidateQueries(['concern', {childId, concernId}]);
       },
     },
   );

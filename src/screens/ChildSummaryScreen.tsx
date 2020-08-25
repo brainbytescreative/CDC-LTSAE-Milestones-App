@@ -314,9 +314,9 @@ const SummaryItems = withSuspense(
     );
 
     const unanswered = data?.groupedByAnswer['undefined'] || [];
-    const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
-    const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
-    const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
+    const unsure = data?.groupedByAnswer[Answer.UNSURE] || [];
+    const yes = data?.groupedByAnswer[Answer.YES] || [];
+    const notYet = data?.groupedByAnswer[Answer.NOT_YET] || [];
 
     return (
       <View style={{marginHorizontal: 32}}>
