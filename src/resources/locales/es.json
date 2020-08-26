@@ -71,6 +71,11 @@
     "common": {
         "appLanguage": "Idioma de la aplicación",
         "baby": "bebé",
+        "birthday_1": "First",
+        "birthday_2": "Second",
+        "birthday_3": "Third",
+        "birthday_4": "Fourth",
+        "birthday_5": "Fifth",
         "cancel": "Cancelar",
         "child": "niño",
         "dateFormat": "MM/dd/yyyy",

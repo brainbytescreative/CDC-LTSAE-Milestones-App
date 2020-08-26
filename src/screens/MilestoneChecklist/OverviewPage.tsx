@@ -44,6 +44,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
   }, [section]);
 
   const isBirthday: boolean = Number(milestoneAge) % 12 === 0;
+  const yearMilestone = t(`common:birthday_${Number(milestoneAge) / 12}`, {count: 2});
 
   return (
     <AEScrollView innerRef={scrollViewRef}>
@@ -54,7 +55,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
           {section !== 'actEarly' ? (
             <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
               {isBirthday
-                ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted, section})
+                ? t('quickViewMessageBirthDay', {milestone: yearMilestone, section})
                 : t('quickViewMessage', {milestone: milestoneAgeFormatted, section})}
             </Text>
           ) : (
