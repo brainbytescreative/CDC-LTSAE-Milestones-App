@@ -1,4 +1,3 @@
-import {NavigationContainerRef} from '@react-navigation/core';
 import {add, differenceInMonths, formatISO, isPast, parseISO, setHours, startOfDay, sub} from 'date-fns';
 import * as Notifications from 'expo-notifications';
 import {NotificationRequestInput} from 'expo-notifications';
@@ -14,6 +13,7 @@ import {sqLiteClient} from '../../db';
 import {getAppointmentById} from '../../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../../db/notificationQueries';
 import {PropType, WellChildCheckUpAppointmentAgesEnum, milestonesIds} from '../../resources/constants';
+import {currentScreen} from '../../utils/analytics';
 import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../../utils/helpers';
 import useSetMilestoneAge from '../checklistHooks/useSetMilestoneAge';
 import {ChildDbRecord} from '../childrenHooks';
@@ -866,7 +866,9 @@ export function useNavigateNotification() {
   const [setSelectedChild] = useSetSelectedChild();
   const [setMilestoneAge] = useSetMilestoneAge();
   const navigateNotification = useCallback(
-    async (notificationId: string, navigator: Pick<NavigationContainerRef, 'navigate' | 'reset'>) => {
+    async (notificationId: string) => {
+      const navigator = currentScreen.navigation?.current;
+
       const notificationData = await getNotificationById(notificationId);
       switch (notificationData?.notificationCategoryType) {
         case NotificationCategory.Appointment: {
@@ -878,14 +880,14 @@ export function useNavigateNotification() {
         case NotificationCategory.WellCheckUp: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          navigator.navigate('ChildSummaryStack');
+          navigator?.navigate('ChildSummaryStack');
           break;
         }
         case NotificationCategory.TipsAndActivities: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
           // navigator.navigate('TipsAndActivitiesStack');
-          navigator.navigate('TipsAndActivitiesStack', {
+          navigator?.navigate('TipsAndActivitiesStack', {
             screen: 'TipsAndActivities',
             params: {
               notificationId: notificationData?.notificationId,
@@ -897,7 +899,7 @@ export function useNavigateNotification() {
         case NotificationCategory.Recommendation: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          navigator.navigate('ChildSummaryStack');
+          navigator?.navigate('ChildSummaryStack');
           break;
         }
       }

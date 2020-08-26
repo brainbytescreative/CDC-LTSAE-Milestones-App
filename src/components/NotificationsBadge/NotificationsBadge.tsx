@@ -24,7 +24,6 @@ const NotificationsBadge: React.FC = () => {
   const {data: notifications} = useGetUnreadNotifications();
   const [setNotificationRead] = useSetNotificationRead();
   const [navigateNotification] = useNavigateNotification();
-  const navigate = useNavigation();
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -46,7 +45,7 @@ const NotificationsBadge: React.FC = () => {
 
   const onNavigatePress = (notificationId: string) => {
     setIsVisible(false);
-    navigateNotification(notificationId, navigate);
+    navigateNotification(notificationId);
   };
 
   return (

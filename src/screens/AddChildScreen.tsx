@@ -342,7 +342,7 @@ const AddChildScreen: React.FC = () => {
                 <CancelDoneTopControl
                   disabled={isLoading || !formikProps.isValid}
                   onCancel={route.params?.onboarding ? undefined : onCancel}
-                  onDone={onDone}
+                  // onDone={onDone}
                 />
               )}
               <Text

@@ -27,18 +27,20 @@ const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone, disabled = fal
           <Text style={[sharedStyle.regularText]}>{t('common:cancel')}</Text>
         </TouchableOpacity>
       )}
-      <TouchableOpacity
-        disabled={disabled}
-        accessibilityRole={'button'}
-        onPress={() => {
-          onDone?.();
-          trackTopDone();
-        }}
-        style={{flexGrow: 1, alignItems: 'flex-end'}}>
-        <Text style={[sharedStyle.regularText, {color: disabled ? colors.gray : colors.black}]}>
-          {t('common:done')}
-        </Text>
-      </TouchableOpacity>
+      {Boolean(onDone) && (
+        <TouchableOpacity
+          disabled={disabled}
+          accessibilityRole={'button'}
+          onPress={() => {
+            onDone?.();
+            trackTopDone();
+          }}
+          style={{flexGrow: 1, alignItems: 'flex-end'}}>
+          <Text style={[sharedStyle.regularText, {color: disabled ? colors.gray : colors.black}]}>
+            {t('common:done')}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -47,6 +47,8 @@ export const formatAge = (childBirth: Date | undefined): string => {
   } else if (months < 2) {
     const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
     return i18next.t('common:week', {count: weeks});
+  } else if (months === 12) {
+    unit = 'year';
   } else if (months < 24) {
     unit = 'month';
   }
