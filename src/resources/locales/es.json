@@ -266,7 +266,7 @@
     },
     "settings": {
         "drawerLabel": "Notificaciones y configuraciones del usuario",
-        "notificationSettings": "Configuración de la Notificacion",
+        "notificationSettings": "Configuración de la notificacion",
         "requiredForState": "* Requerido",
         "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. \nNo se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
         "userProfile": "Configuraciones de la cuenta"
