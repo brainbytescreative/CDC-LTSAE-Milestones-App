@@ -57,6 +57,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
           trackNext();
           navigation.navigate(nextScreen, {
             onboarding: true,
+            isOldUser: true,
           });
         }}>
         {(formik) => (

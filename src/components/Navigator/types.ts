@@ -6,6 +6,7 @@ import {ChildResult} from '../../hooks/types';
 
 export type AddChildScreenParams =
   | {
+      isOldUser?: boolean;
       childId?: number;
       anotherChild?: boolean;
       onboarding?: boolean;
@@ -54,7 +55,7 @@ export type RootStackParamList = {
   AddChild: AddChildScreenParams;
   OnboardingInfo: undefined;
   OnboardingParentProfile: undefined;
-  OnboardingHowToUse: undefined;
+  OnboardingHowToUse: {isOldUser?: boolean} | undefined;
   Dashboard: undefined;
 };
 
