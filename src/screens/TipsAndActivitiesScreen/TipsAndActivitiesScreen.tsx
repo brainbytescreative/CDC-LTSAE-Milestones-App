@@ -114,7 +114,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
         <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
         <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
           {t('subtitle', {
-            childAge: formatAge(child?.birthday),
+            childAge: formatAge(child?.birthday, {singular: true}),
             babyOrChild: Number(milestoneId) > 12 ? t('common:child') : t('common:baby'),
           })}
         </Text>

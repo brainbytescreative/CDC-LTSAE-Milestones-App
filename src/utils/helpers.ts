@@ -1,5 +1,5 @@
 import {NavigationContainerProps} from '@react-navigation/native';
-import {add, differenceInDays, differenceInMonths, differenceInWeeks, format, formatDistanceStrict} from 'date-fns';
+import {add, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, format} from 'date-fns';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
@@ -33,33 +33,35 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
   }
 };
 
-type UnitsType = NonNullable<Parameters<typeof formatDistanceStrict>[2]>['unit'];
-
-export const formatAge = (childBirth: Date | undefined): string => {
+export const formatAge = (childBirth: Date | undefined, options?: {singular?: boolean}): string => {
   const birthDay = childBirth ?? new Date();
   const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
   const months = (birthDay && differenceInMonths(new Date(), birthDay)) || 0;
-
-  let unit: UnitsType; //= days > 0 ? undefined : 'day';
+  let ageText: string;
+  let value: number;
 
   if (days < 7) {
-    unit = 'day';
+    value = days;
+    ageText = i18next.t('common:day', {count: options?.singular ? 1 : days});
   } else if (months < 2) {
     const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
-    return i18next.t('common:week', {count: weeks});
+    value = weeks;
+    ageText = i18next.t('common:week', {count: options?.singular ? 1 : weeks});
   } else if (months === 12) {
-    unit = 'year';
+    value = 1;
+    ageText = i18next.t('common:year', {count: 1});
   } else if (months < 24) {
-    unit = 'month';
+    value = months;
+    ageText = i18next.t('common:month', {count: options?.singular ? 1 : months});
+  } else {
+    const years = (birthDay && differenceInYears(new Date(), birthDay)) || 0;
+    value = years;
+    ageText = i18next.t('common:year', {count: options?.singular ? 1 : years});
   }
 
-  const childAge = formatDistanceStrict(days < 1 ? birthDay : new Date(), birthDay, {
-    unit,
-    roundingMethod: 'floor',
-    locale: dateFnsLocales[i18next.language],
-  });
+  ageText = options?.singular ? ageText.replace('1', String(value)) : ageText;
 
-  return birthDay ? childAge : '';
+  return ageText;
 };
 
 export function calcChildAge(birthDay: Date | undefined) {

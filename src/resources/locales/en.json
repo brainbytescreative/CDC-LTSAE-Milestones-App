@@ -80,6 +80,8 @@
         "child": "child",
         "dateFormat": "MMMM dd, yyyy",
         "dateTimeFormat": "MM/dd/yyyy h:mm a",
+        "day": "{{count}} day",
+        "day_plural": "{{count}} days",
         "delete": "Delete",
         "done": "Done",
         "edit": "Edit",
