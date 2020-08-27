@@ -580,19 +580,23 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
 
   return {
     compose: () => {
+      const body = nunjucks.renderString(emailSummaryContent[i18next.language]!, {
+        childName: childData?.name || child?.name,
+        concerns: concerns?.concerned,
+        skippedItems: data?.groupedByAnswer[`${undefined}`],
+        yesItems: data?.groupedByAnswer['0'],
+        notSureItems: data?.groupedByAnswer['1'],
+        notYetItems: data?.groupedByAnswer['2'],
+        formattedAge: milestoneAgeFormatted,
+        currentDayText: formatDate(new Date(), 'date'),
+        ...tOpt({t, gender: childData?.gender || child?.gender}),
+      });
+
+      // console.log(body);
+
       return MailComposer.composeAsync({
         isHtml: true,
-        body: nunjucks.renderString(emailSummaryContent[i18next.language]!, {
-          childName: childData?.name || child?.name,
-          concerns: concerns?.concerned,
-          skippedItems: data?.groupedByAnswer[`${undefined}`],
-          yesItems: data?.groupedByAnswer['0'],
-          notSureItems: data?.groupedByAnswer['1'],
-          notYetItems: data?.groupedByAnswer['2'],
-          formattedAge: milestoneAgeFormatted,
-          currentDayText: formatDate(new Date(), 'date'),
-          ...tOpt({t, gender: childData?.gender || child?.gender}),
-        }),
+        body: body,
       });
     },
     loading: !(concernsStatus === 'success' && questionsStatus === 'success' && milestoneStatus === 'success'),

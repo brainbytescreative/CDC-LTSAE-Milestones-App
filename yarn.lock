@@ -4497,10 +4497,10 @@ expo-image-loader@~1.1.1:
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-1.1.1.tgz#6c65bd1a41761c8acb91575060579e4864b93394"
   integrity sha512-qI4opRO2D1MGRAbHxYnMBJ4LzKT17KfqbM5oTxNoMZCRNpzB0xsuJrWy5C+0UOkV0vnqQyjvCtynTSawhWnl9A==
 
-expo-mail-composer@^8.2.1:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/expo-mail-composer/-/expo-mail-composer-8.2.1.tgz#26168b747606a9531801f1322b1690aa22bfe7db"
-  integrity sha512-srZ+yyevorpMONqXoUYAc5alLPix8xCZXhnatyXHPS1a11OOSsjtURjeK0CL4okmIkCSyw2Ug3W6GXfxVgv7Qw==
+expo-mail-composer@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/expo-mail-composer/-/expo-mail-composer-8.3.0.tgz#f8b6a38d88e6df79432368134a9db1f4983d21e4"
+  integrity sha512-ubS5nzCQagvPBPI74TuIjck/OtN4xVWaxcg4ws0i5dwcixHB2RGb3mp7UUZBcYYOgTGbp4NRU648cF5ZXENHoQ==
   dependencies:
     query-string "^6.2.0"
 

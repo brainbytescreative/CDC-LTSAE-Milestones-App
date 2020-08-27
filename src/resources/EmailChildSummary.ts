@@ -9,7 +9,7 @@ const en = `
                 content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title/>
+        <title>Email</title>
     </head>
     <body>
     <div style="padding-bottom: 20px;"><i>{{currentDayText}}</i></div>
@@ -136,7 +136,7 @@ const es = `
                 content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title/>
+        <title>Email</title>
     </head>
     <body>
     <div style="padding-bottom: 20px;"><i>{{currentDayText}}</i></div>

@@ -8,7 +8,7 @@ PODS:
   - EXFileSystem (9.0.1):
     - UMCore
     - UMFileSystemInterface
-  - EXMailComposer (8.2.1):
+  - EXMailComposer (8.3.0):
     - UMCore
     - UMFileSystemInterface
   - EXNotifications (0.4.0):
@@ -674,7 +674,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXApplication: d7ccb60c33fa4d506967ff6adde42a0f872d69ad
   EXFileSystem: 76875135b61708b9afa7e6a89b72a60ba0fdfa20
-  EXMailComposer: a7e2a9f6ad73718dc1ec0bb786200dbc9376e2c2
+  EXMailComposer: c5126fc71f20770ebde5fee3965d54097320ef6d
   EXNotifications: f0f89e5ba8ef5ad7568b9f1e65031a6f40fbd313
   EXPermissions: 80ac3acbdb145930079810fe5b08c022b3428aa8
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245

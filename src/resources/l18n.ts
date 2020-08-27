@@ -39,7 +39,7 @@ export function useChangeLanguage() {
       onSuccess: async () => {
         // return queryCache.invalidateQueries([languageCode]);
         // return queryCache.clear();
-        await queryCache.invalidateQueries(() => true, {refetchActive: false});
+        await queryCache.invalidateQueries(() => true, {refetchActive: true});
       },
     },
   );
