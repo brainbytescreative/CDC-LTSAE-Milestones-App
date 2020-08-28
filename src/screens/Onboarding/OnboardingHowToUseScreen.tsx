@@ -36,19 +36,11 @@ const newUserEsImages = [
 const images = {
   en: {
     new: newUserEnImages,
-    current: [
-      require('./../../resources/images/howto/how_to_current_en_1.png'),
-      require('./../../resources/images/howto/how_to_current_en_2.png'),
-      ...newUserEnImages,
-    ],
+    current: [require('./../../resources/images/howto/how_to_current_en_1.png'), ...newUserEnImages],
   },
   es: {
     new: newUserEsImages,
-    current: [
-      require('./../../resources/images/howto/how_to_current_es_1.png'),
-      require('./../../resources/images/howto/how_to_current_es_2.png'),
-      ...newUserEsImages,
-    ],
+    current: [require('./../../resources/images/howto/how_to_current_es_1.png'), ...newUserEsImages],
   },
 };
 
