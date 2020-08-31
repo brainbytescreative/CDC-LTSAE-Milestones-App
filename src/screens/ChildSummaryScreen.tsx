@@ -2,6 +2,7 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import i18next from 'i18next';
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -432,8 +433,10 @@ const ChildSummaryScreen: React.FC = () => {
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  let {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
+
+  milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
 
   useFocusEffect(
     React.useCallback(() => {

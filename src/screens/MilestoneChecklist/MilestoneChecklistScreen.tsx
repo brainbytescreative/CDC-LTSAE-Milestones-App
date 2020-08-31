@@ -164,8 +164,8 @@ const MilestoneChecklistScreen: React.FC<{
     //   flatListRef.current?.scrollForExtraHeightOnAndroid(-300);
     // } else {
     setTimeout(() => {
-      flatListRef.current?.scrollToPosition(0, 0);
-    }, 300);
+      flatListRef.current?.scrollToPosition(0, 0, false);
+    }, 100);
     // }
 
     switch (val) {

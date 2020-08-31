@@ -271,6 +271,26 @@ export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 
   ],
 });
 
+export const navStateForAppointmentsList = {
+  index: 0,
+  routes: [
+    {
+      name: 'DashboardStack',
+      state: {
+        index: 0,
+        routes: [
+          {
+            name: 'Dashboard',
+            params: {
+              appointments: true,
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
+
 type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];
 
 // Gets the current screen from navigation state

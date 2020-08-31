@@ -14,7 +14,13 @@ import {getAppointmentById} from '../../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../../db/notificationQueries';
 import {PropType, WellChildCheckUpAppointmentAgesEnum, milestonesIds} from '../../resources/constants';
 import {currentScreen} from '../../utils/analytics';
-import {checkMissingMilestones, formattedAge, navStateForAppointmentID, tOpt} from '../../utils/helpers';
+import {
+  checkMissingMilestones,
+  formattedAge,
+  navStateForAppointmentID,
+  navStateForAppointmentsList,
+  tOpt,
+} from '../../utils/helpers';
 import useSetMilestoneAge from '../checklistHooks/useSetMilestoneAge';
 import {ChildDbRecord} from '../childrenHooks';
 // noinspection ES6PreferShortImport
@@ -879,8 +885,9 @@ export function useNavigateNotification() {
         }
         case NotificationCategory.WellCheckUp: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
-          notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          navigator?.navigate('ChildSummaryStack');
+          // notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+          // navigator?.navigate('ChildSummaryStack');
+          navigator?.reset(navStateForAppointmentsList);
           break;
         }
         case NotificationCategory.TipsAndActivities: {
