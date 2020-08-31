@@ -41,8 +41,8 @@ export const formatAge = (childBirth: Date | undefined, options?: {singular?: bo
   let value: number;
 
   if (days < 7) {
-    value = days;
-    ageText = i18next.t('common:day', {count: options?.singular ? 1 : days});
+    value = days > 0 ? days : 0;
+    ageText = i18next.t('common:day', {count: options?.singular ? 1 : value});
   } else if (months < 2) {
     const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
     value = weeks;
