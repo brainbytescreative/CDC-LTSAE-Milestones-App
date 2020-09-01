@@ -26,7 +26,7 @@ export type MilestoneQueryResult =
     }
   | undefined;
 
-export type MilestoneQueryKey = [string, {childBirthday?: Date | string}];
+export type MilestoneQueryKey = [string, {childBirthday?: Date | string; singular?: boolean}];
 
 export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
   birthday: Date;

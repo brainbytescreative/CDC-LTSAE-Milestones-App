@@ -885,9 +885,13 @@ export function useNavigateNotification() {
         }
         case NotificationCategory.WellCheckUp: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
-          // notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
-          // navigator?.navigate('ChildSummaryStack');
-          navigator?.reset(navStateForAppointmentsList);
+          if ([1, 15, 30].includes(Number(notificationData.milestoneId))) {
+            navigator?.reset(navStateForAppointmentsList);
+          } else {
+            notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+            navigator?.navigate('MilestoneChecklistStack');
+          }
+
           break;
         }
         case NotificationCategory.TipsAndActivities: {
@@ -902,7 +906,12 @@ export function useNavigateNotification() {
           });
           break;
         }
-        case NotificationCategory.Milestone:
+        case NotificationCategory.Milestone: {
+          notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
+          notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));
+          navigator?.navigate('MilestoneChecklistStack');
+          break;
+        }
         case NotificationCategory.Recommendation: {
           notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           notificationData?.milestoneId && (await setMilestoneAge(notificationData.milestoneId));

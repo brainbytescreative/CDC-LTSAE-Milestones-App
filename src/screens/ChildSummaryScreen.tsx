@@ -34,6 +34,7 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import {formattedAge} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -433,10 +434,11 @@ const ChildSummaryScreen: React.FC = () => {
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
-  let {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
-  milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
+  const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
+  const milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(ageText) : ageText;
 
   useFocusEffect(
     React.useCallback(() => {
