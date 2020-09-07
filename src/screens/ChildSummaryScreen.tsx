@@ -437,6 +437,7 @@ const ChildSummaryScreen: React.FC = () => {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
+  // fixme make a separate helper
   const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
   const milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(ageText) : ageText;
 

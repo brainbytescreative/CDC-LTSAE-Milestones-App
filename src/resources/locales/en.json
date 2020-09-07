@@ -14,6 +14,7 @@
         "unreadNotifications": "Number of unread notifications: {{count}}"
     },
     "addAppointment": {
+        "button": "Add Appointment",
         "edit-title": "Edit appointment",
         "title": "Add Appointment"
     },
@@ -202,6 +203,7 @@
         "quickViewMessage": "Here’s a quick look at all of the {{section}} milestones most children reach by {{milestone}}.",
         "quickViewMessageActEarly": "<1>If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening.</1> Don't wait. Acting early can make a real difference! For more information, visit <0>www.cdc.gov/Concerned</0>",
         "quickViewMessageBirthDay": "Here's a quick look at all of the {{section}} milestones most children reach by their {{milestone}} birthday",
+        "quickviewAge": "{{age}}\n$t(milestoneChecklist:milestoneQuickView)",
         "section-actEarly": "When to \nAct Early",
         "section-cognitive": "$t(skillTypes:cognitive)",
         "section-language": "$t(skillTypes:language)",

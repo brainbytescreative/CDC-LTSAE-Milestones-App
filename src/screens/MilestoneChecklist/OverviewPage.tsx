@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
+import i18next from 'i18next';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
@@ -50,8 +51,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
     <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
         <View style={{flexGrow: 1}}>
-          <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
-          <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
+          <Text style={[styles.header, {marginTop: 20}]}>{t('quickviewAge', {age: milestoneAgeFormatted})}</Text>
           {section !== 'actEarly' ? (
             <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
               {isBirthday

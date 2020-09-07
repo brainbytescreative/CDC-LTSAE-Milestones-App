@@ -145,7 +145,7 @@ const es = `
             milestones. A summary of your responses and other helpful information
             are below.</b> #}
        <b>
-            Gracias por usar la aplicación Milestone Tracker de los CDC para registrar los indicadores del 
+            Gracias apor usar la aplicación Sigamos el Desarrollo de los CDC para registrar los indicadores del 
             desarrollo de {{ childName }}. A continuación se incluye un resumen de sus respuestas y de otra información útil.
        </b>
     </div>

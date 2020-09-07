@@ -176,7 +176,7 @@ const AddAppointmentScreen: React.FC = () => {
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 32}}>
             <AEButtonRounded disabled={disabled} onPress={formik.handleSubmit} style={{marginBottom: 0}}>
-              {apptId ? t('common:done') : t('title')}
+              {apptId ? t('common:done') : t('button')}
             </AEButtonRounded>
             <AEButtonRounded
               onPress={() => {

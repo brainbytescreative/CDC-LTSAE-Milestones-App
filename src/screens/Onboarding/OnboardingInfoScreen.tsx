@@ -80,7 +80,7 @@ const OnboardingInfoScreen: React.FC = () => {
               }}>
               {Array.from(new Array(5)).map((value, index) => (
                 <View style={[{flexDirection: 'row'}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
-                  <Text style={[sharedStyle.boldText, {fontSize: 15}]}>{'+   '}</Text>
+                  <Text style={[sharedStyle.boldText, {fontSize: 15}]}>{'•   '}</Text>
                   <Text style={[{fontSize: 15}]}>{t('list', {context: `${index}`})}</Text>
                 </View>
               ))}
@@ -110,7 +110,7 @@ const OnboardingInfoScreen: React.FC = () => {
               setVisible(false);
             }}
             visible={visible}>
-            <LanguageSelector title={'Select a Language/\nSeleccione Un Idioma'} />
+            <LanguageSelector title={'Select a Language/Seleccione un idioma'} />
             <TouchableOpacity
               accessibilityRole={'button'}
               onPress={() => {
