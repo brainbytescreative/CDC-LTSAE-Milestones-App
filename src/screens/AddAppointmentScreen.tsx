@@ -17,7 +17,7 @@ import NavBarBackground from '../components/Svg/NavBarBackground';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '../hooks/appointmentsHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {colors} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import {addAppointmentSchema} from '../resources/validationSchemas';
 import {trackInteractionByType} from '../utils/analytics';
 
@@ -170,6 +170,7 @@ const AddAppointmentScreen: React.FC = () => {
               onChangeText={formik.handleChange('questions') as any}
               placeholder={t('fields:questionsPlaceholder')}
             />
+            <Text style={[{textAlign: 'right', marginTop: 20}, sharedStyle.required]}>{t('common:required')}</Text>
           </View>
         </AEKeyboardAvoidingView>
         <View style={{marginTop: 47}}>
