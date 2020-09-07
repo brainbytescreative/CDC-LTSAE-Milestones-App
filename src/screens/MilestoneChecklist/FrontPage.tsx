@@ -8,15 +8,17 @@ import AEButtonMultiline from '../../components/AEButtonMultiline';
 import AEScrollView from '../../components/AEScrollView';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
+import {formattedAgeSingular} from '../../utils/helpers';
 
 interface Props {
   onGetStarted: () => void;
-  milestoneAgeFormatted: string | undefined;
+  milestoneAge: number | undefined;
 }
 
-const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAgeFormatted}) => {
+const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAge}) => {
   const {t} = useTranslation('milestoneChecklist');
   const {bottom} = useSafeAreaInsets();
+  const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
   return (
     <AEScrollView>
       <View style={{flexGrow: 1}}>

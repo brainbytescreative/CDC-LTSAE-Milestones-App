@@ -14,7 +14,7 @@
         "unreadNotifications": "Number of unread notifications: {{count}}"
     },
     "addAppointment": {
-        "button": "Add Appointment",
+        "button": "Add appointment",
         "edit-title": "Edit appointment",
         "title": "Add Appointment"
     },
@@ -24,14 +24,14 @@
         "boy": "Boy",
         "changePhoto": "Change photo",
         "correctedAgeLink": "http://bit.ly/2RUpEu1",
-        "dateHint": "Hint: Select the year first.",
+        "dateHint": "Hint: select the year first.",
         "drawerLabel": "Children & Add Child",
         "edit-title": "Edit child",
         "girl": "Girl",
         "note": "If your child was born prematurely, enter their actual birth date, but use the checklist based on your child’s corrected age. If the corrected age is between checklists, use the checklist for the younger age.",
         "noteClick": "Click here to calculate corrected age.",
         "prematureQuestion": "Was your child born prematurely?",
-        "selectOne": "Select One*",
+        "selectOne": "Select one*",
         "title": "Add a Child"
     },
     "alert": {
@@ -59,7 +59,7 @@
         "editNote": "Edit note",
         "emailSummary": "$t(common:emailSummary)",
         "findElLink": "https://www.cdc.gov/ncbddd/actearly/parents/states.html?s_cid=ncbddd_act_mt_app_sum2_state",
-        "message1": "Below are the responses you entered \nfor {{name}}.\n\nClick \"Email Summary\" below to email a summary of your child's milestones to yourself or other care providers.\n\nClick \"Show Doctor\" to share a summary during your child's doctor visit.\n\nIf you have noted any concerns or selected “not yet” or “not sure” for any milestones, talk to your child’s doctor, share the summary, ask for developmental screening, and go to <0>cdc.gov/FindEl</0> to learn more about services that can help. For more information, visit <1>cdc.gov/Concerned</1>.",
+        "message1": "Below are the responses you entered \nfor {{name}}.\n\n• Click <2>\"Email Summary\"</2> below to email a summary of your child's milestones to yourself or other care providers.\n\n• Click <2>\"Show Doctor\"</2> to share a summary during your child's doctor visit.\n\nIf you have noted any concerns or selected “not yet” or “not sure” for any milestones, talk to your child’s doctor, share the summary, ask for developmental screening, and go to <0>cdc.gov/FindEl</0> to learn more about services that can help. For more information, visit <1>cdc.gov/Concerned</1>.",
         "notSure": "Not Sure",
         "notYet": "Not Yet",
         "note": "Note",
@@ -201,7 +201,7 @@
         "myChildSummary": "My Child’s Summary",
         "nextSection": "Next Section",
         "quickViewMessage": "Here’s a quick look at all of the {{section}} milestones most children reach by {{milestone}}.",
-        "quickViewMessageActEarly": "<1>If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening.</1> Don't wait. Acting early can make a real difference! For more information, visit <0>www.cdc.gov/Concerned</0>",
+        "quickViewMessageActEarly": "<1>If you select any of the items below, it's important to act early by talking with your child's doctor and asking for developmental screening.</1> Don't wait. Acting early can make a real difference! For more information, visit\n<0>www.cdc.gov/Concerned</0>",
         "quickViewMessageBirthDay": "Here's a quick look at all of the {{section}} milestones most children reach by their {{milestone}} birthday",
         "quickviewAge": "{{age}}\n$t(milestoneChecklist:milestoneQuickView)",
         "section-actEarly": "When to \nAct Early",

@@ -1,5 +1,4 @@
 import {useFocusEffect} from '@react-navigation/native';
-import i18next from 'i18next';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
@@ -12,6 +11,7 @@ import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
 import {Section, colors, sharedStyle, skillTypes} from '../../resources/constants';
+import {formattedAgeSingular} from '../../utils/helpers';
 
 interface Props {
   onNext: () => void;
@@ -47,11 +47,13 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
   const isBirthday: boolean = Number(milestoneAge) % 12 === 0;
   const yearMilestone = t(`common:birthday_${Number(milestoneAge) / 12}`, {count: 2});
 
+  const headerAgeText = formattedAgeSingular(t, milestoneAge);
+
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
         <View style={{flexGrow: 1}}>
-          <Text style={[styles.header, {marginTop: 20}]}>{t('quickviewAge', {age: milestoneAgeFormatted})}</Text>
+          <Text style={[styles.header, {marginTop: 20}]}>{t('quickviewAge', {age: headerAgeText})}</Text>
           {section !== 'actEarly' ? (
             <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
               {isBirthday
@@ -64,7 +66,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => Linking.openURL(t('childSummary:concernedLink'))}
-                  style={{textDecorationLine: 'underline'}}
+                  style={{textDecorationLine: 'underline', textAlign: 'center'}}
                 />
               </Trans>
             </Text>

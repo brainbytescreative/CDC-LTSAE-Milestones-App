@@ -24,7 +24,7 @@ type NavigationProp = CompositeNavigationProp<
 >;
 
 const MilestoneChecklistGetStartedScreen: React.FC = () => {
-  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
   const navigation = useNavigation<NavigationProp>();
@@ -66,7 +66,7 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      <FrontPage milestoneAgeFormatted={milestoneAgeFormatted} onGetStarted={onGetStarted} />
+      <FrontPage milestoneAge={milestoneAge} onGetStarted={onGetStarted} />
     </View>
   );
 };

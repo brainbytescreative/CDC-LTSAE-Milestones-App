@@ -215,7 +215,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                 onPress={() => {
                   Linking.openURL(t('actEarlyMessageLink'));
                 }}
-                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
             </Trans>

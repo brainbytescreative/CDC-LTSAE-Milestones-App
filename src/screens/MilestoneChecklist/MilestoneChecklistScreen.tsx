@@ -25,7 +25,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
-import {slowdown} from '../../utils/helpers';
+import {formattedAgeSingular, slowdown} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -41,10 +41,11 @@ const QuestionsList: React.FC<{
   onPressNextSection: () => void;
 }> = withSuspense(
   ({flatListRef, section, onPressNextSection}) => {
-    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
-    const milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted ?? '';
-    const childId = useGetCurrentChild().data?.id;
     const {t} = useTranslation('milestoneChecklist');
+    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
+    const milestoneAge = useGetMilestone().data?.milestoneAge;
+    const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+    const childId = useGetCurrentChild().data?.id;
 
     return (
       <KeyboardAwareFlatList

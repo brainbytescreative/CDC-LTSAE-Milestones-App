@@ -234,6 +234,12 @@ export function formattedAge(milestoneAge: number, t: TFunction, singular = fals
   return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
 }
 
+export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
+  const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
+  console.log(milestoneAge);
+  return i18next.language === 'en' ? _.startCase(ageText) : ageText;
+};
+
 export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
   hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
   heSheTag: t('common:heSheTag', {context: `${gender}`}),

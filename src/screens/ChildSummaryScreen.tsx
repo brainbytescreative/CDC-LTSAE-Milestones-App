@@ -2,7 +2,6 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import i18next from 'i18next';
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -34,7 +33,7 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
-import {formattedAge} from '../utils/helpers';
+import {formattedAgeSingular} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -437,9 +436,7 @@ const ChildSummaryScreen: React.FC = () => {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
-  // fixme make a separate helper
-  const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
-  const milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(ageText) : ageText;
+  const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -464,9 +461,11 @@ const ChildSummaryScreen: React.FC = () => {
       <KeyboardAwareScrollView
         enableOnAndroid={Platform.OS === 'android'}
         bounces={false}
-        contentContainerStyle={{
-          paddingBottom: bottom ? bottom + 32 : 72,
-        }}
+        contentContainerStyle={
+          {
+            // paddingBottom: bottom ? bottom + 32 : 72,
+          }
+        }
         extraHeight={Platform.select({
           ios: 200,
         })}>
@@ -496,6 +495,7 @@ const ChildSummaryScreen: React.FC = () => {
                 onPress={() => Linking.openURL(t('concernedLink'))}
                 style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
               />
+              <Text style={[sharedStyle.boldText]} />
             </Trans>
           </Text>
           {/*<Text>Show your doctor or email summary</Text>*/}
@@ -521,28 +521,32 @@ const ChildSummaryScreen: React.FC = () => {
           </View>
         </View>
         <SummaryItems />
-        <AEButtonRounded
-          style={{marginTop: 40}}
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: 'DashboardStack',
-                  state: {
-                    index: 1,
-                    routes: [
-                      {
-                        name: 'Dashboard',
+        <View style={{marginTop: 30}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingBottom: bottom ? bottom + 32 : 32, paddingTop: 16}}>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'DashboardStack',
+                      state: {
+                        index: 1,
+                        routes: [
+                          {
+                            name: 'Dashboard',
+                          },
+                        ],
                       },
-                    ],
-                  },
-                },
-              ],
-            });
-          }}>
-          {t('common:done')}
-        </AEButtonRounded>
+                    },
+                  ],
+                });
+              }}>
+              {t('common:done')}
+            </AEButtonRounded>
+          </View>
+        </View>
       </KeyboardAwareScrollView>
     </View>
   );
