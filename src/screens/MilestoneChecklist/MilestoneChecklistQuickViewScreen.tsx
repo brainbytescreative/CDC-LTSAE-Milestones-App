@@ -56,7 +56,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           // } else {
           //   navigation.navigate('MilestoneChecklist');
           // }
-          if (section === _.last(skillTypes)) {
+          if (section === _.last(checklistSections)) {
             setSection(skillTypes[0]);
           } else {
             setSection(checklistSections[checklistSections.indexOf(section) + 1]);

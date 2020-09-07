@@ -80,7 +80,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 marginHorizontal: 48,
                 marginTop: 15,
               }}>
-              <Text style={{fontSize: 15, marginRight: 15}}>{'+'}</Text>
+              <Text style={{fontSize: 15, marginRight: 15}}>{'•'}</Text>
               <View
                 style={{
                   flexGrow: 1,
