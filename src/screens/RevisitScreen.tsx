@@ -139,6 +139,17 @@ const RevisitScreen: React.FC = () => {
             ]}>
             {t('timeToCelebrate', {name: child?.name})}
           </Text>
+          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+            <Text style={styles.blockText}>
+              {t('notSure', {
+                milestoneAge: milestoneAgeFormatted,
+              })}
+            </Text>
+          </View>
+          <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32}]}>{t('unsureTip')}</Text>
+          {data?.groupedByAnswer['1']?.map((item, index) => (
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
+          ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
             <Text style={styles.blockText}>
               {t('yes', {
@@ -158,16 +169,6 @@ const RevisitScreen: React.FC = () => {
           </View>
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} id={item.id} note={item.note} />
-          ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
-            <Text style={styles.blockText}>
-              {t('notSure', {
-                milestoneAge: milestoneAgeFormatted,
-              })}
-            </Text>
-          </View>
-          {data?.groupedByAnswer['1']?.map((item, index) => (
-            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
 
           <Text

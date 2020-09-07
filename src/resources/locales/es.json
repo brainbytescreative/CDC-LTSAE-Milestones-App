@@ -266,6 +266,7 @@
         "thankYouText2": "Gracias apor usar la aplicación Sigamos el Desarrollo de los CDC.\n\nObtenga más información sobre los indicadores del desarrollo y sobre cómo reaccionar pronto si tiene inquietudes en <0>cdc.gov/ActEarly.</0>",
         "timeToCelebrate": "Tómese un tiempo para CELEBRAR que {{name}} alcanzó estos indicadores del desarrollo importantes:",
         "unanswered": "Indicadores del desarrollo para {{milestoneAge}} de vida que se saltó",
+        "unsureTip": "REVISIT these milestones and talk with the doctor if you are still unsure",
         "yellowTip": "Usted es quien mejor conoce a {{childName}}. Si no alcanza algún indicador del desarrollo o en algún momento le preocupa su desarrollo, hable con el médico, coméntele sus inquietudes y pídale una evaluación del desarrollo.",
         "yes": "Indicadores del desarrollo para {{milestoneAge}} de vida que marcó \"Sí\""
     },
