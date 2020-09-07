@@ -1,4 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
+import i18next from 'i18next';
+import _ from 'lodash';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking, StyleSheet, View} from 'react-native';
@@ -49,7 +51,8 @@ const RevisitScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  let milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted;
+  milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -118,15 +121,17 @@ const RevisitScreen: React.FC = () => {
           {data?.groupedByAnswer['2']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
-          <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
-            <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
-              <Text
-                accessibilityRole={'link'}
-                onPress={() => Linking.openURL(t('concernedLink'))}
-                style={{textDecorationLine: 'underline'}}
-              />
-            </Trans>
-          </Text>
+          {data?.groupedByAnswer['2']?.length && (
+            <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
+              <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('concernedLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
+              </Trans>
+            </Text>
+          )}
           <Text
             style={[
               {
