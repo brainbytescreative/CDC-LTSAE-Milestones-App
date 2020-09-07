@@ -49,7 +49,7 @@ const RevisitScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
-  const {data: {milestoneAgeFormattedDashes} = {}} = useGetMilestone();
+  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -97,7 +97,7 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>
               {t('notYet', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
@@ -128,7 +128,7 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
             <Text style={styles.blockText}>
               {t('yes', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
@@ -138,7 +138,7 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>
               {t('unanswered', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
@@ -148,7 +148,7 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>
               {t('notSure', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
