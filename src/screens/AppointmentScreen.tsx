@@ -92,14 +92,23 @@ const AppointmentScreen: React.FC = () => {
               style={{marginBottom: 0}}>
               {t('common:edit')}
             </AEButtonMultiline>
+            {/*<AEButtonMultiline*/}
+            {/*  onPress={() => {*/}
+            {/*    trackSelectByType('Show Doctor');*/}
+            {/*    navigation.navigate('Revisit');*/}
+            {/*  }}*/}
+            {/*  disabled={loading}*/}
+            {/*  style={{marginTop: 10, marginBottom: 0}}>*/}
+            {/*  {t('childSummary:showDoctor')}*/}
+            {/*</AEButtonMultiline>*/}
             <AEButtonMultiline
               onPress={() => {
-                trackSelectByType('Show Doctor');
-                navigation.navigate('Revisit');
+                trackSelectByType('My Child Summary');
+                navigation.navigate('ChildSummary');
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 0}}>
-              {t('childSummary:showDoctor')}
+              {t('common:viewSummary')}
             </AEButtonMultiline>
             <AEButtonMultiline
               onPress={() => {

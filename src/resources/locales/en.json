@@ -111,6 +111,7 @@
         "notifications": "Notifications",
         "required": "* Required",
         "timeFormat": "h:mm a",
+        "viewSummary": "View Summary",
         "week": "{{count}} week",
         "week_plural": "{{count}} weeks",
         "year": "{{count}} year",
