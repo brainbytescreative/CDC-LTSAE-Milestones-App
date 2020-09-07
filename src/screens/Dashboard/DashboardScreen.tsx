@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {differenceInWeeks, format} from 'date-fns';
 import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {queryCache} from 'react-query';
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     alignItems: 'center',
-    padding: 5,
+    padding: 7,
   },
   actionItemText: {
     fontSize: 15,
@@ -158,6 +158,54 @@ const YellowBoxSuspended: React.FC = withSuspense(
   <View />,
 );
 
+const Buttons = () => {
+  const {t} = useTranslation('dashboard');
+  const navigation = useNavigation<Props['navigation']>();
+  const fontSize = Math.ceil((Dimensions.get('screen').width * 11) / 320);
+
+  return (
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TouchableOpacity
+        onPress={() => {
+          trackSelectByType('When to Act Early');
+          navigation.navigate('WhenActEarly');
+        }}
+        style={styles.actionItem}>
+        <ActEarlySign />
+        <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+          {t('whenToActEarly')}
+        </Text>
+      </TouchableOpacity>
+      <View style={[styles.actionItem, {marginHorizontal: 10}]}>
+        <TouchableOpacity
+          style={[{alignItems: 'center'}]}
+          onPress={() => {
+            trackSelectByType('My Child Summary');
+            navigation.navigate('ChildSummary');
+          }}>
+          <MilestoneSummarySign />
+          <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+            {t('milestoneSummary')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.actionItem}>
+        <TouchableOpacity
+          onPress={() => {
+            trackSelectByType('Tips');
+            navigation.navigate('TipsAndActivities');
+          }}
+          style={{alignItems: 'center'}}>
+          <TipsAndActivitiesSign />
+          <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+            {t('tipsAndActivities')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
 const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scrollViewRef}) => {
   const navigation = useNavigation<Props['navigation']>();
   const route = useRoute<Props['route']>();
@@ -198,46 +246,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
           {/*    age: `${milestoneAgeFormatted || '  '}`,*/}
           {/*  })}*/}
           {/*</Text>*/}
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity
-              onPress={() => {
-                trackSelectByType('When to Act Early');
-                navigation.navigate('WhenActEarly');
-              }}
-              style={styles.actionItem}>
-              <ActEarlySign />
-              <Text numberOfLines={0} adjustsFontSizeToFit style={styles.actionItemText}>
-                {t('whenToActEarly')}
-              </Text>
-            </TouchableOpacity>
-            <View style={[styles.actionItem, {marginHorizontal: 10}]}>
-              <TouchableOpacity
-                style={[{alignItems: 'center'}]}
-                onPress={() => {
-                  trackSelectByType('My Child Summary');
-                  navigation.navigate('ChildSummary');
-                }}>
-                <MilestoneSummarySign />
-                <Text numberOfLines={0} style={styles.actionItemText}>
-                  {t('milestoneSummary')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.actionItem}>
-              <TouchableOpacity
-                onPress={() => {
-                  trackSelectByType('Tips');
-                  navigation.navigate('TipsAndActivities');
-                }}
-                style={{alignItems: 'center'}}>
-                <TipsAndActivitiesSign />
-                <Text numberOfLines={0} style={styles.actionItemText}>
-                  {t('tipsAndActivities')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Buttons />
         </View>
         <View
           onLayout={(event) => {
