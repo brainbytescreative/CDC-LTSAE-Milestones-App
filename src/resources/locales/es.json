@@ -344,7 +344,7 @@
         "drawerLabel": "$t(tipsAndActivities:title)",
         "like": "Me gusta",
         "remindMe": "Recordarme",
-        "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} {{childAge}} hoy",
+        "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} de {{childAge}} hoy",
         "title": "Consejos y actividades"
     }
 }
