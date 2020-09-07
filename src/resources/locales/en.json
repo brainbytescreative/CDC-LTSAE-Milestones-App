@@ -175,7 +175,7 @@
     },
     "info": {
         "aboutThisApp": "About this App",
-        "aboutThisAppText": "This app was developed by the Centers for Disease Control and Prevention’s “Learn the Signs. Act Early.” program (<0>www.cdc.gov/ActEarly</0>) with contribution from Dr. Rosa Arriaga and students from the Computing for Good program at \nthe Georgia Institute of Technology, Atlanta, GA.\n\nThis app includes the following features to make tracking your child’s important developmental milestones easy and fun: \n\n<1>Add A Child</1> - enter personalized information about your child or multiple children\n\n<1>Milestone Tracker</1> - track your child’s developmenal progress by looking for important milestones using an interactive, illustrated checklist\n\n<1>Milestone Photos and Videos</1> - know what each milestone looks like so that you can better identify them in your own child\n\n<1>Tips and Activities</1> - support your child’s development at every age\n\n<1>When to Act Early</1> - know when it’s time to “act early” and talk with your child’s doctor about developmental concerns\n\n<1>Appointments</1> - keep track of your child’s doctors’ appointments and get reminders about recommended developmental screenings\n\n<1>Milestone Results</1> - get a summary of your child’s milestones to view, and share with or email to your child’s doctor and other important care providers\n\nThe use of this app is NOT a substitute for the use of validated, standardized devleopmental screening tools as recommended by the American Academy of Pediatrics. \n\nFor more information and free tools to help you track your child’s milestones, visit <2>www.cdc.gov/ActEarly</2>",
+        "aboutThisAppText": "This app was developed by the Centers for Disease Control and Prevention’s “Learn the Signs. Act Early.” program (<0>www.cdc.gov/ActEarly</0>) with contribution from Dr. Rosa Arriaga and students from the Computing for Good program at the Georgia Institute of Technology, Atlanta, GA.\n\nThis app includes the following features to make tracking your child’s important developmental milestones easy and fun: \n\n<1>Add A Child</1> - enter personalized information about your child or multiple children\n\n<1>Milestone Tracker</1> - track your child’s developmenal progress by looking for important milestones using an interactive, illustrated checklist\n\n<1>Milestone Photos and Videos</1> - know what each milestone looks like so that you can better identify them in your own child\n\n<1>Tips and Activities</1> - support your child’s development at every age\n\n<1>When to Act Early</1> - know when it’s time to “act early” and talk with your child’s doctor about developmental concerns\n\n<1>Appointments</1> - keep track of your child’s doctors’ appointments and get reminders about recommended developmental screenings\n\n<1>Milestone Results</1> - get a summary of your child’s milestones to view, and share with or email to your child’s doctor and other important care providers\n\nThe use of this app is NOT a substitute for the use of validated, standardized devleopmental screening tools as recommended by the American Academy of Pediatrics. \n\nFor more information and free tools to help you track your child’s milestones, visit <2>www.cdc.gov/ActEarly</2>",
         "actEarlyLink": "https://www.cdc.gov/ncbddd/actearly/index.html?s_cid=ncbddd_act_mt_app_info2",
         "drawerLabel": "App Info & Privacy Policy ",
         "privacyPolicy": "Privacy Policy",
@@ -275,7 +275,7 @@
         "drawerLabel": "Notifications & User Settings ",
         "notificationSettings": "Notification Settings ",
         "requiredForState": "*required for state",
-        "statePrivacyLanguage": "Milestone Tracker asks for state and territory to learn where the app is being used. \nIt does not collect or share any personal information that could be used to identify you or your child.",
+        "statePrivacyLanguage": "Milestone Tracker asks for state and territory to learn where the app is being used. It does not collect or share any personal information that could be used to identify you or your child.",
         "userProfile": "User Profile"
     },
     "skillTypes": {
@@ -344,7 +344,7 @@
     },
     "tipsAndActivities": {
         "all": "All",
-        "drawerLabel": "$t(tipsAndActivities:title)",
+        "drawerLabel": "Tips & Activities",
         "like": "Like",
         "remindMe": "Remind Me",
         "subtitle": "You can help your {{babyOrChild}} learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old {{babyOrChild}} today.",

@@ -65,9 +65,12 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
               <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
                 <Text
                   accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('childSummary:concernedLink'))}
-                  style={{textDecorationLine: 'underline', textAlign: 'center'}}
+                  onPress={() => {
+                    Linking.openURL(t('actEarlyMessageLink'));
+                  }}
+                  style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
                 />
+                <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
               </Trans>
             </Text>
           )}

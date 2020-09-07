@@ -193,7 +193,7 @@
         "answer_unsure": "No estoy seguro",
         "answer_yes": "Sí",
         "complete": "Completa",
-        "drawerLabel": "Lista de verificación",
+        "drawerLabel": "Lista de indicadores",
         "incomplete": "incompleta",
         "message1": "La app Sigamos el Desarrollo tiene listas de verificación para las edades de 2, 4, 6, 9, 12 y 18 meses, y de los 2 a los 5 años.",
         "message2": "Si la edad de su hijo está entre dos listas de verificación, complete la lista de la edad menor.",
@@ -275,7 +275,7 @@
         "drawerLabel": "Notificaciones y configuraciones del usuario",
         "notificationSettings": "Configuración para recibir notificaciones",
         "requiredForState": "* Requerido",
-        "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. \nNo se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
+        "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. No se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
         "userProfile": "Configuraciones de la cuenta"
     },
     "skillTypes": {
