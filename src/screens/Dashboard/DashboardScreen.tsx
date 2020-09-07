@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
   },
   actionItemText: {
     fontSize: 15,
@@ -207,7 +207,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
               }}
               style={styles.actionItem}>
               <ActEarlySign />
-              <Text numberOfLines={3} adjustsFontSizeToFit style={styles.actionItemText}>
+              <Text numberOfLines={0} adjustsFontSizeToFit style={styles.actionItemText}>
                 {t('whenToActEarly')}
               </Text>
             </TouchableOpacity>
@@ -219,7 +219,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
                   navigation.navigate('ChildSummary');
                 }}>
                 <MilestoneSummarySign />
-                <Text numberOfLines={3} adjustsFontSizeToFit style={styles.actionItemText}>
+                <Text numberOfLines={0} style={styles.actionItemText}>
                   {t('milestoneSummary')}
                 </Text>
               </TouchableOpacity>
@@ -232,7 +232,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
                 }}
                 style={{alignItems: 'center'}}>
                 <TipsAndActivitiesSign />
-                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
+                <Text numberOfLines={0} style={styles.actionItemText}>
                   {t('tipsAndActivities')}
                 </Text>
               </TouchableOpacity>

@@ -19,7 +19,7 @@
         "title": "Add Appointment"
     },
     "addChild": {
-        "addAnotherChild": "+ Add another child",
+        "addAnotherChild": "+ Add Another Child",
         "addPhoto": "Add a photo",
         "boy": "Boy",
         "changePhoto": "Change photo",
@@ -109,7 +109,7 @@
         "month_plural": "{{count}} months",
         "next": "Next",
         "notifications": "Notifications",
-        "required": "* required",
+        "required": "* Required",
         "timeFormat": "h:mm a",
         "week": "{{count}} week",
         "week_plural": "{{count}} weeks",

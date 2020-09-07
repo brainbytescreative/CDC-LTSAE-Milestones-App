@@ -145,23 +145,23 @@
         "emailSubject": "Resumen de los indicadores del desarrollo de los {{milestone}} de {{name}}"
     },
     "fields": {
-        "appointmentNotifications": "Notificaciones de citas",
+        "appointmentNotifications": "Citas",
         "apptTypePlaceholder": "Tipo o descripción de la cita",
         "childNamePlaceholder": "Nombre del niño *",
         "dateOfBirthPlaceholder": "Fecha de nacimiento *",
         "datePlaceholder": "Fecha",
         "doctorPlaceholder": "Nombre del proveedor",
-        "guardianPlaceholder": "Padre/tutor legal",
-        "milestoneNotifications": "Notificaciones de siguiente lista",
+        "guardianPlaceholder": "Usuario o cuidador",
+        "milestoneNotifications": "Siguiente lista de verificación",
         "notesConcernsPlaceholder": "Preguntas/inquietudes/notas",
         "offLabel": "Desactivadas",
         "onLabel": "Activadas",
         "questionsPlaceholder": "Preguntas/inquietudes/notas",
-        "recommendationNotifications": "Notificaciones de recomendaciones",
+        "recommendationNotifications": "Recomendaciones",
         "requiredFieldsError": "Please fill out required fields",
         "territoryPlaceholder": "Estado o territorio *",
         "timePlaceholder": "Hora",
-        "tipsAndActivitiesNotification": "Notificaciones de consejos y actividades"
+        "tipsAndActivitiesNotification": "Consejos y actividades"
     },
     "guardianTypes": {
         "WICProvider": "Proveedor de WIC ",
@@ -174,7 +174,7 @@
     },
     "info": {
         "aboutThisApp": "Acerca de esta aplicación",
-        "aboutThisAppText": "Esta aplicación fue desarrollada por el programa <0>www.cdc.gov/ActEarly</0>, de los Centros para el Control y la Prevención de Enfermedades, con el aporte de la Dra.Rosa Arriaga y alumnos del programa Computing for Good (Informática para una Buena Causa) del Georgia Institute of Technology, Atlanta, GA.\n\nEsta aplicación incluye las siguientes características para que el seguimiento de los indicadores importantes del desarrollo de su hijo sea fácil y divertido:\n\n<1>Agregar un niño</1> - Ingrese información personalizada de su hijo o hijos\n\n<1>Sigamos el Desarrollo</1> - Haga un seguimiento de cómo progresa el desarrollo de su hijo al analizar indicadores importantes mediante una lista de verificación interactiva e ilustrada\n\n<1>Fotografías y video de indicadores del desarrollo</1> - Conozca cómo es cada indicador para poder identificarlo mejor en su propio hijo\n\n<1>Consejos y actividades</1> - Apoye el desarrollo de su hijo en cada edad\n\n<1>Cuándo reaccionar pronto</1> - Conozca cuándo es hora de “reaccionar pronto” y hable con el médico de su hijo sobre sus inquietudes en relación con el desarrollo\n\n<1>Citas</1> - Lleve un registro de las citas con el médico de su hijo y reciba recordatorios sobre las evaluaciones del desarrollo que se recomiendan\n\n<1>Resultados de los indicadores del desarrollo</1> - Reciba un resumen de los indicadores de su hijo y compártalo con el médico y otros proveedores de atención importantes de su hijo o envíeselos por correo electrónico.\n\nEl uso de esta aplicación NO sustituye el uso de herramientas de evaluación del desarrollo estandarizadas y validadas, recomendadas por la Academia Estadounidense de Pediatría.\n\nPara obtener más información y herramientas gratuitas que lo ayuden a realizar un seguimiento de los indicadores del desarrollo de su hijo, visite <2>www.cdc.gov/ActEarly</2>.",
+        "aboutThisAppText": "Esta aplicación fue desarrollada por el programa <0>www.cdc.gov/ActEarly</0>, de los Centros para el Control y la Prevención de Enfermedades, con el aporte de la Dra. Rosa Arriaga y alumnos del programa Computing for Good (Informática para una Buena Causa) del Georgia Institute of Technology, Atlanta, GA.\n\nEsta aplicación incluye las siguientes características para que el seguimiento de los indicadores importantes del desarrollo de su hijo sea fácil y divertido:\n\n<1>Agregar un niño</1> - Ingrese información personalizada de su hijo o hijos\n\n<1>Seguir el Desarrollo</1> - Haga un seguimiento de cómo progresa el desarrollo de su hijo al analizar indicadores importantes mediante una lista de verificación interactiva e ilustrada\n\n<1>Fotografías y videos de indicadores del desarrollo</1> - Conozca cómo es cada indicador para poder identificarlo mejor en su propio hijo\n\n<1>Consejos y actividades</1> - Apoye el desarrollo de su hijo en cada edad\n\n<1>Cuándo reaccionar pronto</1> - Conozca cuándo es hora de “reaccionar pronto” y hable con el médico de su hijo sobre sus inquietudes en relación con el desarrollo\n\n<1>Citas</1> - Lleve un registro de las citas con el médico de su hijo y reciba recordatorios sobre las evaluaciones del desarrollo que se recomiendan\n\n<1>Resultados de los indicadores del desarrollo</1> - Reciba un resumen de los indicadores de su hijo y compártalo con el médico y otros proveedores de atención importantes de su hijo o envíeselos por correo electrónico.\n\nEl uso de esta aplicación NO sustituye el uso de herramientas de evaluación del desarrollo estandarizadas y validadas, recomendadas por la Academia Estadounidense de Pediatría.\n\nPara obtener más información y herramientas gratuitas que lo ayudan a seguir los indicadores del desarrollo de su hijo, visite <2>www.cdc.gov/ActEarly</2>.",
         "actEarlyLink": "https://www.cdc.gov/ncbddd/spanish/actearly/index.html?s_cid=ncbddd_act_mt_app_sp_info2",
         "drawerLabel": "Información sobre la app y política de privacidad",
         "privacyPolicy": "Política de privacidad",
@@ -270,7 +270,7 @@
     },
     "settings": {
         "drawerLabel": "Notificaciones y configuraciones del usuario",
-        "notificationSettings": "Configuración de la notificacion",
+        "notificationSettings": "Configuración para recibir notificaciones",
         "requiredForState": "* Requerido",
         "statePrivacyLanguage": "Se le pide su estado y territorio para saber dónde se está usando la app Sigamos el Desarrollo. \nNo se recoge ni comparte ninguna información personal que se pueda usar para identificarlo a usted o su hijo.",
         "userProfile": "Configuraciones de la cuenta"
