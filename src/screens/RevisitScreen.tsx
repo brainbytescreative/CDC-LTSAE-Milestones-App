@@ -83,10 +83,24 @@ const RevisitScreen: React.FC = () => {
           <LTSAELogo />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
-          <Trans t={t} i18nKey={'description'} tOptions={{name: child?.name}}>
-            <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
-          </Trans>
+          {t('description')}
         </Text>
+        <View style={[styles.yellowTipContainer, {marginTop: 30, marginHorizontal: 32}]}>
+          <Text style={styles.yellowTipText}>
+            {t('yellowTip', {
+              childName: child?.name,
+              ...tOpt({t, gender: child?.gender}),
+            })}
+          </Text>
+        </View>
+        <Text
+          style={[
+            {fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'},
+            sharedStyle.boldText,
+          ]}>
+          {t('actearly', {name: child?.name})}
+        </Text>
+
         <View style={{marginHorizontal: 32}}>
           <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
@@ -155,16 +169,10 @@ const RevisitScreen: React.FC = () => {
           {data?.groupedByAnswer['1']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
-          <View style={[styles.yellowTipContainer, {marginTop: 40}]}>
-            <Text style={styles.yellowTipText}>
-              {t('yellowTip', {
-                childName: child?.name,
-                ...tOpt({t, gender: child?.gender}),
-              })}
-            </Text>
-          </View>
+
           <Text
             style={{
+              marginTop: 40,
               marginBottom: 50,
               marginHorizontal: 16,
               textAlign: 'center',
@@ -211,7 +219,7 @@ const styles = StyleSheet.create({
   yellowTipContainer: {
     paddingHorizontal: 25,
     paddingVertical: 10,
-    marginBottom: 50,
+    // marginBottom: 50,
     alignItems: 'center',
     backgroundColor: colors.yellow,
     borderRadius: 20,

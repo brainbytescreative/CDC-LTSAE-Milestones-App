@@ -488,12 +488,12 @@ const ChildSummaryScreen: React.FC = () => {
               <Text
                 accessibilityRole={'link'}
                 onPress={() => Linking.openURL(t('findElLink'))}
-                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text
                 accessibilityRole={'link'}
                 onPress={() => Linking.openURL(t('concernedLink'))}
-                style={[{textDecorationLine: 'underline'}, sharedStyle.boldText]}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text style={[sharedStyle.boldText]} />
             </Trans>
