@@ -271,6 +271,8 @@ export const notificationIntervals: Readonly<Record<string, NotificationTriggerI
   },
 });
 
+export const verticalImages = [];
+
 export const images = {
   '20651': require('./images/20651.jpg'),
   '20652': require('./images/20652.jpg'),
