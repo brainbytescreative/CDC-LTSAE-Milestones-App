@@ -140,7 +140,7 @@ function tipsAndActivitiesTrigger() {
  * @param appointmentDate
  */
 function appointment1daysBeforeTrigger(appointmentDate: Date) {
-  const date = add(appointmentDate, {days: 1});
+  const date = sub(appointmentDate, {days: 1});
   return at8AM(date);
 }
 
@@ -187,6 +187,10 @@ function wellCheckUpMilestoneReminder(birthday: Date, value: number) {
   return at8AM(add(birthday, {months: value}));
 }
 
+function trigerIsValid(date: Date) {
+  return __DEV__ ? true : !isPast(date);
+}
+
 export function useSetMilestoneNotifications() {
   const [reschedule] = useScheduleNotifications();
   const [setWellChildCheckUpAppointments] = useSetWellChildCheckUpAppointments();
@@ -198,7 +202,7 @@ export function useSetMilestoneNotifications() {
         .map((value) => {
           const milestoneId = value * 12;
           const at8am = getMilestoneOnBirthDayTrigger({birthday: variables.child.birthday, years: value});
-          if (isPast(at8am)) {
+          if (!trigerIsValid(at8am)) {
             return undefined;
           }
           return {
@@ -748,7 +752,7 @@ export function useSetWellChildCheckUpAppointments() {
 
       const noCheckListData = noChecklistMonths.map((value) => {
         const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
-        if (isPast(fireDateTimestamp)) {
+        if (!trigerIsValid(fireDateTimestamp)) {
           return undefined;
         }
         return {
@@ -766,7 +770,7 @@ export function useSetWellChildCheckUpAppointments() {
 
       const screeningReminders1Data = screeningReminders1.map((value) => {
         const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
-        if (isPast(fireDateTimestamp)) {
+        if (!trigerIsValid(fireDateTimestamp)) {
           return undefined;
         }
         return {
@@ -784,7 +788,7 @@ export function useSetWellChildCheckUpAppointments() {
 
       const screeningReminders2Data = screeningReminders2.map((value) => {
         const fireDateTimestamp = wellCheckUpMilestoneReminder(child.birthday, value);
-        if (isPast(fireDateTimestamp)) {
+        if (!trigerIsValid(fireDateTimestamp)) {
           return undefined;
         }
         return {
@@ -799,7 +803,7 @@ export function useSetWellChildCheckUpAppointments() {
 
       const before2WeeksData = remainingMilestones.map((value) => {
         const fireDateTimestamp = getWellCheckUpTrigger({milestoneId: value, birthday: child.birthday});
-        if (isPast(fireDateTimestamp)) {
+        if (!trigerIsValid(fireDateTimestamp)) {
           return undefined;
         }
         return {
