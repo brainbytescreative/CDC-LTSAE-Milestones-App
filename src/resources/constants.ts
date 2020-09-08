@@ -265,13 +265,16 @@ export const missingConcerns = [1, 7, 15, 25, 34, 42, 51, 58, 68, 80];
 export const tooYongAgeDays = 42;
 export type LanguageType = 'en' | 'es';
 
-export const notificationIntervals: Readonly<Record<string, NotificationTriggerInput>> = Object.freeze({
-  tips: {
-    seconds: 20, // todo 2 weeks
-  },
-});
-
-export const verticalImages = [];
+export const verticalImages = [
+  'milestone_4_skill_29_photo_26',
+  'milestone_9_skill_75_photo_55',
+  'milestone_36_skill_188_photo_123',
+  'milestone_48_skill_211_photo_131',
+  'milestone_60_skill_236_photo_150',
+  'milestone_60_skill_236_photo_151',
+  'milestone_4_skill_20_photo_11',
+  'milestone_24_skill_136_photo_85',
+];
 
 export const images = {
   '20651': require('./images/20651.jpg'),

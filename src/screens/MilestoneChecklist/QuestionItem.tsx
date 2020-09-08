@@ -13,7 +13,7 @@ import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetQuestionAnswer, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import {Answer} from '../../hooks/types';
-import {colors, images, sharedStyle} from '../../resources/constants';
+import {colors, images, sharedStyle, verticalImages} from '../../resources/constants';
 import {SkillSection} from '../../resources/milestoneChecklist';
 import {trackInteractionByType} from '../../utils/analytics';
 
@@ -114,7 +114,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const answer = data?.answer;
 
   const {t} = useTranslation('milestones');
-  const height = (Dimensions.get('window').width - 64) * 0.595;
+  const hasVerticalImage = Boolean(photos.filter(({name}) => verticalImages.includes(name)).length);
+  const ratio = hasVerticalImage ? 1.68 : 0.595;
+  const height = (Dimensions.get('window').width - 64) * ratio;
 
   const video =
     videos?.map((item) => {
