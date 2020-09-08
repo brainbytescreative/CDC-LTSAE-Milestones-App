@@ -131,7 +131,7 @@ function completeMilestoneReminderTrigger() {
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
 function tipsAndActivitiesTrigger() {
-  const date = add(new Date(), __DEV__ ? {seconds: 5} : {weeks: 1});
+  const date = add(new Date(), __DEV__ ? {seconds: 10} : {weeks: 1});
   return __DEV__ ? date : at8PM(date);
 }
 
@@ -562,7 +562,7 @@ export function useGetUnreadNotifications() {
   return useQuery<NotificationDB[] | undefined, string>(
     'unreadNotifications',
     async (): Promise<NotificationDB[] | undefined> => {
-      const result = await sqLiteClient.dB?.executeSql(
+      const [result] = await sqLiteClient.db.executeSql(
         `
                   SELECT notifications.*, ch.gender 'childGender', ch.name 'childName'
                   FROM notifications
@@ -573,7 +573,16 @@ export function useGetUnreadNotifications() {
         `,
         [formatISO(new Date())],
       );
-      return result && result[0].rows.raw();
+
+      console.log(
+        JSON.stringify(
+          result.rows.raw().map((value) => value.fireDateTimestamp),
+          null,
+          2,
+        ),
+      );
+
+      return result.rows.raw();
     },
     {
       suspense: true,

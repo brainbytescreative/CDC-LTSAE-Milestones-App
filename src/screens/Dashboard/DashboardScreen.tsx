@@ -151,7 +151,6 @@ const YellowBoxSuspended: React.FC = withSuspense(
     const {data: {betweenCheckList = false} = {}} = useGetMilestone();
     let showtip = betweenCheckList || ageLessTwoMonth;
     showtip = Number(ageInDays) >= 41 && Number(ageInDays) <= 56 ? false : showtip;
-    console.log(betweenCheckList);
     return showtip ? (
       <AEYellowBox containerStyle={styles.yellowTipContainer}>
         {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
