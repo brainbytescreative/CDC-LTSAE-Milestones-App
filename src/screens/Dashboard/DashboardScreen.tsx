@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {differenceInWeeks, format} from 'date-fns';
+import {differenceInDays, differenceInWeeks, format} from 'date-fns';
 import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -146,9 +146,13 @@ const YellowBoxSuspended: React.FC = withSuspense(
     const {t} = useTranslation('dashboard');
     const {data: child} = useGetCurrentChild();
     const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    const ageInDays = child?.birthday && differenceInDays(new Date(), child?.birthday);
     const ageLessTwoMonth = Number(ageInWeeks) < 6;
     const {data: {betweenCheckList = false} = {}} = useGetMilestone();
-    return betweenCheckList || ageLessTwoMonth ? (
+    let showtip = betweenCheckList || ageLessTwoMonth;
+    showtip = Number(ageInDays) >= 41 && Number(ageInDays) <= 56 ? false : showtip;
+    console.log(betweenCheckList);
+    return showtip ? (
       <AEYellowBox containerStyle={styles.yellowTipContainer}>
         {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
       </AEYellowBox>
