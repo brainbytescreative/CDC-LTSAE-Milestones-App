@@ -306,7 +306,10 @@ const AddChildScreen: React.FC = () => {
           };
 
           if (childId) {
-            updateChild({...childInput, id: childId});
+            updateChild({...childInput, id: childId}).then(() => {
+              trackChildAge(values.firstChild.birthday);
+              trackChildGender(Number(values.firstChild.gender));
+            });
           } else {
             addChild({data: childInput, isAnotherChild: false}).then(() => {
               trackCompleteAddChild();

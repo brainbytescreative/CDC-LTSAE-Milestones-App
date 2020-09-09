@@ -134,6 +134,7 @@ export type SelectEventType =
   | 'Edit'
   | 'Edit Note'
   | 'Territory'
+  | 'Children and Add Child'
   | 'Edit Answer';
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
@@ -149,7 +150,7 @@ export const sectionToEvent: Record<Section, SelectEventType> = {
 };
 
 export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEventType | undefined> = {
-  AddChildStub: 'Add Child',
+  AddChildStub: 'Children and Add Child',
   ChildSummaryStack: 'My Child Summary',
   DashboardStack: 'Dashboard',
   InfoStack: 'Privacy Policy and App',

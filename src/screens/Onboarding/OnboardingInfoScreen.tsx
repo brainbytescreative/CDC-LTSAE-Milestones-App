@@ -14,7 +14,7 @@ import CDCLogo from '../../components/Svg/CDCLogo';
 import IceColdArc from '../../components/Svg/IceColdArc';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
-import {trackStartTracking} from '../../utils/analytics';
+import {trackSelectLanguage, trackStartTracking} from '../../utils/analytics';
 
 const OnboardingInfoScreen: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -110,7 +110,10 @@ const OnboardingInfoScreen: React.FC = () => {
               setVisible(false);
             }}
             visible={visible}>
-            <LanguageSelector title={'Select a Language/Seleccione un idioma'} />
+            <LanguageSelector
+              title={'Select a Language/Seleccione un idioma'}
+              onLanguageChange={(language) => trackSelectLanguage(language, {page: 'Language Pop-Up'})}
+            />
             <TouchableOpacity
               accessibilityRole={'button'}
               onPress={() => {

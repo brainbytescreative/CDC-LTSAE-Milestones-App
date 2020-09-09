@@ -39,7 +39,7 @@ const NotificationsBadge: React.FC = () => {
   }, [navigation, visible]);
 
   const onCrossPress = (notificationId: string) => {
-    trackInteractionByType('Delete Appointment');
+    trackInteractionByType('Delete Appointment', {page: 'Notifications'});
     setNotificationRead({notificationId});
   };
 

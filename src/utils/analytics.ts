@@ -29,6 +29,7 @@ type PageType =
   | 'Appointment'
   | 'Info/Privacy Policy'
   | 'Notifications'
+  | 'Language Pop-Up'
   | 'Notification and Account Settings'
   | 'Add a Child (Child Profile)';
 
@@ -81,7 +82,7 @@ export function trackAction(key: string, options?: {page?: PageType; eventname?:
 
   pageName &&
     ACPCore.trackState(pageName, {
-      'gov.cdc.appname': 'Mobile App Dev',
+      'gov.cdc.appname': 'Milestone Tracker',
       'gov.cdc.language': i18next.language, // t5 (Language)
       'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
       'gov.cdc.osname': Platform.OS, //t54 (OS Name)
@@ -104,9 +105,9 @@ export function trackStartTracking(options?: OptionsType) {
 }
 const lngDescr = {en: 'English', es: 'Spanish'};
 
-export function trackSelectLanguage(lng: LangCode) {
+export function trackSelectLanguage(lng: LangCode, options?: OptionsType) {
   const language = (lng ?? i18next.language) as keyof typeof lng;
-  trackAction(`Select: Language: ${lngDescr[language]}`);
+  trackAction(`Select: Language: ${lngDescr[language]}`, options);
 }
 
 export function trackTopCancel(options?: OptionsType) {
@@ -188,6 +189,18 @@ export function trackChildDone(options?: OptionsType) {
 
 export function trackSelectByType(type: SelectEventType, options?: Parameters<typeof trackAction>[1]) {
   trackAction(`Select: ${type}`, options);
+}
+
+const notificationSetting: Record<string, string | undefined> = {
+  milestoneNotifications: 'Milestone Notifications',
+  appointmentNotifications: 'Appointment Notifications',
+  recommendationNotifications: 'Reccomendation Notifications',
+  tipsAndActivitiesNotification: 'Tips Notifications',
+};
+
+export function trackNotificationSelect(name: string) {
+  const selectName = notificationSetting[name];
+  selectName && trackAction(`Select: ${selectName}`);
 }
 
 type InteractionType =

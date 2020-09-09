@@ -24,7 +24,7 @@ import {
 } from '../hooks/settingsHooks';
 import {colors, sharedStyle} from '../resources/constants';
 import {editProfileSchema} from '../resources/validationSchemas';
-import {trackSelectByType, trackSelectLanguage} from '../utils/analytics';
+import {trackNotificationSelect, trackSelectByType, trackSelectLanguage} from '../utils/analytics';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -65,6 +65,7 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         onValueChange={(value) => {
           helpers.setValue(value);
           value ? trackSelectByType('On') : trackSelectByType('Off');
+          trackNotificationSelect(name);
         }}
         onText={t('onLabel')}
         offText={t('offLabel')}
