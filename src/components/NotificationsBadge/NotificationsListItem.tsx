@@ -48,9 +48,11 @@ const NotificationsListItem: React.FC<{
               {request?.content.title}
             </Text>
             <Text>{request?.content.body}</Text>
-            <Text style={{marginTop: 10, color: colors.gray, fontSize: 13}}>
-              {_.isDate(request?.trigger) && formatDate(request?.trigger, 'datetime')}
-            </Text>
+            {__DEV__ && (
+              <Text style={{marginTop: 10, color: colors.gray, fontSize: 13}}>
+                {_.isDate(request?.trigger) && formatDate(request?.trigger, 'datetime')}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
 

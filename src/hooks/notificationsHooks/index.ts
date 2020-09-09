@@ -115,7 +115,7 @@ function getMilestoneOnBirthDayTrigger({years, birthday}: {birthday: Date; years
  * @param birthday
  */
 function getWellCheckUpTrigger({milestoneId, birthday}: {birthday: Date; milestoneId: number}) {
-  const before2weeks = sub(add(birthday, {months: milestoneId}), {weeks: 2});
+  const before2weeks = add(birthday, {months: milestoneId, weeks: -2});
   return at8PM(before2weeks);
 }
 
