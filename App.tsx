@@ -27,13 +27,7 @@ import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import AppStateManager from './src/components/AppStateManager';
 import Navigator from './src/components/Navigator';
 import {colors} from './src/resources/constants';
-import {
-  currentScreen,
-  trackAction,
-  trackInteractionByType,
-  trackSelectByType,
-  trackStartAddChild,
-} from './src/utils/analytics';
+import {currentScreen, trackAction, trackSelectByType, trackStartAddChild} from './src/utils/analytics';
 import {getActiveRouteName} from './src/utils/helpers';
 
 enableScreens();
@@ -132,10 +126,10 @@ const App = () => {
                       trackStartAddChild();
                       break;
                     }
-                    case 'AddAppointment': {
-                      trackInteractionByType('Start Add Appointment');
-                      break;
-                    }
+                    // case 'AddAppointment': {
+                    //   trackInteractionByType('Start Add Appointment');
+                    //   break;
+                    // }
                   }
                   crashlytics().log(currentRouteName);
                 }

@@ -122,7 +122,7 @@ const AppointmentsList: React.FC = withSuspense(
               })}
               key={`appointment-${appt.id}`}
               onPress={() => {
-                trackSelectByType('Add Appointment');
+                trackSelectByType('Appointments');
                 navigation.navigate('Appointment', {
                   appointmentId: appt.id,
                 });
@@ -268,6 +268,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
             accessibilityRole={'button'}
             accessibilityLabel={t('addAppointment:title')}
             onPress={() => {
+              trackSelectByType('Add Appointment');
               navigation.navigate('AddAppointment');
             }}>
             <Text style={{fontSize: 14}}>{t('addApt')}</Text>

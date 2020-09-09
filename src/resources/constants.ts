@@ -2,7 +2,6 @@
 
 import {StackNavigationOptions} from '@react-navigation/stack';
 import * as FileSystem from 'expo-file-system';
-import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
 import {Platform, StyleSheet} from 'react-native';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
@@ -130,6 +129,7 @@ export type SelectEventType =
   | 'Notes/Concerns'
   | 'Doctor'
   | 'Date'
+  | 'Time'
   | 'Appointment Type/Description'
   | 'Edit'
   | 'Edit Note'

@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {add, differenceInSeconds, startOfDay} from 'date-fns';
 import {useFormik} from 'formik';
 import _ from 'lodash';
@@ -19,7 +19,7 @@ import {useAddAppointment, useGetAppointmentById, useUpdateAppointment} from '..
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {colors, sharedStyle} from '../resources/constants';
 import {addAppointmentSchema} from '../resources/validationSchemas';
-import {trackInteractionByType} from '../utils/analytics';
+import {trackInteractionByType, trackSelectByType} from '../utils/analytics';
 
 interface FormValues {
   apptType: string;
@@ -100,6 +100,12 @@ const AddAppointmentScreen: React.FC = () => {
     }
   }, [appointment, setValues]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      !apptId && trackInteractionByType('Start Add Appointment');
+    }, [apptId]),
+  );
+
   const {t} = useTranslation('addAppointment');
   const titlePrefix = apptId ? 'edit-' : '';
   const disabled = addStatus === 'loading' || updateStatus === 'loading' || !formik.isValid;
@@ -130,6 +136,9 @@ const AddAppointmentScreen: React.FC = () => {
             <AETextInput
               style={{marginTop: 11}}
               autoCorrect={false}
+              onFocus={() => {
+                trackSelectByType('Appointment Type/Description');
+              }}
               value={formik.values.apptType}
               onChangeText={formik.handleChange('apptType') as any}
               placeholder={`${t('fields:apptTypePlaceholder')} *`}
@@ -138,17 +147,26 @@ const AddAppointmentScreen: React.FC = () => {
               style={{marginTop: 11}}
               value={formik.values.date}
               label={`${t('fields:datePlaceholder')} *`}
-              onChange={(date) => formik.setFieldValue('date', date)}
+              onChange={(date) => {
+                trackSelectByType('Date');
+                formik.setFieldValue('date', date);
+              }}
             />
             <DatePicker
               mode={'time'}
               style={{marginTop: 11}}
               value={formik.values.time}
               label={`${t('fields:timePlaceholder')} *`}
-              onChange={(date) => formik.setFieldValue('time', date)}
+              onChange={(date) => {
+                trackSelectByType('Time');
+                formik.setFieldValue('time', date);
+              }}
             />
             <AETextInput
               autoCorrect={false}
+              onFocus={() => {
+                trackSelectByType('Doctor');
+              }}
               style={{marginTop: 11}}
               value={formik.values.doctorName}
               onChangeText={formik.handleChange('doctorName') as any}
@@ -158,11 +176,17 @@ const AddAppointmentScreen: React.FC = () => {
               multiline={true}
               autoCorrect={false}
               style={{marginTop: 11}}
+              onFocus={() => {
+                trackSelectByType('Notes/Concerns');
+              }}
               value={formik.values.notes}
               onChangeText={formik.handleChange('notes') as any}
               placeholder={t('fields:notesConcernsPlaceholder')}
             />
             <AETextInput
+              onFocus={() => {
+                trackSelectByType('Questions to Ask Doctor');
+              }}
               multiline={true}
               autoCorrect={false}
               style={{maxHeight: 100, marginTop: 11}}
