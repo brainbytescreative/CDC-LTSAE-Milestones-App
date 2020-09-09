@@ -18,7 +18,7 @@ type PageType =
   | 'Parent/Caregiver Profile'
   | 'How to Use App'
   | 'Dashboard'
-  | 'Milestone Checklist Intro Page'
+  | 'Milestone Checklist Intro'
   | 'Main Milestone Home'
   | 'Milestone Checklist'
   | 'When to Act Early'
@@ -30,46 +30,63 @@ type PageType =
   | 'Info/Privacy Policy'
   | 'Notifications'
   | 'Language Pop-Up'
-  | 'Notification and Account Settings'
+  | 'Notification and Settings'
   | 'Add a Child (Child Profile)';
 
 type OptionsType = Parameters<typeof trackAction>[1];
 
 const screeNameToPageName = (name: string): PageType | string => {
+  let pageName: PageType | undefined;
+
   switch (name) {
     case 'OnboardingParentProfile':
-      return 'Parent/Caregiver Profile';
+      pageName = 'Parent/Caregiver Profile';
+      break;
     case 'OnboardingInfo':
-      return 'Welcome Screen';
+      pageName = 'Welcome Screen';
+      break;
     case 'OnboardingHowToUse':
-      return 'How to Use App';
+      pageName = 'How to Use App';
+      break;
     case 'AddChild':
-      return 'Add a Child (Child Profile)';
+      pageName = 'Add a Child (Child Profile)';
+      break;
     case 'Dashboard':
-      return 'Dashboard';
+      pageName = 'Main Milestone Home';
+      break;
     case 'MilestoneChecklistGetStarted':
-      return 'Milestone Checklist Intro Page';
+      pageName = 'Milestone Checklist Intro';
+      break;
     case 'NotificationSettings':
-      return 'Notification and Account Settings';
+      pageName = 'Notification and Settings';
+      break;
     case 'MilestoneChecklist':
-      return 'Milestone Checklist';
+      pageName = 'Milestone Checklist';
+      break;
     case 'ChildSummary':
-      return "My Child's Summary";
+      pageName = "My Child's Summary";
+      break;
     case 'MilestoneChecklistQuickView':
-      return 'Milestone Quick View';
+      pageName = 'Milestone Quick View';
+      break;
     case 'TipsAndActivities':
-      return 'Tips';
+      pageName = 'Tips';
+      break;
     case 'Info':
-      return 'Info/Privacy Policy';
+      pageName = 'Info/Privacy Policy';
+      break;
     case 'AddAppointment':
-      return 'Add Appointment';
+      pageName = 'Add Appointment';
+      break;
     case 'Appointment':
-      return 'Appointment';
+      pageName = 'Appointment';
+      break;
     case 'MilestoneChecklistWhenToActEarly':
-      return 'When to Act Early';
-    default:
-      return name;
+      pageName = 'When to Act Early';
+      break;
   }
+
+  return pageName ?? name;
 };
 
 export function trackAction(key: string, options?: {page?: PageType; eventname?: string; sectionname?: string}) {

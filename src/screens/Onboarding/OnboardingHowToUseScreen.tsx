@@ -13,6 +13,7 @@ import {RootStackParamList} from '../../components/Navigator/types';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
+import {trackAction} from '../../utils/analytics';
 
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 
@@ -33,6 +34,18 @@ const newUserEsImages = [
   require('./../../resources/images/howto/how_to_new_es_5.png'),
 ];
 
+const eventNames = {
+  new: ['Dashboard', 'Dashboard Progress', 'When to Act Early', "My Child's Summary", 'Tips & Activities '],
+  current: [
+    'Not A New User?',
+    'Dashboard',
+    'Dashboard Progress',
+    'When to Act Early',
+    "My Child's Summary",
+    'Tips & Activities ',
+  ],
+};
+
 const images = {
   en: {
     new: newUserEnImages,
@@ -48,7 +61,7 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();
-  const [position, setPosition] = useState(0);
+  const [position, setPosition] = useState<number | undefined>(undefined);
 
   const userType = route?.params?.isOldUser ? 'current' : 'new';
   const stubArray = images[i18next.language as 'en' | 'es'][userType];
@@ -80,8 +93,9 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
           {t('howToUseApp')}
         </Text>
         <ViewPager
-          onPageSelected={(event) => {
-            setPosition(event.nativeEvent.position);
+          onPageSelected={({nativeEvent: {position: p}}) => {
+            p !== position && trackAction(`Select: How to Use App: ${eventNames[userType][p]}`);
+            setPosition(p);
           }}
           style={styles.viewPager}
           initialPage={0}>
