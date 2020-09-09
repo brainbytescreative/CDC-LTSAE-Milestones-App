@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 
 import {ParentProfileSelectorValues, guardianTypes, sharedStyle, states} from '../resources/constants';
-import {trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
+import {trackSelectByType, trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 import DropDownPicker from './DropDownPicker';
 import Chevron from './Svg/Chevron';
 
@@ -61,6 +61,7 @@ const ParentProfileSelector: React.FC = () => {
             value={field.value}
             zIndex={1000}
             onChangeItem={(item) => {
+              trackSelectByType('Territory');
               trackSelectTerritory(String(item.label));
               // onChange({guardian: value?.guardian, territory: item.value});
               form.setFieldValue(field.name, item.value);

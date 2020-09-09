@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
+import {queryCache} from 'react-query';
 
 import AEYellowBox from '../../components/AEYellowBox';
 import CheckMark from '../../components/Svg/CheckMark';
@@ -90,13 +91,6 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
   useEffect(() => {
     !isFetching && setNote(concern?.note || '');
   }, [concern, isFetching]);
-
-  useEffect(() => {
-    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
-    return () => {
-      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
-    };
-  }, []);
 
   return (
     <View>
@@ -194,6 +188,13 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
 
+  useEffect(() => {
+    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
+    return () => {
+      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
+    };
+  }, []);
+
   const {t} = useTranslation('milestoneChecklist');
   return (
     <KeyboardAwareFlatList
@@ -236,6 +237,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
               accessibilityRole={'button'}
               onPress={() => {
                 onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
+                trackInteractionByType('My Child Summary');
               }}>
               <View
                 style={[

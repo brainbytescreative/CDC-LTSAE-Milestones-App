@@ -10,7 +10,7 @@ import MilestoneChecklistGetStartedScreen from '../../screens/MilestoneChecklist
 import MilestoneChecklistQuickViewScreen from '../../screens/MilestoneChecklist/MilestoneChecklistQuickViewScreen';
 import MilestoneChecklistScreen from '../../screens/MilestoneChecklist/MilestoneChecklistScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackInteractionByType, trackSelectByType} from '../../utils/analytics';
 import BurgerButton from '../BurgerButton';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from './types';
 
@@ -70,7 +70,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
               tintColor={colors.black}
               label={' '}
               onPress={() => {
-                trackInteractionByType('Back');
+                trackSelectByType('Back');
                 screenProps.navigation?.goBack?.();
               }}
             />

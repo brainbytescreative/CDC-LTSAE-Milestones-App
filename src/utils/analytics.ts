@@ -64,6 +64,8 @@ const screeNameToPageName = (name: string): PageType | string => {
       return 'Add Appointment';
     case 'Appointment':
       return 'Appointment';
+    case 'MilestoneChecklistWhenToActEarly':
+      return 'When to Act Early';
     default:
       return name;
   }
@@ -75,7 +77,7 @@ export function trackAction(key: string, options?: {page?: PageType; eventname?:
   const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
   // console.log('<<<', pageName, `,key: ${key}`);
 
-  // console.log(pageName, options?.sectionname, key);
+  console.log(pageName, options?.sectionname, key);
 
   pageName &&
     ACPCore.trackState(pageName, {
@@ -216,6 +218,8 @@ type InteractionType =
   | 'Started Movement Milestones'
   | 'Completed Movement Milestones'
   | 'Started When to Act Early'
+  | 'Email Summary'
+  | 'Show Doctor'
   | 'Completed When to Act Early';
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {

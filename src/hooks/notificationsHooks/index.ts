@@ -574,14 +574,6 @@ export function useGetUnreadNotifications() {
         [formatISO(new Date())],
       );
 
-      console.log(
-        JSON.stringify(
-          result.rows.raw().map((value) => value.fireDateTimestamp),
-          null,
-          2,
-        ),
-      );
-
       return result.rows.raw();
     },
     {
@@ -891,6 +883,7 @@ export function useNavigateNotification() {
       const notificationData = await getNotificationById(notificationId);
       switch (notificationData?.notificationCategoryType) {
         case NotificationCategory.Appointment: {
+          notificationData?.childId && (await setSelectedChild({id: notificationData?.childId}));
           if (notificationData?.appointmentId) {
             navigator?.reset(navStateForAppointmentID(notificationData?.appointmentId));
           }

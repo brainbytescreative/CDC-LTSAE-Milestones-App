@@ -49,7 +49,7 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
   const onGetStarted = () => {
     setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
       navigation.navigate('MilestoneChecklist');
-      trackInteractionByType('Get Started');
+      trackInteractionByType('Get Started', {page: 'Milestone Checklist Intro Page'});
     });
   };
   return (

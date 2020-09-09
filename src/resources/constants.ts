@@ -133,6 +133,7 @@ export type SelectEventType =
   | 'Appointment Type/Description'
   | 'Edit'
   | 'Edit Note'
+  | 'Territory'
   | 'Edit Answer';
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;

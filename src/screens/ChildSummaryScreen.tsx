@@ -32,7 +32,7 @@ import {
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
-import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import {trackInteractionByType, trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
 import {formattedAgeSingular} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
@@ -415,6 +415,7 @@ const ComposeEmailButton = withSuspense(
     return (
       <AEButtonMultiline
         onPress={() => {
+          trackInteractionByType('Email Summary');
           composeMail().catch((e) => {
             Alert.alert('', e.message);
           });
@@ -506,6 +507,7 @@ const ChildSummaryScreen: React.FC = () => {
             <ComposeEmailButton />
             <AEButtonMultiline
               onPress={() => {
+                trackInteractionByType('Show Doctor');
                 navigation.navigate('Revisit');
               }}
               style={{marginTop: 10, marginBottom: 30}}>

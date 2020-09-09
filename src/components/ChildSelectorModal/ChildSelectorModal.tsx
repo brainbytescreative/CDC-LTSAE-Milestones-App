@@ -146,7 +146,10 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
         return (
           <TouchableOpacity
             accessibilityRole={'button'}
-            onPress={() => setChildSelectorVisible(!childSelectorVisible)}
+            onPress={() => {
+              trackSelectByType('Child Name Drop-down');
+              setChildSelectorVisible(!childSelectorVisible);
+            }}
             style={{
               // flex: 1,
               flexDirection: 'row',
@@ -164,6 +167,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
+    trackSelectByType('Edit', {page: 'Child Dropdown Page'});
     // navigation.navigate('DashboardStack', {
     //   screen: 'AddChild',
     //   params: {
