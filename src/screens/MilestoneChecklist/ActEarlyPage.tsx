@@ -1,4 +1,4 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
-import {queryCache} from 'react-query';
 
 import AEYellowBox from '../../components/AEYellowBox';
 import CheckMark from '../../components/Svg/CheckMark';
@@ -202,6 +201,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       extraHeight={Platform.select({
         ios: 200,
       })}
+      scrollIndicatorInsets={{right: 0.1}}
       bounces={false}
       ListHeaderComponent={
         <View style={{marginBottom: 50}}>
