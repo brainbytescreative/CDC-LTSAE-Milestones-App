@@ -12,8 +12,8 @@ import {LangCode} from '../resources/l18n';
 import {formatAge, getActiveRouteName} from './helpers';
 
 type PageType =
-  | 'Child Dropdown Page'
-  | 'Menu Page'
+  | 'Child Drop-Down'
+  | 'Menu'
   | 'Welcome Screen'
   | 'Parent/Caregiver Profile'
   | 'How to Use App'
@@ -262,7 +262,7 @@ export function trackChecklistSectionSelect(section: Section) {
 
 export function trackDrawerSelect(name: keyof DashboardDrawerParamsList) {
   const selectName = drawerMenuToEvent[name];
-  selectName && trackSelectByType(selectName, {page: 'Menu Page'});
+  selectName && trackSelectByType(selectName, {page: 'Menu'});
 }
 
 export function trackSelectChild(childId: ChildResult['id'], options?: Parameters<typeof trackAction>[1]) {
