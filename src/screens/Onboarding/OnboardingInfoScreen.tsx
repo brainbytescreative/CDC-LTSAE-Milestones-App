@@ -47,7 +47,7 @@ const OnboardingInfoScreen: React.FC = () => {
               marginHorizontal: 32,
               marginVertical: 16,
               textAlign: 'center',
-              fontSize: 15,
+              fontSize: 16,
             }}>
             {t('welcome1p')}
           </Text>
@@ -81,7 +81,7 @@ const OnboardingInfoScreen: React.FC = () => {
               {Array.from(new Array(5)).map((value, index) => (
                 <View style={[{flexDirection: 'row'}, index !== 0 && {marginTop: 6}]} key={`list-item-${index}`}>
                   <Text style={[sharedStyle.boldText, {fontSize: 15}]}>{'•   '}</Text>
-                  <Text style={[{fontSize: 15}]}>{t('list', {context: `${index}`})}</Text>
+                  <Text style={[{fontSize: 16}]}>{t('list', {context: `${index}`})}</Text>
                 </View>
               ))}
             </View>

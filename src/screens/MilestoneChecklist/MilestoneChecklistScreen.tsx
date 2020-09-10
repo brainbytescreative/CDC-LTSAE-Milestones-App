@@ -2,7 +2,6 @@ import ViewPager from '@react-native-community/viewpager';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import _ from 'lodash';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, Platform, View} from 'react-native';
@@ -24,7 +23,7 @@ import {
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
-import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
+import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
 import {formattedAgeSingular, slowdown} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
@@ -154,6 +153,8 @@ const MilestoneChecklistScreen: React.FC<{
   }, [section, prevSection.name]);
 
   const onSectionSet = (val: Section) => {
+    const page: PageType = prevSection.name === 'actEarly' ? 'When to Act Early' : 'Milestone Checklist';
+
     prevSection.name = section;
     setSection(val);
     viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
@@ -168,19 +169,19 @@ const MilestoneChecklistScreen: React.FC<{
 
     switch (val) {
       case 'social':
-        trackInteractionByType('Started Social Milestones');
+        trackInteractionByType('Started Social Milestones', {page});
         break;
       case 'language':
-        trackInteractionByType('Started Language Milestones');
+        trackInteractionByType('Started Language Milestones', {page});
         break;
       case 'cognitive':
-        trackInteractionByType('Started Cognitive Milestones');
+        trackInteractionByType('Started Cognitive Milestones', {page});
         break;
       case 'movement':
-        trackInteractionByType('Started Movement Milestones');
+        trackInteractionByType('Started Movement Milestones', {page});
         break;
       case 'actEarly':
-        trackInteractionByType('Started When to Act Early');
+        trackInteractionByType('Started When to Act Early', {page});
         break;
     }
   };

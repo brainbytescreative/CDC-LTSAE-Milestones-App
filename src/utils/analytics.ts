@@ -14,7 +14,7 @@ import {LangCode} from '../resources/l18n';
 import {Quetion, checklistMap} from '../resources/milestoneChecklist';
 import {formatAge, getActiveRouteName} from './helpers';
 
-type PageType =
+export type PageType =
   | 'Child Drop-Down'
   | 'Menu'
   | 'Welcome Screen'
@@ -140,6 +140,7 @@ export function trackAction(
   const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
   // console.log('<<<', pageName, `,key: ${key}`);
   // console.log(pageName, options?.sectionName, key);
+  // console.log(pageName, key);
   trackChecklistPage(key, {...options, pageName});
   trackActionInternal(pageName, key, {sectionName: options?.sectionName});
 }
@@ -222,8 +223,8 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
       ? i18next.t('common:yearSingular', {count: milestoneId / 12, lng: 'en'})
       : i18next.t('common:monthSingular', {count: milestoneId, lng: 'en'});
   const pageName = `${_.startCase(milestoneAgeFormatted)}${suffix}`;
-  console.log(pageName, key);
-  // trackActionInternal(pageName, key);
+  // console.log(pageName, key);
+  trackActionInternal(pageName, key);
 }
 
 // type EventType =
