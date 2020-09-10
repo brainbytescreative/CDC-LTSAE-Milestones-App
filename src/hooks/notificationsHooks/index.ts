@@ -877,7 +877,7 @@ export function useNavigateNotification() {
   const [setSelectedChild] = useSetSelectedChild();
   const [setMilestoneAge] = useSetMilestoneAge();
   const navigateNotification = useCallback(
-    async (notificationId: string) => {
+    async (notificationId: string, markAsRead = true) => {
       const navigator = currentScreen.navigation?.current;
 
       const notificationData = await getNotificationById(notificationId);
@@ -926,7 +926,7 @@ export function useNavigateNotification() {
         }
       }
 
-      return setNotificationRead({notificationId});
+      return markAsRead && setNotificationRead({notificationId});
     },
     [setNotificationRead, setSelectedChild, setMilestoneAge],
   );

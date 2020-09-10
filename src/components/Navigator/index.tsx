@@ -86,7 +86,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      navigateNotification(response.notification.request.identifier);
+      navigateNotification(response.notification.request.identifier, false);
     });
     return () => subscription.remove();
   }, [navigation, navigateNotification]);
