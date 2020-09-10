@@ -48,7 +48,11 @@ const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, chi
         if (id && childId && milestoneId) {
           setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
         }
-        !concern?.answer && trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
+        !concern?.answer &&
+          trackInteractionByType('Checked Act Early Item', {
+            page: 'When to Act Early',
+            concernData: {concernId: Number(id), milestoneId: Number(milestoneId)},
+          });
 
         // if (id && childId && milestoneId && !concern?.answer) {
         //   setConcern({concernId: id, answer: true, childId: childId, note: concern?.note, milestoneId});

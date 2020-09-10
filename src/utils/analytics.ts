@@ -108,14 +108,21 @@ function trackActionInternal(pageName: undefined | string, key: string, options?
     });
 }
 
+type BaseAnalyticsData = {
+  milestoneId: number;
+};
+
 type QuestionAnalyticsData = {
   questionId: number;
-  milestoneId: number;
-};
+} & BaseAnalyticsData;
+
 type TipAnalyticsData = {
   hintId: number;
-  milestoneId: number;
-};
+} & BaseAnalyticsData;
+
+type ConcernAnalyticsData = {
+  concernId: number;
+} & BaseAnalyticsData;
 
 export function trackAction(
   key: string,
@@ -125,6 +132,7 @@ export function trackAction(
     sectionName?: string;
     questionData?: QuestionAnalyticsData;
     tipData?: TipAnalyticsData;
+    concernData?: ConcernAnalyticsData;
   },
 ) {
   const screenName =
@@ -152,6 +160,16 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
   let suffix = '';
   switch (data.pageName) {
     case 'When to Act Early': {
+      if (data.concernData) {
+        const [concern] =
+          checklistMap
+            .get(data.concernData.milestoneId)
+            ?.concerns.filter((value) => value.id === data.concernData?.concernId) ?? [];
+        const concernText = i18next.t(`milestones:${concern.value}`, {lng: 'en'});
+        suffix = `: ${_.trim(concernText, '.')}`;
+      } else {
+        suffix = ': Act Early';
+      }
       break;
     }
     case 'Milestone Checklist Intro': {
