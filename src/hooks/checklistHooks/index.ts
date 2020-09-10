@@ -254,7 +254,6 @@ export function useSetQuestionAnswer() {
   return useMutation<void, MilestoneAnswer>(
     async (variables) => {
       const {answer, childId, note, questionId, milestoneId} = variables;
-      answer && trackChecklistAnswer(answer);
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
       await setAnswer({childId, questionId, answer, milestoneId, note});
     },

@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {FlatList, Platform, View} from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
-import {useQuery} from 'react-query';
+import {queryCache, useQuery} from 'react-query';
 
 import ButtonWithChevron from '../../components/ButtonWithChevron';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
@@ -80,6 +80,7 @@ const QuestionsList: React.FC<{
 const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = ({onSectionSet, section}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
+  queryCache.setQueryData('section', section);
   return (
     <FlatList
       extraData={sectionsProgress}
@@ -108,7 +109,7 @@ const MilestoneChecklistScreen: React.FC<{
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
-  const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
+  const {refetch: refetchAnswers} = useGetCheckListAnswers(milestoneAge, childId);
   const prevSection = useRef<{name: Section}>({name: 'social'}).current;
 
   useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
@@ -123,13 +124,9 @@ const MilestoneChecklistScreen: React.FC<{
     React.useCallback(() => {
       gotStarted && trackInteractionByType('Started Social Milestones');
       return () => {
-        if (unansweredData && !_.isEmpty(unansweredData)) {
-          trackChecklistUnanswered();
-          // const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
-          // ACPCore.trackAction(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
-        }
+        refetchAnswers().then(() => trackChecklistUnanswered());
       };
-    }, [unansweredData, gotStarted]),
+    }, [gotStarted, refetchAnswers]),
   );
 
   const flatListRef = useRef<KeyboardAwareFlatList>(null);

@@ -1,14 +1,17 @@
 import {ACPCore} from '@adobe/react-native-acpcore';
 import {NavigationContainerRef} from '@react-navigation/core';
 import i18next from 'i18next';
+import _ from 'lodash';
 import {RefObject} from 'react';
 import {Platform} from 'react-native';
 import {getModel, getReadableVersion} from 'react-native-device-info';
+import {queryCache} from 'react-query';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
-import {Answer, ChildResult} from '../hooks/types';
+import {Answer, ChildResult, MilestoneQueryResult} from '../hooks/types';
 import {Section, SelectEventType, drawerMenuToEvent, sectionToEvent} from '../resources/constants';
 import {LangCode} from '../resources/l18n';
+import {Quetion, checklistMap} from '../resources/milestoneChecklist';
 import {formatAge, getActiveRouteName} from './helpers';
 
 type PageType =
@@ -89,14 +92,7 @@ const screeNameToPageName = (name: string): PageType | string => {
   return pageName ?? name;
 };
 
-export function trackAction(key: string, options?: {page?: PageType; eventname?: string; sectionname?: string}) {
-  const screenName =
-    currentScreen.currentRouteName ?? getActiveRouteName(currentScreen.navigation?.current?.getRootState());
-  const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
-  // console.log('<<<', pageName, `,key: ${key}`);
-
-  console.log(pageName, options?.sectionname, key);
-
+function trackActionInternal(pageName: undefined | string, key: string, options?: {sectionName?: string}) {
   pageName &&
     ACPCore.trackState(pageName, {
       'gov.cdc.appname': 'Milestone Tracker',
@@ -107,11 +103,125 @@ export function trackAction(key: string, options?: {page?: PageType; eventname?:
       'gov.cdc.devicetype': getModel(), // t56 (Device Type)
       'gov.cdc.status': '1', // t57 (Status)
       'gov.cdc.eventname': key,
-      // ...(options?.eventname && {'gov.cdc.eventname': options.eventname}),
-      ...(options?.sectionname && {'gov.cdc.sectionname': options.sectionname}),
+      ...(options?.sectionName && {'gov.cdc.sectionname': options.sectionName}),
       ...(pageName && {'gov.cdc.page': pageName}),
     });
 }
+
+type QuestionAnalyticsData = {
+  questionId: number;
+  milestoneId: number;
+};
+type TipAnalyticsData = {
+  hintId: number;
+  milestoneId: number;
+};
+
+export function trackAction(
+  key: string,
+  options?: {
+    page?: PageType;
+    eventname?: string;
+    sectionName?: string;
+    questionData?: QuestionAnalyticsData;
+    tipData?: TipAnalyticsData;
+  },
+) {
+  const screenName =
+    currentScreen.currentRouteName ?? getActiveRouteName(currentScreen.navigation?.current?.getRootState());
+  const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
+  // console.log('<<<', pageName, `,key: ${key}`);
+  // console.log(pageName, options?.sectionName, key);
+  trackChecklistPage(key, {...options, pageName});
+  trackActionInternal(pageName, key, {sectionName: options?.sectionName});
+}
+
+function getMilestoneData() {
+  const selectedChildId = queryCache.getQueryData('selectedChildId');
+  const child: ChildResult | undefined = queryCache.getQueryData(['selectedChild', {id: selectedChildId}]);
+  const childBirthday = child?.birthday;
+  const milestoneId = Number(
+    queryCache.getQueryData<MilestoneQueryResult>(['milestone', {childBirthday}])?.milestoneAge,
+  );
+  return {milestoneId, selectedChildId};
+}
+
+type AdditionalChecklistParams = Omit<NonNullable<OptionsType>, 'page' | 'eventname' | 'sectionName'> | undefined;
+
+function trackChecklistPage(key: string, data: {pageName?: PageType | string} & AdditionalChecklistParams) {
+  let suffix = '';
+  switch (data.pageName) {
+    case 'When to Act Early': {
+      break;
+    }
+    case 'Milestone Checklist Intro': {
+      suffix = ': Milestones';
+      break;
+    }
+    case 'Milestone Checklist': {
+      const section: string | undefined = queryCache.getQueryData('section');
+      if (data.questionData && section) {
+        const [question] =
+          checklistMap
+            .get(data.questionData.milestoneId)
+            ?.milestones.filter((value) => value.id === data.questionData?.questionId) ?? [];
+        const questionText = i18next.t(`milestones:${question.value}`, {lng: 'en'});
+
+        suffix = `: ${section}: ${_.trim(questionText, '.')}`;
+      } else if (section) {
+        suffix = `: ${_.startCase(section)}`;
+      }
+      break;
+    }
+    case 'Milestone Quick View': {
+      suffix = ': Quickview';
+      break;
+    }
+    case 'Tips': {
+      if (data.tipData) {
+        const [tip] =
+          checklistMap
+            .get(data.tipData.milestoneId)
+            ?.helpful_hints.filter((value) => value.id === data.tipData?.hintId) ?? [];
+        suffix = `: Tip: ${i18next.t(`milestones:${tip.value}`)}`;
+      } else {
+        suffix = ': Tips';
+      }
+
+      break;
+    }
+    default: {
+      return;
+    }
+  }
+
+  // 'selectedChildId'
+  // ['selectedChild', {id: selectedChildId}]
+  //   ['milestone', {childBirthday}]
+  const milestoneId = getMilestoneData().milestoneId;
+  const milestoneAgeFormatted =
+    milestoneId % 12 === 0
+      ? i18next.t('common:yearSingular', {count: milestoneId / 12, lng: 'en'})
+      : i18next.t('common:monthSingular', {count: milestoneId, lng: 'en'});
+  const pageName = `${_.startCase(milestoneAgeFormatted)}${suffix}`;
+  console.log(pageName, key);
+  // trackActionInternal(pageName, key);
+}
+
+// type EventType =
+//   | 'Answer: Yes'
+//   | 'Answer: Not Sure'
+//   | 'Answer: Not Yet'
+//   | 'Answer: Unanswered'
+//   | 'Interaction: Get Started';
+//
+// type TabType = 'Milestones' | 'Quickview' | 'Social' | 'Language' | 'Cognitive' | 'Movement' | SkillType;
+//
+// export function trackByChecklistAge(page: {age: number; tab: TabType; details?: string}, event: EventType) {
+//   const tail = page.details ? `: ${page.details}` : '';
+//   trackActionInternal(`${page.age}: ${page.tab}${tail}`, event);
+//   return;
+// }
 
 export function trackAppLaunch(options?: OptionsType) {
   trackAction('Application: Launch', options);
@@ -271,12 +381,19 @@ export function trackSelectChild(childId: ChildResult['id'], options?: Parameter
 
 const AnswerToText = ['Yes', 'Not Sure', 'Not Yet'];
 
-export function trackChecklistAnswer(answer: Answer) {
-  trackAction(`Answer: ${AnswerToText[answer]}`);
+export function trackChecklistAnswer(answer: Answer, options?: OptionsType) {
+  trackAction(`Answer: ${AnswerToText[answer]}`, options);
 }
 
 export function trackChecklistUnanswered(options?: OptionsType) {
-  trackAction('Answer: Unanswered', options);
+  const {milestoneId, selectedChildId: childId} = getMilestoneData();
+  const data: {unansweredData: Quetion[] | undefined} | undefined = queryCache.getQueryData([
+    'answers',
+    {milestoneId, childId},
+  ]);
+  if (data?.unansweredData?.length) {
+    trackAction('Answer: Unanswered', options);
+  }
 }
 
 export function trackSelectSummary(answer: Answer) {

@@ -76,7 +76,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
 
   const onRemindMePress = useCallback<NonNullable<PropType<ItemProps, 'onRemindMePress'>>>(
     (id, value) => {
-      trackInteractionByType('Remind Me');
+      trackInteractionByType('Remind Me', {tipData: {milestoneId: Number(milestoneId), hintId: Number(id)}});
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = (tips || []).filter(({id: tipId}) => id === tipId)[0];
@@ -93,7 +93,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
-    trackInteractionByType('Like');
+    trackInteractionByType('Like', {tipData: {milestoneId: Number(milestoneId), hintId: Number(id)}});
     id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
     setHighlightedTip(undefined);
   };

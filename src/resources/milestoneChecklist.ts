@@ -3683,7 +3683,7 @@ const checklist: MilestoneChecklist[] = [
   },
 ];
 
-type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
+export type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
 
 const mapSet = function (key: unknown) {
   throw "Can't add property " + key + ', map is not extensible';

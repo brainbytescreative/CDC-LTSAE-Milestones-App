@@ -6,6 +6,7 @@ import {FlatList, View} from 'react-native';
 
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import withSuspense from '../../components/withSuspense';
 import {
   useGetMilestone,
   useGetMilestoneGotStarted,
@@ -13,7 +14,7 @@ import {
   useSetMilestoneGotStarted,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {checklistSections, colors} from '../../resources/constants';
+import {checklistSections, colors, suspenseEnabled} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
 import FrontPage from './FrontPage';
 import SectionItem from './SectionItem';
@@ -71,4 +72,4 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
   );
 };
 
-export default MilestoneChecklistGetStartedScreen;
+export default withSuspense(MilestoneChecklistGetStartedScreen, suspenseEnabled);

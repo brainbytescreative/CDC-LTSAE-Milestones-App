@@ -1,6 +1,6 @@
 import {NavigationContainerProps} from '@react-navigation/native';
 import {add, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, format} from 'date-fns';
-import {TFunction} from 'i18next';
+import {TFunction, TOptions} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
@@ -236,7 +236,7 @@ export function formattedAge(milestoneAge: number, t: TFunction, singular = fals
 
 export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
   const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
-  console.log(milestoneAge);
+  // console.log(milestoneAge);
   return i18next.language === 'en' ? _.startCase(ageText) : ageText;
 };
 

@@ -15,7 +15,7 @@ import {useGetMilestone, useGetQuestionAnswer, useSetQuestionAnswer} from '../..
 import {Answer} from '../../hooks/types';
 import {colors, images, sharedStyle, verticalImages} from '../../resources/constants';
 import {SkillSection} from '../../resources/milestoneChecklist';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackChecklistAnswer, trackInteractionByType} from '../../utils/analytics';
 
 // const jsCode = `
 //
@@ -167,6 +167,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       childId &&
       milestoneId &&
       answerQuestion({questionId: id, childId, answer: answerValue, note: note, milestoneId});
+    answer && trackChecklistAnswer(answerValue, {questionData: {milestoneId: Number(milestoneId), questionId: id}});
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
