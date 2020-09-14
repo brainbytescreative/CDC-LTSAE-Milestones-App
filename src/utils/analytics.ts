@@ -10,7 +10,6 @@ import {queryCache} from 'react-query';
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 import {Answer, ChildResult, MilestoneQueryResult} from '../hooks/types';
 import {Section, SelectEventType, drawerMenuToEvent, sectionToEvent} from '../resources/constants';
-import {LangCode} from '../resources/l18n';
 import {Quetion, checklistMap} from '../resources/milestoneChecklist';
 import {formatAge, getActiveRouteName} from './helpers';
 
@@ -249,10 +248,10 @@ export function trackAppLaunch(options?: OptionsType) {
 export function trackStartTracking(options?: OptionsType) {
   trackAction('Interaction: Start Tracking ', {page: 'Welcome Screen', ...options});
 }
-const lngDescr = {en: 'English', es: 'Spanish'};
+const lngDescr: Record<string, string | undefined> = {en: 'English', es: 'Spanish'};
 
-export function trackSelectLanguage(lng: LangCode, options?: OptionsType) {
-  const language = (lng ?? i18next.language) as keyof typeof lng;
+export function trackSelectLanguage(lng: string, options?: OptionsType) {
+  const language = lng ?? i18next.language;
   trackAction(`Select: Language: ${lngDescr[language]}`, options);
 }
 

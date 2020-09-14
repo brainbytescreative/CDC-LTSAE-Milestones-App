@@ -15,7 +15,7 @@ import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {colors, sharedStyle, suspenseEnabled} from '../resources/constants';
+import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {tOpt} from '../utils/helpers';
 
 interface ItemProps {
@@ -123,7 +123,7 @@ const RevisitScreen: React.FC = () => {
           ))}
           {data?.groupedByAnswer['2']?.length && (
             <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
-              <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
+              <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name, breakStr, breakStrBig}}>
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => Linking.openURL(t('concernedLink'))}
@@ -188,11 +188,11 @@ const RevisitScreen: React.FC = () => {
               lineHeight: 18,
               fontSize: 15,
             }}>
-            <Trans t={t} i18nKey={'thankYouText2'}>
+            <Trans t={t} i18nKey={'thankYouText2'} tOptions={{breakStr}}>
               <Text
                 accessibilityRole={'link'}
                 onPress={() => Linking.openURL(t('actEarlyLink'))}
-                style={{textDecorationLine: 'underline'}}
+                style={{textDecorationLine: 'underline', textAlign: 'center'}}
               />
             </Trans>
           </Text>

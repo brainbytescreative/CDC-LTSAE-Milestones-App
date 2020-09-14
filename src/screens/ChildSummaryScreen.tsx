@@ -483,18 +483,14 @@ const ChildSummaryScreen: React.FC = () => {
           ]}>
           {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
         </Text>
-        <View style={{paddingHorizontal: 32, flexDirection: 'row'}}>
+        <View style={{paddingHorizontal: 32}}>
           <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>
             <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
               <Text
                 numberOfLines={1}
                 accessibilityRole={'link'}
                 onPress={() => Linking.openURL(t('findElLink'))}
-                style={[
-                  {textDecorationLine: 'underline', textAlign: 'center'},
-                  {flex: 1, textAlign: 'left', flexDirection: 'row'},
-                  sharedStyle.boldText,
-                ]}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text
                 numberOfLines={1}

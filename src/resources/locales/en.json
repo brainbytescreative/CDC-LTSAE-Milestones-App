@@ -262,7 +262,7 @@
         "description": "A summary of your responses and other helpful information are below. Share this with your child's doctor and other care providers. Don’t wait.",
         "notSure": "{{milestoneAge}} Milestones You\nMarked as “Not Sure”",
         "notYet": "{{milestoneAge}} Milestones You\nMarked as “Not Yet”",
-        "notYetText": "Ask the doctor for developmental screening and about services that can help. Remember, acting early on concerns and missed milestones can make a big difference for {{name}}. Don’t wait. Learn more about how to help your child at: <0>cdc.gov/Concerned</0>",
+        "notYetText": "Ask the doctor for developmental screening and about services that can help. Remember, acting early on concerns and missed milestones can make a big difference for {{name}}. Don’t wait. Learn more about how to help your child at: {{breakStrBig}}<0>cdc.gov/Concerned</0>",
         "thankYouText": "Thank you for using\nCDC’s Milestone Tracker\nApp for tracking {{childName}}'s\nmilestones.",
         "thankYouText2": "Thank you again for using CDC’s Milestone Tracker App!\n\nLearn more about developmental milestones and acting early on concerns at <0>cdc.gov/ActEarly.</0>",
         "timeToCelebrate": "Take time to CELEBRATE {{name}} having reached these important milestones:",

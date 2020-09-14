@@ -2,7 +2,7 @@
 
 import {StackNavigationOptions} from '@react-navigation/stack';
 import * as FileSystem from 'expo-file-system';
-import {Platform, StyleSheet} from 'react-native';
+import {Dimensions, Platform, StyleSheet} from 'react-native';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
@@ -244,6 +244,9 @@ export const sharedStyle = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
 });
+
+export const breakStr = Dimensions.get('screen').width >= 375 ? '' : '\n';
+export const breakStrBig = Dimensions.get('screen').width >= 414 ? '' : '\n';
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
 export type DeepWriteable<T> = {-readonly [P in keyof T]: DeepWriteable<T[P]>};

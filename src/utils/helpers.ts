@@ -1,6 +1,6 @@
 import {NavigationContainerProps} from '@react-navigation/native';
 import {add, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, format} from 'date-fns';
-import {TFunction, TOptions} from 'i18next';
+import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 

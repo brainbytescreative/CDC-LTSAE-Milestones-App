@@ -5,12 +5,12 @@ import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-na
 import {Text} from 'react-native-paper';
 
 import {colors, sharedStyle} from '../resources/constants';
-import {LangCode, useChangeLanguage} from '../resources/l18n';
+import {useChangeLanguage} from '../resources/l18n';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
   title?: string;
-  onLanguageChange?: (language: LangCode) => void;
+  onLanguageChange?: (language: string) => void;
 }
 
 const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => {

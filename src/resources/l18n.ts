@@ -1,26 +1,15 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import i18next from 'i18next';
 import {useCallback} from 'react';
 import {initReactI18next} from 'react-i18next';
 import {queryCache} from 'react-query';
 
+import Storage from '../utils/Storage';
 import translationEN from './locales/en.json';
 import translationES from './locales/es.json';
 import milestonesTextsEN from './milestones/en-texts.json';
 import milestonesEN from './milestones/en.json';
 import milestonesTextsES from './milestones/es-texts.json';
 import milestonesES from './milestones/es.json';
-
-const languageCode = 'Language';
-export type LangCode = 'en' | 'es' | undefined;
-
-export const getLanguageCode = () => {
-  return AsyncStorage.getItem(languageCode) as Promise<LangCode>;
-};
-
-export const setLanguageCode = (language: string) => {
-  return AsyncStorage.setItem(languageCode, language);
-};
 
 export function useChangeLanguage() {
   return useCallback((lang) => {
@@ -32,6 +21,7 @@ export function useChangeLanguage() {
       },
       {refetchActive: true},
     );
+    Storage.setItemTyped('language', lang);
   }, []);
 }
 
@@ -40,7 +30,7 @@ const languageDetector = {
   type: 'languageDetector',
   async: true,
   detect: (callback: (language: string) => void) => {
-    return getLanguageCode().then((language) => {
+    return Storage.getItemTyped('language').then((language) => {
       callback(language || 'en');
     });
   },

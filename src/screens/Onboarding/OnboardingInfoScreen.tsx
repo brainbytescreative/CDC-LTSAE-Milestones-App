@@ -31,7 +31,7 @@ const OnboardingInfoScreen: React.FC = () => {
               <Text style={[{fontSize: 20, textAlign: 'center', marginBottom: 8}, sharedStyle.boldText]}>
                 {t('welcome')}
               </Text>
-              <Text style={{fontSize: 13, marginBottom: 24}}>{t('broughtToYouBy')}</Text>
+              <Text style={{fontSize: 15, marginBottom: 24}}>{t('broughtToYouBy')}</Text>
               <View style={styles.logosRow}>
                 <CDCLogo />
                 <LTSAELogo />
