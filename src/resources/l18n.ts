@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import i18next from 'i18next';
 import {useCallback} from 'react';
 import {initReactI18next} from 'react-i18next';
-import {queryCache, useMutation, useQuery} from 'react-query';
+import {queryCache} from 'react-query';
 
 import translationEN from './locales/en.json';
 import translationES from './locales/es.json';
@@ -22,35 +22,17 @@ export const setLanguageCode = (language: string) => {
   return AsyncStorage.setItem(languageCode, language);
 };
 
-export function useGetLanguageCode() {
-  const {data} = useQuery<LangCode, any>(languageCode, getLanguageCode);
-  return {
-    data: data || 'en',
-  };
-}
-
 export function useChangeLanguage() {
-  const [mutate] = useMutation<void, any>(
-    async (variables) => {
-      await queryCache.setQueryData([languageCode], variables);
-      return setLanguageCode(variables);
-    },
-    {
-      onSuccess: async () => {
-        // return queryCache.invalidateQueries([languageCode]);
-        // return queryCache.clear();
-        await queryCache.invalidateQueries(() => true, {refetchActive: true});
+  return useCallback((lang) => {
+    i18next.changeLanguage(lang);
+    queryCache.invalidateQueries(
+      (query) => {
+        const [key] = query.queryKey;
+        return ['questions', 'concerns', 'tips'].includes(String(key));
       },
-    },
-  );
-
-  return useCallback(
-    (lang) => {
-      i18next.changeLanguage(lang);
-      return mutate(lang);
-    },
-    [mutate],
-  );
+      {refetchActive: true},
+    );
+  }, []);
 }
 
 const languageDetector = {

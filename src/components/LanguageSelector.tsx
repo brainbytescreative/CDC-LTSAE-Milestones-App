@@ -1,10 +1,11 @@
+import i18next from 'i18next';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import {colors, sharedStyle} from '../resources/constants';
-import {LangCode, useChangeLanguage, useGetLanguageCode} from '../resources/l18n';
+import {LangCode, useChangeLanguage} from '../resources/l18n';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -14,7 +15,7 @@ interface Props {
 
 const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => {
   const changeLanguage = useChangeLanguage();
-  const {data: lngCode} = useGetLanguageCode();
+  const lngCode = i18next.language;
   const {t} = useTranslation();
 
   return (

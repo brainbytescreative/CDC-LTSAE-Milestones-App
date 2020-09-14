@@ -132,18 +132,7 @@ const RevisitScreen: React.FC = () => {
               </Trans>
             </Text>
           )}
-          <Text
-            style={[
-              {
-                fontSize: 15,
-                lineHeight: 18,
-                marginTop: 40,
-                marginHorizontal: 16,
-              },
-              sharedStyle.boldText,
-            ]}>
-            {t('timeToCelebrate', {name: child?.name})}
-          </Text>
+
           <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
             <Text style={styles.blockText}>
               {t('notSure', {
@@ -155,16 +144,30 @@ const RevisitScreen: React.FC = () => {
           {data?.groupedByAnswer['1']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
-            <Text style={styles.blockText}>
-              {t('yes', {
-                milestoneAge: milestoneAgeFormatted,
-              })}
+          <>
+            <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+              <Text style={styles.blockText}>
+                {t('yes', {
+                  milestoneAge: milestoneAgeFormatted,
+                })}
+              </Text>
+            </View>
+            <Text
+              style={[
+                {
+                  fontSize: 15,
+                  lineHeight: 18,
+                  marginTop: 40,
+                  marginHorizontal: 16,
+                },
+                sharedStyle.boldText,
+              ]}>
+              {t('timeToCelebrate', {name: child?.name})}
             </Text>
-          </View>
-          {data?.groupedByAnswer['0']?.map((item, index) => (
-            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
-          ))}
+            {data?.groupedByAnswer['0']?.map((item, index) => (
+              <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
+            ))}
+          </>
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>
               {t('unanswered', {
