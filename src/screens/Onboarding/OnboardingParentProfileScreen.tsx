@@ -79,6 +79,7 @@ const OnboardingParentProfileScreen: React.FC = () => {
               {/*    });*/}
               {/*  }}*/}
               {/*/>*/}
+              <View style={{height: 18}} />
               <Text
                 numberOfLines={1}
                 adjustsFontSizeToFit
