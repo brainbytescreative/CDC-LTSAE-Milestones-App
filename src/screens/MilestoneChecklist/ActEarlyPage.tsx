@@ -20,7 +20,6 @@ import CheckMark from '../../components/Svg/CheckMark';
 import ChevronRightBig from '../../components/Svg/ChevronRightBig';
 import NoteIcon from '../../components/Svg/NoteIcon';
 import PurpleArc from '../../components/Svg/PurpleArc';
-import withSuspense from '../../components/withSuspense';
 import {
   useGetConcern,
   useGetConcerns,
@@ -278,11 +277,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withSuspense(ActEarlyPage, {
-  shared: {
-    suspense: true,
-  },
-  queries: {
-    staleTime: Infinity,
-  },
-});
+export default ActEarlyPage;

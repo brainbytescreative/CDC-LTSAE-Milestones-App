@@ -80,6 +80,7 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
             accessibilityLabel={t('accessibility:addChildPhoto')}
             onPress={() => {
               trackChildAddAPhoto();
+              // Permissions.getAsync('')
               ImagePicker.showImagePicker(options, (response) => {
                 console.log('response.type', JSON.stringify(response, null, 2));
                 if (response.uri) {
