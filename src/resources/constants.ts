@@ -438,15 +438,13 @@ function replaceFile(path = '') {
 const cacheDir = replaceFile(`${FileSystem.cacheDirectory ?? ''}ImagePicker/`);
 const docDir = replaceFile(`${FileSystem.documentDirectory ?? ''}`);
 
-export const pathToDB = async (path = '') => {
-  // FileSystem.moveAsync()
-  const destenation = path?.replace(cacheDir, docDir);
-  await FileSystem.moveAsync({from: path, to: destenation});
-  // console.log(destenation, path, docDir, cacheDir, res);
-  return destenation.replace(docDir, '');
+export const pathToDB = async (path?: string) => {
+  const destenation = path && path.replace(cacheDir, docDir);
+  path && destenation && (await FileSystem.moveAsync({from: path, to: destenation}));
+  return destenation?.replace(docDir, '');
 };
 export const pathFromDB = (path?: string) => {
-  return `${docDir ?? ''}${path}`;
+  return path ? `${docDir ?? ''}${path}` : path;
 };
 
 // First, define a type that, when passed a union of keys, creates an object which
