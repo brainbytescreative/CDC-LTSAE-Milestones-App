@@ -34,11 +34,12 @@ export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
+      const photo = await pathToDB(variables.photo);
       const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
           name: _.upperFirst(_.trim(variables.name)),
-          photo: pathToDB(variables.photo),
+          photo: photo,
           birthday: formatISO(variables.birthday, {
             representation: 'date',
           }),
@@ -103,11 +104,12 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
   const [setSelectedChild] = useSetSelectedChild();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
+      const photo = await pathToDB(variables.data.photo);
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
           name: _.upperFirst(_.trim(variables.data.name)),
-          photo: pathToDB(variables.data.photo),
+          photo: photo,
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
           }),

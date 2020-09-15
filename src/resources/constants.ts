@@ -431,21 +431,22 @@ export const images = {
   en_m60_s221_140: require('./images/en_m60_s221_140.jpg'),
 } as {[key: string]: any};
 
-export const pathToDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: path?.replace(FileSystem.documentDirectory || '', ''),
-        default: path,
-      })
-    : path;
+function replaceFile(path = '') {
+  return Platform.OS === 'android' ? path.replace('file:///', 'file:/') : path;
+}
+
+const cacheDir = replaceFile(`${FileSystem.cacheDirectory ?? ''}ImagePicker/`);
+const docDir = replaceFile(`${FileSystem.documentDirectory ?? ''}`);
+
+export const pathToDB = async (path = '') => {
+  // FileSystem.moveAsync()
+  const destenation = path?.replace(cacheDir, docDir);
+  await FileSystem.moveAsync({from: path, to: destenation});
+  // console.log(destenation, path, docDir, cacheDir, res);
+  return destenation.replace(docDir, '');
 };
 export const pathFromDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: `${FileSystem.documentDirectory || ''}${path}`,
-        default: path,
-      })
-    : path;
+  return `${docDir ?? ''}${path}`;
 };
 
 // First, define a type that, when passed a union of keys, creates an object which

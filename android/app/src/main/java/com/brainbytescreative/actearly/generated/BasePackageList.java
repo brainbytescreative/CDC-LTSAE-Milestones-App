@@ -9,9 +9,10 @@ public class BasePackageList {
     return Arrays.<Package>asList(
         new expo.modules.application.ApplicationPackage(),
         new expo.modules.filesystem.FileSystemPackage(),
+        new expo.modules.permissions.PermissionsPackage(),
+        new expo.modules.imagepicker.ImagePickerPackage(),
         new expo.modules.mailcomposer.MailComposerPackage(),
-        new expo.modules.notifications.NotificationsPackage(),
-        new expo.modules.permissions.PermissionsPackage()
+        new expo.modules.notifications.NotificationsPackage()
     );
   }
 }

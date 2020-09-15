@@ -378,6 +378,12 @@ type InteractionType =
   | 'Started When to Act Early'
   | 'Email Summary'
   | 'Show Doctor'
+  | 'Add a Photo'
+  | 'Add Photo from Library'
+  | 'Take Photo'
+  | 'Completed Add Photo'
+  | 'Completed Add Photo: Library'
+  | 'Completed Add Photo: Take'
   | 'Completed When to Act Early';
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {

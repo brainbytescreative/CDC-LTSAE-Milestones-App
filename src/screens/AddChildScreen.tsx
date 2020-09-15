@@ -1,5 +1,11 @@
+import {useActionSheet} from '@expo/react-native-action-sheet';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+// import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import {ImagePickerOptions, ImagePickerResult, MediaTypeOptions} from 'expo-image-picker';
+import {ImageInfo} from 'expo-image-picker/src/ImagePicker.types';
+import * as Permissions from 'expo-permissions';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
@@ -16,7 +22,6 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -39,24 +44,29 @@ import {
   trackChildAddChildName,
   trackChildAge,
   trackChildCompletedAddChildName,
-  trackChildCompletedAddPhoto,
   trackChildCompletedChildDateOfBirth,
   trackChildDone,
   trackChildGender,
   trackChildStartedChildDateOfBirth,
   trackCompleteAddChild,
+  trackInteractionByType,
 } from '../utils/analytics';
 
+// const options: ImagePickerOptions = {
+//   noData: true,
+//   quality: 1.0,
+//   maxWidth: 500,
+//   maxHeight: 500,
+//   mediaType: 'photo',
+//   storageOptions: {
+//     skipBackup: true,
+//     privateDirectory: true,
+//   },
+// };
+
 const options: ImagePickerOptions = {
-  noData: true,
-  quality: 1.0,
-  maxWidth: 500,
-  maxHeight: 500,
-  mediaType: 'photo',
-  storageOptions: {
-    skipBackup: true,
-    privateDirectory: true,
-  },
+  mediaTypes: MediaTypeOptions.Images,
+  quality: 1,
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
@@ -69,45 +79,109 @@ interface CommonFieldProps {
   t: TFunction;
   name: string;
 }
+enum ActionSheetOptions {
+  takePhoto,
+  library,
+  cancel,
+}
 
-const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
-  <FastField name={name}>
-    {({field, form}: FastFieldProps<string | undefined>) => (
-      <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
-        <View style={[sharedStyle.shadow]}>
-          <TouchableOpacity
-            accessibilityRole={'button'}
-            accessibilityLabel={t('accessibility:addChildPhoto')}
-            onPress={() => {
-              trackChildAddAPhoto();
-              // Permissions.getAsync('')
-              ImagePicker.showImagePicker(options, (response) => {
-                console.log('response.type', JSON.stringify(response, null, 2));
-                if (response.uri) {
-                  trackChildCompletedAddPhoto();
-                  form.setFieldValue(field.name, response.uri);
-                }
-                console.log(response.uri);
-              });
-            }}
-            style={[styles.childImage, sharedStyle.shadow]}>
-            {field.value ? (
-              <Image
-                style={{height: '100%', width: '100%'}}
-                source={{
-                  uri: field.value,
-                }}
-              />
-            ) : (
-              <PlusIcon />
-            )}
-          </TouchableOpacity>
+const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => {
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  return (
+    <FastField name={name}>
+      {({field, form}: FastFieldProps<string | undefined>) => (
+        <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
+          <View style={[sharedStyle.shadow]}>
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={t('accessibility:addChildPhoto')}
+              onPress={() => {
+                trackChildAddAPhoto();
+
+                let interactionType: 'camera' | 'lib' | undefined;
+
+                showActionSheetWithOptions(
+                  {
+                    message: t('common:selectAPhoto'),
+                    cancelButtonIndex: 2,
+                    options: [t('common:takePhoto'), t('common:choseFromLibrary'), t('common:cancel')],
+                    textStyle: {...sharedStyle.regularText},
+                    titleTextStyle: {...sharedStyle.regularText},
+                    messageTextStyle: {...sharedStyle.regularText},
+                  },
+                  async (i: ActionSheetOptions) => {
+                    let result: (ImagePickerResult & ImageInfo) | undefined;
+                    switch (i) {
+                      case ActionSheetOptions.takePhoto:
+                        {
+                          let {status: aksStatus} = await Permissions.getAsync('camera');
+                          if (aksStatus !== 'granted') {
+                            const {status: getStatus} = await Permissions.askAsync('camera');
+                            aksStatus = getStatus;
+                          }
+
+                          result =
+                            aksStatus === 'granted'
+                              ? ((await ImagePicker.launchCameraAsync(options)) as any)
+                              : undefined;
+                          trackInteractionByType('Take Photo');
+                          interactionType = 'camera';
+                        }
+                        break;
+                      case ActionSheetOptions.library:
+                        {
+                          let {status: aksStatus} = await Permissions.getAsync('cameraRoll');
+                          if (aksStatus !== 'granted') {
+                            const {status: getStatus} = await Permissions.askAsync('cameraRoll');
+                            aksStatus = getStatus;
+                          }
+
+                          result =
+                            aksStatus === 'granted'
+                              ? ((await ImagePicker.launchImageLibraryAsync(options)) as any)
+                              : undefined;
+                          trackInteractionByType('Add Photo from Library');
+                          interactionType = 'lib';
+                        }
+                        break;
+                      case ActionSheetOptions.cancel:
+                        break;
+                    }
+
+                    if (result?.uri) {
+                      trackInteractionByType('Completed Add Photo');
+                      interactionType &&
+                        interactionType === 'camera' &&
+                        trackInteractionByType('Completed Add Photo: Take');
+                      interactionType &&
+                        interactionType === 'lib' &&
+                        trackInteractionByType('Completed Add Photo: Library');
+                      form.setFieldValue(field.name, result.uri);
+                    }
+                    console.log(result);
+                  },
+                );
+              }}
+              style={[styles.childImage, sharedStyle.shadow]}>
+              {field.value ? (
+                <Image
+                  style={{height: '100%', width: '100%'}}
+                  source={{
+                    uri: field.value,
+                  }}
+                />
+              ) : (
+                <PlusIcon />
+              )}
+            </TouchableOpacity>
+          </View>
+          <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
         </View>
-        <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
-      </View>
-    )}
-  </FastField>
-);
+      )}
+    </FastField>
+  );
+};
 
 const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
