@@ -11,7 +11,7 @@ import {InfoStackParamList} from '../components/Navigator/types';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import {colors, sharedStyle} from '../resources/constants';
+import {breakStr, colors, sharedStyle} from '../resources/constants';
 
 const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = ({navigation}) => {
   const {t} = useTranslation('info');
@@ -30,7 +30,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
       <AEScrollView>
         <Text style={[sharedStyle.screenTitle]}>{t('aboutThisApp')}</Text>
         <Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>
-          <Trans t={t} i18nKey={'aboutThisAppText'}>
+          <Trans t={t} i18nKey={'aboutThisAppText'} tOptions={{breakStr}}>
             <Text
               accessibilityRole={'link'}
               onPress={() => Linking.openURL(t('actEarlyLink'))}

@@ -1,17 +1,18 @@
 import React from 'react';
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, View, ViewProps, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import {colors, sharedStyle} from '../resources/constants';
 
-interface Props {
+type Props = {
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
-}
+} & Pick<ViewProps, 'onLayout'>;
 
-const AEYellowBox: React.FC<Props> = ({children, containerStyle, labelStyle}) => {
+const AEYellowBox: React.FC<Props> = ({children, containerStyle, labelStyle, onLayout}) => {
   return (
     <View
+      onLayout={onLayout}
       style={[
         {
           backgroundColor: colors.yellow,

@@ -135,8 +135,8 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
             style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
             itemsContainerStyle={{backgroundColor: colors.iceCold}}
             labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
-            defaultNull
-            placeholder={t('all')}
+            defaultIndex={0}
+            // placeholder={t('all')}
             items={tipFilters.map((value) => ({label: t(value), value}))}
             onChangeItem={(item) => setTipType(item.value as TipType)}
           />

@@ -16,7 +16,7 @@ import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
-import {tOpt} from '../utils/helpers';
+import {formattedAgeSingular, tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;
@@ -51,7 +51,8 @@ const RevisitScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
-  let milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted;
+  const milestoneAge = useGetMilestone().data?.milestoneAge;
+  let milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
   milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
 
   useFocusEffect(

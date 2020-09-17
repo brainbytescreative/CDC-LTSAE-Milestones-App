@@ -2,10 +2,10 @@ import React, {useReducer, useRef} from 'react';
 import {Platform, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
-interface Item {
-  label: string;
-  value: string | number;
-}
+// interface Item {
+//   label: string;
+//   value: string | number;
+// }
 
 interface Props {
   /**
@@ -118,13 +118,14 @@ const DropDownPicker: React.FC<Props> = ({
   customArrowDown,
   items,
   value,
+  defaultIndex,
 }) => {
   const [state, setState] = useReducer((p: State, a: State) => ({...p, ...a}), {
     defaultNull,
     visible: false,
     choice: {
-      label: undefined,
-      value: undefined,
+      label: items?.[Number(defaultIndex)]?.label,
+      value: items?.[Number(defaultIndex)]?.value,
     },
   });
 
@@ -227,15 +228,17 @@ const DropDownPicker: React.FC<Props> = ({
           itemsContainerStyle,
         ]}>
         <ScrollView nestedScrollEnabled bounces={false} style={[{width: '100%', zIndex}]}>
-          {items.map((item, index) => (
-            <TouchableOpacity
-              accessibilityRole={'menuitem'}
-              key={index}
-              onPress={() => select(item, index)}
-              style={[styles.dropDownItem, itemStyle, state.choice?.value === item.value && activeItemStyle]}>
-              <Text style={[labelStyle, state.choice?.value === item.value && activeLabelStyle]}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+          {items
+            .filter((v) => v.value !== state.choice?.value)
+            .map((item, index) => (
+              <TouchableOpacity
+                accessibilityRole={'menuitem'}
+                key={index}
+                onPress={() => select(item, index)}
+                style={[styles.dropDownItem, itemStyle, state.choice?.value === item.value && activeItemStyle]}>
+                <Text style={[labelStyle, state.choice?.value === item.value && activeLabelStyle]}>{item.label}</Text>
+              </TouchableOpacity>
+            ))}
         </ScrollView>
       </View>
       {/*</Portal>*/}

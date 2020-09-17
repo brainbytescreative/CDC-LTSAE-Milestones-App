@@ -189,6 +189,8 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
+  const flatListRef = useRef<KeyboardAwareFlatList>(null);
+  const flatListOffset = useRef<number>(0);
 
   useEffect(() => {
     trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
@@ -204,6 +206,10 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
       extraHeight={Platform.select({
         ios: 200,
       })}
+      onScroll={(event) => {
+        flatListOffset.current = event.nativeEvent.contentOffset.y;
+      }}
+      ref={flatListRef}
       scrollIndicatorInsets={{right: 0.1}}
       bounces={false}
       ListHeaderComponent={
@@ -225,7 +231,15 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             </Trans>
           </Text>
           {(isMissingConcern || isNotYet) && (
-            <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>
+            <AEYellowBox
+              onLayout={() => {
+                if (Platform.OS === 'ios') {
+                  flatListRef.current?.scrollToPosition(0, flatListOffset.current + 77, false);
+                }
+              }}
+              containerStyle={{marginBottom: 0}}>
+              {t('actEarlyWarning')}
+            </AEYellowBox>
           )}
         </View>
       }
