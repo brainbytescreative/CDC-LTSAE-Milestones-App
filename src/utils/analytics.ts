@@ -139,7 +139,7 @@ export function trackAction(
   const pageName = options?.page ?? (screenName && screeNameToPageName(screenName));
   // console.log('<<<', pageName, `,key: ${key}`);
   // console.log(pageName, options?.sectionName, key);
-  // console.log(pageName, key);
+  console.log(pageName, key);
   trackChecklistPage(key, {...options, pageName});
   trackActionInternal(pageName, key, {sectionName: options?.sectionName});
 }
@@ -379,11 +379,13 @@ type InteractionType =
   | 'Email Summary'
   | 'Show Doctor'
   | 'Add a Photo'
+  | 'Add Another Child'
   | 'Add Photo from Library'
   | 'Take Photo'
   | 'Completed Add Photo'
   | 'Completed Add Photo: Library'
   | 'Completed Add Photo: Take'
+  | 'Completed Add Child'
   | 'Completed When to Act Early';
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {

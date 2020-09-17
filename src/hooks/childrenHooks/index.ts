@@ -4,6 +4,7 @@ import {MutateOptions, QueryOptions, queryCache, useMutation, useQuery} from 're
 
 import {sqLiteClient} from '../../db';
 import {pathFromDB, pathToDB} from '../../resources/constants';
+import {trackInteractionByType} from '../../utils/analytics';
 import {objectToQuery} from '../../utils/helpers';
 import Storage from '../../utils/Storage';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
@@ -128,6 +129,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       if (!rowsAffected || rowsAffected === 0) {
         throw new Error('Add child failed');
       }
+      trackInteractionByType('Completed Add Child', {page: `Add child #${insertId}` as any});
       return insertId;
     },
     {

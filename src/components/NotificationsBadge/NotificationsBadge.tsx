@@ -39,13 +39,14 @@ const NotificationsBadge: React.FC = () => {
   }, [navigation, visible]);
 
   const onCrossPress = (notificationId: string) => {
-    trackInteractionByType('Delete Appointment', {page: 'Notifications'});
+    trackInteractionByType('Delete Notification', {page: 'Notifications'});
     setNotificationRead({notificationId});
   };
 
   const onNavigatePress = (notificationId: string) => {
     setIsVisible(false);
     navigateNotification(notificationId);
+    trackSelectByType('Notifications', {page: 'Notifications'});
   };
 
   return (
