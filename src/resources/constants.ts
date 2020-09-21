@@ -247,6 +247,7 @@ export const sharedStyle = StyleSheet.create({
 
 export const breakStr = Dimensions.get('screen').width >= 375 ? '' : '\n';
 export const breakStrBig = Dimensions.get('screen').width >= 414 ? '' : '\n';
+export const breakStrLarge = Dimensions.get('screen').width >= 500 ? '' : '\n';
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
 export type DeepWriteable<T> = {-readonly [P in keyof T]: DeepWriteable<T[P]>};

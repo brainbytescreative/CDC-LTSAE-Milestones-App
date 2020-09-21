@@ -87,7 +87,19 @@ const App = () => {
 
   React.useEffect(() => {
     crashlytics().log('App mounted.');
-    // crashlytics().crash();
+    // __DEV__ &&
+    //   setTimeout(() => {
+    //     Alert.alert('', 'crashtest', [
+    //       {
+    //         text: 'ok',
+    //         onPress: () => {
+    //           // crashlytics().recordError(new Error('tets'));
+    //           // crashlytics().crash();
+    //         },
+    //       },
+    //     ]);
+    //   }, 5000);
+    // console.log('test');
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync();
   }, []);

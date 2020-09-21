@@ -414,12 +414,12 @@ PODS:
     - Firebase/Analytics (~> 6.30.0)
     - React
     - RNFBApp
-  - RNFBApp (8.4.2):
+  - RNFBApp (8.4.3):
     - Firebase/CoreOnly (~> 6.30.0)
-    - React
-  - RNFBCrashlytics (8.4.4):
+    - React-Core
+  - RNFBCrashlytics (8.4.5):
     - Firebase/Crashlytics (~> 6.30.0)
-    - React
+    - React-Core
     - RNFBApp
   - RNFS (2.16.6):
     - React
@@ -737,8 +737,8 @@ SPEC CHECKSUMS:
   RNDateTimePicker: a8000390e7a4fe23d9f36492ded9282640721c82
   RNDeviceInfo: c5f8f3a456adcbba405ace475254b08febc4c095
   RNFBAnalytics: 20564db4cfd317c304fe5a8e5d840f8c9d105aaa
-  RNFBApp: 373cce42559cc7a9a42afc876746e3946de3e32e
-  RNFBCrashlytics: 834057016b34fa49e3eef028a13e35f48840c78c
+  RNFBApp: a74d8259d827c8bf55100e759cffa2e50ba6fe30
+  RNFBCrashlytics: 4039c6b27a35dd6cbbb0c111d4f668ce513a2881
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc

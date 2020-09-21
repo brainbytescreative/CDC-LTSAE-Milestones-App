@@ -94,7 +94,7 @@ const screeNameToPageName = (name: string): PageType | string => {
 function trackActionInternal(pageName: undefined | string, key: string, options?: {sectionName?: string}) {
   pageName &&
     ACPCore.trackState(pageName, {
-      'gov.cdc.appname': 'Milestone Tracker',
+      'gov.cdc.appname': 'LTSAE Milestone Tracker',
       'gov.cdc.language': i18next.language, // t5 (Language)
       'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
       'gov.cdc.osname': Platform.OS, //t54 (OS Name)

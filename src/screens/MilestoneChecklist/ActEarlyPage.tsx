@@ -199,6 +199,12 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
     };
   }, []);
 
+  useEffect(() => {
+    if (isMissingConcern || isNotYet) {
+      flatListRef.current?.scrollToPosition(0, 0, true);
+    }
+  }, [isMissingConcern, isNotYet]);
+
   const {t} = useTranslation('milestoneChecklist');
   return (
     <KeyboardAwareFlatList
@@ -232,11 +238,11 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
           </Text>
           {(isMissingConcern || isNotYet) && (
             <AEYellowBox
-              onLayout={() => {
-                if (Platform.OS === 'ios') {
-                  flatListRef.current?.scrollToPosition(0, flatListOffset.current + 77, false);
-                }
-              }}
+              // onLayout={() => {
+              //   if (Platform.OS === 'ios') {
+              //     flatListRef.current?.scrollToPosition(0, flatListOffset.current + 77, false);
+              //   }
+              // }}
               containerStyle={{marginBottom: 0}}>
               {t('actEarlyWarning')}
             </AEYellowBox>

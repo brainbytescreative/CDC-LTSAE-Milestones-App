@@ -1,35 +1,42 @@
 {
   "project_info": {
-    "project_number": "473900692643",
-    "firebase_url": "https://actearly-2d4b9.firebaseio.com",
-    "project_id": "actearly-2d4b9",
-    "storage_bucket": "actearly-2d4b9.appspot.com"
+    "project_number": "327389338000",
+    "firebase_url": "https://milestones-refactor.firebaseio.com",
+    "project_id": "milestones-refactor",
+    "storage_bucket": "milestones-refactor.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:473900692643:android:7453447739bbd7cbfabb16",
+        "mobilesdk_app_id": "1:327389338000:android:3ec14a7e9ff3bba1cb3b15",
         "android_client_info": {
           "package_name": "com.brainbytescreative.actearly"
         }
       },
       "oauth_client": [
         {
-          "client_id": "473900692643-l0l55uua4d2025b226pmooscm24qvlcg.apps.googleusercontent.com",
+          "client_id": "327389338000-9vi3qfqm12tm44b4p3fkh0amec5qpkld.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCToT48kZVhWAMEgRMbd9gdrxiER8OCrCQ"
+          "current_key": "AIzaSyCJvhVrO_mRciFL2RqLUDMdw-C_dXBUgts"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "473900692643-l0l55uua4d2025b226pmooscm24qvlcg.apps.googleusercontent.com",
+              "client_id": "327389338000-9vi3qfqm12tm44b4p3fkh0amec5qpkld.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "327389338000-85jtsiec95lb2hs62i8uif717ktuhl04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.brainbytescreative.MilestoneTracker.dev"
+              }
             }
           ]
         }

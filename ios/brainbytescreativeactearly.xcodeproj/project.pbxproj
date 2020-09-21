@@ -16,9 +16,10 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* brainbytescreativeactearlyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* brainbytescreativeactearlyTests.m */; };
-		344C8BB42481096A00CC73F6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 344C8BB32481096A00CC73F6 /* GoogleService-Info.plist */; };
 		348422F524E2B13900D0C171 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 348422F424E2B13900D0C171 /* InfoPlist.strings */; };
 		348422F924E2B25500D0C171 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 348422F824E2B25500D0C171 /* LaunchScreen.storyboard */; };
+		34C163582518B7DB00CFF2CA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C163572518B7DB00CFF2CA /* GoogleService-Info.plist */; };
+		34C163592518B7DB00CFF2CA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C163572518B7DB00CFF2CA /* GoogleService-Info.plist */; };
 		34D2BA04244F24D20016333D /* bootstrap.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 34D2BA03244F24D20016333D /* bootstrap.min.css */; };
 		406FD4A1713B40A1BDAEB487 /* Avenir-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A51E533142D7479CBFBB5A9D /* Avenir-Heavy.ttf */; };
 		4FDE57FF0F5140AB89C0103F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9FCE1229C70149C2B94EA697 /* Montserrat-Bold.ttf */; };
@@ -60,9 +61,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = brainbytescreativeactearly/main.m; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* brainbytescreativeactearly-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "brainbytescreativeactearly-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* brainbytescreativeactearly-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "brainbytescreativeactearly-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		344C8BB32481096A00CC73F6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		348422F424E2B13900D0C171 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		348422F824E2B25500D0C171 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		34C163572518B7DB00CFF2CA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		34D2BA03244F24D20016333D /* bootstrap.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = bootstrap.min.css; sourceTree = "<group>"; };
 		4DAC9463E8C77B70B8EF048F /* Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOSTests/Pods-brainbytescreativeactearly-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5ECF4A77C52DB02953E1AB83 /* Pods-brainbytescreativeactearly-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOS.release.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOS/Pods-brainbytescreativeactearly-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -139,7 +140,7 @@
 		13B07FAE1A68108700A75B9A /* brainbytescreativeactearly */ = {
 			isa = PBXGroup;
 			children = (
-				344C8BB32481096A00CC73F6 /* GoogleService-Info.plist */,
+				34C163572518B7DB00CFF2CA /* GoogleService-Info.plist */,
 				34D2BA03244F24D20016333D /* bootstrap.min.css */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -373,8 +374,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				344C8BB42481096A00CC73F6 /* GoogleService-Info.plist in Resources */,
 				34D2BA04244F24D20016333D /* bootstrap.min.css in Resources */,
+				34C163582518B7DB00CFF2CA /* GoogleService-Info.plist in Resources */,
 				348422F924E2B25500D0C171 /* LaunchScreen.storyboard in Resources */,
 				406FD4A1713B40A1BDAEB487 /* Avenir-Heavy.ttf in Resources */,
 				C5F16772532A4F27B75E918B /* Avenir-Light.ttf in Resources */,
@@ -389,6 +390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				34C163592518B7DB00CFF2CA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,7 +793,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = N4HRJ74RGJ;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -820,7 +822,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = N4HRJ74RGJ;
 				INFOPLIST_FILE = brainbytescreativeactearly/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
