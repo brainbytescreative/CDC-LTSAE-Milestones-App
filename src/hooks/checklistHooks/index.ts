@@ -20,7 +20,6 @@ import {
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
 import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
-import {trackChecklistAnswer} from '../../utils/analytics';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
@@ -153,7 +152,10 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
           }) ?? [];
 
       data.forEach((value) => {
-        queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
+        queryCache.setQueryData(
+          ['question', {childId: value.childId, questionId: value.questionId, milestoneId: milestoneAge}],
+          value,
+        );
       });
 
       const questionsGrouped = new Map(Object.entries(_.groupBy(questionsData, 'skillType')));
@@ -305,7 +307,10 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
       const answers: ConcernAnswer[] | undefined = result && result[0].rows.raw();
 
       answers?.forEach((value) => {
-        queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
+        queryCache.setQueryData(
+          ['concern', {childId: value.childId, concernId: value.concernId, milestoneId: variables.milestoneAge}],
+          value,
+        );
       });
 
       const concernsData: Concern[] =
@@ -331,12 +336,17 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
 
       concernsData
         ?.filter((value) => value.id && !answeredIds?.includes(value.id))
-        ?.forEach((value) => {
-          queryCache.setQueryData(['concern', {childId: variables.childId, concernId: value.id}], {
-            childId: variables.childId,
-            concernId: value.id,
-            answered: false,
-          });
+        ?.map((value) => {
+          // console.log(value);
+          queryCache.setQueryData(
+            ['concern', {childId: variables.childId, concernId: value.id, milestoneId: variables.milestoneAge}],
+            {
+              childId: variables.childId,
+              concernId: value.id,
+              answered: false,
+              milestoneId: milestoneAge,
+            },
+          );
         });
 
       const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
@@ -364,6 +374,7 @@ export function useGetConcern(predicate: ConcernPredicate) {
     },
     {
       enabled: Boolean(predicate.childId && predicate.milestoneId && predicate.concernId),
+      suspense: false,
     },
   );
 }
@@ -603,12 +614,16 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
 }
 
 export function useGetIsMissingMilestone({milestoneId, childId}: {milestoneId?: number; childId?: number}) {
-  return useQuery(['isMissingMilestones', {milestoneId, childId}], async (key, variables) => {
-    if (variables.milestoneId && variables.childId) {
-      return checkMissingMilestones(variables.milestoneId, variables.childId);
-    }
-    return;
-  });
+  return useQuery(
+    ['isMissingMilestones', {milestoneId, childId}],
+    async (key, variables) => {
+      if (variables.milestoneId && variables.childId) {
+        return checkMissingMilestones(variables.milestoneId, variables.childId);
+      }
+      return;
+    },
+    {suspense: false},
+  );
 }
 
 export function useCheckMissingMilestones() {
@@ -651,6 +666,10 @@ export function useCheckMissingMilestones() {
             return queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}]);
           }),
         );
+        queryCache.invalidateQueries(({queryKey}) => {
+          console.log(queryKey);
+          return false;
+        });
         queryCache.invalidateQueries('isMissingMilestones');
       },
     },

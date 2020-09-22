@@ -20,6 +20,7 @@ import CheckMark from '../../components/Svg/CheckMark';
 import ChevronRightBig from '../../components/Svg/ChevronRightBig';
 import NoteIcon from '../../components/Svg/NoteIcon';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import withSuspense from '../../components/withSuspense';
 import {
   useGetConcern,
   useGetConcerns,
@@ -33,109 +34,112 @@ import {Concern} from '../../resources/milestoneChecklist';
 import {trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 
-const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
-  const [setConcern] = useSetConcern();
-  const {t} = useTranslation('milestoneChecklist');
-  const [note, setNote] = useState('');
-  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
-  const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
+const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React.memo(
+  ({id, value, childId, onPress: onItemPress}) => {
+    const [setConcern] = useSetConcern();
+    const {t} = useTranslation('milestoneChecklist');
+    const [note, setNote] = useState('');
+    const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+    const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
 
-  const isMissingAnswerConcern = missingConcerns.includes(id || 0);
-  const onPress = isMissingAnswerConcern
-    ? undefined
-    : () => {
-        if (id && childId && milestoneId) {
-          setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
-        }
-        !concern?.answer &&
-          trackInteractionByType('Checked Act Early Item', {
-            page: 'When to Act Early',
-            concernData: {concernId: Number(id), milestoneId: Number(milestoneId)},
-          });
+    const isMissingAnswerConcern = missingConcerns.includes(id || 0);
+    const onPress = isMissingAnswerConcern
+      ? undefined
+      : () => {
+          onItemPress?.();
+          if (id && childId && milestoneId) {
+            setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
+          }
+          !concern?.answer &&
+            trackInteractionByType('Checked Act Early Item', {
+              page: 'When to Act Early',
+              concernData: {concernId: Number(id), milestoneId: Number(milestoneId)},
+            });
 
-        // if (id && childId && milestoneId && !concern?.answer) {
-        //   setConcern({concernId: id, answer: true, childId: childId, note: concern?.note, milestoneId});
-        // }
-        //
-        // if (concern?.answer) {
-        //   Alert.alert(
-        //     '',
-        //     t('alert:concernUncheck'),
-        //     [
-        //       {
-        //         text: t('dialog:no'),
-        //         style: 'cancel',
-        //       },
-        //       {
-        //         text: t('dialog:yes'),
-        //         style: 'default',
-        //         onPress: () => {
-        //           if (id && childId && milestoneId) {
-        //             setConcern({concernId: id, answer: false, childId: childId, note: null, milestoneId});
-        //           }
-        //         },
-        //       },
-        //     ],
-        //     {cancelable: false},
-        //   );
-        // } else {
-        //   trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
-        // }
-      };
+          // if (id && childId && milestoneId && !concern?.answer) {
+          //   setConcern({concernId: id, answer: true, childId: childId, note: concern?.note, milestoneId});
+          // }
+          //
+          // if (concern?.answer) {
+          //   Alert.alert(
+          //     '',
+          //     t('alert:concernUncheck'),
+          //     [
+          //       {
+          //         text: t('dialog:no'),
+          //         style: 'cancel',
+          //       },
+          //       {
+          //         text: t('dialog:yes'),
+          //         style: 'default',
+          //         onPress: () => {
+          //           if (id && childId && milestoneId) {
+          //             setConcern({concernId: id, answer: false, childId: childId, note: null, milestoneId});
+          //           }
+          //         },
+          //       },
+          //     ],
+          //     {cancelable: false},
+          //   );
+          // } else {
+          //   trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
+          // }
+        };
 
-  const saveNote = useRef(
-    _.debounce((text: string) => {
-      id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
-      trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
-    }, 500),
-  );
+    const saveNote = useRef(
+      _.debounce((text: string) => {
+        id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
+        trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
+      }, 500),
+    );
 
-  useEffect(() => {
-    !isFetching && setNote(concern?.note || '');
-  }, [concern, isFetching]);
+    useEffect(() => {
+      !isFetching && setNote(concern?.note || '');
+    }, [concern, isFetching]);
 
-  return (
-    <View>
-      <View style={[itemStyles.container, sharedStyle.shadow]}>
-        <View
-          style={{
-            paddingHorizontal: 16,
-          }}>
-          <Text style={{textAlign: 'center'}}>{value}</Text>
+    return (
+      <View>
+        <View style={[itemStyles.container, sharedStyle.shadow]}>
+          <View
+            style={{
+              paddingHorizontal: 16,
+            }}>
+            <Text style={{textAlign: 'center'}}>{value}</Text>
+          </View>
+        </View>
+        <View style={[itemStyles.buttonsContainer]}>
+          <TouchableOpacity
+            accessible={!isMissingAnswerConcern}
+            accessibilityRole={'button'}
+            accessibilityLabel={t('accessibility:concernToggleButton')}
+            disabled={isMissingAnswerConcern}
+            onPress={onPress}
+            style={[
+              itemStyles.checkMarkContainer,
+              sharedStyle.shadow,
+              concern?.answer && {backgroundColor: colors.yellow},
+            ]}>
+            <CheckMark />
+          </TouchableOpacity>
+
+          <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
+            <TextInput
+              value={note}
+              onChange={(e) => {
+                setNote(e.nativeEvent.text);
+                saveNote.current(e.nativeEvent.text);
+              }}
+              multiline
+              style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
+              placeholder={t('addANote')}
+            />
+            {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}
+          </View>
         </View>
       </View>
-      <View style={[itemStyles.buttonsContainer]}>
-        <TouchableOpacity
-          accessible={!isMissingAnswerConcern}
-          accessibilityRole={'button'}
-          accessibilityLabel={t('accessibility:concernToggleButton')}
-          disabled={isMissingAnswerConcern}
-          onPress={onPress}
-          style={[
-            itemStyles.checkMarkContainer,
-            sharedStyle.shadow,
-            concern?.answer && {backgroundColor: colors.yellow},
-          ]}>
-          <CheckMark />
-        </TouchableOpacity>
-
-        <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
-          <TextInput
-            value={note}
-            onChange={(e) => {
-              setNote(e.nativeEvent.text);
-              saveNote.current(e.nativeEvent.text);
-            }}
-            multiline
-            style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
-            placeholder={t('addANote')}
-          />
-          {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}
-        </View>
-      </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const itemStyles = StyleSheet.create({
   container: {
@@ -199,11 +203,17 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
     };
   }, []);
 
-  useEffect(() => {
-    if (isMissingConcern || isNotYet) {
+  const onItemPres = () => {
+    if (!isMissingConcern && !isNotYet) {
       flatListRef.current?.scrollToPosition(0, 0, true);
     }
-  }, [isMissingConcern, isNotYet]);
+  };
+
+  // useEffect(() => {
+  //   if (isMissingConcern || isNotYet) {
+  //     flatListRef.current?.scrollToPosition(0, 0, true);
+  //   }
+  // }, [isMissingConcern, isNotYet]);
 
   const {t} = useTranslation('milestoneChecklist');
   return (
@@ -250,7 +260,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
         </View>
       }
       data={concerns || []}
-      renderItem={({item}) => <Item {...item} childId={childId} />}
+      renderItem={({item}) => <Item {...item} childId={childId} onPress={onItemPres} />}
       keyExtractor={(item) => `concern-${item.id}`}
       ListFooterComponent={() => (
         <View>
@@ -297,4 +307,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActEarlyPage;
+export default withSuspense(ActEarlyPage, {shared: {suspense: false}});

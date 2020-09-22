@@ -111,8 +111,6 @@ const MilestoneChecklistScreen: React.FC<{
   const {refetch: refetchAnswers} = useGetCheckListAnswers(milestoneAge, childId);
   const prevSection = useRef<{name: Section}>({name: 'social'}).current;
 
-  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
-
   useEffect(() => {
     if (gotStartedStatus === 'success' && !gotStarted) {
       navigation.replace('MilestoneChecklistGetStarted');
