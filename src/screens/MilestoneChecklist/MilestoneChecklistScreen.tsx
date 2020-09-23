@@ -4,10 +4,10 @@ import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigat
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, Platform, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, View} from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
-import {queryCache, useQuery} from 'react-query';
+import {queryCache} from 'react-query';
 
 import ButtonWithChevron from '../../components/ButtonWithChevron';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
@@ -24,7 +24,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
-import {formattedAgeSingular, slowdown} from '../../utils/helpers';
+import {formattedAgeSingular} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -60,7 +60,12 @@ const QuestionsList: React.FC<{
         renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
         keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
         ListHeaderComponent={() => (
-          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>{milestoneAgeFormatted}</Text>
+          <>
+            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>
+              {milestoneAgeFormatted}
+            </Text>
+            <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
+          </>
         )}
         ListFooterComponent={() => (
           <View style={{marginTop: 50}}>
@@ -211,6 +216,15 @@ const MilestoneChecklistScreen: React.FC<{
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  header: {
+    textAlign: 'center',
+    fontSize: 22,
+    marginTop: 5,
+    fontFamily: 'Montserrat-Bold',
+  },
+});
 
 export default withSuspense(MilestoneChecklistScreen, {
   shared: {
