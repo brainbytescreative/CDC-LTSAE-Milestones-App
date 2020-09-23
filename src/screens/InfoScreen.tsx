@@ -39,7 +39,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
             <Text style={sharedStyle.boldText} />
             <Text
               accessibilityRole={'link'}
-              onPress={() => Linking.openURL(t('actEarlyLink'))}
+              onPress={() => Linking.openURL(t('actEarlyLink2'))}
               style={{textDecorationLine: 'underline'}}
             />
           </Trans>
