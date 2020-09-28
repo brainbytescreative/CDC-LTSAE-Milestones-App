@@ -757,7 +757,7 @@ export function useSetWellChildCheckUpAppointments() {
           return undefined;
         }
         return {
-          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          notificationId: `well_child_check_up_no_checklist_${child.id}_${Math.abs(value)}`,
           fireDateTimestamp,
           body: 'notifications:wellCheckUpNoChecklist',
           milestoneId: Math.abs(value),
@@ -775,7 +775,7 @@ export function useSetWellChildCheckUpAppointments() {
           return undefined;
         }
         return {
-          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          notificationId: `well_child_check_up_sr1_${child.id}_${Math.abs(value)}`,
           fireDateTimestamp,
           body: 'notifications:wellCheckUpSR1',
           milestoneId: Math.abs(value),
@@ -793,7 +793,7 @@ export function useSetWellChildCheckUpAppointments() {
           return undefined;
         }
         return {
-          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          notificationId: `well_child_check_up_sr2_${child.id}_${Math.abs(value)}`,
           fireDateTimestamp,
           body: 'notifications:wellCheckUpSR2',
           milestoneId: Math.abs(value),
@@ -808,7 +808,7 @@ export function useSetWellChildCheckUpAppointments() {
           return undefined;
         }
         return {
-          notificationId: `well_child_check_up_appointment_${child.id}_${Math.abs(value)}`,
+          notificationId: `well_child_check_up_5_days_after_birthday_${child.id}_${Math.abs(value)}`,
           fireDateTimestamp,
           body: 'notifications:wellCheckUp5DaysAfterBirthday',
           milestoneId: Math.abs(value),
