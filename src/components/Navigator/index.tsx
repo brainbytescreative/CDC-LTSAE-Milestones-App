@@ -16,6 +16,7 @@ import AddChildScreen from '../../screens/AddChildScreen';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
+import {trackNotificationById} from '../../utils/analytics';
 import ErrorBoundary from '../ErrorBoundary';
 import withSuspense from '../withSuspense';
 import RootDrawer from './RootDrawer';
@@ -76,7 +77,8 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
   // );
 
   React.useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(() => {
+    const subscription = Notifications.addNotificationReceivedListener((data) => {
+      trackNotificationById(data.request.identifier);
       setTimeout(() => {
         queryCache.invalidateQueries('unreadNotifications');
       }, 2000);

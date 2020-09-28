@@ -336,6 +336,36 @@ export function trackSelectByType(type: SelectEventType, options?: Parameters<ty
   trackAction(`Select: ${type}`, options);
 }
 
+export function trackNotificationById(id: string) {
+  let notificationName: string | undefined;
+
+  if (id.startsWith('milestone_birthday')) {
+    notificationName = 'Next Milestone';
+  } else if (id.startsWith('well_child_check_up_5_days_after_birthday')) {
+    notificationName = 'Well Child Reminder Checklist';
+  } else if (id.startsWith('well_child_check_up_no_checklist')) {
+    notificationName = 'Well Child Reminder No Checklist';
+  } else if (id.startsWith('well_child_check_up_sr')) {
+    notificationName = 'Well Child Reminder Screening';
+  } else if (id.startsWith('appointment_2DaysBefore')) {
+    notificationName = 'Appointment Reminder';
+  } else if (id.startsWith('recommendation_1day_passed')) {
+    notificationName = 'Concern 1';
+  } else if (id.startsWith('recommendation_1week_passed')) {
+    notificationName = 'Concern 2';
+  } else if (id.startsWith('recommendation_1week_passed')) {
+    notificationName = 'Concern 2';
+  } else if (id.startsWith('recommendation_4weeks_passed')) {
+    notificationName = 'Concern 3';
+  } else if (id.startsWith('milestone_reminder')) {
+    notificationName = 'Complete Checklist';
+  } else if (id.startsWith('tips')) {
+    notificationName = 'Remind Me';
+  }
+
+  notificationName && trackAction(`Notification: ${notificationName}`, {page: 'Notifications'});
+}
+
 const notificationSetting: Record<string, string | undefined> = {
   milestoneNotifications: 'Milestone Notifications',
   appointmentNotifications: 'Appointment Notifications',

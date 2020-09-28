@@ -94,7 +94,8 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
         </Text>
         <ViewPager
           onPageSelected={({nativeEvent: {position: p}}) => {
-            p !== position && trackAction(`Select: How to Use App: ${eventNames[userType][p]}`);
+            p !== position &&
+              trackAction(`Select: How to Use App: ${eventNames[userType][p]}`, {page: 'How to Use App'});
             setPosition(p);
           }}
           style={styles.viewPager}
