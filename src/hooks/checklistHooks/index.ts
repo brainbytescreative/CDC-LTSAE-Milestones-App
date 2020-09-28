@@ -1,5 +1,6 @@
 import {parseISO} from 'date-fns';
 import * as MailComposer from 'expo-mail-composer';
+import i18next from 'i18next';
 import _ from 'lodash';
 import nunjucks from 'nunjucks';
 import {useMemo} from 'react';
@@ -7,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
-import {getChecklistAnswer} from '../../db/checklistQueries';
+import {getChecklistAnswer, setAnswer} from '../../db/checklistQueries';
 import {
   MilestoneIdType,
   PropType,
@@ -19,7 +20,6 @@ import {
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
 import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
-import {trackChecklistAnswer} from '../../utils/analytics';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
@@ -53,19 +53,19 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
+  const childBirthday = child?.birthday || currentChild?.birthday;
 
   return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
-    ['milestone', {childBirthday: child?.birthday || currentChild?.birthday}],
+    ['milestone', {childBirthday}],
     async (key, variables) => {
       if (!variables.childBirthday) {
         return;
       }
-      const betweenCheckList = false;
 
       const birthDay =
         typeof variables.childBirthday === 'string' ? parseISO(variables.childBirthday) : variables.childBirthday;
 
-      const {milestoneAge, isTooYong} = calcChildAge(birthDay);
+      const {milestoneAge, isTooYong, betweenCheckList} = calcChildAge(birthDay);
 
       let milestoneAgeFormatted;
       let milestoneAgeFormattedDashes;
@@ -84,6 +84,9 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
         isTooYong,
         betweenCheckList,
       };
+    },
+    {
+      enabled: Boolean(childBirthday),
     },
   );
 }
@@ -121,10 +124,21 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       const questionsData =
         checklistMap
           .get(variables.milestoneAge)
-          ?.milestones?.map((item) => ({
-            ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.childGender})),
-          }))
+          ?.milestones?.map((item) => {
+            // const value =
+            //   item.value && __DEV__
+            //     ? [
+            //         t(item.value, {lng: 'en', ...tOpt({t, gender: variables.childGender})}),
+            //         t(item.value, {lng: 'es', ...tOpt({t, gender: variables.childGender})}),
+            //       ].join('\n\n')
+            //     : t(item.value, tOpt({t, gender: variables.childGender}));
+
+            const value = t(item.value, tOpt({t, gender: variables.childGender}));
+            return {
+              ...item,
+              value: _.trim(value, '.'),
+            };
+          })
           ?.sort((a, b) => {
             const aIsAnswered = answersIds.includes(a.id);
             const bIsAbswered = answersIds.includes(b.id);
@@ -138,7 +152,10 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
           }) ?? [];
 
       data.forEach((value) => {
-        queryCache.setQueryData(['question', {childId: value.childId, questionId: value.questionId}], value);
+        queryCache.setQueryData(
+          ['question', {childId: value.childId, questionId: value.questionId, milestoneId: milestoneAge}],
+          value,
+        );
       });
 
       const questionsGrouped = new Map(Object.entries(_.groupBy(questionsData, 'skillType')));
@@ -148,10 +165,10 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       const answersById = new Map<string, MilestoneAnswer>(Object.entries(_.keyBy(data, 'questionId')));
 
       questionsById.forEach((value, mKey, map) => map.set(mKey, {...map.get(mKey)!, ...answersById.get(mKey)}));
-      const groupedByAnswer: Record<string, {id: number; value?: string; note: string}[]> = _.groupBy(
-        Array.from(questionsById.values()),
-        'answer',
-      ) as any;
+      const groupedByAnswer: Record<
+        Answer | 'undefined' | string,
+        {id: number; value?: string; note: string}[]
+      > = _.groupBy(Array.from(questionsById.values()), 'answer') as any;
 
       groupedByAnswer.undefined = Array.from(_.merge(groupedByAnswer.undefined, groupedByAnswer.null));
 
@@ -236,55 +253,29 @@ export function useSetQuestionAnswer() {
   const [checkMissing] = useCheckMissingMilestones();
   const [setReminder] = useSetCompleteMilestoneReminder();
 
-  return useMutation<Answer | undefined, MilestoneAnswer>(
+  return useMutation<void, MilestoneAnswer>(
     async (variables) => {
       const {answer, childId, note, questionId, milestoneId} = variables;
-      answer && trackChecklistAnswer(answer);
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
-      const prevAnswerRes = await sqLiteClient.dB?.executeSql(
-        `
-          SELECT answer
-          FROM milestones_answers
-          WHERE childId = ?1
-            AND milestoneId = ?2
-            AND questionId = ?3
-          LIMIT 1
-      `,
-        [childId, milestoneId, questionId],
-      );
-      const prevAnswer = prevAnswerRes && prevAnswerRes[0].rows.item(0)?.answer;
-
-      const result = await sqLiteClient.dB?.executeSql(
-        `
-                  INSERT OR
-                  REPLACE
-                  INTO milestones_answers (childId, questionId, answer, milestoneId, note)
-                  VALUES (?1, ?2, ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM milestones_answers WHERE questionId = ?2 AND childId = ?1)))
-        `,
-        [childId, questionId, answer, milestoneId, note],
-      );
-
-      if (!result || result[0].rowsAffected === 0) {
-        throw new Error('Update failed');
-      }
-
-      return prevAnswer;
+      await setAnswer({childId, questionId, answer, milestoneId, note});
     },
     {
       throwOnError: false,
-      onSuccess: (prevAnswer, {childId, questionId, milestoneId, answer}) => {
+      onSuccess: async (data, {childId, questionId, milestoneId, answer}) => {
         checkMissing({childId, milestoneId});
         // queryCache.invalidateQueries(['question', {childId, questionId, milestoneId}]).then();
         // todo optimistic
-        queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
+        await queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
         if (milestoneAge) {
-          queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
+          await queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
         } else {
-          queryCache.invalidateQueries('monthProgress');
+          await queryCache.invalidateQueries('monthProgress');
         }
-
-        prevAnswer !== answer && setReminder({childId, questionId, milestoneId, answer, prevAnswer});
+        // const prevAnswer = await getAnswerValue({childId, milestoneId, questionId});
+        // console.log(prevAnswer);
+        // if (prevAnswer !== answer) {
+        await setReminder({childId, questionId, milestoneId, answer});
+        // }
       },
     },
   );
@@ -316,14 +307,17 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
       const answers: ConcernAnswer[] | undefined = result && result[0].rows.raw();
 
       answers?.forEach((value) => {
-        queryCache.setQueryData(['concern', {childId: value.childId, concernId: value.concernId}], value);
+        queryCache.setQueryData(
+          ['concern', {childId: value.childId, concernId: value.concernId, milestoneId: variables.milestoneAge}],
+          value,
+        );
       });
 
       const concernsData: Concern[] =
         checklistMap.get(Number(milestoneAge))?.concerns?.map((item) => {
           return {
             ...item,
-            value: item.value && t(item.value, tOpt({t, gender: variables.gender})),
+            value: item.value && _.trim(t(item.value, tOpt({t, gender: variables.gender})), '.'),
           };
         }) ?? [];
 
@@ -342,12 +336,17 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
 
       concernsData
         ?.filter((value) => value.id && !answeredIds?.includes(value.id))
-        ?.forEach((value) => {
-          queryCache.setQueryData(['concern', {childId: variables.childId, concernId: value.id}], {
-            childId: variables.childId,
-            concernId: value.id,
-            answered: false,
-          });
+        ?.map((value) => {
+          // console.log(value);
+          queryCache.setQueryData(
+            ['concern', {childId: variables.childId, concernId: value.id, milestoneId: variables.milestoneAge}],
+            {
+              childId: variables.childId,
+              concernId: value.id,
+              answered: false,
+              milestoneId: milestoneAge,
+            },
+          );
         });
 
       const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
@@ -363,14 +362,21 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
 type ConcernPredicate = Partial<Pick<ConcernAnswer, 'childId' | 'concernId' | 'milestoneId'>>;
 
 export function useGetConcern(predicate: ConcernPredicate) {
-  return useQuery<ConcernAnswer, [string, typeof predicate]>(['concern', predicate], async (key, variables) => {
-    const result = await sqLiteClient.dB?.executeSql('select * from concern_answers where concernId=? and childId=?', [
-      variables.concernId,
-      variables.childId,
-    ]);
+  return useQuery<ConcernAnswer, [string, typeof predicate]>(
+    ['concern', predicate],
+    async (key, variables) => {
+      const [result] = await sqLiteClient.db.executeSql(
+        'select * from concern_answers where concernId=? and childId=?',
+        [variables.concernId, variables.childId],
+      );
 
-    return result && result[0].rows.item(0);
-  });
+      return result.rows.item(0);
+    },
+    {
+      enabled: Boolean(predicate.childId && predicate.milestoneId && predicate.concernId),
+      suspense: false,
+    },
+  );
 }
 
 export function useSetConcern() {
@@ -386,7 +392,11 @@ export function useSetConcern() {
                   REPLACE
                   INTO concern_answers (concernId, answer, childId, milestoneId, note)
                   VALUES (?1, coalesce(?2, coalesce((SELECT answer FROM concern_answers WHERE concernId=?1 AND childId=?3), 0)), ?3, ?4,
-                          COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3)))
+                          ${
+                            note === undefined
+                              ? 'COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3))'
+                              : '?5'
+                          })
         `,
         [concernId, answer, childId, milestoneId, note],
       );
@@ -399,13 +409,13 @@ export function useSetConcern() {
       onSuccess: async (data, {childId, concernId, milestoneId}) => {
         // const predicate = {childId, concernId};
         // console.log(predicate, answer);
+        await queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}], {exact: true});
         const {isMissingConcern} = await checkMissing({childId, milestoneId});
         if (isMissingConcern) {
           await setRecommendationNotifications({milestoneId, child: {id: childId}});
         } else {
           await deleteRecommendationNotifications({milestoneId, childId});
         }
-        await queryCache.invalidateQueries(['concern', {childId, concernId}]);
       },
     },
   );
@@ -580,19 +590,23 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
 
   return {
     compose: () => {
+      const body = nunjucks.renderString(emailSummaryContent[i18next.language]!, {
+        childName: childData?.name || child?.name,
+        concerns: concerns?.concerned,
+        skippedItems: data?.groupedByAnswer[`${undefined}`],
+        yesItems: data?.groupedByAnswer['0'],
+        notSureItems: data?.groupedByAnswer['1'],
+        notYetItems: data?.groupedByAnswer['2'],
+        formattedAge: milestoneAgeFormatted,
+        currentDayText: formatDate(new Date(), 'date'),
+        ...tOpt({t, gender: childData?.gender || child?.gender}),
+      });
+
+      // console.log(body);
+
       return MailComposer.composeAsync({
         isHtml: true,
-        body: nunjucks.renderString(emailSummaryContent.en, {
-          childName: childData?.name || child?.name,
-          concerns: concerns?.concerned,
-          skippedItems: data?.groupedByAnswer[`${undefined}`],
-          yesItems: data?.groupedByAnswer['0'],
-          notSureItems: data?.groupedByAnswer['1'],
-          notYetItems: data?.groupedByAnswer['2'],
-          formattedAge: milestoneAgeFormatted,
-          currentDayText: formatDate(new Date(), 'date'),
-          ...tOpt({t, gender: childData?.gender || child?.gender}),
-        }),
+        body: body,
       });
     },
     loading: !(concernsStatus === 'success' && questionsStatus === 'success' && milestoneStatus === 'success'),
@@ -600,12 +614,16 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
 }
 
 export function useGetIsMissingMilestone({milestoneId, childId}: {milestoneId?: number; childId?: number}) {
-  return useQuery(['isMissingMilestones', {milestoneId, childId}], async (key, variables) => {
-    if (variables.milestoneId && variables.childId) {
-      return checkMissingMilestones(variables.milestoneId, variables.childId);
-    }
-    return;
-  });
+  return useQuery(
+    ['isMissingMilestones', {milestoneId, childId}],
+    async (key, variables) => {
+      if (variables.milestoneId && variables.childId) {
+        return checkMissingMilestones(variables.milestoneId, variables.childId);
+      }
+      return;
+    },
+    {suspense: false},
+  );
 }
 
 export function useCheckMissingMilestones() {
@@ -648,6 +666,10 @@ export function useCheckMissingMilestones() {
             return queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}]);
           }),
         );
+        queryCache.invalidateQueries(({queryKey}) => {
+          console.log(queryKey);
+          return false;
+        });
         queryCache.invalidateQueries('isMissingMilestones');
       },
     },

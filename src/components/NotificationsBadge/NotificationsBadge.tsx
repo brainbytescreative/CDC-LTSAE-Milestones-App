@@ -24,7 +24,6 @@ const NotificationsBadge: React.FC = () => {
   const {data: notifications} = useGetUnreadNotifications();
   const [setNotificationRead] = useSetNotificationRead();
   const [navigateNotification] = useNavigateNotification();
-  const navigate = useNavigation();
 
   React.useLayoutEffect(() => {
     const onPress = () => {
@@ -40,13 +39,14 @@ const NotificationsBadge: React.FC = () => {
   }, [navigation, visible]);
 
   const onCrossPress = (notificationId: string) => {
-    trackInteractionByType('Delete Appointment');
+    trackInteractionByType('Delete Notification', {page: 'Notifications'});
     setNotificationRead({notificationId});
   };
 
   const onNavigatePress = (notificationId: string) => {
     setIsVisible(false);
-    navigateNotification(notificationId, navigate);
+    navigateNotification(notificationId);
+    trackSelectByType('Notifications', {page: 'Notifications'});
   };
 
   return (

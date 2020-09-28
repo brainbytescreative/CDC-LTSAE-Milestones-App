@@ -24,3 +24,9 @@ export async function getSelectedChildIdFallback(): Promise<ChildDbRecord['id'] 
   const res = await sqLiteClient.db.executeSql('select id from children order by id  limit 1');
   return res[0].rows.item(0)?.id;
 }
+
+export async function getChildrenCount() {
+  const [res] = await sqLiteClient.db.executeSql('SELECT count(id) cnt FROM children');
+  return Number(res.rows.item(0)?.['cnt']);
+  // return __DEV__ ? 0 : Number(res.rows.item(0)?.['cnt']);
+}

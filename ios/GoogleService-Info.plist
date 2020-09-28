@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>473900692643-opgv946l19m8avag2p5249p8j9mq95qu.apps.googleusercontent.com</string>
+	<string>327389338000-85jtsiec95lb2hs62i8uif717ktuhl04.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.473900692643-opgv946l19m8avag2p5249p8j9mq95qu</string>
+	<string>com.googleusercontent.apps.327389338000-85jtsiec95lb2hs62i8uif717ktuhl04</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDVZaq5N-N8uVXZqF6aWFkoby3IuAHXsZE</string>
+	<string>AIzaSyADYhK9SQtGFMd6DWklZludCRCCmChAkbc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>473900692643</string>
+	<string>327389338000</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.brainbytescreative.MilestoneTracker.dev</string>
 	<key>PROJECT_ID</key>
-	<string>actearly-2d4b9</string>
+	<string>milestones-refactor</string>
 	<key>STORAGE_BUCKET</key>
-	<string>actearly-2d4b9.appspot.com</string>
+	<string>milestones-refactor.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:473900692643:ios:0439230eee6cdb36fabb16</string>
+	<string>1:327389338000:ios:e6c1be9d1c9265bdcb3b15</string>
 	<key>DATABASE_URL</key>
-	<string>https://actearly-2d4b9.firebaseio.com</string>
+	<string>https://milestones-refactor.firebaseio.com</string>
 </dict>
 </plist>

@@ -1,16 +1,17 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useEffect, useRef} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {Linking, ScrollView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonRounded from '../../components/AEButtonRounded';
 import AEScrollView from '../../components/AEScrollView';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
 import {Section, colors, sharedStyle, skillTypes} from '../../resources/constants';
+import {formattedAgeSingular} from '../../utils/helpers';
 
 interface Props {
   onNext: () => void;
@@ -39,19 +40,40 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
     }, []),
   );
 
+  useLayoutEffect(() => {
+    scrollViewRef.current?.scrollTo({y: 0, animated: false});
+  }, [section]);
+
   const isBirthday: boolean = Number(milestoneAge) % 12 === 0;
+  const yearMilestone = t(`common:birthday_${Number(milestoneAge) / 12}`, {count: 2});
+
+  const headerAgeText = formattedAgeSingular(t, milestoneAge);
 
   return (
     <AEScrollView innerRef={scrollViewRef}>
       <View style={{flex: 1}}>
         <View style={{flexGrow: 1}}>
-          <Text style={[styles.header, {marginTop: 20}]}>{milestoneAgeFormatted}</Text>
-          <Text style={[styles.header]}>{t('milestoneQuickView')}</Text>
-          <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
-            {isBirthday
-              ? t('quickViewMessageBirthDay', {milestone: milestoneAgeFormatted})
-              : t('quickViewMessage', {milestone: milestoneAgeFormatted})}
-          </Text>
+          <Text style={[styles.header, {marginTop: 20}]}>{t('quickviewAge', {age: headerAgeText})}</Text>
+          {section !== 'actEarly' ? (
+            <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+              {isBirthday
+                ? t('quickViewMessageBirthDay', {milestone: yearMilestone, section})
+                : t('quickViewMessage', {milestone: milestoneAgeFormatted, section})}
+            </Text>
+          ) : (
+            <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+              <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => {
+                    Linking.openURL(t('actEarlyMessageLink'));
+                  }}
+                  style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+                />
+                <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+              </Trans>
+            </Text>
+          )}
 
           {questionsGrouped?.get(section)?.map((item, index) => (
             <View
@@ -61,7 +83,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 marginHorizontal: 48,
                 marginTop: 15,
               }}>
-              <Text style={{fontSize: 15, marginRight: 15}}>{'+'}</Text>
+              <Text style={{fontSize: 15, marginRight: 15}}>{'•'}</Text>
               <View
                 style={{
                   flexGrow: 1,
@@ -87,7 +109,6 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
 const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
-    textTransform: 'capitalize',
     marginTop: 5,
     marginHorizontal: 48,
     ...sharedStyle.largeBoldText,

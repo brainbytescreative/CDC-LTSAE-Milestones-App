@@ -1,19 +1,22 @@
 import {useFocusEffect} from '@react-navigation/native';
+import i18next from 'i18next';
+import _ from 'lodash';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Image, Linking, StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import AEScrollView from '../components/AEScrollView';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import LanguageSelector from '../components/LanguageSelector';
+import LTSAELogo from '../components/LTSAELogo';
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {colors, sharedStyle, suspenseEnabled} from '../resources/constants';
-import {tOpt} from '../utils/helpers';
+import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
+import {formattedAgeSingular, tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;
@@ -48,7 +51,9 @@ const RevisitScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
-  const {data: {milestoneAgeFormattedDashes} = {}} = useGetMilestone();
+  const milestoneAge = useGetMilestone().data?.milestoneAge;
+  let milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+  milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -76,24 +81,30 @@ const RevisitScreen: React.FC = () => {
           }}
           style={{marginHorizontal: 32, marginTop: 16}}
         />
-        <Text
-          style={[
-            sharedStyle.screenTitle,
-            {
-              textTransform: 'none',
-            },
-          ]}>
-          {t('thankYouText', {childName: child?.name})}
-        </Text>
+        <Text style={[sharedStyle.screenTitle]}>{t('thankYouText', {childName: child?.name})}</Text>
         <View style={styles.logosRow}>
           <CDCLogo />
-          <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
+          <LTSAELogo />
         </View>
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
-          <Trans t={t} i18nKey={'description'} tOptions={{name: child?.name}}>
-            <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
-          </Trans>
+          {t('description')}
         </Text>
+        <View style={[styles.yellowTipContainer, {marginTop: 30, marginHorizontal: 32}]}>
+          <Text style={styles.yellowTipText}>
+            {t('yellowTip', {
+              childName: child?.name,
+              ...tOpt({t, gender: child?.gender}),
+            })}
+          </Text>
+        </View>
+        <Text
+          style={[
+            {fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'},
+            sharedStyle.boldText,
+          ]}>
+          {t('actearly', {name: child?.name})}
+        </Text>
+
         <View style={{marginHorizontal: 32}}>
           <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
@@ -104,75 +115,85 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.tanHide}]}>
             <Text style={styles.blockText}>
               {t('notYet', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
           {data?.groupedByAnswer['2']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
-          <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
-            <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name}}>
-              <Text
-                accessibilityRole={'link'}
-                onPress={() => Linking.openURL(t('concernedLink'))}
-                style={{textDecorationLine: 'underline'}}
-              />
-            </Trans>
-          </Text>
-          <Text
-            style={[
-              {
-                fontSize: 15,
-                lineHeight: 18,
-                marginTop: 40,
-                marginHorizontal: 16,
-              },
-              sharedStyle.boldText,
-            ]}>
-            {t('timeToCelebrate', {name: child?.name})}
-          </Text>
+          {data?.groupedByAnswer['2']?.length && (
+            <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
+              <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name, breakStr, breakStrBig}}>
+                <Text
+                  accessibilityRole={'link'}
+                  onPress={() => Linking.openURL(t('concernedLink'))}
+                  style={{textDecorationLine: 'underline'}}
+                />
+              </Trans>
+            </Text>
+          )}
+
+          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
+            <Text style={styles.blockText}>
+              {t('notSure', {
+                milestoneAge: milestoneAgeFormatted,
+              })}
+            </Text>
+          </View>
+          <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32}]}>{t('unsureTip')}</Text>
+          {data?.groupedByAnswer['1']?.map((item, index) => (
+            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
+          ))}
+          <>
+            <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
+              <Text style={styles.blockText}>
+                {t('yes', {
+                  milestoneAge: milestoneAgeFormatted,
+                })}
+              </Text>
+            </View>
+            <Text
+              style={[
+                {
+                  fontSize: 15,
+                  lineHeight: 18,
+                  marginTop: 40,
+                  marginHorizontal: 16,
+                },
+                sharedStyle.boldText,
+              ]}>
+              {t('timeToCelebrate', {name: child?.name})}
+            </Text>
+            {data?.groupedByAnswer['0']?.map((item, index) => (
+              <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
+            ))}
+          </>
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>
               {t('unanswered', {
-                milestoneAge: milestoneAgeFormattedDashes,
+                milestoneAge: milestoneAgeFormatted,
               })}
             </Text>
           </View>
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} id={item.id} note={item.note} />
           ))}
-          <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
-            <Text style={styles.blockText}>
-              {t('notSure', {
-                milestoneAge: milestoneAgeFormattedDashes,
-              })}
-            </Text>
-          </View>
-          {data?.groupedByAnswer['1']?.map((item, index) => (
-            <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
-          ))}
-          <View style={[styles.yellowTipContainer, {marginTop: 40}]}>
-            <Text style={styles.yellowTipText}>
-              {t('yellowTip', {
-                childName: child?.name,
-                ...tOpt({t, gender: child?.gender}),
-              })}
-            </Text>
-          </View>
+
           <Text
             style={{
+              marginTop: 40,
               marginBottom: 50,
               marginHorizontal: 16,
               textAlign: 'center',
               lineHeight: 18,
               fontSize: 15,
             }}>
-            <Trans t={t} i18nKey={'thankYouText2'}>
+            <Trans t={t} i18nKey={'thankYouText2'} tOptions={{breakStr}}>
               <Text
                 accessibilityRole={'link'}
                 onPress={() => Linking.openURL(t('actEarlyLink'))}
-                style={{textDecorationLine: 'underline'}}
+                style={{textDecorationLine: 'underline', textAlign: 'center'}}
               />
             </Trans>
           </Text>
@@ -208,7 +229,7 @@ const styles = StyleSheet.create({
   yellowTipContainer: {
     paddingHorizontal: 25,
     paddingVertical: 10,
-    marginBottom: 50,
+    // marginBottom: 50,
     alignItems: 'center',
     backgroundColor: colors.yellow,
     borderRadius: 20,

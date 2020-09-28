@@ -5,26 +5,17 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
 import React, {useCallback, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Linking,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Alert, Linking, Platform, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryCache} from 'react-query';
 
+import AEButtonMultiline from '../components/AEButtonMultiline';
+import AEButtonRounded from '../components/AEButtonRounded';
 import ChildPhoto from '../components/ChildPhoto';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import LanguageSelector from '../components/LanguageSelector';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {ChildSummaryParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
 import NoteIcon from '../components/Svg/NoteIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
@@ -41,7 +32,8 @@ import {
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
-import {trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import {trackInteractionByType, trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import {formattedAgeSingular} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -78,10 +70,10 @@ const Item: React.FC<ItemProps> = ({
       <Text style={{fontSize: 15}}>{value}</Text>
       {!!note && noteLocal === undefined && (
         <Text style={{fontSize: 15}}>
-          <Text style={{fontFamily: 'Montserrat-Bold'}}>
+          <Text style={[sharedStyle.boldText]}>
             {t('note')}
             {': '}
-          </Text>{' '}
+          </Text>
           {note}
         </Text>
       )}
@@ -89,7 +81,7 @@ const Item: React.FC<ItemProps> = ({
       {noteLocal !== undefined && (
         <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
           <TextInput
-            value={noteLocal || note || ''}
+            value={noteLocal}
             onChange={(e) => {
               setNote(e.nativeEvent.text);
               // saveNote(e.nativeEvent.text);
@@ -220,36 +212,76 @@ const SummaryItems = withSuspense(
     const onEditConcernPress = useCallback<NonNullable<ItemProps['onEditAnswerPress']>>(
       (id, note) => {
         const options = [
-          t('milestoneChecklist:answer_yes'),
-          t('milestoneChecklist:answer_no'),
+          t('common:delete'),
+          // t('milestoneChecklist:answer_no'),
 
           t('common:cancel'),
         ].map((val) => _.upperFirst(val));
 
         showActionSheetWithOptions(
           {
-            message: t('changeYourAnswerTitle'),
+            message: t('alert:concernUncheck'),
             cancelButtonIndex: options.length - 1,
+            destructiveButtonIndex: 0,
             options,
             textStyle: {...sharedStyle.regularText},
             titleTextStyle: {...sharedStyle.regularText},
             messageTextStyle: {...sharedStyle.regularText},
           },
           (index) => {
-            [0, 1].includes(index) &&
-              child?.id &&
-              milestoneAge &&
+            // [0, 1].includes(index) &&
+            //   child?.id &&
+            //   milestoneAge &&
+            //   setConcern({
+            //     concernId: id,
+            //     answer: !index,
+            //     childId: child?.id,
+            //     note: note,
+            //     milestoneId: milestoneAge,
+            //   }).then(() => {
+            //     return refetchConcerns();
+            //   });
+            if (index === 0 && child?.id && milestoneAge) {
               setConcern({
                 concernId: id,
-                answer: !index,
+                answer: false,
                 childId: child?.id,
                 note: note,
                 milestoneId: milestoneAge,
               }).then(() => {
                 return refetchConcerns();
               });
+            }
           },
         );
+        // Alert.alert(
+        //   '',
+        //   t('alert:concernUncheck'),
+        //   [
+        //     {
+        //       text: t('dialog:no'),
+        //       style: 'cancel',
+        //     },
+        //     {
+        //       text: t('common:delete'),
+        //       style: 'default',
+        //       onPress: () => {
+        //         if (child?.id && milestoneAge) {
+        //           setConcern({
+        //             concernId: id,
+        //             answer: false,
+        //             childId: child?.id,
+        //             note: note,
+        //             milestoneId: milestoneAge,
+        //           }).then(() => {
+        //             return refetchConcerns();
+        //           });
+        //         }
+        //       },
+        //     },
+        //   ],
+        //   {cancelable: false},
+        // );
       },
       [t, showActionSheetWithOptions, child?.id, milestoneAge, setConcern, refetchConcerns],
     );
@@ -276,16 +308,16 @@ const SummaryItems = withSuspense(
             note,
             milestoneId: milestoneAge,
           }).then(() => {
-            // refetchConcerns(); // fixme
+            return refetchConcerns();
           });
       },
-      [child?.id, setConcern, milestoneAge],
+      [child?.id, milestoneAge, setConcern, refetchConcerns],
     );
 
     const unanswered = data?.groupedByAnswer['undefined'] || [];
-    const unsure = data?.groupedByAnswer[`${Answer.UNSURE}`] || [];
-    const yes = data?.groupedByAnswer[`${Answer.YES}`] || [];
-    const notYet = data?.groupedByAnswer[`${Answer.NOT_YET}`] || [];
+    const unsure = data?.groupedByAnswer[Answer.UNSURE] || [];
+    const yes = data?.groupedByAnswer[Answer.YES] || [];
+    const notYet = data?.groupedByAnswer[Answer.NOT_YET] || [];
 
     return (
       <View style={{marginHorizontal: 32}}>
@@ -381,15 +413,16 @@ const ComposeEmailButton = withSuspense(
     const {compose: composeMail} = useGetComposeSummaryMail();
     const {t} = useTranslation('childSummary');
     return (
-      <AEButtonRounded
+      <AEButtonMultiline
         onPress={() => {
+          trackInteractionByType('Email Summary');
           composeMail().catch((e) => {
             Alert.alert('', e.message);
           });
         }}
         style={{marginBottom: 0}}>
         {t('emailSummary')}
-      </AEButtonRounded>
+      </AEButtonMultiline>
     );
   },
   suspenseEnabled,
@@ -401,8 +434,10 @@ const ChildSummaryScreen: React.FC = () => {
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted} = {}} = useGetMilestone();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
+
+  const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -424,66 +459,99 @@ const ChildSummaryScreen: React.FC = () => {
         <View style={{height: 16, backgroundColor: colors.iceCold}} />
         <ShortHeaderArc width={'100%'} />
       </View>
-      <KeyboardAvoidingView behavior={Platform.select({ios: 'padding'})}>
-        <ScrollView
-          bounces={false}
-          contentContainerStyle={{
-            paddingBottom: bottom ? bottom + 76 : 100,
-          }}>
-          <ChildSelectorModal />
-          <ChildPhoto photo={child?.photo} />
-          <Text
-            style={[
-              {
-                textAlign: 'center',
-                marginTop: 20,
-                textTransform: 'capitalize',
-                marginHorizontal: 32,
-              },
-              sharedStyle.largeBoldText,
-            ]}>
-            {`${t('childSummary:title', {name: child?.name ?? '', age: milestoneAgeFormatted ?? ''})}`}
-          </Text>
-          <View style={{paddingHorizontal: 32}}>
-            <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15}}>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('findElLink'))}
-                  style={{textDecorationLine: 'underline'}}
-                />
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('concernedLink'))}
-                  style={{textDecorationLine: 'underline'}}
-                />
-              </Trans>
-            </Text>
-            {/*<Text>Show your doctor or email summary</Text>*/}
-          </View>
-          <View style={{marginTop: 35}}>
-            <PurpleArc width={'100%'} />
-            <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-              <ComposeEmailButton />
-              <AEButtonRounded
-                onPress={() => {
-                  navigation.navigate('Revisit');
-                }}
-                style={{marginTop: 10, marginBottom: 30}}>
-                {t('showDoctor')}
-              </AEButtonRounded>
-              <LanguageSelector
-                onLanguageChange={(lng) => {
-                  trackSelectLanguage(lng);
-                  queryCache.invalidateQueries('questions');
-                }}
-                style={{marginHorizontal: 32}}
+      <KeyboardAwareScrollView
+        enableOnAndroid={Platform.OS === 'android'}
+        bounces={false}
+        contentContainerStyle={
+          {
+            // paddingBottom: bottom ? bottom + 32 : 72,
+          }
+        }
+        extraHeight={Platform.select({
+          ios: 200,
+        })}>
+        <ChildSelectorModal />
+        <ChildPhoto photo={child?.photo} />
+        <Text
+          style={[
+            {
+              textAlign: 'center',
+              marginTop: 20,
+              marginHorizontal: 32,
+            },
+            sharedStyle.largeBoldText,
+          ]}>
+          {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
+        </Text>
+        <View style={{paddingHorizontal: 32}}>
+          <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>
+            <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
+              <Text
+                numberOfLines={1}
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('findElLink'))}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
-            </View>
+              <Text
+                numberOfLines={1}
+                accessibilityRole={'link'}
+                onPress={() => Linking.openURL(t('concernedLink'))}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+              />
+              <Text style={[sharedStyle.boldText]} />
+            </Trans>
+          </Text>
+          {/*<Text>Show your doctor or email summary</Text>*/}
+        </View>
+        <View style={{marginTop: 35}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
+            <ComposeEmailButton />
+            <AEButtonMultiline
+              onPress={() => {
+                trackInteractionByType('Show Doctor');
+                navigation.navigate('Revisit');
+              }}
+              style={{marginTop: 10, marginBottom: 30}}>
+              {t('showDoctor')}
+            </AEButtonMultiline>
+            <LanguageSelector
+              onLanguageChange={(lng) => {
+                trackSelectLanguage(lng);
+                queryCache.invalidateQueries('questions');
+              }}
+              style={{marginHorizontal: 32}}
+            />
           </View>
-          <SummaryItems />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+        <SummaryItems />
+        <View style={{marginTop: 30}}>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple, paddingBottom: bottom ? bottom + 32 : 32, paddingTop: 16}}>
+            <AEButtonRounded
+              onPress={() => {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'DashboardStack',
+                      state: {
+                        index: 1,
+                        routes: [
+                          {
+                            name: 'Dashboard',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                });
+              }}>
+              {t('common:done')}
+            </AEButtonRounded>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -499,7 +567,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 10,
     fontFamily: 'Montserrat-Bold',
-    textTransform: 'capitalize',
   },
 });
 

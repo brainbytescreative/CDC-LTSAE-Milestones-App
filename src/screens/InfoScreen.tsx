@@ -1,16 +1,17 @@
 import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Image, Linking, StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEScrollView from '../components/AEScrollView';
+import LTSAELogo from '../components/LTSAELogo';
 import {InfoStackParamList} from '../components/Navigator/types';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import {colors, sharedStyle} from '../resources/constants';
+import {breakStr, breakStrLarge, colors, sharedStyle} from '../resources/constants';
 
 const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = ({navigation}) => {
   const {t} = useTranslation('info');
@@ -29,7 +30,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
       <AEScrollView>
         <Text style={[sharedStyle.screenTitle]}>{t('aboutThisApp')}</Text>
         <Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>
-          <Trans t={t} i18nKey={'aboutThisAppText'}>
+          <Trans t={t} i18nKey={'aboutThisAppText'} tOptions={{breakStr, breakStrLarge}}>
             <Text
               accessibilityRole={'link'}
               onPress={() => Linking.openURL(t('actEarlyLink'))}
@@ -38,14 +39,14 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
             <Text style={sharedStyle.boldText} />
             <Text
               accessibilityRole={'link'}
-              onPress={() => Linking.openURL(t('actEarlyLink'))}
+              onPress={() => Linking.openURL(t('actEarlyLink2'))}
               style={{textDecorationLine: 'underline'}}
             />
           </Trans>
         </Text>
         <View style={styles.logosRow}>
           <CDCLogo />
-          <Image style={{marginLeft: 24}} source={require('../resources/images/LTSAE_Logo.png')} />
+          <LTSAELogo />
         </View>
         <Text
           onPress={() => {

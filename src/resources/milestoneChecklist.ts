@@ -357,17 +357,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 17,
-          value: 'milestone_4_skill_17',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_4_skill_17_video_3',
-              alt: 'milestone_4_skill_17_alt_13',
-            },
-          ],
-        },
-        {
           id: 16,
           value: 'milestone_4_skill_16',
           photos: [],
@@ -375,6 +364,17 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_4_skill_16_video_4',
               alt: 'milestone_4_skill_16_alt_14',
+            },
+          ],
+        },
+        {
+          id: 17,
+          value: 'milestone_4_skill_17',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_4_skill_17_video_3',
+              alt: 'milestone_4_skill_17_alt_13',
             },
           ],
         },
@@ -834,13 +834,13 @@ const checklist: MilestoneChecklist[] = [
       ],
       movement: [
         {
-          id: 53,
-          value: 'milestone_6_skill_53',
+          id: 51,
+          value: 'milestone_6_skill_51',
           photos: [],
           videos: [
             {
-              name: 'milestone_6_skill_53_video_17',
-              alt: 'milestone_6_skill_53_alt_44',
+              name: 'milestone_6_skill_51_video_19',
+              alt: 'milestone_6_skill_51_alt_47',
             },
           ],
         },
@@ -856,6 +856,17 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
+          id: 53,
+          value: 'milestone_6_skill_53',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_6_skill_53_video_17',
+              alt: 'milestone_6_skill_53_alt_44',
+            },
+          ],
+        },
+        {
           id: 54,
           value: 'milestone_6_skill_54',
           photos: [],
@@ -863,17 +874,6 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_6_skill_54_video_18',
               alt: 'milestone_6_skill_54_alt_46',
-            },
-          ],
-        },
-        {
-          id: 51,
-          value: 'milestone_6_skill_51',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_6_skill_51_video_19',
-              alt: 'milestone_6_skill_51_alt_47',
             },
           ],
         },
@@ -1482,17 +1482,6 @@ const checklist: MilestoneChecklist[] = [
       ],
       cognitive: [
         {
-          id: 93,
-          value: 'milestone_12_skill_93',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_12_skill_93_video_39',
-              alt: 'milestone_12_skill_93_alt_80',
-            },
-          ],
-        },
-        {
           id: 94,
           value: 'milestone_12_skill_94',
           photos: [
@@ -1510,6 +1499,17 @@ const checklist: MilestoneChecklist[] = [
             },
           ],
           videos: [],
+        },
+        {
+          id: 93,
+          value: 'milestone_12_skill_93',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_12_skill_93_video_39',
+              alt: 'milestone_12_skill_93_alt_80',
+            },
+          ],
         },
         {
           id: 95,
@@ -1907,17 +1907,6 @@ const checklist: MilestoneChecklist[] = [
       ],
       cognitive: [
         {
-          id: 119,
-          value: 'milestone_18_skill_119',
-          photos: [
-            {
-              name: 'milestone_18_skill_119_photo_78',
-              alt: 'milestone_18_skill_119_alt_105',
-            },
-          ],
-          videos: [],
-        },
-        {
           id: 122,
           value: 'milestone_18_skill_122',
           photos: [],
@@ -1929,12 +1918,12 @@ const checklist: MilestoneChecklist[] = [
           ],
         },
         {
-          id: 121,
-          value: 'milestone_18_skill_121',
+          id: 119,
+          value: 'milestone_18_skill_119',
           photos: [
             {
-              name: 'milestone_18_skill_121_photo_79',
-              alt: 'milestone_18_skill_121_alt_107',
+              name: 'milestone_18_skill_119_photo_78',
+              alt: 'milestone_18_skill_119_alt_105',
             },
           ],
           videos: [],
@@ -1946,6 +1935,17 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_18_skill_120_photo_80',
               alt: 'milestone_18_skill_120_alt_108',
+            },
+          ],
+          videos: [],
+        },
+        {
+          id: 121,
+          value: 'milestone_18_skill_121',
+          photos: [
+            {
+              name: 'milestone_18_skill_121_photo_79',
+              alt: 'milestone_18_skill_121_alt_107',
             },
           ],
           videos: [],
@@ -2393,6 +2393,17 @@ const checklist: MilestoneChecklist[] = [
           ],
         },
         {
+          id: 157,
+          value: 'milestone_24_skill_157',
+          photos: [
+            {
+              name: 'milestone_24_skill_157_photo_97',
+              alt: 'milestone_24_skill_157_alt_140',
+            },
+          ],
+          videos: [],
+        },
+        {
           id: 158,
           value: 'milestone_24_skill_158',
           photos: [
@@ -2403,17 +2414,6 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_24_skill_158_photo_96',
               alt: 'milestone_24_skill_158_alt_139_2',
-            },
-          ],
-          videos: [],
-        },
-        {
-          id: 157,
-          value: 'milestone_24_skill_157',
-          photos: [
-            {
-              name: 'milestone_24_skill_157_photo_97',
-              alt: 'milestone_24_skill_157_alt_140',
             },
           ],
           videos: [],
@@ -2597,17 +2597,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 165,
-          value: 'milestone_36_skill_165',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_36_skill_165_video_74',
-              alt: 'milestone_36_skill_165_alt_147',
-            },
-          ],
-        },
-        {
           id: 166,
           value: 'milestone_36_skill_166',
           photos: [
@@ -2642,17 +2631,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 168,
-          value: 'milestone_36_skill_168',
-          photos: [
-            {
-              name: 'milestone_36_skill_168_photo_110',
-              alt: 'milestone_36_skill_168_alt_150',
-            },
-          ],
-          videos: [],
-        },
-        {
           id: 169,
           value: 'milestone_36_skill_169',
           photos: [
@@ -2663,6 +2641,28 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_36_skill_169_photo_112',
               alt: 'milestone_36_skill_169_alt_151_2',
+            },
+          ],
+          videos: [],
+        },
+        {
+          id: 165,
+          value: 'milestone_36_skill_165',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_36_skill_165_video_74',
+              alt: 'milestone_36_skill_165_alt_147',
+            },
+          ],
+        },
+        {
+          id: 168,
+          value: 'milestone_36_skill_168',
+          photos: [
+            {
+              name: 'milestone_36_skill_168_photo_110',
+              alt: 'milestone_36_skill_168_alt_150',
             },
           ],
           videos: [],
@@ -2703,17 +2703,6 @@ const checklist: MilestoneChecklist[] = [
           ],
         },
         {
-          id: 173,
-          value: 'milestone_36_skill_173',
-          photos: [
-            {
-              name: 'milestone_36_skill_173_photo_113',
-              alt: 'milestone_36_skill_173_alt_155',
-            },
-          ],
-          videos: [],
-        },
-        {
           id: 174,
           value: 'milestone_36_skill_174',
           photos: [],
@@ -2725,17 +2714,6 @@ const checklist: MilestoneChecklist[] = [
           ],
         },
         {
-          id: 175,
-          value: 'milestone_36_skill_175',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_36_skill_175_video_79',
-              alt: 'milestone_36_skill_175_alt_157',
-            },
-          ],
-        },
-        {
           id: 176,
           value: 'milestone_36_skill_176',
           photos: [],
@@ -2743,6 +2721,17 @@ const checklist: MilestoneChecklist[] = [
             {
               name: 'milestone_36_skill_176_video_80',
               alt: 'milestone_36_skill_176_alt_158',
+            },
+          ],
+        },
+        {
+          id: 175,
+          value: 'milestone_36_skill_175',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_36_skill_175_video_79',
+              alt: 'milestone_36_skill_175_alt_157',
             },
           ],
         },
@@ -2782,17 +2771,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 180,
-          value: 'milestone_36_skill_180',
-          photos: [
-            {
-              name: 'milestone_36_skill_180_photo_116',
-              alt: 'milestone_36_skill_180_alt_162',
-            },
-          ],
-          videos: [],
-        },
-        {
           id: 181,
           value: 'milestone_36_skill_181',
           photos: [],
@@ -2802,6 +2780,17 @@ const checklist: MilestoneChecklist[] = [
               alt: 'milestone_36_skill_181_alt_163',
             },
           ],
+        },
+        {
+          id: 180,
+          value: 'milestone_36_skill_180',
+          photos: [
+            {
+              name: 'milestone_36_skill_180_photo_116',
+              alt: 'milestone_36_skill_180_alt_162',
+            },
+          ],
+          videos: [],
         },
         {
           id: 182,
@@ -3006,17 +2995,6 @@ const checklist: MilestoneChecklist[] = [
     milestones: {
       social: [
         {
-          id: 190,
-          value: 'milestone_48_skill_190',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_48_skill_190_video_83',
-              alt: 'milestone_48_skill_190_alt_172',
-            },
-          ],
-        },
-        {
           id: 191,
           value: 'milestone_48_skill_191',
           photos: [
@@ -3026,6 +3004,17 @@ const checklist: MilestoneChecklist[] = [
             },
           ],
           videos: [],
+        },
+        {
+          id: 190,
+          value: 'milestone_48_skill_190',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_48_skill_190_video_83',
+              alt: 'milestone_48_skill_190_alt_172',
+            },
+          ],
         },
         {
           id: 192,
@@ -3061,6 +3050,17 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
+          id: 195,
+          value: 'milestone_48_skill_195',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_48_skill_195_video_86',
+              alt: 'milestone_48_skill_195_alt_178',
+            },
+          ],
+        },
+        {
           id: 196,
           value: 'milestone_48_skill_196',
           photos: [],
@@ -3074,13 +3074,13 @@ const checklist: MilestoneChecklist[] = [
       ],
       language: [
         {
-          id: 197,
-          value: 'milestone_48_skill_197',
+          id: 199,
+          value: 'milestone_48_skill_199',
           photos: [],
           videos: [
             {
-              name: 'milestone_48_skill_197_video_88',
-              alt: 'milestone_48_skill_197_alt_179',
+              name: 'milestone_48_skill_199_video_90',
+              alt: 'milestone_48_skill_199_alt_181',
             },
           ],
         },
@@ -3096,16 +3096,17 @@ const checklist: MilestoneChecklist[] = [
           ],
         },
         {
-          id: 199,
-          value: 'milestone_48_skill_199',
+          id: 197,
+          value: 'milestone_48_skill_197',
           photos: [],
           videos: [
             {
-              name: 'milestone_48_skill_199_video_90',
-              alt: 'milestone_48_skill_199_alt_181',
+              name: 'milestone_48_skill_197_video_88',
+              alt: 'milestone_48_skill_197_alt_179',
             },
           ],
         },
+
         {
           id: 200,
           value: 'milestone_48_skill_200',
@@ -3559,17 +3560,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 228,
-          value: 'milestone_60_skill_228',
-          photos: [],
-          videos: [
-            {
-              name: 'milestone_60_skill_228_video_107',
-              alt: 'milestone_60_skill_228_alt_210',
-            },
-          ],
-        },
-        {
           id: 229,
           value: 'milestone_60_skill_229',
           photos: [
@@ -3580,6 +3570,18 @@ const checklist: MilestoneChecklist[] = [
           ],
           videos: [],
         },
+        {
+          id: 228,
+          value: 'milestone_60_skill_228',
+          photos: [],
+          videos: [
+            {
+              name: 'milestone_60_skill_228_video_107',
+              alt: 'milestone_60_skill_228_alt_210',
+            },
+          ],
+        },
+
         {
           id: 230,
           value: 'milestone_60_skill_230',
@@ -3650,17 +3652,6 @@ const checklist: MilestoneChecklist[] = [
           videos: [],
         },
         {
-          id: 235,
-          value: 'milestone_60_skill_235',
-          photos: [
-            {
-              name: 'milestone_60_skill_235_photo_149',
-              alt: 'milestone_60_skill_235_alt_217',
-            },
-          ],
-          videos: [],
-        },
-        {
           id: 236,
           value: 'milestone_60_skill_236',
           photos: [
@@ -3675,13 +3666,24 @@ const checklist: MilestoneChecklist[] = [
           ],
           videos: [],
         },
+        {
+          id: 235,
+          value: 'milestone_60_skill_235',
+          photos: [
+            {
+              name: 'milestone_60_skill_235_photo_149',
+              alt: 'milestone_60_skill_235_alt_217',
+            },
+          ],
+          videos: [],
+        },
       ],
     },
     title: 'milestone_60_title',
   },
 ];
 
-type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
+export type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
 
 const mapSet = function (key: unknown) {
   throw "Can't add property " + key + ', map is not extensible';

@@ -52,11 +52,28 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
     {suspense: true},
   );
 
-  // useQuery('translations', async (key) => {
-  //   const response = await axios.get(
-  //     `https://localise.biz/api/export/locale/${lng}.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg`,
-  //   );
-  // });
+  // useQuery(
+  //   'translations',
+  //   async () => {
+  //     await Promise.all(
+  //       [
+  //         {lng: 'en', key: 'jShrt63tWG-vKZnFfrYDje0B_uGhs-5G'},
+  //         {lng: 'es', key: 'jShrt63tWG-vKZnFfrYDje0B_uGhs-5G'},
+  //         {lng: 'en', key: 'fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg'},
+  //         {lng: 'es', key: 'fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg'},
+  //       ].map(async ({lng, key}) => {
+  //         const response = await Axios.get<Record<string, Record<string, string> | undefined> | undefined>(
+  //           `https://localise.biz/api/export/locale/${lng}.json?index=id&format=i18next3&fallback=en&order=id&key=${key}`,
+  //         );
+  //         _.isObject(response?.data) &&
+  //           Object.keys(response.data).forEach((ns) => {
+  //             i18next.addResources(lng, ns, response?.data?.[ns]);
+  //           });
+  //       }),
+  //     );
+  //   },
+  //   {suspense: true},
+  // );
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(() => {
@@ -69,7 +86,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      navigation && navigateNotification(response.notification.request.identifier, navigation);
+      navigateNotification(response.notification.request.identifier, false);
     });
     return () => subscription.remove();
   }, [navigation, navigateNotification]);
@@ -84,7 +101,11 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
               <Stack.Screen name={'OnboardingInfo'} component={OnboardingInfoScreen} />
               <Stack.Screen name={'OnboardingParentProfile'} component={OnboardingParentProfileScreen} />
               <Stack.Screen name={'AddChild'} initialParams={{onboarding: true}} component={AddChildScreen} />
-              <Stack.Screen name={'OnboardingHowToUse'} component={OnboardingHowToUseScreen} />
+              <Stack.Screen
+                name={'OnboardingHowToUse'}
+                component={OnboardingHowToUseScreen}
+                options={{gestureEnabled: false}}
+              />
             </>
           )}
           <Stack.Screen name={'Dashboard'} component={RootDrawer} />

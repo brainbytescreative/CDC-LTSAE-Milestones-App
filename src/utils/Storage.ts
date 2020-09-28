@@ -12,6 +12,7 @@ type ParsedValue = {
   notificationSettings: NotificationSettings;
   onboarding: boolean;
   parentProfile: ParentProfileSelectorValues;
+  language: string;
 };
 
 export default class Storage {

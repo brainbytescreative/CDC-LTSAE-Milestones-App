@@ -76,7 +76,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
 
   const onRemindMePress = useCallback<NonNullable<PropType<ItemProps, 'onRemindMePress'>>>(
     (id, value) => {
-      trackInteractionByType('Remind Me');
+      trackInteractionByType('Remind Me', {tipData: {milestoneId: Number(milestoneId), hintId: Number(id)}});
       id && child?.id && setTip({hintId: id, childId: child?.id, remindMe: value});
 
       const selectedTip = (tips || []).filter(({id: tipId}) => id === tipId)[0];
@@ -93,7 +93,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
   );
 
   const onLikePress: PropType<ItemProps, 'onLikePress'> = (id, value) => {
-    trackInteractionByType('Like');
+    trackInteractionByType('Like', {tipData: {milestoneId: Number(milestoneId), hintId: Number(id)}});
     id && child?.id && setTip({hintId: id, childId: child?.id, like: value});
     setHighlightedTip(undefined);
   };
@@ -114,7 +114,8 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
         <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
         <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
           {t('subtitle', {
-            childAge: formatAge(child?.birthday),
+            childAge: formatAge(child?.birthday, {singular: true}),
+            babyOrChild: Number(milestoneId) > 12 ? t('common:child') : t('common:baby'),
           })}
         </Text>
 
@@ -134,8 +135,8 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
             style={[sharedStyle.shadow, {backgroundColor: colors.iceCold, paddingVertical: 5}]}
             itemsContainerStyle={{backgroundColor: colors.iceCold}}
             labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
-            defaultNull
-            placeholder={t('all')}
+            defaultIndex={0}
+            // placeholder={t('all')}
             items={tipFilters.map((value) => ({label: t(value), value}))}
             onChangeItem={(item) => setTipType(item.value as TipType)}
           />

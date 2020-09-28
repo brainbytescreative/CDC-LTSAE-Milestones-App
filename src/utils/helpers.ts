@@ -1,12 +1,12 @@
 import {NavigationContainerProps} from '@react-navigation/native';
-import {differenceInDays, differenceInMonths, format, formatDistanceStrict} from 'date-fns';
+import {add, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears, format} from 'date-fns';
 import {TFunction} from 'i18next';
 import _ from 'lodash';
 import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
 import {sqLiteClient} from '../db';
 import {Answer, Appointment, AppointmentDb} from '../hooks/types';
-import {NoExtraProperties, PropType, milestonesIds, missingConcerns, tooYongAgeDays} from '../resources/constants';
+import {NoExtraProperties, PropType, milestonesIds, missingConcerns} from '../resources/constants';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import i18next from '../resources/l18n';
 
@@ -33,40 +33,110 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
   }
 };
 
-export const formatAge = (childBirth: Date | undefined): string => {
+export const formatAge = (childBirth: Date | undefined, options?: {singular?: boolean}): string => {
   const birthDay = childBirth ?? new Date();
   const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
-  const childAge = formatDistanceStrict(days < 1 ? birthDay : new Date(), birthDay, {
-    unit: days > 0 ? undefined : 'day',
-    roundingMethod: 'floor',
-    locale: dateFnsLocales[i18next.language],
-  });
+  const months = (birthDay && differenceInMonths(new Date(), birthDay)) || 0;
+  let ageText: string;
+  let value: number;
 
-  return birthDay ? childAge : '';
+  if (days < 7) {
+    value = days > 0 ? days : 0;
+    ageText = i18next.t('common:day', {count: options?.singular ? 1 : value});
+  } else if (months < 2) {
+    const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
+    value = weeks;
+    ageText = i18next.t('common:week', {count: options?.singular ? 1 : weeks});
+  } else if (months === 12) {
+    value = 1;
+    ageText = i18next.t('common:year', {count: 1});
+  } else if (months < 24) {
+    value = months;
+    ageText = i18next.t('common:month', {count: options?.singular ? 1 : months});
+  } else {
+    const years = (birthDay && differenceInYears(new Date(), birthDay)) || 0;
+    value = years;
+    ageText = i18next.t('common:year', {count: options?.singular ? 1 : years});
+  }
+
+  ageText = options?.singular ? ageText.replace('1', String(value)) : ageText;
+
+  return ageText;
 };
 
 export function calcChildAge(birthDay: Date | undefined) {
-  let isTooYong = false;
+  // let isTooYong = false;
   let milestoneAge;
   let ageMonth: number;
-  if (birthDay) {
+  let ageDay: number;
+  // let nextMilestone: Date | undefined;
+  let betweenCheckList = false;
+
+  if (birthDay && _.isDate(birthDay)) {
     ageMonth = differenceInMonths(new Date(), birthDay);
+    ageDay = differenceInDays(new Date(), birthDay);
+
+    // Current age in date format
+    const baseDate = add(birthDay, {days: ageDay});
     const minAge = _.min(milestonesIds) || 0;
     const maxAge = _.max(milestonesIds) || Infinity;
 
     if (ageMonth <= minAge) {
       milestoneAge = minAge;
-      const ageDays = differenceInDays(new Date(), birthDay);
-      isTooYong = ageDays < tooYongAgeDays;
+      // const ageDays = differenceInDays(new Date(), birthDay);
+      // isTooYong = ageDays < tooYongAgeDays;
     } else if (ageMonth >= maxAge) {
       milestoneAge = maxAge;
     } else {
       const milestones = milestonesIds.filter((value) => value <= ageMonth);
       milestoneAge = _.last(milestones);
     }
-    return {milestoneAge, isTooYong, ageMonth};
+
+    const currentIndex = milestonesIds.indexOf(milestoneAge as never);
+    const nextMilestoneId = milestonesIds[currentIndex + 1];
+
+    if (nextMilestoneId) {
+      /**
+       * If the selected child's age is greater than or equal to 2 weeks before
+       * next milestone age and less than 1 month minus 1 day before next milestone,
+       * no message will be displayed.
+       */
+      const nextMilestoneDate = add(birthDay, {months: nextMilestoneId});
+      const inWeeks = differenceInDays(nextMilestoneDate, baseDate);
+
+      betweenCheckList = inWeeks > 13;
+
+      /**
+       * Ensure checklist functionality is as follows:
+       *    Within two weeks of child's next birthday,
+       *    they should be served the next age checklist.
+       */
+      if (inWeeks < 14) {
+        milestoneAge = nextMilestoneId;
+      }
+      // console.log('<<<inWeeks', inWeeks, baseDate);
+
+      // console.log(inWeeks, betweenCheckList);
+      // // less than 1 month minus 1 day before next milestone
+      // const leftSide = add(birthDay, {months: milestoneAge - 1, days: -1});
+      // // basedate < less than: leftCompare = -1
+      // const leftCompare = compareAsc(baseDate, leftSide);
+      // // greater than or equal to 2 weeks before next milestone
+      // const rightSide = add(birthDay, {months: milestoneAge, weeks: -2});
+      // // rightCompare == 0 || rightCompare == 1
+      // const rightCompare = compareAsc(baseDate, rightSide);
+      // betweenCheckList = leftCompare < 0 && rightCompare >= 0;
+      // console.log(leftSide, rightSide, baseDate);
+      // // console.log(leftCompare, rightCompare, baseDate, leftSide, birthDay);
+      // console.log(baseDate, betweenCheckList);
+      // console.log(add(new Date(), {years: -4, weeks: 1}));
+    }
+
+    // console.log(add(startOfDay(new Date()), {months: -12, days: 14}));
+
+    return {milestoneAge, ageMonth, betweenCheckList};
   }
-  return {isTooYong: false};
+  return {isTooYong: false, betweenCheckList};
 }
 
 export async function checkMissingMilestones(milestoneId: number, childId: number) {
@@ -164,6 +234,12 @@ export function formattedAge(milestoneAge: number, t: TFunction, singular = fals
   return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
 }
 
+export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
+  const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
+  // console.log(milestoneAge);
+  return i18next.language === 'en' ? _.startCase(ageText) : ageText;
+};
+
 export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
   hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
   heSheTag: t('common:heSheTag', {context: `${gender}`}),
@@ -200,6 +276,26 @@ export const navStateForAppointmentID = (appointmentId: PropType<AppointmentDb, 
     },
   ],
 });
+
+export const navStateForAppointmentsList = {
+  index: 0,
+  routes: [
+    {
+      name: 'DashboardStack',
+      state: {
+        index: 0,
+        routes: [
+          {
+            name: 'Dashboard',
+            params: {
+              appointments: true,
+            },
+          },
+        ],
+      },
+    },
+  ],
+};
 
 type NavState = Parameters<NonNullable<PropType<NavigationContainerProps, 'onStateChange'>>>[0];
 

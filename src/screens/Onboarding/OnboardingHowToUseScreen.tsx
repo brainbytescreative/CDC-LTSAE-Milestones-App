@@ -1,29 +1,70 @@
 import ViewPager from '@react-native-community/viewpager';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import i18next from 'i18next';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import CancelDoneTopControl from '../../components/CancelDoneTopControl';
-import AEButtonRounded from '../../components/Navigator/AEButtonRounded';
+import AEButtonMultiline from '../../components/AEButtonMultiline';
 import {RootStackParamList} from '../../components/Navigator/types';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
+import {trackAction} from '../../utils/analytics';
 
 type HowToUseScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingHowToUse'>;
 
-const NextScreen: keyof RootStackParamList = 'Dashboard';
-const stubArray = Array.from(new Array(5));
+// const NextScreen: keyof RootStackParamList = 'Dashboard';
 
-const OnboardingHowToUseScreen: React.FC = () => {
+const newUserEnImages = [
+  require('./../../resources/images/howto/how_to_new_en_1.png'),
+  require('./../../resources/images/howto/how_to_new_en_2.png'),
+  require('./../../resources/images/howto/how_to_new_en_3.png'),
+  require('./../../resources/images/howto/how_to_new_en_4.png'),
+  require('./../../resources/images/howto/how_to_new_en_5.png'),
+];
+const newUserEsImages = [
+  require('./../../resources/images/howto/how_to_new_es_1.png'),
+  require('./../../resources/images/howto/how_to_new_es_2.png'),
+  require('./../../resources/images/howto/how_to_new_es_3.png'),
+  require('./../../resources/images/howto/how_to_new_es_4.png'),
+  require('./../../resources/images/howto/how_to_new_es_5.png'),
+];
+
+const eventNames = {
+  new: ['Dashboard', 'Dashboard Progress', 'When to Act Early', "My Child's Summary", 'Tips & Activities '],
+  current: [
+    'Not A New User?',
+    'Dashboard',
+    'Dashboard Progress',
+    'When to Act Early',
+    "My Child's Summary",
+    'Tips & Activities ',
+  ],
+};
+
+const images = {
+  en: {
+    new: newUserEnImages,
+    current: [require('./../../resources/images/howto/how_to_current_en_1.png'), ...newUserEnImages],
+  },
+  es: {
+    new: newUserEsImages,
+    current: [require('./../../resources/images/howto/how_to_current_es_1.png'), ...newUserEsImages],
+  },
+};
+
+const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 'OnboardingHowToUse'>}> = ({route}) => {
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();
-  const [position, setPosition] = useState(0);
+  const [position, setPosition] = useState<number | undefined>(undefined);
+
+  const userType = route?.params?.isOldUser ? 'current' : 'new';
+  const stubArray = images[i18next.language as 'en' | 'es'][userType];
 
   return (
     <View style={{flex: 1, backgroundColor: colors.iceCold, paddingTop: top}}>
@@ -32,14 +73,14 @@ const OnboardingHowToUseScreen: React.FC = () => {
           <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
           <NavBarBackground width={'100%'} />
         </View>
-        <CancelDoneTopControl
-          onCancel={() => {
-            navigation.navigate(NextScreen);
-          }}
-          onDone={() => {
-            navigation.navigate('Dashboard');
-          }}
-        />
+        {/*<CancelDoneTopControl*/}
+        {/*  onCancel={() => {*/}
+        {/*    navigation.navigate(NextScreen);*/}
+        {/*  }}*/}
+        {/*  onDone={() => {*/}
+        {/*    navigation.navigate('Dashboard');*/}
+        {/*  }}*/}
+        {/*/>*/}
         <Text
           style={[
             {
@@ -52,18 +93,15 @@ const OnboardingHowToUseScreen: React.FC = () => {
           {t('howToUseApp')}
         </Text>
         <ViewPager
-          onPageSelected={(event) => {
-            setPosition(event.nativeEvent.position);
+          onPageSelected={({nativeEvent: {position: p}}) => {
+            p !== position && trackAction(`Select: How to Use App: ${eventNames[userType][p]}`);
+            setPosition(p);
           }}
           style={styles.viewPager}
           initialPage={0}>
           {
             stubArray.map((value, index) => (
-              <Image
-                key={`how-to-image-${index}`}
-                resizeMode={'contain'}
-                source={require('../../resources/images/howToUseSlide.png')}
-              />
+              <Image key={`how-to-image-${index}`} resizeMode={'contain'} source={value} />
             )) as any
           }
         </ViewPager>
@@ -88,12 +126,12 @@ const OnboardingHowToUseScreen: React.FC = () => {
               />
             ))}
           </View>
-          <AEButtonRounded
+          <AEButtonMultiline
             onPress={() => {
               navigation.navigate('Dashboard');
             }}>
             {t('common:getStartedBtn')}
-          </AEButtonRounded>
+          </AEButtonMultiline>
         </View>
       </View>
     </View>

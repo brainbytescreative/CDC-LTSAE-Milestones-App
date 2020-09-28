@@ -1,10 +1,10 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {differenceInWeeks, format} from 'date-fns';
-import React, {useEffect, useMemo} from 'react';
+import {differenceInDays, differenceInWeeks, format} from 'date-fns';
+import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {queryCache} from 'react-query';
 
@@ -23,7 +23,7 @@ import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistH
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {Appointment} from '../../hooks/types';
-import {colors, sharedStyle} from '../../resources/constants';
+import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
 import {trackSelectByType} from '../../utils/analytics';
@@ -48,7 +48,8 @@ interface SkeletonProps {
   milestoneChecklistWidgetComponent?: any;
   milestoneAgeFormatted?: string;
   appointments?: Appointment[];
-  ageLessTwoMonth: boolean;
+  // ageLessTwoMonth: boolean;
+  scrollViewRef?: RefObject<ScrollView>;
 }
 
 const styles = StyleSheet.create({
@@ -57,11 +58,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   appointmentsHeaderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    // alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    marginHorizontal: 20,
+    marginHorizontal: 0,
   },
   appointmentsContainer: {
     backgroundColor: 'white',
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     alignItems: 'center',
-    padding: 10,
+    padding: 7,
   },
   actionItemText: {
     fontSize: 15,
@@ -121,7 +122,7 @@ const AppointmentsList: React.FC = withSuspense(
               })}
               key={`appointment-${appt.id}`}
               onPress={() => {
-                trackSelectByType('Add Appointment');
+                trackSelectByType('Appointments');
                 navigation.navigate('Appointment', {
                   appointmentId: appt.id,
                 });
@@ -140,17 +141,97 @@ const AppointmentsList: React.FC = withSuspense(
   <View />,
 );
 
-const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLessTwoMonth}) => {
-  const navigation = useNavigation<DashboardStackNavigationProp>();
+const YellowBoxSuspended: React.FC = withSuspense(
+  () => {
+    const {t} = useTranslation('dashboard');
+    const {data: child} = useGetCurrentChild();
+    const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    const ageInDays = child?.birthday && differenceInDays(new Date(), child?.birthday);
+    const ageLessTwoMonth = Number(ageInWeeks) < 6;
+    const {data: {betweenCheckList = false} = {}} = useGetMilestone();
+    let showtip = betweenCheckList || ageLessTwoMonth;
+    showtip = Number(ageInDays) >= 41 && Number(ageInDays) <= 56 ? false : showtip;
+    return showtip ? (
+      <AEYellowBox containerStyle={styles.yellowTipContainer}>
+        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
+      </AEYellowBox>
+    ) : null;
+  },
+  suspenseEnabled,
+  <View />,
+);
+
+const Buttons = () => {
+  const {t} = useTranslation('dashboard');
+  const navigation = useNavigation<Props['navigation']>();
+  const fontSize = Math.ceil((Dimensions.get('screen').width * 11) / 320);
+
+  return (
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TouchableOpacity
+        onPress={() => {
+          trackSelectByType('When to Act Early');
+          navigation.navigate('WhenActEarly');
+        }}
+        style={styles.actionItem}>
+        <ActEarlySign />
+        <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+          {t('whenToActEarly')}
+        </Text>
+      </TouchableOpacity>
+      <View style={[styles.actionItem, {marginHorizontal: 10}]}>
+        <TouchableOpacity
+          style={[{alignItems: 'center'}]}
+          onPress={() => {
+            trackSelectByType('My Child Summary');
+            navigation.navigate('ChildSummary');
+          }}>
+          <MilestoneSummarySign />
+          <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+            {t('milestoneSummary')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.actionItem}>
+        <TouchableOpacity
+          onPress={() => {
+            trackSelectByType('Tips');
+            navigation.navigate('TipsAndActivities');
+          }}
+          style={{alignItems: 'center'}}>
+          <TipsAndActivitiesSign />
+          <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
+            {t('tipsAndActivities')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scrollViewRef}) => {
+  const navigation = useNavigation<Props['navigation']>();
+  const route = useRoute<Props['route']>();
+  const appointmentsParam = route.params?.appointments;
+  const [appointmentsPosition, setAppointmentsPosition] = useState(0);
+
+  useLayoutEffect(() => {
+    if (appointmentsParam && appointmentsPosition) {
+      navigation.setParams({appointments: undefined});
+      scrollViewRef?.current?.scrollTo({y: Number(appointmentsPosition) + 100});
+    }
+  }, [appointmentsParam, appointmentsPosition, navigation, scrollViewRef]);
+
   const {t} = useTranslation('dashboard');
   return (
     <View>
       {childPhotoComponent}
       <ChildName />
       <MonthCarousel />
-      <AEYellowBox containerStyle={styles.yellowTipContainer}>
-        {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
-      </AEYellowBox>
+      <YellowBoxSuspended />
+      {/*<AEYellowBox containerStyle={styles.yellowTipContainer}>*/}
+      {/*  {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}*/}
+      {/*</AEYellowBox>*/}
       <PurpleArc width={'100%'} />
       <View
         style={{
@@ -168,48 +249,13 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
           {/*    age: `${milestoneAgeFormatted || '  '}`,*/}
           {/*  })}*/}
           {/*</Text>*/}
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity
-              onPress={() => {
-                trackSelectByType('When to Act Early');
-                navigation.navigate('WhenActEarly');
-              }}
-              style={styles.actionItem}>
-              <ActEarlySign />
-              <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                {t('whenToActEarly')}
-              </Text>
-            </TouchableOpacity>
-            <View style={[styles.actionItem, {marginHorizontal: 10}]}>
-              <TouchableOpacity
-                style={[{alignItems: 'center'}]}
-                onPress={() => {
-                  trackSelectByType('My Child Summary');
-                  navigation.navigate('ChildSummary');
-                }}>
-                <MilestoneSummarySign />
-                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                  {t('milestoneSummary')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.actionItem}>
-              <TouchableOpacity
-                onPress={() => {
-                  trackSelectByType('Tips');
-                  navigation.navigate('TipsAndActivities');
-                }}
-                style={{alignItems: 'center'}}>
-                <TipsAndActivitiesSign />
-                <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionItemText}>
-                  {t('tipsAndActivities')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Buttons />
         </View>
-        <View style={[styles.appointmentsHeaderContainer]}>
+        <View
+          onLayout={(event) => {
+            setAppointmentsPosition(event.nativeEvent.layout.y);
+          }}
+          style={[styles.appointmentsHeaderContainer]}>
           <Text
             style={{
               fontSize: 22,
@@ -218,12 +264,14 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, ageLes
             {t('appointments')}
           </Text>
           <TouchableOpacity
+            style={{paddingTop: 12}}
             accessibilityRole={'button'}
             accessibilityLabel={t('addAppointment:title')}
             onPress={() => {
+              trackSelectByType('Add Appointment');
               navigation.navigate('AddAppointment');
             }}>
-            <Text style={{fontSize: 12}}>{t('addApt')}</Text>
+            <Text style={{fontSize: 14}}>{t('addApt')}</Text>
           </TouchableOpacity>
         </View>
         <AppointmentsList />
@@ -252,14 +300,14 @@ const ChildName: React.FC = withSuspense(
   </View>,
 );
 
-const DashboardContainer: React.FC = withSuspense(
-  () => {
+const DashboardContainer: React.FC<{scrollViewRef?: RefObject<ScrollView>}> = withSuspense(
+  ({scrollViewRef}) => {
     const {data: child} = useGetCurrentChild();
     const {data: {milestoneAge} = {}} = useGetMilestone();
     useGetMilestoneGotStarted({childId: child?.id, milestoneId: milestoneAge});
     const [setOnboarding] = useSetOnboarding();
-    const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
-    const ageLessTwoMonth = Number(ageInWeeks) < 6;
+    // const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
+    // const ageLessTwoMonth = Number(ageInWeeks) < 6;
 
     // useEffect(() => {
     //   child && setMilestoneNotifications({child});
@@ -284,7 +332,8 @@ const DashboardContainer: React.FC = withSuspense(
 
     return (
       <DashboardSkeleton
-        ageLessTwoMonth={ageLessTwoMonth}
+        scrollViewRef={scrollViewRef}
+        // ageLessTwoMonth={ageLessTwoMonth}
         // childNameComponent={
         //   <View style={{alignItems: 'center'}}>
         //     <Text style={styles.childNameText}>{childName}</Text>
@@ -300,7 +349,10 @@ const DashboardContainer: React.FC = withSuspense(
     );
   },
   {shared: {suspense: false}},
-  <DashboardSkeleton ageLessTwoMonth={false} childPhotoComponent={<ChildPhoto />} />,
+  <DashboardSkeleton
+    // ageLessTwoMonth={false}
+    childPhotoComponent={<ChildPhoto />}
+  />,
 );
 
 const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
@@ -308,9 +360,11 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   // const {refetch} = useGetChecklistQuestions();
 
   const addChildParam = route.params?.addChild;
+  const scrollViewRef = useRef<ScrollView>(null);
+
   useEffect(() => {
     if (addChildParam) {
-      navigation.setParams({addChild: false});
+      navigation.setParams({addChild: undefined});
     }
   }, [addChildParam, navigation]);
 
@@ -318,6 +372,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
     <>
       <ChildSelectorModal visible={addChildParam} />
       <ScrollView
+        ref={scrollViewRef}
         scrollIndicatorInsets={{right: 0.1}}
         bounces={false}
         style={{backgroundColor: '#fff'}}
@@ -330,7 +385,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
           <View style={{backgroundColor: colors.iceCold, height: 40}} />
           <NavBarBackground width={'100%'} />
         </View>
-        <DashboardContainer />
+        <DashboardContainer scrollViewRef={scrollViewRef} />
       </ScrollView>
     </>
   );

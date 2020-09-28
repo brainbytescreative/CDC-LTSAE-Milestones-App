@@ -21,12 +21,12 @@ export type MilestoneQueryResult =
       childAge: number | undefined;
       milestoneAgeFormatted: string | undefined;
       milestoneAgeFormattedDashes: string | undefined;
-      isTooYong: boolean;
+      // isTooYong: boolean;
       betweenCheckList: boolean;
     }
   | undefined;
 
-export type MilestoneQueryKey = [string, {childBirthday?: Date | string}];
+export type MilestoneQueryKey = [string, {childBirthday?: Date | string; singular?: boolean}];
 
 export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
   birthday: Date;

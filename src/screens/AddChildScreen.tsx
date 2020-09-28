@@ -1,30 +1,36 @@
+import {useActionSheet} from '@expo/react-native-action-sheet';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+// import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import {ImagePickerOptions, ImagePickerResult, MediaTypeOptions} from 'expo-image-picker';
+import {ImageInfo} from 'expo-image-picker/src/ImagePicker.types';
+import * as Permissions from 'expo-permissions';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
 import {TFunction} from 'i18next';
+import _ from 'lodash';
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Alert,
   Image,
   Linking,
-  ScrollView,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import ImagePicker, {ImagePickerOptions} from 'react-native-image-picker';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import AEButtonRounded from '../components/AEButtonRounded';
 import AERadioButton from '../components/AERadioButton';
-import AEScrollView from '../components/AEScrollView';
 import AETextInput from '../components/AETextInput';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import DatePicker from '../components/DatePicker';
-import AEButtonRounded from '../components/Navigator/AEButtonRounded';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import PlusIcon from '../components/Svg/PlusIcon';
@@ -38,24 +44,29 @@ import {
   trackChildAddChildName,
   trackChildAge,
   trackChildCompletedAddChildName,
-  trackChildCompletedAddPhoto,
   trackChildCompletedChildDateOfBirth,
   trackChildDone,
   trackChildGender,
   trackChildStartedChildDateOfBirth,
   trackCompleteAddChild,
+  trackInteractionByType,
 } from '../utils/analytics';
 
+// const options: ImagePickerOptions = {
+//   noData: true,
+//   quality: 1.0,
+//   maxWidth: 500,
+//   maxHeight: 500,
+//   mediaType: 'photo',
+//   storageOptions: {
+//     skipBackup: true,
+//     privateDirectory: true,
+//   },
+// };
+
 const options: ImagePickerOptions = {
-  noData: true,
-  quality: 1.0,
-  maxWidth: 500,
-  maxHeight: 500,
-  mediaType: 'photo',
-  storageOptions: {
-    skipBackup: true,
-    privateDirectory: true,
-  },
+  mediaTypes: MediaTypeOptions.Images,
+  quality: 1,
 };
 
 type AddChildRouteProp = RouteProp<DashboardStackParamList, 'AddChild'>;
@@ -68,49 +79,114 @@ interface CommonFieldProps {
   t: TFunction;
   name: string;
 }
+enum ActionSheetOptions {
+  takePhoto,
+  library,
+  cancel,
+}
 
-const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => (
-  <FastField name={name}>
-    {({field, form}: FastFieldProps<string | undefined>) => (
-      <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
-        <View style={[sharedStyle.shadow]}>
-          <TouchableOpacity
-            accessibilityRole={'button'}
-            accessibilityLabel={t('accessibility:addChildPhoto')}
-            onPress={() => {
-              trackChildAddAPhoto();
-              ImagePicker.showImagePicker(options, (response) => {
-                console.log('response.type', JSON.stringify(response, null, 2));
-                if (response.uri) {
-                  trackChildCompletedAddPhoto();
-                  form.setFieldValue(field.name, response.uri);
-                }
-                console.log(response.uri);
-              });
-            }}
-            style={[styles.childImage, sharedStyle.shadow]}>
-            {field.value ? (
-              <Image
-                style={{height: '100%', width: '100%'}}
-                source={{
-                  uri: field.value,
-                }}
-              />
-            ) : (
-              <PlusIcon />
-            )}
-          </TouchableOpacity>
+const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => {
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  return (
+    <FastField name={name}>
+      {({field, form}: FastFieldProps<string | undefined>) => (
+        <View style={{alignItems: 'center', marginTop: 30, marginBottom: 20}}>
+          <View style={[sharedStyle.shadow]}>
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={t('accessibility:addChildPhoto')}
+              onPress={() => {
+                trackChildAddAPhoto();
+
+                let interactionType: 'camera' | 'lib' | undefined;
+
+                showActionSheetWithOptions(
+                  {
+                    message: t('common:selectAPhoto'),
+                    cancelButtonIndex: 2,
+                    options: [t('common:takePhoto'), t('common:choseFromLibrary'), t('common:cancel')],
+                    textStyle: {...sharedStyle.regularText},
+                    titleTextStyle: {...sharedStyle.regularText},
+                    messageTextStyle: {...sharedStyle.regularText},
+                  },
+                  async (i: ActionSheetOptions) => {
+                    let result: (ImagePickerResult & ImageInfo) | undefined;
+                    switch (i) {
+                      case ActionSheetOptions.takePhoto:
+                        {
+                          let {status: aksStatus} = await Permissions.getAsync('camera');
+                          if (aksStatus !== 'granted') {
+                            const {status: getStatus} = await Permissions.askAsync('camera');
+                            aksStatus = getStatus;
+                          }
+
+                          result =
+                            aksStatus === 'granted'
+                              ? ((await ImagePicker.launchCameraAsync(options)) as any)
+                              : undefined;
+                          trackInteractionByType('Take Photo');
+                          interactionType = 'camera';
+                        }
+                        break;
+                      case ActionSheetOptions.library:
+                        {
+                          let {status: aksStatus} = await Permissions.getAsync('cameraRoll');
+                          if (aksStatus !== 'granted') {
+                            const {status: getStatus} = await Permissions.askAsync('cameraRoll');
+                            aksStatus = getStatus;
+                          }
+
+                          result =
+                            aksStatus === 'granted'
+                              ? ((await ImagePicker.launchImageLibraryAsync(options)) as any)
+                              : undefined;
+                          trackInteractionByType('Add Photo from Library');
+                          interactionType = 'lib';
+                        }
+                        break;
+                      case ActionSheetOptions.cancel:
+                        break;
+                    }
+
+                    if (result?.uri) {
+                      trackInteractionByType('Completed Add Photo');
+                      interactionType &&
+                        interactionType === 'camera' &&
+                        trackInteractionByType('Completed Add Photo: Take');
+                      interactionType &&
+                        interactionType === 'lib' &&
+                        trackInteractionByType('Completed Add Photo: Library');
+                      form.setFieldValue(field.name, result.uri);
+                    }
+                    console.log(result);
+                  },
+                );
+              }}
+              style={[styles.childImage, sharedStyle.shadow]}>
+              {field.value ? (
+                <Image
+                  style={{height: '100%', width: '100%'}}
+                  source={{
+                    uri: field.value,
+                  }}
+                />
+              ) : (
+                <PlusIcon />
+              )}
+            </TouchableOpacity>
+          </View>
+          <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
         </View>
-        <Text style={{marginTop: 10, fontSize: 15}}>{field.value ? t('changePhoto') : t('addPhoto')}</Text>
-      </View>
-    )}
-  </FastField>
-);
+      )}
+    </FastField>
+  );
+};
 
 const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<string>) => (
+      {({field, form, meta}: FastFieldProps<string>) => (
         <AETextInput
           onFocus={() => {
             trackChildAddChildName();
@@ -118,6 +194,7 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
           onBlur={() => {
             trackChildCompletedAddChildName();
           }}
+          style={[Boolean(meta.error && meta.touched) && sharedStyle.errorOutline]}
           autoCorrect={false}
           value={field.value}
           onChangeText={form.handleChange(field.name) as any}
@@ -131,18 +208,24 @@ const NameField: React.FC<CommonFieldProps> = ({t, name}) => {
 const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<Date | undefined>) => (
-        <DatePicker
-          onPress={() => {
-            trackChildStartedChildDateOfBirth();
-          }}
-          value={field.value}
-          label={t('fields:dateOfBirthPlaceholder')}
-          onChange={(date) => {
-            trackChildCompletedChildDateOfBirth();
-            form.setFieldValue(name, date);
-          }}
-        />
+      {({field, form, meta}: FastFieldProps<Date | undefined>) => (
+        <>
+          <DatePicker
+            error={Boolean(meta.error && meta.touched)}
+            onPress={() => {
+              trackChildStartedChildDateOfBirth();
+            }}
+            value={field.value}
+            label={t('fields:dateOfBirthPlaceholder')}
+            onChange={(date) => {
+              trackChildCompletedChildDateOfBirth();
+              form.setFieldValue(name, date);
+            }}
+          />
+          {Platform.select({
+            android: <Text style={{marginTop: 8}}>{t('addChild:dateHint')}</Text>,
+          })}
+        </>
       )}
     </FastField>
   );
@@ -151,29 +234,37 @@ const BirthdayField: React.FC<CommonFieldProps> = ({name, t}) => {
 const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
-      {({field, form}: FastFieldProps<0 | 1 | undefined>) => (
+      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
         <View style={{marginTop: 20, marginBottom: 16}}>
           <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
           <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <AERadioButton
-              onChange={() => form.setFieldValue(field.name, 0)}
-              value={field.value === 0}
-              title={t('boy')}
-              titleStyle={{marginRight: 32}}
-            />
-            <AERadioButton
-              onChange={() => form.setFieldValue(field.name, 1)}
-              value={field.value === 1}
-              title={`${t('girl')}`}
-              titleStyle={{marginRight: 32}}
-            />
+            style={[
+              {
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'flex-start',
+              },
+            ]}>
+            <View
+              style={[
+                {flexDirection: 'row'},
+                Boolean(meta.error && meta.touched) && {...sharedStyle.errorOutline, paddingVertical: 1},
+              ]}>
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, 0)}
+                value={field.value === 0}
+                title={t('boy')}
+                titleStyle={{marginRight: 32}}
+              />
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, 1)}
+                value={field.value === 1}
+                title={`${t('girl')}`}
+                titleStyle={{marginRight: 0}}
+              />
+            </View>
           </View>
-          <Text style={{textAlign: 'right'}}>{t('common:required')}</Text>
+          <Text style={[{textAlign: 'right'}, sharedStyle.required]}>{t('common:required')}</Text>
         </View>
       )}
     </FastField>
@@ -211,7 +302,7 @@ const AddChildScreen: React.FC = () => {
   const title = t(`${prefix}title`);
 
   const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const firstChild = {
     name: '',
@@ -238,15 +329,21 @@ const AddChildScreen: React.FC = () => {
   }, [child]);
 
   const onDone = () => {
-    formikRef.current?.handleSubmit();
-    if (route.params?.onboarding) {
-      navigation.navigate('OnboardingHowToUse');
-      // setOnboarding(true);
-    } else {
-      // navigation.navigate('Dashboard');
-      navigation.goBack();
-    }
-    trackChildDone();
+    formikRef.current?.validateForm().then((errors) => {
+      if (_.isEmpty(errors)) {
+        formikRef.current?.handleSubmit();
+        if (route.params?.onboarding) {
+          navigation.navigate('OnboardingHowToUse');
+          // setOnboarding(true);
+        } else {
+          // navigation.navigate('Dashboard');
+          navigation.goBack();
+        }
+        trackChildDone();
+      } else {
+        Alert.alert('', t('alert:enterChildInformation'));
+      }
+    });
   };
   const onCancel = () => {
     if (route.params?.onboarding) {
@@ -261,13 +358,21 @@ const AddChildScreen: React.FC = () => {
   }, [scrollViewRef]);
 
   return (
-    <AEScrollView innerRef={scrollViewRef}>
+    <KeyboardAwareScrollView
+      innerRef={(ref) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        scrollViewRef.current = ref;
+      }}
+      enableOnAndroid={Platform.OS === 'android'}
+      bounces={false}
+      style={{flex: 1}}>
       <Formik
         initialValues={initialValues}
         validationSchema={addEditChildSchema}
-        innerRef={(ref) => (formikRef.current = ref)}
+        innerRef={formikRef}
         validateOnChange
-        validateOnMount
+        // validateOnMount
         onSubmit={async (values) => {
           const childInput = {
             ...values.firstChild,
@@ -276,7 +381,10 @@ const AddChildScreen: React.FC = () => {
           };
 
           if (childId) {
-            updateChild({...childInput, id: childId});
+            updateChild({...childInput, id: childId}).then(() => {
+              trackChildAge(values.firstChild.birthday);
+              trackChildGender(Number(values.firstChild.gender));
+            });
           } else {
             addChild({data: childInput, isAnotherChild: false}).then(() => {
               trackCompleteAddChild();
@@ -308,11 +416,15 @@ const AddChildScreen: React.FC = () => {
                 <View style={{backgroundColor: colors.iceCold, flexGrow: 1}} />
                 <NavBarBackground width={'100%'} />
               </View>
-              <CancelDoneTopControl
-                disabled={isLoading || !formikProps.isValid}
-                onCancel={route.params?.onboarding ? undefined : onCancel}
-                onDone={onDone}
-              />
+              {!route.params?.onboarding || !_.isEmpty(formikProps.values.anotherChildren) ? (
+                <CancelDoneTopControl
+                  disabled={isLoading || !formikProps.isValid}
+                  onCancel={route.params?.onboarding ? undefined : onCancel}
+                  // onDone={onDone}
+                />
+              ) : (
+                <View style={{height: 18}} />
+              )}
               <Text
                 adjustsFontSizeToFit
                 style={[{marginHorizontal: 32, textAlign: 'center'}, sharedStyle.largeBoldText]}>
@@ -371,21 +483,24 @@ const AddChildScreen: React.FC = () => {
                     <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
                       <View style={{marginTop: 50}}>
                         <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
+                          disabled={isLoading}
                           style={{marginVertical: 0}}
-                          onPress={() => {
-                            trackAddAnotherChild();
-                            arrayHelpers.push({
-                              name: '',
+                          onPress={async () => {
+                            await formikProps.validateForm().then((errors) => {
+                              if (_.isEmpty(errors)) {
+                                trackAddAnotherChild();
+                                arrayHelpers.push({
+                                  name: '',
+                                });
+                              } else {
+                                Alert.alert('', t('alert:enterChildInformation'));
+                              }
                             });
                           }}>
-                          {t('addAnotherChild').toUpperCase()}
+                          {t('addAnotherChild')}
                         </AEButtonRounded>
-                        <AEButtonRounded
-                          disabled={isLoading || !formikProps.isValid}
-                          style={{marginBottom: 24}}
-                          onPress={onDone}>
-                          {t('common:done').toUpperCase()}
+                        <AEButtonRounded disabled={isLoading} style={{marginBottom: 24}} onPress={onDone}>
+                          {t('common:done')}
                         </AEButtonRounded>
                       </View>
                       <View
@@ -409,7 +524,7 @@ const AddChildScreen: React.FC = () => {
           </View>
         )}
       </Formik>
-    </AEScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 

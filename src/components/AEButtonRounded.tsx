@@ -2,7 +2,7 @@ import React from 'react';
 import {ViewStyle} from 'react-native';
 import {Button} from 'react-native-paper';
 
-import {sharedStyle} from '../../resources/constants';
+import {sharedStyle} from '../resources/constants';
 
 type Created = React.ComponentProps<typeof Button>;
 
@@ -24,7 +24,7 @@ const AEButtonRounded: React.FC<Created & Props> = ({children, style, contentSty
         contentStyle,
       ]}
       labelStyle={{
-        textTransform: 'capitalize',
+        textTransform: 'none',
         fontFamily: 'Montserrat-Bold',
         fontSize: 18,
       }}

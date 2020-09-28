@@ -1,7 +1,8 @@
 import {Formik, useField} from 'formik';
 import {FormikProps} from 'formik/dist/types';
+import i18next from 'i18next';
 import _ from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
 import {Text} from 'react-native-paper';
@@ -22,7 +23,8 @@ import {
   useSetNotificationSettings,
 } from '../hooks/settingsHooks';
 import {colors, sharedStyle} from '../resources/constants';
-import {trackSelectByType, trackSelectLanguage} from '../utils/analytics';
+import {editProfileSchema} from '../resources/validationSchemas';
+import {trackNotificationSelect, trackSelectByType, trackSelectLanguage} from '../utils/analytics';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -42,28 +44,28 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         marginTop: 21,
       }}>
       <Text
-        numberOfLines={1}
+        numberOfLines={3}
         onLayout={onLayout}
-        adjustsFontSizeToFit
         style={[
           {
             fontSize: 15,
-            textTransform: 'capitalize',
-            width: '75%',
+            width: i18next.language === 'es' ? '60%' : '70%',
           },
           textStyle,
         ]}>
         {t(name)}
       </Text>
       <AESwitch
+        style={{marginLeft: 8}}
         value={field.value}
         onValueChange={(value) => {
           helpers.setValue(value);
           value ? trackSelectByType('On') : trackSelectByType('Off');
+          trackNotificationSelect(name);
         }}
         onText={t('onLabel')}
         offText={t('offLabel')}
@@ -86,7 +88,6 @@ const SettingsScreen: React.FC = () => {
   const [setSettings] = useSetNotificationSettings();
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
-  const [height, setHeight] = useState<number | undefined>();
   const [scheduleNotifications] = useScheduleNotifications();
 
   useEffect(() => {
@@ -130,14 +131,7 @@ const SettingsScreen: React.FC = () => {
                 return (
                   <View style={{marginHorizontal: 32}}>
                     {notificationPreferences.map((value, index) => (
-                      <NotificationSetting
-                        key={`notif-${index}`}
-                        onLayout={(e) => {
-                          e.nativeEvent.layout.height < (height || 100) && setHeight(e.nativeEvent.layout.height);
-                        }}
-                        textStyle={!!height && {height}}
-                        name={value}
-                      />
+                      <NotificationSetting key={`notif-${index}`} name={value} />
                     ))}
                   </View>
                 );
@@ -147,29 +141,28 @@ const SettingsScreen: React.FC = () => {
           <View style={{marginTop: 47}}>
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
-              <Text
-                style={[
-                  {
-                    textTransform: 'capitalize',
-                  },
-                  sharedStyle.largeBoldText,
-                ]}>
-                {t('userProfile')}
-              </Text>
+              <Text style={[sharedStyle.largeBoldText]}>{t('userProfile')}</Text>
               <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage')}</Text>
 
-              <ParentProfileSelector
-                value={profile}
-                onChange={(values) => {
-                  setProfile(values);
-                }}
-              />
+              {profile && (
+                <Formik
+                  key={`ParentProfileSelector-${i18next.language}`}
+                  initialValues={profile}
+                  validationSchema={editProfileSchema}
+                  validate={(values) => {
+                    setProfile(values);
+                  }}
+                  onSubmit={() => {
+                    return;
+                  }}>
+                  <ParentProfileSelector />
+                </Formik>
+              )}
               <Text style={{textAlign: 'right', marginTop: 10}}>{t('requiredForState')}</Text>
               <Text
                 style={[
                   {
                     marginBottom: 16,
-                    textTransform: 'capitalize',
                   },
                   sharedStyle.largeBoldText,
                 ]}>

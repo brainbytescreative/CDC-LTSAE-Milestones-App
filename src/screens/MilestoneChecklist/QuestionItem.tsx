@@ -13,9 +13,9 @@ import PhotoChevronRight from '../../components/Svg/PhotoChevronRight';
 import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetQuestionAnswer, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import {Answer} from '../../hooks/types';
-import {colors, images, sharedStyle} from '../../resources/constants';
+import {colors, images, sharedStyle, verticalImages} from '../../resources/constants';
 import {SkillSection} from '../../resources/milestoneChecklist';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackChecklistAnswer, trackInteractionByType} from '../../utils/analytics';
 
 // const jsCode = `
 //
@@ -114,6 +114,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
   const answer = data?.answer;
 
   const {t} = useTranslation('milestones');
+  const hasVerticalImage = Boolean(photos.filter(({name}) => verticalImages.includes(name)).length);
+  const ratio = hasVerticalImage ? 1.68 : 0.595;
+  const height = (Dimensions.get('window').width - 64) * ratio;
 
   const video =
     videos?.map((item) => {
@@ -121,21 +124,24 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       if (!code) {
         return null;
       }
+
       return (
-        <WebView
-          onMessage={(event) => {
-            event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
-          }}
-          originWhitelist={['*']}
-          allowsInlineMediaPlayback={true}
-          key={`video-${item.name}`}
-          style={{alignSelf: 'stretch', height}}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          startInLoadingState
-          scrollEnabled={false}
-          source={{html: getVideoHtml(code)}}
-        />
+        <View>
+          <WebView
+            onMessage={(event) => {
+              event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
+            }}
+            originWhitelist={['*']}
+            allowsInlineMediaPlayback={true}
+            key={`video-${code}`}
+            style={{width: '100%', height}}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState
+            scrollEnabled={false}
+            source={{html: getVideoHtml(code)}}
+          />
+        </View>
       );
     }) || [];
 
@@ -145,6 +151,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       const image = images[name];
       return (
         <Image
+          // resizeMode={'contain'}
           key={`photo-${index}-${id}`}
           accessibilityLabel={item.alt && t(`milestones:alts:${item.alt}`)}
           accessibilityRole={'image'}
@@ -155,13 +162,12 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       );
     }) as any) || [];
 
-  const height = (Dimensions.get('window').width - 64) * 0.595;
-
   const doAnswer = (answerValue: Answer) => () => {
     id &&
       childId &&
       milestoneId &&
       answerQuestion({questionId: id, childId, answer: answerValue, note: note, milestoneId});
+    answer && trackChecklistAnswer(answerValue, {questionData: {milestoneId: Number(milestoneId), questionId: id}});
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,6 +188,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
 
   const mediaItems = [...photo, ...video];
 
+  // noinspection ConstantConditionalExpressionJS
   return (
     <View style={{flex: 1, marginTop: 38, marginHorizontal: 32}}>
       <View style={{backgroundColor: colors.purple, borderRadius: 10, overflow: 'hidden'}}>
@@ -196,19 +203,21 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
               ref={viewPagerRef}
               style={{flex: 1, height}}
               initialPage={0}>
-              {__DEV__
-                ? photo.map((item: any, index: number) => {
-                    return (
-                      <View key={index}>
-                        <Text accessible={false}>{`${photos?.[index].alt}\n${t(
-                          `milestones:alts:${photos?.[index].alt}`,
-                        )}`}</Text>
-                        {item}
-                      </View>
-                    );
-                  })
-                : photo}
-              {video}
+              {/*{__DEV__*/}
+              {/*  ? photo.map((item: any, index: number) => {*/}
+              {/*      return (*/}
+              {/*        <View key={index}>*/}
+              {/*          <Text accessible={false}>{`${photos?.[index].alt}\n${t(*/}
+              {/*            `milestones:alts:${photos?.[index].alt}`,*/}
+              {/*          )}`}</Text>*/}
+              {/*          {item}*/}
+              {/*        </View>*/}
+              {/*      );*/}
+              {/*    })*/}
+              {/*  : photo}*/}
+              {/*{photo}*/}
+              {/*{video}*/}
+              {mediaItems}
             </ViewPager>
             {mediaItems && mediaItems?.length > 1 && (
               <>
@@ -260,9 +269,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             sharedStyle.shadow,
             answer === Answer.YES ? {backgroundColor: colors.lightGreen} : undefined,
           ]}>
-          <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
-            {t('milestoneChecklist:answer_yes')}
-          </Text>
+          <Text numberOfLines={1}>{t('milestoneChecklist:answer_yes')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.UNSURE)}
@@ -272,9 +279,13 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             {marginHorizontal: 8},
             answer === Answer.UNSURE ? {backgroundColor: colors.yellow} : undefined,
           ]}>
-          <Text numberOfLines={1} style={{textTransform: 'uppercase'}}>
-            {t('milestoneChecklist:answer_unsure')}
-          </Text>
+          {i18next.language === 'es' ? (
+            <Text style={{width: 70, textAlign: 'center'}} numberOfLines={2}>
+              {t('milestoneChecklist:answer_unsure')}
+            </Text>
+          ) : (
+            <Text numberOfLines={1}>{t('milestoneChecklist:answer_unsure')}</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doAnswer(Answer.NOT_YET)}
@@ -283,7 +294,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             sharedStyle.shadow,
             answer === Answer.NOT_YET ? {backgroundColor: colors.tanHide} : undefined,
           ]}>
-          <Text numberOfLines={1} adjustsFontSizeToFit style={{textTransform: 'uppercase'}}>
+          <Text numberOfLines={1} adjustsFontSizeToFit>
             {t('milestoneChecklist:answer_not_yet')}
           </Text>
         </TouchableOpacity>

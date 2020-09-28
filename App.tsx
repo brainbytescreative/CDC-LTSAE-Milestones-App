@@ -27,13 +27,7 @@ import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 import AppStateManager from './src/components/AppStateManager';
 import Navigator from './src/components/Navigator';
 import {colors} from './src/resources/constants';
-import {
-  currentScreen,
-  trackInteractionByType,
-  trackSelectByType,
-  trackStartAddChild,
-  trackState,
-} from './src/utils/analytics';
+import {currentScreen, trackAction, trackSelectByType, trackStartAddChild} from './src/utils/analytics';
 import {getActiveRouteName} from './src/utils/helpers';
 
 enableScreens();
@@ -93,7 +87,19 @@ const App = () => {
 
   React.useEffect(() => {
     crashlytics().log('App mounted.');
-    // crashlytics().crash();
+    // __DEV__ &&
+    //   setTimeout(() => {
+    //     Alert.alert('', 'crashtest', [
+    //       {
+    //         text: 'ok',
+    //         onPress: () => {
+    //           // crashlytics().recordError(new Error('tets'));
+    //           // crashlytics().crash();
+    //         },
+    //       },
+    //     ]);
+    //   }, 5000);
+    // console.log('test');
     Notifications.requestPermissionsAsync();
     Notifications.getPermissionsAsync();
   }, []);
@@ -126,22 +132,22 @@ const App = () => {
                       trackSelectByType('How to Use App');
                       break;
                     case 'OnboardingParentProfile':
-                      trackState('Interaction: Parent/Caregiver Profile: Started');
+                      trackAction('Interaction: Parent/Caregiver Profile: Started');
                       break;
                     case 'AddChild': {
                       trackStartAddChild();
                       break;
                     }
-                    case 'AddAppointment': {
-                      trackInteractionByType('Start Add Appointment');
-                      break;
-                    }
+                    // case 'AddAppointment': {
+                    //   trackInteractionByType('Start Add Appointment');
+                    //   break;
+                    // }
                   }
                   crashlytics().log(currentRouteName);
                 }
 
                 if (previousRouteName === 'OnboardingParentProfile') {
-                  trackState('Interaction: Parent/Caregiver Profile: Complete');
+                  trackAction('Interaction: Parent/Caregiver Profile: Complete');
                 }
 
                 // Save the current route name for later comparision

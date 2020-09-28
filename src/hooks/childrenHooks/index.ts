@@ -1,8 +1,10 @@
 import {formatISO, parseISO} from 'date-fns';
+import _ from 'lodash';
 import {MutateOptions, QueryOptions, queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
 import {pathFromDB, pathToDB} from '../../resources/constants';
+import {trackInteractionByType} from '../../utils/analytics';
 import {objectToQuery} from '../../utils/helpers';
 import Storage from '../../utils/Storage';
 import {useRemoveNotificationsByChildId, useSetMilestoneNotifications} from '../notificationsHooks';
@@ -33,10 +35,12 @@ export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
+      const photo = await pathToDB(variables.photo);
       const [query, values] = objectToQuery<ChildDbRecord>(
         {
           ...variables,
-          photo: pathToDB(variables.photo),
+          name: _.upperFirst(_.trim(variables.name)),
+          photo: photo,
           birthday: formatISO(variables.birthday, {
             representation: 'date',
           }),
@@ -101,10 +105,12 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
   const [setSelectedChild] = useSetSelectedChild();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
+      const photo = await pathToDB(variables.data.photo);
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
           ...variables.data,
-          photo: pathToDB(variables.data.photo),
+          name: _.upperFirst(_.trim(variables.data.name)),
+          photo: photo,
           birthday: formatISO(variables.data.birthday, {
             representation: 'date',
           }),
@@ -115,7 +121,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       const insertId = res?.[0].insertId;
 
       if (!variables.isAnotherChild && insertId) {
-        console.log(variables.isAnotherChild, insertId);
+        // console.log(variables.isAnotherChild, insertId);
         await setSelectedChild({id: insertId});
       }
 
@@ -123,6 +129,7 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
       if (!rowsAffected || rowsAffected === 0) {
         throw new Error('Add child failed');
       }
+      trackInteractionByType('Completed Add Child', {page: `Add child #${insertId}` as any});
       return insertId;
     },
     {

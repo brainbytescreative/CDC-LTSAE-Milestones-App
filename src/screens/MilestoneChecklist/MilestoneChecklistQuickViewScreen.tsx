@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
 import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
+import {queryCache} from 'react-query';
 
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
@@ -30,6 +31,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
   const onSectionSet = (val: Section) => {
     // if (val !== 'actEarly') {
     setSection(val);
+    queryCache.setQueryData('section', val);
     // }
   };
 
@@ -56,7 +58,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
           // } else {
           //   navigation.navigate('MilestoneChecklist');
           // }
-          if (section === _.last(skillTypes)) {
+          if (section === _.last(checklistSections)) {
             setSection(skillTypes[0]);
           } else {
             setSection(checklistSections[checklistSections.indexOf(section) + 1]);

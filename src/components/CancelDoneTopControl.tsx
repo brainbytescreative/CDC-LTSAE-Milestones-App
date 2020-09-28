@@ -15,7 +15,9 @@ interface Props {
 const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone, disabled = false}) => {
   const {t} = useTranslation();
   return (
-    <View style={{flexDirection: 'row', marginHorizontal: 32, marginVertical: 10}}>
+    <View
+      onLayout={(event) => console.log(event.nativeEvent.layout.height)}
+      style={{flexDirection: 'row', marginHorizontal: 32, marginVertical: 10}}>
       {Boolean(onCancel) && (
         <TouchableOpacity
           accessibilityRole={'button'}
@@ -27,18 +29,20 @@ const CancelDoneTopControl: React.FC<Props> = ({onCancel, onDone, disabled = fal
           <Text style={[sharedStyle.regularText]}>{t('common:cancel')}</Text>
         </TouchableOpacity>
       )}
-      <TouchableOpacity
-        disabled={disabled}
-        accessibilityRole={'button'}
-        onPress={() => {
-          onDone?.();
-          trackTopDone();
-        }}
-        style={{flexGrow: 1, alignItems: 'flex-end'}}>
-        <Text style={[sharedStyle.regularText, {color: disabled ? colors.gray : colors.black}]}>
-          {t('common:done')}
-        </Text>
-      </TouchableOpacity>
+      {Boolean(onDone) && (
+        <TouchableOpacity
+          disabled={disabled}
+          accessibilityRole={'button'}
+          onPress={() => {
+            onDone?.();
+            trackTopDone();
+          }}
+          style={{flexGrow: 1, alignItems: 'flex-end'}}>
+          <Text style={[sharedStyle.regularText, {color: disabled ? colors.gray : colors.black}]}>
+            {t('common:done')}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

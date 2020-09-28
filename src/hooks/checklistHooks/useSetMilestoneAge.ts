@@ -11,14 +11,14 @@ function useSetMilestoneAge() {
   const {data: child} = useGetCurrentChild();
   return [
     (age: number) => {
-      const {milestoneAge: childAge} = calcChildAge(child?.birthday);
+      const {milestoneAge: childAge, betweenCheckList} = calcChildAge(child?.birthday);
       const formatted = formattedAge(age, t);
       const data: MilestoneQueryResult = {
         milestoneAge: age,
         ...formatted,
         childAge,
-        isTooYong: false,
-        betweenCheckList: false,
+        // isTooYong: false,
+        betweenCheckList: age === childAge ? betweenCheckList : false,
       };
 
       const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday}];

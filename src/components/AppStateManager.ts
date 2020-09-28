@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
+import {queryCache} from 'react-query';
 
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
 import {PropType} from '../resources/constants';
@@ -14,6 +15,7 @@ const AppStateManager: React.FC = () => {
   const _handleAppStateChange: StateChangeListener = (nextAppState) => {
     if (!!appState?.match(/inactive|background/) && nextAppState === 'active') {
       scheduleNotifications();
+      queryCache.invalidateQueries('unreadNotifications', {refetchActive: true, refetchInactive: true});
       trackAppLaunch();
     }
     setAppState(nextAppState);

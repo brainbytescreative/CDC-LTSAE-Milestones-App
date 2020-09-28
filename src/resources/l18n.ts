@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import i18next from 'i18next';
 import {useCallback} from 'react';
 import {initReactI18next} from 'react-i18next';
-import {queryCache, useMutation, useQuery} from 'react-query';
+import {queryCache} from 'react-query';
 
+import Storage from '../utils/Storage';
 import translationEN from './locales/en.json';
 import translationES from './locales/es.json';
 import milestonesTextsEN from './milestones/en-texts.json';
@@ -11,43 +11,18 @@ import milestonesEN from './milestones/en.json';
 import milestonesTextsES from './milestones/es-texts.json';
 import milestonesES from './milestones/es.json';
 
-const languageCode = 'Language';
-export type LangCode = 'en' | 'es' | undefined;
-
-export const getLanguageCode = () => {
-  return AsyncStorage.getItem(languageCode) as Promise<LangCode>;
-};
-
-export const setLanguageCode = (language: string) => {
-  return AsyncStorage.setItem(languageCode, language);
-};
-
-export function useGetLanguageCode() {
-  const {data} = useQuery<LangCode, any>(languageCode, getLanguageCode);
-  return {
-    data: data || 'en',
-  };
-}
-
 export function useChangeLanguage() {
-  const [mutate] = useMutation<void, any>(
-    (variables) => {
-      return setLanguageCode(variables);
-    },
-    {
-      onSuccess: () => {
-        return queryCache.invalidateQueries([languageCode]);
+  return useCallback((lang) => {
+    i18next.changeLanguage(lang);
+    queryCache.invalidateQueries(
+      (query) => {
+        const [key] = query.queryKey;
+        return ['questions', 'concerns', 'tips', 'milestone'].includes(String(key));
       },
-    },
-  );
-
-  return useCallback(
-    (lang) => {
-      i18next.changeLanguage(lang);
-      return mutate(lang);
-    },
-    [mutate],
-  );
+      {refetchActive: true},
+    );
+    Storage.setItemTyped('language', lang);
+  }, []);
 }
 
 const languageDetector = {
@@ -55,7 +30,7 @@ const languageDetector = {
   type: 'languageDetector',
   async: true,
   detect: (callback: (language: string) => void) => {
-    return getLanguageCode().then((language) => {
+    return Storage.getItemTyped('language').then((language) => {
       callback(language || 'en');
     });
   },

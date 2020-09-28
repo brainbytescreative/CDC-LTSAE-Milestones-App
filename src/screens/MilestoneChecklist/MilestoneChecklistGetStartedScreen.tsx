@@ -6,6 +6,7 @@ import {FlatList, View} from 'react-native';
 
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardStackParamList, MilestoneCheckListParamList} from '../../components/Navigator/types';
+import withSuspense from '../../components/withSuspense';
 import {
   useGetMilestone,
   useGetMilestoneGotStarted,
@@ -13,7 +14,7 @@ import {
   useSetMilestoneGotStarted,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {checklistSections, colors} from '../../resources/constants';
+import {checklistSections, colors, suspenseEnabled} from '../../resources/constants';
 import {trackInteractionByType} from '../../utils/analytics';
 import FrontPage from './FrontPage';
 import SectionItem from './SectionItem';
@@ -24,7 +25,7 @@ type NavigationProp = CompositeNavigationProp<
 >;
 
 const MilestoneChecklistGetStartedScreen: React.FC = () => {
-  const {data: {milestoneAgeFormatted, milestoneAge} = {}} = useGetMilestone();
+  const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
   const navigation = useNavigation<NavigationProp>();
@@ -46,6 +47,12 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
     }, [gotStarted, gotStartedStatus, navigation]),
   );
 
+  const onGetStarted = () => {
+    setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
+      navigation.navigate('MilestoneChecklist');
+      trackInteractionByType('Get Started', {page: 'Milestone Checklist Intro'});
+    });
+  };
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <ChildSelectorModal />
@@ -54,21 +61,15 @@ const MilestoneChecklistGetStartedScreen: React.FC = () => {
           showsHorizontalScrollIndicator={false}
           data={checklistSections}
           horizontal={true}
-          renderItem={({item}) => <SectionItem progress={sectionsProgress?.get(item)} section={item} />}
+          renderItem={({item}) => (
+            <SectionItem onSectionSet={onGetStarted} progress={sectionsProgress?.get(item)} section={item} />
+          )}
           keyExtractor={(item, index) => `${item}-${index}`}
         />
       </View>
-      <FrontPage
-        milestoneAgeFormatted={milestoneAgeFormatted}
-        onGetStarted={() => {
-          setGetStarted({milestoneId: milestoneAge, childId}).then(() => {
-            navigation.navigate('MilestoneChecklist');
-            trackInteractionByType('Get Started');
-          });
-        }}
-      />
+      <FrontPage milestoneAge={milestoneAge} onGetStarted={onGetStarted} />
     </View>
   );
 };
 
-export default MilestoneChecklistGetStartedScreen;
+export default withSuspense(MilestoneChecklistGetStartedScreen, suspenseEnabled);

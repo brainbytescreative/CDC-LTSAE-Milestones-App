@@ -2,12 +2,12 @@ import ViewPager from '@react-native-community/viewpager';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp, useFocusEffect} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import _ from 'lodash';
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, View} from 'react-native';
+import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
-import {useQuery} from 'react-query';
+import {queryCache} from 'react-query';
 
 import ButtonWithChevron from '../../components/ButtonWithChevron';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
@@ -23,8 +23,8 @@ import {
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
-import {trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
-import {slowdown} from '../../utils/helpers';
+import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
+import {formattedAgeSingular} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -35,18 +35,23 @@ type NavigationProp = CompositeNavigationProp<
 >;
 
 const QuestionsList: React.FC<{
-  flatListRef: RefObject<FlatList>;
+  flatListRef: RefObject<KeyboardAwareFlatList>;
   section: Section;
   onPressNextSection: () => void;
 }> = withSuspense(
   ({flatListRef, section, onPressNextSection}) => {
-    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped!;
-    const milestoneAgeFormatted = useGetMilestone().data?.milestoneAgeFormatted ?? '';
-    const childId = useGetCurrentChild().data?.id;
     const {t} = useTranslation('milestoneChecklist');
+    const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
+    const milestoneAge = useGetMilestone().data?.milestoneAge;
+    const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+    const childId = useGetCurrentChild().data?.id;
 
     return (
-      <FlatList
+      <KeyboardAwareFlatList
+        // enableOnAndroid={Platform.OS === 'android'}
+        extraHeight={Platform.select({
+          ios: 200,
+        })}
         ref={flatListRef}
         bounces={false}
         initialNumToRender={1}
@@ -55,7 +60,12 @@ const QuestionsList: React.FC<{
         renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
         keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
         ListHeaderComponent={() => (
-          <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.boldText]}>{milestoneAgeFormatted}</Text>
+          <>
+            <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>
+              {milestoneAgeFormatted}
+            </Text>
+            <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
+          </>
         )}
         ListFooterComponent={() => (
           <View style={{marginTop: 50}}>
@@ -74,7 +84,7 @@ const QuestionsList: React.FC<{
 const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = ({onSectionSet, section}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {progress: sectionsProgress} = useGetSectionsProgress(childId);
-
+  queryCache.setQueryData('section', section);
   return (
     <FlatList
       extraData={sectionsProgress}
@@ -103,10 +113,8 @@ const MilestoneChecklistScreen: React.FC<{
   const {data: {id: childId} = {}} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
-  const {data: {unansweredData} = {}} = useGetCheckListAnswers(milestoneAge, childId);
+  const {refetch: refetchAnswers} = useGetCheckListAnswers(milestoneAge, childId);
   const prevSection = useRef<{name: Section}>({name: 'social'}).current;
-
-  useQuery('MilestoneChecklistScreen', () => slowdown(Promise.resolve(), 0), {staleTime: 0});
 
   useEffect(() => {
     if (gotStartedStatus === 'success' && !gotStarted) {
@@ -118,16 +126,12 @@ const MilestoneChecklistScreen: React.FC<{
     React.useCallback(() => {
       gotStarted && trackInteractionByType('Started Social Milestones');
       return () => {
-        if (unansweredData && !_.isEmpty(unansweredData)) {
-          trackChecklistUnanswered();
-          // const unanswered = unansweredData.map((data) => t(`milestones:${data.value}`, {lng: 'en'})).join(',');
-          // ACPCore.trackState(`Unanswered questions: ${unanswered}`, {'gov.cdc.appname': 'CDC Health IQ'});
-        }
+        refetchAnswers().then(() => trackChecklistUnanswered());
       };
-    }, [unansweredData, gotStarted]),
+    }, [gotStarted, refetchAnswers]),
   );
 
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<KeyboardAwareFlatList>(null);
   const viewPagerRef = useRef<ViewPager | null>(null);
 
   useEffect(() => {
@@ -152,25 +156,35 @@ const MilestoneChecklistScreen: React.FC<{
   }, [section, prevSection.name]);
 
   const onSectionSet = (val: Section) => {
+    const page: PageType = prevSection.name === 'actEarly' ? 'When to Act Early' : 'Milestone Checklist';
+
     prevSection.name = section;
     setSection(val);
     viewPagerRef.current?.setPageWithoutAnimation(checklistSections.indexOf(val));
-    flatListRef.current?.scrollToOffset({animated: false, offset: 0});
+
+    // if (Platform.OS === 'android') {
+    //   flatListRef.current?.scrollForExtraHeightOnAndroid(-300);
+    // } else {
+    setTimeout(() => {
+      flatListRef.current?.scrollToPosition(0, 0, false);
+    }, 100);
+    // }
+
     switch (val) {
       case 'social':
-        trackInteractionByType('Started Social Milestones');
+        trackInteractionByType('Started Social Milestones', {page});
         break;
       case 'language':
-        trackInteractionByType('Started Language Milestones');
+        trackInteractionByType('Started Language Milestones', {page});
         break;
       case 'cognitive':
-        trackInteractionByType('Started Cognitive Milestones');
+        trackInteractionByType('Started Cognitive Milestones', {page});
         break;
       case 'movement':
-        trackInteractionByType('Started Movement Milestones');
+        trackInteractionByType('Started Movement Milestones', {page});
         break;
       case 'actEarly':
-        trackInteractionByType('Started When to Act Early');
+        trackInteractionByType('Started When to Act Early', {page});
         break;
     }
   };
@@ -202,6 +216,15 @@ const MilestoneChecklistScreen: React.FC<{
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  header: {
+    textAlign: 'center',
+    fontSize: 22,
+    marginTop: 5,
+    fontFamily: 'Montserrat-Bold',
+  },
+});
 
 export default withSuspense(MilestoneChecklistScreen, {
   shared: {

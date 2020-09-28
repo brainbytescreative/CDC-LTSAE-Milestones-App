@@ -126,7 +126,7 @@ const TipsAndActivitiesItem: React.FC<ItemProps> = ({
           ]}>
           <TouchableOpacity style={itemStyle.buttonTouchable} onPress={() => onLikePress?.(itemId, !like)}>
             <LikeHeart selected={!!like} style={{marginRight: 5}} />
-            <Text style={{textTransform: 'capitalize'}}>{t('like')}</Text>
+            <Text>{t('like')}</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -141,7 +141,7 @@ const TipsAndActivitiesItem: React.FC<ItemProps> = ({
             onPress={() => {
               onRemindMePress?.(itemId, !remindMe);
             }}>
-            <Text style={{textTransform: 'capitalize'}}>{t('remindMe')}</Text>
+            <Text>{t('remindMe')}</Text>
           </TouchableOpacity>
         </View>
       </View>

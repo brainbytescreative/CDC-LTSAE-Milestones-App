@@ -4,8 +4,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {
   Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
   Linking,
   Platform,
   StyleSheet,
@@ -14,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 
 import AEYellowBox from '../../components/AEYellowBox';
@@ -23,7 +22,6 @@ import NoteIcon from '../../components/Svg/NoteIcon';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {
-  useGetChecklistQuestions,
   useGetConcern,
   useGetConcerns,
   useGetIsMissingMilestone,
@@ -36,84 +34,112 @@ import {Concern} from '../../resources/milestoneChecklist';
 import {trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 
-const Item: React.FC<Concern & {childId?: number}> = React.memo(({id, value, childId}) => {
-  const [setConcern] = useSetConcern();
-  const {t} = useTranslation('milestoneChecklist');
-  const [note, setNote] = useState('');
-  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
-  const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
+const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React.memo(
+  ({id, value, childId, onPress: onItemPress}) => {
+    const [setConcern] = useSetConcern();
+    const {t} = useTranslation('milestoneChecklist');
+    const [note, setNote] = useState('');
+    const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
+    const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
 
-  const isMissingAnswerConcern = missingConcerns.includes(id || 0);
-  const onPress = isMissingAnswerConcern
-    ? undefined
-    : () => {
-        id &&
-          childId &&
-          milestoneId &&
-          setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
-        !concern?.answer && trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
-      };
+    const isMissingAnswerConcern = missingConcerns.includes(id || 0);
+    const onPress = isMissingAnswerConcern
+      ? undefined
+      : () => {
+          onItemPress?.();
+          if (id && childId && milestoneId) {
+            setConcern({concernId: id, answer: !concern?.answer, childId: childId, note: concern?.note, milestoneId});
+          }
+          !concern?.answer &&
+            trackInteractionByType('Checked Act Early Item', {
+              page: 'When to Act Early',
+              concernData: {concernId: Number(id), milestoneId: Number(milestoneId)},
+            });
 
-  const saveNote = useRef(
-    _.debounce((text: string) => {
-      id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
-      trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
-    }, 500),
-  );
+          // if (id && childId && milestoneId && !concern?.answer) {
+          //   setConcern({concernId: id, answer: true, childId: childId, note: concern?.note, milestoneId});
+          // }
+          //
+          // if (concern?.answer) {
+          //   Alert.alert(
+          //     '',
+          //     t('alert:concernUncheck'),
+          //     [
+          //       {
+          //         text: t('dialog:no'),
+          //         style: 'cancel',
+          //       },
+          //       {
+          //         text: t('dialog:yes'),
+          //         style: 'default',
+          //         onPress: () => {
+          //           if (id && childId && milestoneId) {
+          //             setConcern({concernId: id, answer: false, childId: childId, note: null, milestoneId});
+          //           }
+          //         },
+          //       },
+          //     ],
+          //     {cancelable: false},
+          //   );
+          // } else {
+          //   trackInteractionByType('Checked Act Early Item', {page: 'When to Act Early'});
+          // }
+        };
 
-  useEffect(() => {
-    !isFetching && setNote(concern?.note || '');
-  }, [concern, isFetching]);
+    const saveNote = useRef(
+      _.debounce((text: string) => {
+        id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
+        trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
+      }, 500),
+    );
 
-  useEffect(() => {
-    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
-    return () => {
-      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
-    };
-  }, []);
+    useEffect(() => {
+      !isFetching && setNote(concern?.note || '');
+    }, [concern, isFetching]);
 
-  return (
-    <View>
-      <View style={[itemStyles.container, sharedStyle.shadow]}>
-        <View
-          style={{
-            paddingHorizontal: 16,
-          }}>
-          <Text style={{textAlign: 'center'}}>{value}</Text>
+    return (
+      <View>
+        <View style={[itemStyles.container, sharedStyle.shadow]}>
+          <View
+            style={{
+              paddingHorizontal: 16,
+            }}>
+            <Text style={{textAlign: 'center'}}>{value}</Text>
+          </View>
+        </View>
+        <View style={[itemStyles.buttonsContainer]}>
+          <TouchableOpacity
+            accessible={!isMissingAnswerConcern}
+            accessibilityRole={'button'}
+            accessibilityLabel={t('accessibility:concernToggleButton')}
+            disabled={isMissingAnswerConcern}
+            onPress={onPress}
+            style={[
+              itemStyles.checkMarkContainer,
+              sharedStyle.shadow,
+              concern?.answer && {backgroundColor: colors.yellow},
+            ]}>
+            <CheckMark />
+          </TouchableOpacity>
+
+          <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
+            <TextInput
+              value={note}
+              onChange={(e) => {
+                setNote(e.nativeEvent.text);
+                saveNote.current(e.nativeEvent.text);
+              }}
+              multiline
+              style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
+              placeholder={t('addANote')}
+            />
+            {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}
+          </View>
         </View>
       </View>
-      <View style={[itemStyles.buttonsContainer]}>
-        <TouchableOpacity
-          accessible={!isMissingAnswerConcern}
-          accessibilityRole={'button'}
-          accessibilityLabel={t('accessibility:concernToggleButton')}
-          disabled={isMissingAnswerConcern}
-          onPress={onPress}
-          style={[
-            itemStyles.checkMarkContainer,
-            sharedStyle.shadow,
-            concern?.answer && {backgroundColor: colors.yellow},
-          ]}>
-          <CheckMark />
-        </TouchableOpacity>
-
-        <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
-          <TextInput
-            value={note}
-            onChange={(e) => {
-              setNote(e.nativeEvent.text);
-              saveNote.current(e.nativeEvent.text);
-            }}
-            multiline
-            style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, padding: 0}}
-            placeholder={t('addANote')}
-          />
-          {Dimensions.get('window').width > 320 && <NoteIcon style={{marginLeft: 10}} />}
-        </View>
-      </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const itemStyles = StyleSheet.create({
   container: {
@@ -125,6 +151,7 @@ const itemStyles = StyleSheet.create({
   },
   buttonsContainer: {
     marginHorizontal: 32,
+    paddingHorizontal: 18,
     marginTop: -20,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -134,7 +161,7 @@ const itemStyles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 12,
     backgroundColor: 'white',
-    marginLeft: 30,
+    // marginLeft: 30,
     marginRight: 23,
     width: 58,
     height: 51,
@@ -149,7 +176,7 @@ const itemStyles = StyleSheet.create({
     // paddingHorizontal: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
+    // marginRight: 20,
     backgroundColor: 'white',
     borderRadius: 10,
     flexGrow: 1,
@@ -162,76 +189,112 @@ const itemStyles = StyleSheet.create({
 
 const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSummaryPress}) => {
   const {data: {id: childId} = {}} = useGetCurrentChild();
-  const {data: {milestoneAgeFormatted, milestoneAge: milestoneId} = {}} = useGetMilestone();
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
   const {data: {isMissingConcern = false, isNotYet = false} = {}} = useGetIsMissingMilestone({childId, milestoneId});
-  const {data: {totalProgressValue} = {}} = useGetChecklistQuestions();
+  const flatListRef = useRef<KeyboardAwareFlatList>(null);
+  const flatListOffset = useRef<number>(0);
+
+  useEffect(() => {
+    trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
+    return () => {
+      trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
+    };
+  }, []);
+
+  const onItemPres = () => {
+    if (!isMissingConcern && !isNotYet) {
+      flatListRef.current?.scrollToPosition(0, 0, true);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (isMissingConcern || isNotYet) {
+  //     flatListRef.current?.scrollToPosition(0, 0, true);
+  //   }
+  // }, [isMissingConcern, isNotYet]);
 
   const {t} = useTranslation('milestoneChecklist');
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{flex: 1}}>
-      <FlatList
-        ListHeaderComponent={
-          <View style={{marginBottom: 50}}>
-            <Text style={[styles.header, {marginTop: 40}]}>{milestoneAgeFormatted}</Text>
-            <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
-            <Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>
-              {totalProgressValue === 1 ? t('complete') : t('incomplete')}
-            </Text>
-            <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
-            <Text style={{textAlign: 'center', marginTop: 10, marginHorizontal: 48}}>
-              <Trans t={t} i18nKey={'actEarlyMessage1'}>
-                <Text
-                  accessibilityRole={'link'}
-                  onPress={() => {
-                    Linking.openURL(t('actEarlyMessageLink'));
-                  }}
-                  style={{textDecorationLine: 'underline'}}
-                />
-              </Trans>
-            </Text>
-            {(isMissingConcern || isNotYet) && (
-              <AEYellowBox containerStyle={{marginBottom: 0}}>{t('actEarlyWarning')}</AEYellowBox>
-            )}
-          </View>
-        }
-        data={concerns || []}
-        renderItem={({item}) => <Item {...item} childId={childId} />}
-        keyExtractor={(item) => `concern-${item.id}`}
-        ListFooterComponent={() => (
-          <View>
-            <PurpleArc width={'100%'} />
-            <View style={{backgroundColor: colors.purple}}>
-              <TouchableWithoutFeedback
-                accessibilityRole={'button'}
+    <KeyboardAwareFlatList
+      enableOnAndroid={Platform.OS === 'android'}
+      extraHeight={Platform.select({
+        ios: 200,
+      })}
+      onScroll={(event) => {
+        flatListOffset.current = event.nativeEvent.contentOffset.y;
+      }}
+      ref={flatListRef}
+      scrollIndicatorInsets={{right: 0.1}}
+      bounces={false}
+      ListHeaderComponent={
+        <View style={{marginBottom: 50}}>
+          {/*<Text style={[{textAlign: 'center', fontWeight: 'normal', fontSize: 15, marginTop: 16}]}>*/}
+          {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
+          {/*</Text>*/}
+          <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
+          <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
+            <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+              <Text
+                accessibilityRole={'link'}
                 onPress={() => {
-                  onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
-                }}>
-                <View
-                  style={[
-                    {
-                      backgroundColor: colors.white,
-                      margin: 32,
-                      borderRadius: 10,
-                      flexDirection: 'row',
-                      padding: 16,
-                      height: 60,
-                      alignItems: 'center',
-                    },
-                    sharedStyle.shadow,
-                  ]}>
-                  <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold'}}>
-                    {t('myChildSummary')}
-                  </Text>
-                  <ChevronRightBig width={10} height={20} />
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
+                  Linking.openURL(t('actEarlyMessageLink'));
+                }}
+                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+              />
+              <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+            </Trans>
+          </Text>
+          {(isMissingConcern || isNotYet) && (
+            <AEYellowBox
+              // onLayout={() => {
+              //   if (Platform.OS === 'ios') {
+              //     flatListRef.current?.scrollToPosition(0, flatListOffset.current + 77, false);
+              //   }
+              // }}
+              containerStyle={{marginBottom: 0}}>
+              {t('actEarlyWarning')}
+            </AEYellowBox>
+          )}
+        </View>
+      }
+      data={concerns || []}
+      renderItem={({item}) => <Item {...item} childId={childId} onPress={onItemPres} />}
+      keyExtractor={(item) => `concern-${item.id}`}
+      ListFooterComponent={() => (
+        <View>
+          <PurpleArc width={'100%'} />
+          <View style={{backgroundColor: colors.purple}}>
+            <TouchableWithoutFeedback
+              accessibilityRole={'button'}
+              onPress={() => {
+                onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
+                trackInteractionByType('My Child Summary');
+              }}>
+              <View
+                style={[
+                  {
+                    backgroundColor: colors.white,
+                    margin: 32,
+                    borderRadius: 10,
+                    flexDirection: 'row',
+                    padding: 16,
+                    height: 60,
+                    alignItems: 'center',
+                  },
+                  sharedStyle.shadow,
+                ]}>
+                <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold', fontSize: 18}}>
+                  {t('myChildSummary')}
+                </Text>
+                <ChevronRightBig width={10} height={20} />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        )}
-      />
-    </KeyboardAvoidingView>
+        </View>
+      )}
+    />
   );
 };
 
@@ -239,17 +302,9 @@ const styles = StyleSheet.create({
   header: {
     textAlign: 'center',
     fontSize: 20,
-    textTransform: 'capitalize',
     marginTop: 5,
     fontFamily: 'Montserrat-Bold',
   },
 });
 
-export default withSuspense(ActEarlyPage, {
-  shared: {
-    suspense: true,
-  },
-  queries: {
-    staleTime: Infinity,
-  },
-});
+export default withSuspense(ActEarlyPage, {shared: {suspense: false}});

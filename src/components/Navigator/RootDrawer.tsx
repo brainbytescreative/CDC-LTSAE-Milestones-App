@@ -87,7 +87,9 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                     if (params?.redirect) {
                       props.navigation.navigate(...params.redirect);
                     } else {
-                      props.navigation.navigate(name);
+                      props.navigation.navigate(name, {
+                        params: {},
+                      });
                     }
 
                     trackDrawerSelect(name);
@@ -134,45 +136,6 @@ const RootDrawer: React.FC = () => {
         component={DashboardStack}
       />
       <Drawer.Screen
-        name={'MilestoneChecklistStack'}
-        options={{
-          drawerLabel: t('milestoneChecklist:drawerLabel'),
-        }}
-        component={MilestoneChecklistStack}
-      />
-
-      <Drawer.Screen
-        name={'MilestoneQuickViewStack'}
-        options={{
-          drawerLabel: t('milestoneChecklist:milestoneQuickView'),
-        }}
-        initialParams={{initialRouteName: 'MilestoneChecklistQuickView', quickView: true}}
-        component={MilestoneChecklistStack}
-      />
-      <Drawer.Screen
-        name={'TipsAndActivitiesStack'}
-        options={{
-          unmountOnBlur: true,
-          drawerLabel: t('tipsAndActivities:drawerLabel'),
-        }}
-        component={TipsAndActivitiesStack}
-      />
-      <Drawer.Screen
-        name={'ChildSummaryStack'}
-        options={{
-          drawerLabel: t('childSummary:drawerLabel'),
-        }}
-        component={ChildSummaryStack}
-      />
-      <Drawer.Screen
-        name={'WhenToActEarly'}
-        options={{
-          unmountOnBlur: true,
-          drawerLabel: t('milestoneChecklist:whenToActEarly'),
-        }}
-        component={WhenActEarlyStack}
-      />
-      <Drawer.Screen
         name={'AddChildStub'}
         options={{
           drawerLabel: t('addChild:drawerLabel'),
@@ -191,13 +154,69 @@ const RootDrawer: React.FC = () => {
         component={Stub}
       />
       <Drawer.Screen
+        name={'MilestoneChecklistStack'}
+        options={{
+          unmountOnBlur: true,
+          drawerLabel: t('milestoneChecklist:drawerLabel'),
+        }}
+        component={MilestoneChecklistStack}
+      />
+      <Drawer.Screen
+        name={'WhenToActEarly'}
+        options={{
+          unmountOnBlur: true,
+          drawerLabel: t('milestoneChecklist:whenToActEarly'),
+        }}
+        component={WhenActEarlyStack}
+      />
+      <Drawer.Screen
+        name={'ChildSummaryStack'}
+        options={{
+          drawerLabel: t('childSummary:drawerLabel'),
+        }}
+        component={ChildSummaryStack}
+      />
+      <Drawer.Screen
+        name={'TipsAndActivitiesStack'}
+        options={{
+          unmountOnBlur: true,
+          drawerLabel: t('tipsAndActivities:drawerLabel'),
+        }}
+        component={TipsAndActivitiesStack}
+      />
+      <Drawer.Screen
+        name={'MilestoneQuickViewStack'}
+        options={{
+          drawerLabel: t('milestoneChecklist:milestoneQuickView'),
+        }}
+        initialParams={{initialRouteName: 'MilestoneChecklistQuickView', quickView: true}}
+        component={MilestoneChecklistStack}
+      />
+      <Drawer.Screen
+        name={'AppointmentsStub'}
+        options={{
+          drawerLabel: t('dashboard:appointments'),
+        }}
+        initialParams={{
+          redirect: [
+            'DashboardStack',
+            {
+              screen: 'Dashboard',
+              params: {
+                appointments: true,
+              },
+            },
+          ],
+        }}
+        component={Stub}
+      />
+      <Drawer.Screen
         name={'SettingsStack'}
         options={{
           drawerLabel: t('settings:drawerLabel'),
         }}
         component={SettingsStack}
       />
-
       <Drawer.Screen
         name={'InfoStack'}
         options={{

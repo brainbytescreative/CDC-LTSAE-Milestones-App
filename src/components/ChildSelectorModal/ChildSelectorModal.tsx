@@ -76,7 +76,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
             text: t('dialog:yes'),
             style: 'default',
             onPress: () => {
-              trackSelectByType('Delete', {page: 'Child Dropdown Page'});
+              trackSelectByType('Delete', {page: 'Child Drop-Down'});
               deleteChild({id});
             },
           },
@@ -114,7 +114,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
         />
         <ChildSectorFooter
           onPress={() => {
-            trackSelectByType('Add Child', {page: 'Child Dropdown Page'});
+            trackSelectByType('Add Child', {page: 'Child Drop-Down'});
             onEdit();
           }}
         />
@@ -146,7 +146,10 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
         return (
           <TouchableOpacity
             accessibilityRole={'button'}
-            onPress={() => setChildSelectorVisible(!childSelectorVisible)}
+            onPress={() => {
+              trackSelectByType('Child Name Drop-down');
+              setChildSelectorVisible(!childSelectorVisible);
+            }}
             style={{
               // flex: 1,
               flexDirection: 'row',
@@ -164,6 +167,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
+    trackSelectByType('Edit', {page: 'Child Drop-Down'});
     // navigation.navigate('DashboardStack', {
     //   screen: 'AddChild',
     //   params: {

@@ -2,20 +2,22 @@
 
 import {StackNavigationOptions} from '@react-navigation/stack';
 import * as FileSystem from 'expo-file-system';
-import {NotificationTriggerInput} from 'expo-notifications/src/Notifications.types';
-import {Platform, StyleSheet} from 'react-native';
+import {Dimensions, Platform, StyleSheet} from 'react-native';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
 export const states = [
   'AL',
   'AK',
-  'AS',
   'AZ',
   'AR',
   'CA',
+  'NC',
+  'SC',
   'CO',
   'CT',
+  'ND',
+  'SD',
   'DE',
   'DC',
   'FL',
@@ -30,6 +32,7 @@ export const states = [
   'KY',
   'LA',
   'ME',
+  'MP',
   'MD',
   'MA',
   'MI',
@@ -39,31 +42,27 @@ export const states = [
   'MT',
   'NE',
   'NV',
-  'NH',
   'NJ',
-  'NM',
   'NY',
-  'NC',
-  'ND',
-  'MP',
+  'NH',
+  'NM',
   'OH',
   'OK',
   'OR',
   'PA',
   'PR',
   'RI',
-  'SC',
-  'SD',
+  'AS',
   'TN',
   'TX',
   'UT',
   'VT',
-  'VI',
   'VA',
+  'VI',
   'WA',
-  'WV',
   'WI',
   'WY',
+  'NonUs',
 ] as const;
 
 export type StateCode = typeof states[number];
@@ -73,9 +72,20 @@ export interface ParentProfileSelectorValues {
   guardian: string | undefined | null;
 }
 
-export type Guardian = 'guardian' | 'healthcareProvider';
+export type Guardian = typeof guardianTypes[number];
 
-export const guardianTypes: ['guardian', 'healthcareProvider'] = ['guardian', 'healthcareProvider'];
+// export const guardianTypes = ['guardian', 'healthcareProvider'] as const;
+
+export const guardianTypes = [
+  'guardian',
+  'headStartProvider',
+  'teacher',
+  'WICProvider',
+  'homeVisitor',
+  'healthcareProvider',
+  'other',
+] as const;
+
 export enum WellChildCheckUpAppointmentAgesEnum {
   Age1 = 1,
   Age9 = 9,
@@ -100,11 +110,13 @@ export type SelectEventType =
   | 'Movement'
   | 'When to Act Early'
   | 'My Child Summary'
+  | 'Show Doctor'
   | "Email Child's Summary"
   | 'Delete'
   | 'Dashboard'
   | 'How to Use App'
   | 'Add Child'
+  | 'Appointments'
   | 'Add Appointment'
   | 'Milestone Checklist'
   | 'Milestone Quickview'
@@ -117,9 +129,12 @@ export type SelectEventType =
   | 'Notes/Concerns'
   | 'Doctor'
   | 'Date'
+  | 'Time'
   | 'Appointment Type/Description'
   | 'Edit'
   | 'Edit Note'
+  | 'Territory'
+  | 'Children and Add Child'
   | 'Edit Answer';
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
@@ -135,7 +150,7 @@ export const sectionToEvent: Record<Section, SelectEventType> = {
 };
 
 export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEventType | undefined> = {
-  AddChildStub: 'Add Child',
+  AddChildStub: 'Children and Add Child',
   ChildSummaryStack: 'My Child Summary',
   DashboardStack: 'Dashboard',
   InfoStack: 'Privacy Policy and App',
@@ -144,10 +159,12 @@ export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEv
   TipsAndActivitiesStack: 'Tips',
   WhenToActEarly: 'When to Act Early',
   MilestoneChecklistStack: 'Milestone Checklist',
+  AppointmentsStub: 'Appointments',
 };
 
 export const colors = Object.freeze({
   lightGreen: '#BCFDAC',
+  darkGreen: '#9DF786',
   blueLink: '#0645AD',
   purple: '#CEB9EF',
   iceCold: '#94F5EB',
@@ -195,12 +212,20 @@ export const sharedStyle = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Montserrat-Bold',
     textAlign: 'center',
-    textTransform: 'capitalize',
     marginHorizontal: 32,
     marginTop: 36,
   },
   boldText: {
     fontFamily: 'Montserrat-Bold',
+  },
+  required: {
+    fontSize: 16,
+  },
+  errorOutline: {
+    borderWidth: 2,
+    borderColor: colors.apricot,
+    borderRadius: 10,
+    margin: -2,
   },
   largeBoldText: {
     fontSize: 22,
@@ -219,6 +244,10 @@ export const sharedStyle = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
   },
 });
+
+export const breakStr = Dimensions.get('screen').width >= 375 ? '' : '\n';
+export const breakStrBig = Dimensions.get('screen').width >= 414 ? '' : '\n';
+export const breakStrLarge = Dimensions.get('screen').width >= 500 ? '' : '\n';
 
 export type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
 export type DeepWriteable<T> = {-readonly [P in keyof T]: DeepWriteable<T[P]>};
@@ -242,11 +271,16 @@ export const missingConcerns = [1, 7, 15, 25, 34, 42, 51, 58, 68, 80];
 export const tooYongAgeDays = 42;
 export type LanguageType = 'en' | 'es';
 
-export const notificationIntervals: Readonly<Record<string, NotificationTriggerInput>> = Object.freeze({
-  tips: {
-    seconds: 20, // todo 2 weeks
-  },
-});
+export const verticalImages: string[] = [
+  // 'milestone_4_skill_29_photo_26',
+  // 'milestone_9_skill_75_photo_55',
+  // 'milestone_36_skill_188_photo_123',
+  // 'milestone_48_skill_211_photo_131',
+  // 'milestone_60_skill_236_photo_150',
+  // 'milestone_60_skill_236_photo_151',
+  // 'milestone_4_skill_20_photo_11',
+  // 'milestone_24_skill_136_photo_85',
+];
 
 export const images = {
   '20651': require('./images/20651.jpg'),
@@ -398,21 +432,20 @@ export const images = {
   en_m60_s221_140: require('./images/en_m60_s221_140.jpg'),
 } as {[key: string]: any};
 
-export const pathToDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: path?.replace(FileSystem.documentDirectory || '', ''),
-        default: path,
-      })
-    : path;
+function replaceFile(path = '') {
+  return Platform.OS === 'android' ? path.replace('file:///', 'file:/') : path;
+}
+
+const cacheDir = replaceFile(`${FileSystem.cacheDirectory ?? ''}ImagePicker/`);
+const docDir = replaceFile(`${FileSystem.documentDirectory ?? ''}`);
+
+export const pathToDB = async (path?: string) => {
+  const destenation = path && path.replace(cacheDir, docDir);
+  path && destenation && (await FileSystem.moveAsync({from: path, to: destenation}));
+  return destenation?.replace(docDir, '');
 };
 export const pathFromDB = (path?: string) => {
-  return path
-    ? Platform.select({
-        ios: `${FileSystem.documentDirectory || ''}${path}`,
-        default: path,
-      })
-    : path;
+  return path ? `${docDir ?? ''}${path}` : path;
 };
 
 // First, define a type that, when passed a union of keys, creates an object which
