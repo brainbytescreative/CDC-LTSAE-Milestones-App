@@ -103,8 +103,8 @@ const AppointmentScreen: React.FC = () => {
             {/*</AEButtonMultiline>*/}
             <AEButtonMultiline
               onPress={() => {
-                trackSelectByType('My Child Summary');
-                navigation.navigate('ChildSummary');
+                trackSelectByType('Show Doctor');
+                navigation.navigate('Revisit');
               }}
               disabled={loading}
               style={{marginTop: 10, marginBottom: 0}}>

@@ -58,10 +58,7 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "exclude": [
-    "node_modules",
     "./node_modules",
-    "./node_modules/*",
-    "./node_modules/@types/node/index.d.ts",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js",

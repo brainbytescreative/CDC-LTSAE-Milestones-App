@@ -443,7 +443,7 @@ const docDir = replaceFile(`${FileSystem.documentDirectory ?? ''}`);
 
 export const pathToDB = async (path?: string) => {
   const destenation = path && path.replace(cacheDir, docDir);
-  path && destenation && (await FileSystem.moveAsync({from: path, to: destenation}));
+  path && path.startsWith(cacheDir) && destenation && (await FileSystem.moveAsync({from: path, to: destenation}));
   return destenation?.replace(docDir, '');
 };
 export const pathFromDB = (path?: string) => {

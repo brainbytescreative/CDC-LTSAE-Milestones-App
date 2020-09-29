@@ -286,10 +286,13 @@ const ChildName: React.FC = withSuspense(
     // const currentDay = new Date().getDay();
     const {data: {name: childName, birthday} = {}} = useGetCurrentChild();
     const childAgeText = useMemo(() => formatAge(birthday), [birthday]);
-
+    const prefix = i18next.language === 'es' ? '¡' : '';
     return (
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.childNameText}>{childName}</Text>
+        <Text style={styles.childNameText}>
+          {prefix}
+          {childName}
+        </Text>
         <Text style={styles.childAgeText}>{t('childAge', {value: childAgeText})}</Text>
       </View>
     );

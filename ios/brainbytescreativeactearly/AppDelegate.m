@@ -69,6 +69,11 @@ static void InitializeFlipper(UIApplication *application) {
   
   [FIRApp configure];
   
+  if (@available(iOS 14, *)) {
+    UIDatePicker *picker = [UIDatePicker appearance];
+    picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+  }
+  
   return YES;
 }
 

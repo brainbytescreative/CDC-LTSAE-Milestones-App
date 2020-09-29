@@ -55,6 +55,21 @@ const en = `
         <a href="https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_em1">cdc.gov/Concerned</a>
     </div>
     {% endif %}
+    
+    {% if notSureItems.length %}
+      <div style="padding-top: 5px; padding-left: 25px;">
+          <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins>
+      </div>
+      <div style="padding-top: 5px; padding-left: 25px;">
+          <b>REVISIT these milestones and talk with the doctor if you are still unsure</b>
+      </div>
+      <ol style="margin: 0 0; padding-left: 45px;">
+          {% for item in notSureItems %}
+          <li style="padding-left: 5px;">{{item.value}}</li>
+          {% endfor %}
+      </ol>
+    {% endif %}
+    
     {% if yesItems.length %}
     <div style="padding: 25px 0 5px 0;">
         <p>
@@ -77,33 +92,21 @@ const en = `
     {% endif %}
 
     {% if skippedItems.length+notSureItems.length %}
-    <div style="padding-top: 20px;">
-        <p>
-            <b>Return to the Milestone Tracker app to REVISIT these milestones:</b>
-        </p>
-    </div>
-    {% if skippedItems.length %}
-    <div style="padding-left: 25px;">
-        <ins><b>{{formattedAge}}</b> Milestones You <b>Skipped</b></ins>
-    </div>
-    <ol style="margin: 0 0; padding-left: 45px;">
-        {% for skipped in skippedItems %}
-        <li style="padding-left: 5px;">{{skipped.value}}</li>
-        {% endfor %}
-    </ol>
-    {% endif %}
-
-
-    {% if notSureItems.length %}
-    <div style="padding-top: 5px; padding-left: 25px;">
-        <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins>
-    </div>
-    <ol style="margin: 0 0; padding-left: 45px;">
-        {% for item in notSureItems %}
-        <li style="padding-left: 5px;">{{item.value}}</li>
-        {% endfor %}
-    </ol>
-    {% endif %}
+      <div style="padding-top: 20px;">
+          <p>
+              <b>Return to the Milestone Tracker app to REVISIT these milestones:</b>
+          </p>
+      </div>
+      {% if skippedItems.length %}
+      <div style="padding-left: 25px;">
+          <ins><b>{{formattedAge}}</b> Milestones You <b>Skipped</b></ins>
+      </div>
+      <ol style="margin: 0 0; padding-left: 45px;">
+          {% for skipped in skippedItems %}
+          <li style="padding-left: 5px;">{{skipped.value}}</li>
+          {% endfor %}
+      </ol>
+      {% endif %}
     {% endif %}
     <div style="padding: 25px 0 25px 0;">
         <p>
@@ -202,6 +205,22 @@ const es = `
         <a href="https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_sp_em1">www.cdc.gov/Preocupado.</a>
     </div>
     {% endif %}
+    
+    {% if notSureItems.length %}
+        <div style="padding-top: 5px; padding-left: 25px;">
+            {# <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins> #}
+            <ins>Indicadores del desarrollo para los <b>{{formattedAge}}</b> que marcó  <b>“No estoy seguro”</b></ins>
+        </div>
+        <div style="padding-top: 5px; padding-left: 25px;">
+          <b>CONSULTAR NUEVAMENTE estos indicadores</b>
+        </div>
+        <ol style="margin: 0 0; padding-left: 45px;">
+            {% for item in notSureItems %}
+            <li style="padding-left: 5px;">{{item.value}}</li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+    
     {% if yesItems.length %}
     <div style="padding: 25px 0 5px 0;">
         {# <p>
@@ -250,18 +269,9 @@ const es = `
       {% endif %}
   
   
-      {% if notSureItems.length %}
-        <div style="padding-top: 5px; padding-left: 25px;">
-            {# <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins> #}
-            <ins>Indicadores del desarrollo para los <b>{{formattedAge}}</b> que marcó  <b>“No estoy seguro”</b></ins>
-        </div>
-        <ol style="margin: 0 0; padding-left: 45px;">
-            {% for item in notSureItems %}
-            <li style="padding-left: 5px;">{{item.value}}</li>
-            {% endfor %}
-        </ol>
-      {% endif %}
+
     {% endif %}
+    
     <div style="padding: 25px 0 25px 0;">
         {#<p>
             <strong>You know {{ childName }} best. If {{heSheTag}} is missing milestones or you ever become
