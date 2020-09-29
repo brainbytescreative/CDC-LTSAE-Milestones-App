@@ -5,10 +5,10 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (2.2.1):
     - UMCore
-  - EXFileSystem (9.1.0):
+  - EXFileSystem (9.2.0):
     - UMCore
     - UMFileSystemInterface
-  - EXImagePicker (8.4.0):
+  - EXImagePicker (9.1.1):
     - UMCore
     - UMFileSystemInterface
     - UMPermissionsInterface
@@ -18,7 +18,7 @@ PODS:
   - EXNotifications (0.4.0):
     - UMCore
     - UMPermissionsInterface
-  - EXPermissions (9.1.0):
+  - EXPermissions (9.3.0):
     - UMCore
     - UMPermissionsInterface
   - FBLazyVector (0.62.2)
@@ -675,11 +675,11 @@ SPEC CHECKSUMS:
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXApplication: d7ccb60c33fa4d506967ff6adde42a0f872d69ad
-  EXFileSystem: 14d8859c167fba01e36dc704f548b0b58fc4d92e
-  EXImagePicker: 36f2bba7d6367ecb2b1340c5db5a676b3b19a26a
+  EXFileSystem: afe9b1fd937d30270bf5108ba44e2f4a1d1ad694
+  EXImagePicker: f2fe9ee19a97b225658e80733896275a198c60f2
   EXMailComposer: c5126fc71f20770ebde5fee3965d54097320ef6d
   EXNotifications: f0f89e5ba8ef5ad7568b9f1e65031a6f40fbd313
-  EXPermissions: 9daf039546113d8f2f0a62db1c75d2d9206e5e4e
+  EXPermissions: 30cbe5b72bd209b65c00884180ad058a60bb413d
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Firebase: 210f41ca352067d83b1ba4fd2e7fb49a0c017397

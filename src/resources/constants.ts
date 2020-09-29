@@ -6,7 +6,9 @@ import {Dimensions, Platform, StyleSheet} from 'react-native';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 
+// No de EE. UU Otro
 export const states = [
+  'NonUs',
   'AL',
   'AK',
   'AZ',
@@ -62,7 +64,7 @@ export const states = [
   'WA',
   'WI',
   'WY',
-  'NonUs',
+  'other',
 ] as const;
 
 export type StateCode = typeof states[number];

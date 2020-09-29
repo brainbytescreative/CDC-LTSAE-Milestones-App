@@ -327,7 +327,7 @@
         "NM": "New Mexico",
         "NV": "Nevada",
         "NY": "New York",
-        "NonUs": "Other",
+        "NonUs": "Non-US",
         "OH": "Ohio",
         "OK": "Oklahoma",
         "OR": "Oregon",
@@ -344,7 +344,8 @@
         "VT": "Vermont",
         "WA": "Washington",
         "WI": "Wisconsin",
-        "WY": "Wyoming"
+        "WY": "Wyoming",
+        "other": "Other"
     },
     "tipsAndActivities": {
         "all": "All",
