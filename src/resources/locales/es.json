@@ -129,7 +129,7 @@
         "actionItemsTitle": " ",
         "addApt": "+ Agregar cita",
         "appointments": "Cita",
-        "childAge": "¡tiene {{value}}!",
+        "childAge": "tiene {{value}}!",
         "drawerLabel": "$t(dashboard:title)",
         "milestoneCheckList": "Lista de indicadores",
         "milestoneSummary": "El resumen de mi hijo",
@@ -344,6 +344,7 @@
         "VT": "Vermont",
         "WA": "Washington",
         "WI": "Wisconsin",
+        "WV": "Virginia Occidental",
         "WY": "Wyoming",
         "other": "Otro"
     },
