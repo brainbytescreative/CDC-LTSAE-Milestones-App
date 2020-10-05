@@ -16,6 +16,7 @@ import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
+import {trackEventByType} from '../utils/analytics';
 import {formattedAgeSingular, tOpt} from '../utils/helpers';
 
 interface ItemProps {
@@ -127,7 +128,10 @@ const RevisitScreen: React.FC = () => {
               <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name, breakStr, breakStrBig}}>
                 <Text
                   accessibilityRole={'link'}
-                  onPress={() => Linking.openURL(t('concernedLink'))}
+                  onPress={() => {
+                    trackEventByType('Link', 'Concerned', {page: 'Show doctor'});
+                    return Linking.openURL(t('concernedLink'));
+                  }}
                   style={{textDecorationLine: 'underline'}}
                 />
               </Trans>
@@ -192,7 +196,10 @@ const RevisitScreen: React.FC = () => {
             <Trans t={t} i18nKey={'thankYouText2'} tOptions={{breakStr}}>
               <Text
                 accessibilityRole={'link'}
-                onPress={() => Linking.openURL(t('actEarlyLink'))}
+                onPress={() => {
+                  trackEventByType('Link', 'Act Early', {page: 'Show doctor'});
+                  return Linking.openURL(t('actEarlyLink'));
+                }}
                 style={{textDecorationLine: 'underline', textAlign: 'center'}}
               />
             </Trans>

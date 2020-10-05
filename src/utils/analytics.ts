@@ -33,7 +33,57 @@ export type PageType =
   | 'Notifications'
   | 'Language Pop-Up'
   | 'Notification and Settings'
+  | 'Show doctor'
   | 'Add a Child (Child Profile)';
+
+type InteractionType =
+  | 'Done'
+  | 'Get Started'
+  | 'Scroll Photo'
+  | 'Add Milestone Note'
+  | 'Add Act Early Note'
+  | 'Next Section'
+  | 'Next'
+  | 'Play Video'
+  | 'Back'
+  | 'Cancel'
+  | 'Like'
+  | 'Edit Appointment'
+  | 'Delete Notification'
+  | 'Delete Appointment'
+  | 'Remind Me'
+  | 'My Child Summary'
+  | 'Start Add Appointment'
+  | 'Completed Add Appointment'
+  | 'Checked Act Early Item'
+  | 'Started Social Milestones'
+  | 'Completed Social Milestones'
+  | 'Started Language Milestones'
+  | 'Completed Language Milestones'
+  | 'Started Cognitive Milestones'
+  | 'Completed Cognitive Milestones'
+  | 'Started Movement Milestones'
+  | 'Completed Movement Milestones'
+  | 'Started When to Act Early'
+  | 'Email Summary'
+  | 'Show Doctor'
+  | 'Add a Photo'
+  | 'Add Another Child'
+  | 'Add Photo from Library'
+  | 'Take Photo'
+  | 'Completed Add Photo'
+  | 'Completed Add Photo: Library'
+  | 'Completed Add Photo: Take'
+  | 'Completed Add Child'
+  | 'Completed When to Act Early';
+
+type LinkType = 'Concerned' | 'Find EI' | 'Act Early' | 'Corrected Age';
+
+type EventTypes = {
+  Link: LinkType;
+  Interaction: InteractionType;
+  Select: SelectEventType;
+};
 
 type OptionsType = Parameters<typeof trackAction>[1];
 
@@ -286,10 +336,7 @@ export function trackAddAnotherChild(options?: OptionsType) {
 export function trackChildAddAPhoto(options?: OptionsType) {
   trackAction('Interaction: Add a Photo', options);
 }
-// fixme
-export function trackChildAddPhotoFromLibrary() {
-  trackAction('Interaction: Add Photo from Library');
-}
+
 // fixme
 export function trackChildAddPhotoTakePhoto() {
   trackAction('Interaction: Take Photo');
@@ -378,45 +425,14 @@ export function trackNotificationSelect(name: string) {
   selectName && trackAction(`Select: ${selectName}`);
 }
 
-type InteractionType =
-  | 'Get Started'
-  | 'Scroll Photo'
-  | 'Add Milestone Note'
-  | 'Add Act Early Note'
-  | 'Next Section'
-  | 'Next'
-  | 'Play Video'
-  | 'Back'
-  | 'Cancel'
-  | 'Like'
-  | 'Edit Appointment'
-  | 'Delete Notification'
-  | 'Delete Appointment'
-  | 'Remind Me'
-  | 'My Child Summary'
-  | 'Start Add Appointment'
-  | 'Completed Add Appointment'
-  | 'Checked Act Early Item'
-  | 'Started Social Milestones'
-  | 'Completed Social Milestones'
-  | 'Started Language Milestones'
-  | 'Completed Language Milestones'
-  | 'Started Cognitive Milestones'
-  | 'Completed Cognitive Milestones'
-  | 'Started Movement Milestones'
-  | 'Completed Movement Milestones'
-  | 'Started When to Act Early'
-  | 'Email Summary'
-  | 'Show Doctor'
-  | 'Add a Photo'
-  | 'Add Another Child'
-  | 'Add Photo from Library'
-  | 'Take Photo'
-  | 'Completed Add Photo'
-  | 'Completed Add Photo: Library'
-  | 'Completed Add Photo: Take'
-  | 'Completed Add Child'
-  | 'Completed When to Act Early';
+export function trackEventByType<T extends keyof EventTypes>(
+  type: T,
+  name: EventTypes[T],
+  options?: OptionsType & {eventSuffix?: string},
+) {
+  const suffix = options?.eventSuffix ? `: ${options?.eventSuffix}` : '';
+  trackAction(`${type}: ${name}${suffix}`, options);
+}
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {
   trackAction(`Interaction: ${type}`, options);

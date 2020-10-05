@@ -11,6 +11,7 @@ import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
 import {Section, colors, sharedStyle, skillTypes} from '../../resources/constants';
+import {trackEventByType} from '../../utils/analytics';
 import {formattedAgeSingular} from '../../utils/helpers';
 
 interface Props {
@@ -66,6 +67,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => {
+                    trackEventByType('Link', 'Act Early');
                     Linking.openURL(t('actEarlyMessageLink'));
                   }}
                   style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}

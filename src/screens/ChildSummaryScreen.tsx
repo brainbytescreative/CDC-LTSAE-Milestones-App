@@ -32,7 +32,13 @@ import {
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
 import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
-import {trackInteractionByType, trackSelectByType, trackSelectLanguage, trackSelectSummary} from '../utils/analytics';
+import {
+  trackEventByType,
+  trackInteractionByType,
+  trackSelectByType,
+  trackSelectLanguage,
+  trackSelectSummary,
+} from '../utils/analytics';
 import {formattedAgeSingular} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
@@ -489,13 +495,19 @@ const ChildSummaryScreen: React.FC = () => {
               <Text
                 numberOfLines={1}
                 accessibilityRole={'link'}
-                onPress={() => Linking.openURL(t('findElLink'))}
+                onPress={() => {
+                  trackEventByType('Link', 'Find EI', {page: "My Child's Summary"});
+                  return Linking.openURL(t('findElLink'));
+                }}
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text
                 numberOfLines={1}
                 accessibilityRole={'link'}
-                onPress={() => Linking.openURL(t('concernedLink'))}
+                onPress={() => {
+                  trackEventByType('Link', 'Concerned', {page: "My Child's Summary"});
+                  return Linking.openURL(t('concernedLink'));
+                }}
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text style={[sharedStyle.boldText]} />

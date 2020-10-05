@@ -49,6 +49,7 @@ import {
   trackChildGender,
   trackChildStartedChildDateOfBirth,
   trackCompleteAddChild,
+  trackEventByType,
   trackInteractionByType,
 } from '../utils/analytics';
 
@@ -511,7 +512,10 @@ const AddChildScreen: React.FC = () => {
                         <Text style={{textAlign: 'center'}}>{t('note')}</Text>
                         <Text
                           accessibilityRole={'link'}
-                          onPress={() => Linking.openURL(t('correctedAgeLink'))}
+                          onPress={() => {
+                            trackEventByType('Link', 'Corrected Age');
+                            return Linking.openURL(t('correctedAgeLink'));
+                          }}
                           style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
                           {t('noteClick')}
                         </Text>

@@ -31,7 +31,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
 import {Concern} from '../../resources/milestoneChecklist';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 
 const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React.memo(
@@ -240,6 +240,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                 accessibilityRole={'link'}
                 onPress={() => {
                   Linking.openURL(t('actEarlyMessageLink'));
+                  trackEventByType('Link', 'Concerned', {page: 'When to Act Early'});
                 }}
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />

@@ -12,6 +12,7 @@ import NotificationsBadge from '../components/NotificationsBadge/NotificationsBa
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import {breakStr, breakStrLarge, colors, sharedStyle} from '../resources/constants';
+import {trackEventByType} from '../utils/analytics';
 
 const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = ({navigation}) => {
   const {t} = useTranslation('info');
@@ -33,13 +34,19 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
           <Trans t={t} i18nKey={'aboutThisAppText'} tOptions={{breakStr, breakStrLarge}}>
             <Text
               accessibilityRole={'link'}
-              onPress={() => Linking.openURL(t('actEarlyLink'))}
+              onPress={() => {
+                trackEventByType('Link', 'Act Early', {page: 'Info/Privacy Policy'});
+                return Linking.openURL(t('actEarlyLink'));
+              }}
               style={{textDecorationLine: 'underline'}}
             />
             <Text style={sharedStyle.boldText} />
             <Text
               accessibilityRole={'link'}
-              onPress={() => Linking.openURL(t('actEarlyLink2'))}
+              onPress={() => {
+                trackEventByType('Link', 'Act Early', {page: 'Info/Privacy Policy'});
+                return Linking.openURL(t('actEarlyLink2'));
+              }}
               style={{textDecorationLine: 'underline'}}
             />
           </Trans>
