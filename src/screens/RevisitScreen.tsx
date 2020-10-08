@@ -15,6 +15,7 @@ import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
+import {Answer} from '../hooks/types';
 import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackEventByType} from '../utils/analytics';
 import {formattedAgeSingular, tOpt} from '../utils/helpers';
@@ -145,10 +146,14 @@ const RevisitScreen: React.FC = () => {
               })}
             </Text>
           </View>
-          <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32}]}>{t('unsureTip')}</Text>
+          {Boolean(data?.groupedByAnswer['1']?.length) && (
+            <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32}]}>{t('unsureTip')}</Text>
+          )}
           {data?.groupedByAnswer['1']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
+
+          {/* start yes section*/}
           <>
             <View style={[styles.blockContainer, {backgroundColor: colors.lightGreen}]}>
               <Text style={styles.blockText}>
@@ -157,22 +162,28 @@ const RevisitScreen: React.FC = () => {
                 })}
               </Text>
             </View>
-            <Text
-              style={[
-                {
-                  fontSize: 15,
-                  lineHeight: 18,
-                  marginTop: 40,
-                  marginHorizontal: 16,
-                },
-                sharedStyle.boldText,
-              ]}>
-              {t('timeToCelebrate', {name: child?.name})}
-            </Text>
+            {Boolean(data?.groupedByAnswer['0']?.length) && (
+              <Text
+                style={[
+                  {
+                    fontSize: 15,
+                    lineHeight: 18,
+                    marginTop: 40,
+                    marginHorizontal: 16,
+                  },
+                  sharedStyle.boldText,
+                ]}>
+                {t('timeToCelebrate', {name: child?.name})}
+              </Text>
+            )}
+
             {data?.groupedByAnswer['0']?.map((item, index) => (
               <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
             ))}
           </>
+          {/* end yes section*/}
+
+          {/* start unanswered section*/}
           <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
             <Text style={styles.blockText}>
               {t('unanswered', {
@@ -183,6 +194,7 @@ const RevisitScreen: React.FC = () => {
           {data?.groupedByAnswer['undefined']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} id={item.id} note={item.note} />
           ))}
+          {/* end unanswered section*/}
 
           <Text
             style={{

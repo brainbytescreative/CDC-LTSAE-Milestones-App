@@ -57,12 +57,13 @@ const en = `
     {% endif %}
     
     {% if notSureItems.length %}
+      <div style="padding-top: 20px;">
+          <b>REVISIT these milestones and talk with the doctor if you are still unsure</b>
+      </div>
       <div style="padding-top: 20px; padding-left: 25px;">
           <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins>
       </div>
-      <div style="padding-top: 5px; padding-left: 25px;">
-          <b>REVISIT these milestones and talk with the doctor if you are still unsure</b>
-      </div>
+
       <ol style="margin: 0 0; padding-left: 45px;">
           {% for item in notSureItems %}
           <li style="padding-left: 5px;">{{item.value}}</li>
@@ -181,7 +182,7 @@ const es = `
     {% if notYetItems.length %}
     <div style="padding-top: 5px; padding-left: 25px;">
         {# <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Yet”</b></ins> #}
-        <ins>Indicadores del desarrollo para los <b>{{formattedAge}}</b> que marcó <b>“Todavía no”<b></ins>
+        <ins>Indicadores del desarrollo para los <b>{{formattedAge}}</b> que marcó <b>“Todavía no”</b></ins>
     </div>
     <ol style="margin: 0 0; padding-left: 45px;">
         {% for item in notYetItems %}
@@ -207,12 +208,12 @@ const es = `
     {% endif %}
     
     {% if notSureItems.length %}
-        <div style="padding-top: 5px; padding-left: 25px;">
+        <div style="padding-top: 20px;">
+          <b>CONSULTAR NUEVAMENTE estos indicadores</b>
+        </div>
+        <div style="padding-top: 20px; padding-left: 25px;">
             {# <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins> #}
             <ins>Indicadores del desarrollo para los <b>{{formattedAge}}</b> que marcó  <b>“No estoy seguro”</b></ins>
-        </div>
-        <div style="padding-top: 5px; padding-left: 25px;">
-          <b>CONSULTAR NUEVAMENTE estos indicadores</b>
         </div>
         <ol style="margin: 0 0; padding-left: 45px;">
             {% for item in notSureItems %}
