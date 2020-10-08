@@ -127,7 +127,7 @@
     },
     "dashboard": {
         "actionItemsTitle": "{{age}} Milestone\nAction Items",
-        "addApt": "+ Add appointment",
+        "addApt": "+ Add Appointment",
         "appointments": "Appointments",
         "childAge": "is {{value}} old!",
         "drawerLabel": "$t(dashboard:title)",
