@@ -169,7 +169,7 @@ const es = `
       
       <div style="padding-top: 10px; padding-left: 25px;">
           {# <ins>Items You Marked as <b>Concerns</b></ins> #}
-          <ins>Elementos que marcó como <b>Inquietudes</b></ins>
+          <ins>Elementos que marcó como <b>“Inquietudes“</b></ins>
       </div>
       <ol style="margin: 0 0; padding-left: 45px;">
           {% for concern in concerns %}
