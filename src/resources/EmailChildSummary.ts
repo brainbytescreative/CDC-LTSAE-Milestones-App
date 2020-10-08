@@ -57,7 +57,7 @@ const en = `
     {% endif %}
     
     {% if notSureItems.length %}
-      <div style="padding-top: 5px; padding-left: 25px;">
+      <div style="padding-top: 20px; padding-left: 25px;">
           <ins><b>{{formattedAge}}</b> Milestones You Marked as <b>“Not Sure”</b></ins>
       </div>
       <div style="padding-top: 5px; padding-left: 25px;">
