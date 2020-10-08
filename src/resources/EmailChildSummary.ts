@@ -25,7 +25,7 @@ const en = `
         difference. Don’t wait.
     </p>
     {% if concerns.length %}
-      ACT EARLY by talking with {{ childName }}’s doctor right away about:
+      <b>ACT EARLY by talking with {{ childName }}’s doctor right away about:</b>
       
       <div style="padding-top: 10px; padding-left: 25px;">
           <ins>Items You Marked as <b>Concerns</b></ins>
@@ -165,7 +165,7 @@ const es = `
     {% if concerns.length %}
     
       {# ACT EARLY by talking with {{ childName }}’s doctor right away about: #}
-      REACCIONE PRONTO y hable con el médico de {{ childName }} de inmediato sobre: 
+      <b>REACCIONE PRONTO y hable con el médico de {{ childName }} de inmediato sobre:</b> 
       
       <div style="padding-top: 10px; padding-left: 25px;">
           {# <ins>Items You Marked as <b>Concerns</b></ins> #}
