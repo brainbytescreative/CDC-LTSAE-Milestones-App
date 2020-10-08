@@ -1,9 +1,10 @@
 import {FastField, FastFieldProps} from 'formik';
+import i18next from 'i18next';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 
-import {ParentProfileSelectorValues, guardianTypes, sharedStyle, states} from '../resources/constants';
+import {ParentProfileSelectorValues, guardianTypes, sharedStyle, statesOptions} from '../resources/constants';
 import {trackSelectByType, trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 import DropDownPicker from './DropDownPicker';
 import Chevron from './Svg/Chevron';
@@ -44,30 +45,29 @@ const ParentProfileSelector: React.FC = () => {
       </FastField>
       <View style={{height: 10}} />
       <FastField name={'territory'}>
-        {({field, form, meta}: FastFieldProps<ParentProfileSelectorValues['territory']>) => (
-          <DropDownPicker
-            containerStyle={[meta.error && meta.touched ? sharedStyle.errorOutline : null]}
-            customArrowDown={<Chevron direction={'up'} />}
-            customArrowUp={<Chevron direction={'down'} />}
-            labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
-            style={[sharedStyle.shadow]}
-            placeholder={t('fields:territoryPlaceholder')}
-            items={states.map((val) => ({
-              label: t(`states:${val}`),
-              value: val,
-            }))}
-            defaultNull
-            dropDownMaxHeight={140}
-            value={field.value}
-            zIndex={1000}
-            onChangeItem={(item) => {
-              trackSelectByType('Territory');
-              trackSelectTerritory(String(item.label));
-              // onChange({guardian: value?.guardian, territory: item.value});
-              form.setFieldValue(field.name, item.value);
-            }}
-          />
-        )}
+        {({field, form, meta}: FastFieldProps<ParentProfileSelectorValues['territory']>) => {
+          return (
+            <DropDownPicker
+              containerStyle={[meta.error && meta.touched ? sharedStyle.errorOutline : null]}
+              customArrowDown={<Chevron direction={'up'} />}
+              customArrowUp={<Chevron direction={'down'} />}
+              labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
+              style={[sharedStyle.shadow]}
+              placeholder={t('fields:territoryPlaceholder')}
+              items={statesOptions[i18next.language] ?? []}
+              defaultNull
+              dropDownMaxHeight={140}
+              value={field.value}
+              zIndex={1000}
+              onChangeItem={(item) => {
+                trackSelectByType('Territory');
+                trackSelectTerritory(String(item.label));
+                // onChange({guardian: value?.guardian, territory: item.value});
+                form.setFieldValue(field.name, item.value);
+              }}
+            />
+          );
+        }}
       </FastField>
     </>
   );
