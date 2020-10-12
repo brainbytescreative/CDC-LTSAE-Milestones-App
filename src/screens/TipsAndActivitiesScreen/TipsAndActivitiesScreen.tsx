@@ -13,11 +13,11 @@ import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
 import {PropType, colors, sharedStyle} from '../../resources/constants';
-import {trackInteractionByType} from '../../utils/analytics';
+import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {formatAge} from '../../utils/helpers';
 import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
 
-const tipFilters = ['all', 'like', 'remindMe'];
+const tipFilters = ['all', 'like', 'remindMe'] as const;
 type TipType = typeof tipFilters[number];
 
 const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: string}}}> = ({route}) => {
@@ -138,7 +138,21 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
             defaultIndex={0}
             // placeholder={t('all')}
             items={tipFilters.map((value) => ({label: t(value), value}))}
-            onChangeItem={(item) => setTipType(item.value as TipType)}
+            onChangeItem={(item) => {
+              const value: TipType = item.value as TipType;
+              switch (value) {
+                case 'all':
+                  trackEventByType('Select', 'All');
+                  break;
+                case 'like':
+                  trackEventByType('Select', 'Like');
+                  break;
+                case 'remindMe':
+                  trackEventByType('Select', 'Remind Me');
+                  break;
+              }
+              setTipType(value);
+            }}
           />
         </View>
 

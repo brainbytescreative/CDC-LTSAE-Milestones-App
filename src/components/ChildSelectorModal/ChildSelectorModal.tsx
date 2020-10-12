@@ -76,7 +76,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
             text: t('dialog:yes'),
             style: 'default',
             onPress: () => {
-              trackSelectByType('Delete', {page: 'Child Drop-Down'});
+              trackSelectByType('Delete', {page: 'Children & Add Child'});
               deleteChild({id});
             },
           },
@@ -114,7 +114,7 @@ const ChildrenList: React.FC<{onEdit: (id?: number) => void; onSelect: (id?: num
         />
         <ChildSectorFooter
           onPress={() => {
-            trackSelectByType('Add Child', {page: 'Child Drop-Down'});
+            trackSelectByType('Add Child', {page: 'Children & Add Child'});
             onEdit();
           }}
         />
@@ -167,7 +167,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   const onEdit = (id?: number) => {
     setChildSelectorVisible(false);
-    trackSelectByType('Edit', {page: 'Child Drop-Down'});
+    trackSelectByType('Edit', {page: 'Children & Add Child'});
     // navigation.navigate('DashboardStack', {
     //   screen: 'AddChild',
     //   params: {

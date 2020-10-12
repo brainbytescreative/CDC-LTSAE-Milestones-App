@@ -19,7 +19,7 @@ import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {PropType, colors, milestonesIds} from '../../resources/constants';
-import {trackSelectByType} from '../../utils/analytics';
+import {trackEventByType, trackSelectByType} from '../../utils/analytics';
 
 interface ItemProps {
   childAge: number;
@@ -49,9 +49,10 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
   return (
     <TouchableOpacity
       onPress={() => {
-        childAge < month
-          ? trackSelectByType('Previous Milestone Checklist Age')
-          : trackSelectByType('Future Milestone Checklist Age');
+        // childAge < month
+        //   ? trackSelectByType('Previous Milestone Checklist Age')
+        //   : trackSelectByType('Future Milestone Checklist Age');
+        trackEventByType('Select', 'Milestone Checklist', {eventSuffix: unit});
         onSelect && onSelect(month);
       }}>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>

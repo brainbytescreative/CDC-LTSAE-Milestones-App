@@ -70,7 +70,7 @@ const MilestoneChecklistStack: React.FC<{route: MilestoneRouteProp; navigation: 
               tintColor={colors.black}
               label={' '}
               onPress={() => {
-                trackSelectByType('Back');
+                trackSelectByType('Back', {page: "My Child's Summary"});
                 screenProps.navigation?.goBack?.();
               }}
             />

@@ -122,7 +122,7 @@ const AppointmentsList: React.FC = withSuspense(
               })}
               key={`appointment-${appt.id}`}
               onPress={() => {
-                trackSelectByType('Appointments');
+                // trackSelectByType('Appointments');
                 navigation.navigate('Appointment', {
                   appointmentId: appt.id,
                 });

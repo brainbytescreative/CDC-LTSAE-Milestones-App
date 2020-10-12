@@ -542,6 +542,7 @@ const ChildSummaryScreen: React.FC = () => {
           <View style={{backgroundColor: colors.purple, paddingBottom: bottom ? bottom + 32 : 32, paddingTop: 16}}>
             <AEButtonRounded
               onPress={() => {
+                trackEventByType('Select', 'Done');
                 navigation.reset({
                   index: 0,
                   routes: [

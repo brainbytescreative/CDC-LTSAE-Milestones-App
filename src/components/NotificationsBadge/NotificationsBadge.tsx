@@ -11,7 +11,7 @@ import {
   useSetNotificationRead,
 } from '../../hooks/notificationsHooks';
 import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
-import {trackInteractionByType, trackSelectByType} from '../../utils/analytics';
+import {trackEventByType, trackInteractionByType, trackSelectByType} from '../../utils/analytics';
 import ChevronLeft from '../Svg/ChevronLeft';
 import NotificationsBadgeCounter from './NotificationsBadgeCounter';
 import NotificationsListItem from './NotificationsListItem';
@@ -85,6 +85,7 @@ const NotificationsBadge: React.FC = () => {
                 accessibilityLabel={t('accessibility:close')}
                 onPress={() => {
                   setIsVisible(false);
+                  trackEventByType('Interaction', 'Back', {page: 'Notifications'});
                 }}>
                 <View style={{minHeight: 44, minWidth: 44, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <ChevronLeft />

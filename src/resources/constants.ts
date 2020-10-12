@@ -127,6 +127,10 @@ export type SelectEventType =
   | 'On'
   | 'Off'
   | 'Back'
+  | 'Done'
+  | 'Remind Me'
+  | 'All'
+  | 'Like'
   | 'Child Name Drop-down'
   | 'Notifications'
   | 'Social'
@@ -136,7 +140,7 @@ export type SelectEventType =
   | 'When to Act Early'
   | 'My Child Summary'
   | 'Show Doctor'
-  | "Email Child's Summary"
+  | 'Email Summary'
   | 'Delete'
   | 'Dashboard'
   | 'How to Use App'
@@ -146,7 +150,7 @@ export type SelectEventType =
   | 'Milestone Checklist'
   | 'Milestone Quickview'
   | 'Notifications and Settings '
-  | 'Privacy Policy and App'
+  | 'App Info & Privacy Policy'
   | 'Tips'
   | 'Previous Milestone Checklist Age'
   | 'Future Milestone Checklist Age'
@@ -159,6 +163,10 @@ export type SelectEventType =
   | 'Edit'
   | 'Edit Note'
   | 'Territory'
+  | 'Next Checklist Notifications'
+  | 'Appointment Notifications'
+  | 'Recommendation Notifications'
+  | 'Tips Notifications'
   | 'Children and Add Child'
   | 'Edit Answer';
 
@@ -166,7 +174,7 @@ export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as con
 export type SkillType = typeof skillTypes[number];
 export type Section = SkillType | 'actEarly';
 
-export const sectionToEvent: Record<Section, SelectEventType> = {
+export const sectionToEvent: Record<Section, SelectEventType | undefined> = {
   language: 'Language',
   actEarly: 'When to Act Early',
   cognitive: 'Cognitive',
@@ -178,7 +186,7 @@ export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEv
   AddChildStub: 'Children and Add Child',
   ChildSummaryStack: 'My Child Summary',
   DashboardStack: 'Dashboard',
-  InfoStack: 'Privacy Policy and App',
+  InfoStack: 'App Info & Privacy Policy',
   MilestoneQuickViewStack: 'Milestone Quickview',
   SettingsStack: 'Notifications and Settings ',
   TipsAndActivitiesStack: 'Tips',

@@ -1,4 +1,4 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {HeaderBackButton, createStackNavigator} from '@react-navigation/stack';
 import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -11,6 +11,7 @@ import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
+import {trackSelectByType} from '../../utils/analytics';
 import BurgerButton from '../BurgerButton';
 import {DashboardStackParamList} from './types';
 
@@ -39,18 +40,38 @@ const DashboardStack: FC = () => {
       <Stack.Screen
         name={'AddAppointment'}
         component={AddAppointmentScreen}
-        options={{
+        options={(screenProps) => ({
           title: t('addAppointment:title'),
           headerBackTitle: ' ',
-        }}
+          headerLeft: () => (
+            <HeaderBackButton
+              tintColor={colors.black}
+              label={' '}
+              onPress={() => {
+                trackSelectByType('Back', {page: 'Add Appointment'});
+                screenProps.navigation?.goBack?.();
+              }}
+            />
+          ),
+        })}
       />
       <Stack.Screen
         name={'Appointment'}
         component={AppointmentScreen}
-        options={{
+        options={(screenProps) => ({
           title: t('appointment:title'),
           headerBackTitle: ' ',
-        }}
+          headerLeft: () => (
+            <HeaderBackButton
+              tintColor={colors.black}
+              label={' '}
+              onPress={() => {
+                trackSelectByType('Back', {page: 'Appointment'});
+                screenProps.navigation?.goBack?.();
+              }}
+            />
+          ),
+        })}
       />
       {/*<Stack.Screen*/}
       {/*  name={'MilestoneChecklist'}*/}

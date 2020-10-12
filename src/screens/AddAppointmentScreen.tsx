@@ -51,6 +51,7 @@ const AddAppointmentScreen: React.FC = () => {
       }
 
       trackInteractionByType('Completed Add Appointment');
+      trackInteractionByType('Add Appointment');
 
       const dayStart = startOfDay(values.date);
       const seconds = Math.abs(differenceInSeconds(startOfDay(values.time), values.time));

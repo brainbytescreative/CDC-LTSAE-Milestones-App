@@ -112,7 +112,7 @@ const AppointmentScreen: React.FC = () => {
             </AEButtonMultiline>
             <AEButtonMultiline
               onPress={() => {
-                trackSelectByType("Email Child's Summary");
+                trackSelectByType('Email Summary');
                 composeMail().catch((e) => {
                   Alert.alert('', e.message);
                 });

@@ -14,25 +14,25 @@ import {Quetion, checklistMap} from '../resources/milestoneChecklist';
 import {formatAge, getActiveRouteName} from './helpers';
 
 export type PageType =
-  | 'Child Drop-Down'
+  | 'Children & Add Child'
   | 'Menu'
   | 'Welcome Screen'
   | 'Parent/Caregiver Profile'
   | 'How to Use App'
   | 'Dashboard'
   | 'Milestone Checklist Intro'
-  | 'Main Milestone Home'
+  | 'Home'
   | 'Milestone Checklist'
   | 'When to Act Early'
-  | 'Milestone Quick View'
+  | 'Milestone Overview'
   | "My Child's Summary"
-  | 'Tips'
+  | 'Tips & Activities'
   | 'Add Appointment'
   | 'Appointment'
-  | 'Info/Privacy Policy'
+  | 'App Info & Privacy Policy'
   | 'Notifications'
   | 'Language Pop-Up'
-  | 'Notification and Settings'
+  | 'Notification & User Settings '
   | 'Show doctor'
   | 'Add a Child (Child Profile)';
 
@@ -55,6 +55,7 @@ type InteractionType =
   | 'My Child Summary'
   | 'Start Add Appointment'
   | 'Completed Add Appointment'
+  | 'Add Appointment'
   | 'Checked Act Early Item'
   | 'Started Social Milestones'
   | 'Completed Social Milestones'
@@ -104,13 +105,13 @@ const screeNameToPageName = (name: string): PageType | string => {
       pageName = 'Add a Child (Child Profile)';
       break;
     case 'Dashboard':
-      pageName = 'Main Milestone Home';
+      pageName = 'Home';
       break;
     case 'MilestoneChecklistGetStarted':
       pageName = 'Milestone Checklist Intro';
       break;
     case 'NotificationSettings':
-      pageName = 'Notification and Settings';
+      pageName = 'Notification & User Settings ';
       break;
     case 'MilestoneChecklist':
       pageName = 'Milestone Checklist';
@@ -119,13 +120,13 @@ const screeNameToPageName = (name: string): PageType | string => {
       pageName = "My Child's Summary";
       break;
     case 'MilestoneChecklistQuickView':
-      pageName = 'Milestone Quick View';
+      pageName = 'Milestone Overview';
       break;
     case 'TipsAndActivities':
-      pageName = 'Tips';
+      pageName = 'Tips & Activities';
       break;
     case 'Info':
-      pageName = 'Info/Privacy Policy';
+      pageName = 'App Info & Privacy Policy';
       break;
     case 'AddAppointment':
       pageName = 'Add Appointment';
@@ -241,11 +242,11 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
       }
       break;
     }
-    case 'Milestone Quick View': {
+    case 'Milestone Overview': {
       suffix = ': Quickview';
       break;
     }
-    case 'Tips': {
+    case 'Tips & Activities': {
       if (data.tipData) {
         const [tip] =
           checklistMap
@@ -413,16 +414,16 @@ export function trackNotificationById(id: string) {
   notificationName && trackAction(`Notification: ${notificationName}`, {page: 'Notifications'});
 }
 
-const notificationSetting: Record<string, string | undefined> = {
-  milestoneNotifications: 'Milestone Notifications',
+const notificationSetting: Record<string, SelectEventType | undefined> = {
+  milestoneNotifications: 'Next Checklist Notifications',
   appointmentNotifications: 'Appointment Notifications',
-  recommendationNotifications: 'Reccomendation Notifications',
+  recommendationNotifications: 'Recommendation Notifications',
   tipsAndActivitiesNotification: 'Tips Notifications',
 };
 
 export function trackNotificationSelect(name: string) {
   const selectName = notificationSetting[name];
-  selectName && trackAction(`Select: ${selectName}`);
+  selectName && trackEventByType('Select', selectName);
 }
 
 export function trackEventByType<T extends keyof EventTypes>(
@@ -435,11 +436,12 @@ export function trackEventByType<T extends keyof EventTypes>(
 }
 
 export function trackInteractionByType(type: InteractionType, options?: OptionsType) {
-  trackAction(`Interaction: ${type}`, options);
+  trackEventByType('Interaction', type, options);
 }
 
 export function trackChecklistSectionSelect(section: Section) {
-  trackSelectByType(sectionToEvent[section]);
+  const eventName = sectionToEvent[section];
+  eventName && trackEventByType('Select', eventName);
 }
 
 export function trackDrawerSelect(name: keyof DashboardDrawerParamsList) {
@@ -469,7 +471,7 @@ export function trackChecklistUnanswered(options?: OptionsType) {
 }
 
 export function trackSelectSummary(answer: Answer) {
-  trackAction(`Select: Summary: ${AnswerToText[answer]}`);
+  // trackAction(`Select: Summary: ${AnswerToText[answer]}`);
 }
 
 export const currentScreen: {navigation?: RefObject<NavigationContainerRef>; currentRouteName?: string} = {};

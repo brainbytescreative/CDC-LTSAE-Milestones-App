@@ -35,7 +35,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
             <Text
               accessibilityRole={'link'}
               onPress={() => {
-                trackEventByType('Link', 'Act Early', {page: 'Info/Privacy Policy'});
+                trackEventByType('Link', 'Act Early', {page: 'App Info & Privacy Policy'});
                 return Linking.openURL(t('actEarlyLink'));
               }}
               style={{textDecorationLine: 'underline'}}
@@ -44,7 +44,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
             <Text
               accessibilityRole={'link'}
               onPress={() => {
-                trackEventByType('Link', 'Act Early', {page: 'Info/Privacy Policy'});
+                trackEventByType('Link', 'Act Early', {page: 'App Info & Privacy Policy'});
                 return Linking.openURL(t('actEarlyLink2'));
               }}
               style={{textDecorationLine: 'underline'}}
