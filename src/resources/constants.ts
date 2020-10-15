@@ -70,24 +70,28 @@ export const statesOnly = [
 export const states = Object.freeze<string[]>(['NonUs', ...statesOnly, 'other']);
 
 export const statesOptions: Record<string, {label: string; value: string}[] | undefined> = {
-  en: states.map((val) => ({
-    label: i18next.t(`states:${val}`, {lng: 'en'}),
-    value: val,
-  })),
-  es: [
-    ...[
-      {label: i18next.t('states:NonUs', {lng: 'es'}), value: 'NonUs'},
-      ..._.orderBy(
-        statesOnly.map((val) => ({
-          label: i18next.t(`states:${val}`, {lng: 'es'}),
-          value: val,
-        })),
-        ['label'],
-        ['asc'],
-      ),
-      {label: i18next.t('states:other', {lng: 'es'}), value: 'other'},
-    ],
-  ],
+  get en() {
+    return states.map((val) => ({
+      label: i18next.t(`states:${val}`, {lng: 'en'}),
+      value: val,
+    }));
+  },
+  get es() {
+    return [
+      ...[
+        {label: i18next.t('states:NonUs', {lng: 'es'}), value: 'NonUs'},
+        ..._.orderBy(
+          statesOnly.map((val) => ({
+            label: i18next.t(`states:${val}`, {lng: 'es'}),
+            value: val,
+          })),
+          ['label'],
+          ['asc'],
+        ),
+        {label: i18next.t('states:other', {lng: 'es'}), value: 'other'},
+      ],
+    ];
+  },
 };
 
 export type StateCode = typeof states[number];
