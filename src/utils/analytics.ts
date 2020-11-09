@@ -143,6 +143,7 @@ const screeNameToPageName = (name: string): PageType | string => {
 };
 
 function trackActionInternal(pageName: undefined | string, key: string, options?: {sectionName?: string}) {
+  console.log({pageName, key});
   pageName &&
     ACPCore.trackState(pageName, {
       'gov.cdc.appname': 'LTSAE Milestone Tracker',
@@ -225,14 +226,14 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
       break;
     }
     case 'Milestone Checklist': {
-      const section: string | undefined = queryCache.getQueryData('section');
-      if (data.questionData && section) {
+      let section: string | undefined = queryCache.getQueryData('section');
+      if (data.questionData) {
         const [question] =
           checklistMap
             .get(data.questionData.milestoneId)
             ?.milestones.filter((value) => value.id === data.questionData?.questionId) ?? [];
+        section = section ?? question.skillType;
         const questionText = i18next.t(`milestones:${question.value}`, {lng: 'en'});
-
         suffix = `: ${section}: ${_.trim(questionText, '.')}`;
       } else if (section) {
         suffix = `: ${_.startCase(section)}`;

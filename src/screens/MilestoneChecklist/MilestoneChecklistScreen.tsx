@@ -81,29 +81,31 @@ const QuestionsList: React.FC<{
   {shared: {suspense: true}, queries: {staleTime: Infinity}},
 );
 
-const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = ({onSectionSet, section}) => {
-  const {data: {id: childId} = {}} = useGetCurrentChild();
-  const {progress: sectionsProgress} = useGetSectionsProgress(childId);
-  queryCache.setQueryData('section', section);
-  return (
-    <FlatList
-      extraData={sectionsProgress}
-      showsHorizontalScrollIndicator={false}
-      data={checklistSections}
-      horizontal={true}
-      renderItem={({item}) => (
-        <SectionItem
-          progress={sectionsProgress?.get(item)}
-          // setSection={setSection}
-          onSectionSet={onSectionSet}
-          selectedSection={section}
-          section={item}
-        />
-      )}
-      keyExtractor={(item, index) => `${item}-${index}`}
-    />
-  );
-};
+const Tabs: React.FC<{onSectionSet: (section: Section) => void; section: Section}> = React.memo(
+  ({onSectionSet, section}) => {
+    const {data: {id: childId} = {}} = useGetCurrentChild();
+    const {progress: sectionsProgress} = useGetSectionsProgress(childId);
+    queryCache.setQueryData('section', section);
+    return (
+      <FlatList
+        extraData={sectionsProgress}
+        showsHorizontalScrollIndicator={false}
+        data={checklistSections}
+        horizontal={true}
+        renderItem={({item}) => (
+          <SectionItem
+            progress={sectionsProgress?.get(item)}
+            // setSection={setSection}
+            onSectionSet={onSectionSet}
+            selectedSection={section}
+            section={item}
+          />
+        )}
+        keyExtractor={(item, index) => `${item}-${index}`}
+      />
+    );
+  },
+);
 
 const MilestoneChecklistScreen: React.FC<{
   navigation: NavigationProp;
