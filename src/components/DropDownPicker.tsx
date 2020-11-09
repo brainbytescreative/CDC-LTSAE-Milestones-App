@@ -185,7 +185,6 @@ const DropDownPicker: React.FC<Props> = ({
           accessibilityRole={'menu'}
           ref={tochableRef}
           onLayout={(event) => {
-            // console.log(event.nativeEvent.layout);
             setState({
               top: event.nativeEvent.layout.height,
             });

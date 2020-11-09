@@ -160,7 +160,6 @@ const PhotoField: React.FC<CommonFieldProps> = ({t, name}) => {
                         trackInteractionByType('Completed Add Photo: Library');
                       form.setFieldValue(field.name, result.uri);
                     }
-                    console.log(result);
                   },
                 );
               }}

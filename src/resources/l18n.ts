@@ -37,51 +37,6 @@ const languageDetector = {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   cacheUserLanguage: () => {},
 };
-//https://localise.biz/api/export/locale/en.json?index=id&format=i18next3&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg
-
-// class Backend implements BackendModule {
-//   type: 'backend' = 'backend';
-//
-//   static resources: Record<string, any> = {
-//     en: {
-//       ...translationEN,
-//       milestones: milestonesEN,
-//     },
-//     es: translationES,
-//   };
-//
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   create(languages: string[], namespace: string, key: string, fallbackValue: string): void {
-//     console.log('create');
-//   }
-//
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   init(services: Services, backendOptions: Record<string, any | undefined>, i18nextOptions: InitOptions) {
-//     console.log('init');
-//   }
-//
-//   async read(language: string, namespace: string, callback: ReadCallback) {
-//     const resourceElement = Backend.resources[language][namespace];
-//     // console.log(!!resourceElement);
-//     if (resourceElement) {
-//       callback(null, resourceElement);
-//     } else {
-//       // console.log('<<err');
-//       // callback(new Error('Translation error'), false);
-//     }
-//   }
-//
-//   // async readMulti(languages: string[], namespaces: string[], callback: ReadCallback) {
-//   //   const lng = languages[0];
-//   //   callback(null, Backend.resources);
-//   //   console.log(lng);
-//   //   const response = await axios.get(
-//   //     `https://localise.biz/api/export/locale/${lng}.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg`,
-//   //   );
-//   // }
-// }
-
-// const backend = new Backend();
 
 i18next
   .use(languageDetector as any)

@@ -114,9 +114,6 @@ export function calcChildAge(birthDay: Date | undefined) {
       if (inWeeks < 14) {
         milestoneAge = nextMilestoneId;
       }
-      // console.log('<<<inWeeks', inWeeks, baseDate);
-
-      // console.log(inWeeks, betweenCheckList);
       // // less than 1 month minus 1 day before next milestone
       // const leftSide = add(birthDay, {months: milestoneAge - 1, days: -1});
       // // basedate < less than: leftCompare = -1
@@ -126,13 +123,7 @@ export function calcChildAge(birthDay: Date | undefined) {
       // // rightCompare == 0 || rightCompare == 1
       // const rightCompare = compareAsc(baseDate, rightSide);
       // betweenCheckList = leftCompare < 0 && rightCompare >= 0;
-      // console.log(leftSide, rightSide, baseDate);
-      // // console.log(leftCompare, rightCompare, baseDate, leftSide, birthDay);
-      // console.log(baseDate, betweenCheckList);
-      // console.log(add(new Date(), {years: -4, weeks: 1}));
     }
-
-    // console.log(add(startOfDay(new Date()), {months: -12, days: 14}));
 
     return {milestoneAge, ageMonth, betweenCheckList};
   }
@@ -236,7 +227,6 @@ export function formattedAge(milestoneAge: number, t: TFunction, singular = fals
 
 export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
   const ageText = milestoneAge ? formattedAge(milestoneAge, t, true).milestoneAgeFormatted : '';
-  // console.log(milestoneAge);
   return i18next.language === 'en' ? _.startCase(ageText) : ageText;
 };
 

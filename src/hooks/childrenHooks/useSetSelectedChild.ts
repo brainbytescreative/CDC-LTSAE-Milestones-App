@@ -6,7 +6,6 @@ import Storage from '../../utils/Storage';
 export function useSetSelectedChild() {
   return useMutation<void, {id: number}>(
     async ({id}) => {
-      // console.log(Date.now());
       setTimeout(async () => {
         await Storage.setItemTyped('selectedChild', id);
         await queryCache.setQueryData('selectedChildId', id);

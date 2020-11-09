@@ -671,17 +671,6 @@ export function useSetRecommendationNotifications() {
       },
     ];
 
-    //  fixme optimise rescheduling
-    //
-    //     const [isNotificationSetQuery] = await sqLiteClient.db.executeSql(
-    //       `
-    //         SELECT notificationId FROM notifications WHERE notificationId IN (${series.map(() => '?').join(',')})
-    // `,
-    //       series.map((value) => value.notificationId),
-    //     );
-    //
-    //     console.log(isNotificationSetQuery.rows.length === series.length);
-
     await sqLiteClient.dB?.transaction((tx) => {
       series.forEach(({notificationId, fireDateTimestamp, body}) => {
         tx.executeSql(

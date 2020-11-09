@@ -272,7 +272,6 @@ export function useSetQuestionAnswer() {
           await queryCache.invalidateQueries('monthProgress');
         }
         // const prevAnswer = await getAnswerValue({childId, milestoneId, questionId});
-        // console.log(prevAnswer);
         // if (prevAnswer !== answer) {
         await setReminder({childId, questionId, milestoneId, answer});
         // }
@@ -337,7 +336,6 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
       concernsData
         ?.filter((value) => value.id && !answeredIds?.includes(value.id))
         ?.map((value) => {
-          // console.log(value);
           queryCache.setQueryData(
             ['concern', {childId: variables.childId, concernId: value.id, milestoneId: variables.milestoneAge}],
             {
@@ -602,8 +600,6 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
         ...tOpt({t, gender: childData?.gender || child?.gender}),
       });
 
-      console.log(body);
-
       return MailComposer.composeAsync({
         isHtml: true,
         body: body,
@@ -666,10 +662,6 @@ export function useCheckMissingMilestones() {
             return queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}]);
           }),
         );
-        queryCache.invalidateQueries(({queryKey}) => {
-          console.log(queryKey);
-          return false;
-        });
         queryCache.invalidateQueries('isMissingMilestones');
       },
     },

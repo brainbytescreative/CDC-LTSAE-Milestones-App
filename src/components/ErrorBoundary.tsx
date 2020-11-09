@@ -15,10 +15,9 @@ export default class ErrorBoundary extends React.Component<any> {
     crashlytics().recordError(error);
     return {error};
   }
-  // componentDidCatch(error: any, errorInfo: any) {
-  //   // You can also log the error to an error reporting service
-  //   console.log('>>>>componentDidCatch');
-  // }
+  componentDidCatch(error: any) {
+    crashlytics().recordError(error);
+  }
 
   render() {
     return this.state?.error ? (

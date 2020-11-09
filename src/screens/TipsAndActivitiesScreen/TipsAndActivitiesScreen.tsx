@@ -161,7 +161,6 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
           <TipsAndActivitiesItem
             isHighlighted={Boolean(highlightedTip) && item.id === highlightedTip}
             onLayout={(event) => {
-              // console.log(event.nativeEvent.layout.height);
               positionMap.current.set(Number(item.id), event.nativeEvent.layout.y);
             }}
             key={`${item.id}-${index}`}

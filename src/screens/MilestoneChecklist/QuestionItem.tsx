@@ -17,16 +17,6 @@ import {colors, images, sharedStyle, verticalImages} from '../../resources/const
 import {SkillSection} from '../../resources/milestoneChecklist';
 import {trackChecklistAnswer, trackInteractionByType} from '../../utils/analytics';
 
-// const jsCode = `
-//
-// document.addEventListener('DOMContentLoaded', function(){ // Аналог $(document).ready(function(){
-//   alert('lol');
-//   console.log('test')
-//   document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
-// });
-// // document.querySelector('.ytp-show-cards-title').style.visibility = 'hidden';
-// `;
-
 function getVideoHtml(videId: string) {
   return `
 <!DOCTYPE html>
