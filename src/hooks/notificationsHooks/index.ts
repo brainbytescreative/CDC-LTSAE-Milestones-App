@@ -130,8 +130,8 @@ function completeMilestoneReminderTrigger() {
 /**
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
-function tipsAndActivitiesTrigger() {
-  const date = add(new Date(), __DEV__ ? {seconds: 10} : {weeks: 1});
+function tipsAndActivitiesTrigger(startDate?: Date) {
+  const date = add(startDate ?? new Date(), __DEV__ ? {seconds: 10} : {weeks: 3});
   return __DEV__ ? date : at8PM(date);
 }
 
@@ -469,34 +469,40 @@ export function useSetTipsAndActivitiesNotification() {
       const identifier = notificationId || uuid();
       const bodyLocalizedKey = 'notifications:tipsAndActivitiesBody';
       const titleLocalizedKey = 'notifications:tipsAndActivitiesTitle';
-      const trigger = tipsAndActivitiesTrigger();
+      let trigger = tipsAndActivitiesTrigger();
 
-      await sqLiteClient.dB
-        ?.executeSql(
-          `
-                    INSERT OR
-                    REPLACE
-                    INTO notifications
-                    (notificationId,
-                     fireDateTimestamp,
-                     notificationCategoryType,
-                     childId,
-                     milestoneId,
-                     bodyLocalizedKey,
-                     titleLocalizedKey)
-                    VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
-          `,
-          [
-            identifier,
-            formatISO(trigger),
-            NotificationCategory.TipsAndActivities,
-            childId,
-            milestoneId,
-            bodyLocalizedKey,
-            titleLocalizedKey,
-          ],
-        )
-        .catch(console.log);
+      await Promise.all(
+        Array.from(new Array(20)).map(async (value, index) => {
+          trigger = index === 0 ? trigger : tipsAndActivitiesTrigger(trigger);
+          const isoTriger = formatISO(trigger);
+          await sqLiteClient.dB
+            ?.executeSql(
+              `
+                      INSERT OR
+                      REPLACE
+                      INTO notifications
+                      (notificationId,
+                       fireDateTimestamp,
+                       notificationCategoryType,
+                       childId,
+                       milestoneId,
+                       bodyLocalizedKey,
+                       titleLocalizedKey)
+                      VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+            `,
+              [
+                `${identifier}-${isoTriger}`,
+                isoTriger,
+                NotificationCategory.TipsAndActivities,
+                childId,
+                milestoneId,
+                bodyLocalizedKey,
+                titleLocalizedKey,
+              ],
+            )
+            .catch(console.log);
+        }),
+      );
     },
     {
       onSuccess: () => {
@@ -516,6 +522,23 @@ export function useCancelNotificationById() {
     {
       onSuccess: () => {
         queryCache.invalidateQueries('unreadNotifications');
+      },
+    },
+  );
+}
+export function useCancelTipsNotificationById() {
+  const {t} = useTranslation();
+  return useMutation<void, {notificationId: string}>(
+    async ({notificationId}) => {
+      await sqLiteClient.dB?.executeSql("DELETE FROM notifications WHERE notificationId LIKE ?1 || '%'", [
+        notificationId,
+      ]);
+      return;
+    },
+    {
+      onSuccess: () => {
+        queryCache.invalidateQueries('unreadNotifications');
+        scheduleNotifications(t);
       },
     },
   );

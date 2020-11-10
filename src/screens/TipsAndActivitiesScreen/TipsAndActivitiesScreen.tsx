@@ -11,7 +11,11 @@ import Chevron from '../../components/Svg/Chevron';
 import ShortHeaderArc from '../../components/Svg/ShortHeaderArc';
 import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {useCancelNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
+import {
+  useCancelNotificationById,
+  useCancelTipsNotificationById,
+  useSetTipsAndActivitiesNotification,
+} from '../../hooks/notificationsHooks';
 import {PropType, colors, sharedStyle} from '../../resources/constants';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {formatAge} from '../../utils/helpers';
@@ -28,7 +32,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
   const [setTip] = useSetTip();
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const [setNotification] = useSetTipsAndActivitiesNotification();
-  const [cancelNotification] = useCancelNotificationById();
+  const [cancelNotification] = useCancelTipsNotificationById();
   const positionMap = useRef(new Map<number, number>());
   const scrollView = useRef<ScrollView | undefined>(undefined);
   const [highlightedTip, setHighlightedTip] = useState<number | undefined>();
