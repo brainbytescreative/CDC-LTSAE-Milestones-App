@@ -19,7 +19,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import {useDeleteChild, useGetChildren, useGetCurrentChild, useSetSelectedChild} from '../../hooks/childrenHooks';
 import {ChildResult} from '../../hooks/types';
-import {colors, sharedScreenOptions, sharedStyle} from '../../resources/constants';
+import {colors, sharedStyle} from '../../resources/constants';
 import {trackSelectByType, trackSelectChild} from '../../utils/analytics';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../Navigator/types';
 import NotificationsBadge from '../NotificationsBadge/NotificationsBadge';
@@ -141,7 +141,6 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      ...sharedScreenOptions,
       headerTitle: () => {
         return (
           <TouchableOpacity

@@ -17,6 +17,7 @@ import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUs
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
 import {trackNotificationById} from '../../utils/analytics';
+import AppStateManager from '../AppStateManager';
 import ErrorBoundary from '../ErrorBoundary';
 import withSuspense from '../withSuspense';
 import RootDrawer from './RootDrawer';
@@ -112,6 +113,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
           )}
           <Stack.Screen name={'Dashboard'} component={RootDrawer} />
         </Stack.Navigator>
+        <AppStateManager />
       </ErrorBoundary>
     </I18nextProvider>
   );

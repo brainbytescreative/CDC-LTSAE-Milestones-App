@@ -7,21 +7,11 @@ import {ImagePickerOptions, ImagePickerResult, MediaTypeOptions} from 'expo-imag
 import {ImageInfo} from 'expo-image-picker/src/ImagePicker.types';
 import * as Permissions from 'expo-permissions';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
-import {TFunction} from 'i18next';
+import i18next, {TFunction} from 'i18next';
 import _ from 'lodash';
-import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import React, {ComponentProps, useEffect, useLayoutEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  Alert,
-  Image,
-  Linking,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  TouchableWithoutFeedbackProps,
-  View,
-} from 'react-native';
+import {Alert, Image, Linking, Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -31,11 +21,14 @@ import AERadioButton from '../components/AERadioButton';
 import AETextInput from '../components/AETextInput';
 import CancelDoneTopControl from '../components/CancelDoneTopControl';
 import DatePicker from '../components/DatePicker';
+import DropDownPicker from '../components/DropDownPicker';
 import {DashboardStackParamList, RootStackParamList} from '../components/Navigator/types';
+import Chevron from '../components/Svg/Chevron';
 import NavBarBackground from '../components/Svg/NavBarBackground';
 import PlusIcon from '../components/Svg/PlusIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
+import {ChildResult} from '../hooks/types';
 import {colors, sharedStyle} from '../resources/constants';
 import {addEditChildSchema} from '../resources/validationSchemas';
 import {
@@ -235,8 +228,8 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   return (
     <FastField name={name}>
       {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
-        <View style={{marginTop: 20, marginBottom: 16}}>
-          <Text style={{marginLeft: 8}}>{t('selectOne')}</Text>
+        <View style={{marginTop: 20, marginBottom: 16, marginLeft: 8}}>
+          <Text>{t('selectOne')}</Text>
           <View
             style={[
               {
@@ -271,21 +264,95 @@ const GenderField: React.FC<CommonFieldProps> = ({t, name}) => {
   );
 };
 
-const PrematureTip: React.FC<{t: TFunction} & Pick<TouchableWithoutFeedbackProps, 'onPress'>> = ({t, onPress}) => (
-  <TouchableWithoutFeedback onPress={onPress} accessibilityRole={'button'}>
-    <View style={[styles.prematureTip, sharedStyle.shadow]}>
-      <Text
-        numberOfLines={1}
-        adjustsFontSizeToFit
-        style={{
-          fontSize: 15,
-          textAlign: 'center',
-        }}>
-        {t('prematureQuestion')}
-      </Text>
-    </View>
-  </TouchableWithoutFeedback>
-);
+const PrematureRadioField: React.FC<CommonFieldProps> = ({t, name}) => {
+  return (
+    <FastField name={name}>
+      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
+        <View style={{marginTop: 20, marginBottom: 16, marginLeft: 8}}>
+          <Text>{t('prematureQuestion')}</Text>
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'flex-start',
+              },
+            ]}>
+            <View
+              style={[
+                {flexDirection: 'row'},
+                Boolean(meta.error && meta.touched) && {...sharedStyle.errorOutline, paddingVertical: 1},
+              ]}>
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, true)}
+                value={Boolean(field.value)}
+                title={t('dialog:yes')}
+                titleStyle={{marginRight: 32}}
+              />
+              <AERadioButton
+                onChange={() => form.setFieldValue(field.name, false)}
+                value={!field.value}
+                title={t('dialog:no')}
+                titleStyle={{marginRight: 0}}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+    </FastField>
+  );
+};
+
+const weeks: ComponentProps<typeof DropDownPicker>['items'] = Array.from(new Array(16)).map((value, index) => ({
+  label: i18next.t('common:week', {count: index + 1}),
+  value: index + 1,
+}));
+
+const PrematureWeeksField: React.FC<CommonFieldProps> = ({t, name}) => {
+  return (
+    <FastField name={name}>
+      {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
+        <>
+          <DropDownPicker
+            itemsContainerStyle={{
+              borderRightWidth: 1,
+              borderLeftWidth: 1,
+              borderBottomWidth: 1,
+              borderColor: colors.gray,
+              height: 130,
+            }}
+            containerStyle={[meta.error && meta.touched ? sharedStyle.errorOutline : null]}
+            customArrowDown={<Chevron direction={'up'} />}
+            customArrowUp={<Chevron direction={'down'} />}
+            labelStyle={[sharedStyle.regularText, {flexGrow: 1}]}
+            style={[
+              sharedStyle.shadow,
+              {
+                padding: 5,
+                borderWidth: 1,
+                borderColor: colors.gray,
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              },
+            ]}
+            placeholder={`${t('numberOfWeeksPremature')} *`}
+            placeholderColor={colors.gray}
+            items={weeks}
+            defaultNull
+            dropDownMaxHeight={140}
+            value={field.value}
+            zIndex={1000}
+            onChangeItem={(item) => {
+              form.setFieldValue(field.name, item.value);
+            }}
+          />
+        </>
+      )}
+    </FastField>
+  );
+};
 
 const AddChildScreen: React.FC = () => {
   const navigation = useNavigation<AddChildScreenNavigationProp>();
@@ -304,14 +371,19 @@ const AddChildScreen: React.FC = () => {
   const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
-  const firstChild = {
+  const firstChild: Partial<ChildResult> = {
     name: '',
     gender: undefined,
     birthday: undefined,
     photo: undefined,
+    isPremature: false,
     ...route.params?.child,
   };
-  const initialValues: {firstChild: typeof firstChild; anotherChildren?: typeof firstChild[]} = {
+
+  const initialValues: {
+    firstChild: typeof firstChild;
+    anotherChildren?: typeof firstChild[];
+  } = {
     firstChild,
     anotherChildren: [],
   };
@@ -325,7 +397,11 @@ const AddChildScreen: React.FC = () => {
   }, [title, navigation, route.params]);
 
   useEffect(() => {
-    child && formikRef.current?.setValues({firstChild: child, anotherChildren: []});
+    child &&
+      formikRef.current?.setValues({
+        firstChild: child.realBirthDay ? {...child, birthday: child.realBirthDay} : child,
+        anotherChildren: [],
+      });
   }, [child]);
 
   const onDone = () => {
@@ -353,12 +429,13 @@ const AddChildScreen: React.FC = () => {
     }
   };
 
-  const onPrematureTipPress = useCallback(() => {
-    scrollViewRef.current?.scrollToEnd();
-  }, [scrollViewRef]);
+  // const onPrematureTipPress = useCallback(() => {
+  //   scrollViewRef.current?.scrollToEnd();
+  // }, [scrollViewRef]);
 
   return (
     <KeyboardAwareScrollView
+      // key={__DEV__ ? Math.random() : undefined}
       innerRef={(ref) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -378,10 +455,11 @@ const AddChildScreen: React.FC = () => {
             ...values.firstChild,
             birthday: values.firstChild.birthday!,
             gender: values.firstChild.gender || 0,
-          };
+          } as ChildResult;
 
           if (childId) {
-            updateChild({...childInput, id: childId}).then(() => {
+            const updateData = {...childInput, id: childId};
+            updateChild(updateData).then(() => {
               trackChildAge(values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));
             });
@@ -399,7 +477,7 @@ const AddChildScreen: React.FC = () => {
               ...anotherChild,
               birthday: anotherChild.birthday!,
               gender: anotherChild.gender!,
-            };
+            } as ChildResult;
             await addChild({data: otherInput, isAnotherChild: true})
               .then(() => {
                 trackCompleteAddChild();
@@ -436,7 +514,12 @@ const AddChildScreen: React.FC = () => {
               <NameField t={t} name={'firstChild.name'} />
               <View style={{height: 11}} />
               <BirthdayField name={'firstChild.birthday'} t={t} />
-              <PrematureTip t={t} onPress={onPrematureTipPress} />
+              <PrematureRadioField t={t} name={'firstChild.isPremature'} />
+            </View>
+            <View style={{backgroundColor: colors.white, paddingHorizontal: 32, paddingBottom: 32}}>
+              {formikProps.values.firstChild.isPremature && (
+                <PrematureWeeksField t={t} name={'firstChild.weeksPremature'} />
+              )}
               <GenderField t={t} name={'firstChild.gender'} />
             </View>
 
@@ -450,7 +533,10 @@ const AddChildScreen: React.FC = () => {
                         <NameField t={t} name={`anotherChildren.${index}.name`} />
                         <View style={{height: 11}} />
                         <BirthdayField name={`anotherChildren.${index}.birthday`} t={t} />
-                        <PrematureTip t={t} onPress={onPrematureTipPress} />
+                        <PrematureRadioField t={t} name={`anotherChildren.${index}.isPremature`} />
+                        {Boolean(formikProps.values?.anotherChildren?.[index].isPremature) && (
+                          <PrematureWeeksField t={t} name={`anotherChildren.${index}.weeksPremature`} />
+                        )}
                         <GenderField t={t} name={`anotherChildren.${index}.gender`} />
                         <AEButtonRounded
                           contentStyle={{backgroundColor: colors.apricot}}
@@ -478,7 +564,12 @@ const AddChildScreen: React.FC = () => {
                       </View>
                     ))}
                   </View>
-                  <View style={{backgroundColor: colors.white, flexGrow: 2, justifyContent: 'space-between'}}>
+                  <View
+                    style={{
+                      backgroundColor: colors.white,
+                      flexGrow: 2,
+                      justifyContent: 'space-between',
+                    }}>
                     <PurpleArc width={'100%'} />
                     <View style={{backgroundColor: colors.purple, flexGrow: 2, paddingBottom: bottom ? bottom : 16}}>
                       <View style={{marginTop: 50}}>

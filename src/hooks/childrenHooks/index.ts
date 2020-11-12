@@ -4,6 +4,7 @@ import {MutateOptions, QueryOptions, queryCache, useMutation, useQuery} from 're
 
 import {sqLiteClient} from '../../db';
 import {pathFromDB, pathToDB} from '../../resources/constants';
+import {childSchema, updateChildSchema} from '../../resources/validationSchemas';
 import {trackInteractionByType} from '../../utils/analytics';
 import {objectToQuery} from '../../utils/helpers';
 import Storage from '../../utils/Storage';
@@ -26,7 +27,9 @@ export interface ChildDbRecord extends Record {
   parentName?: string | undefined;
   parentEmail?: string | undefined;
   doctorEmail?: string | undefined;
-  photo?: string | undefined;
+  photo?: string | undefined | null;
+  isPremature?: boolean;
+  weeksPremature?: number | null;
 }
 
 type ChildDbRecordNew = Omit<ChildDbRecord, 'id'>;
@@ -35,13 +38,14 @@ export function useUpdateChild() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   return useMutation<void, ChildResult>(
     async (variables) => {
-      const photo = await pathToDB(variables.photo);
+      const validChild = await updateChildSchema.validate(variables, {stripUnknown: true});
+      const photo = await pathToDB(validChild.photo);
       const [query, values] = objectToQuery<ChildDbRecord>(
         {
-          ...variables,
-          name: _.upperFirst(_.trim(variables.name)),
+          ...validChild,
+          name: _.upperFirst(_.trim(validChild.name)),
           photo: photo,
-          birthday: formatISO(variables.birthday, {
+          birthday: formatISO(validChild.birthday, {
             representation: 'date',
           }),
         },
@@ -105,13 +109,14 @@ export function useAddChild(options?: MutateOptions<AddChildResult, AddChildVari
   const [setSelectedChild] = useSetSelectedChild();
   return useMutation<AddChildResult, AddChildVariables>(
     async (variables) => {
-      const photo = await pathToDB(variables.data.photo);
+      const validChild = await childSchema.validate(variables.data, {stripUnknown: true});
+      const photo = await pathToDB(validChild.photo);
       const [query, values] = objectToQuery<ChildDbRecordNew>(
         {
-          ...variables.data,
-          name: _.upperFirst(_.trim(variables.data.name)),
+          ...validChild,
+          name: _.upperFirst(_.trim(validChild.name)),
           photo: photo,
-          birthday: formatISO(variables.data.birthday, {
+          birthday: formatISO(validChild.birthday, {
             representation: 'date',
           }),
         },

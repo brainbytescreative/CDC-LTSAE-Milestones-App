@@ -19,7 +19,7 @@ import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {PropType, colors, milestonesIds} from '../../resources/constants';
-import {trackEventByType, trackSelectByType} from '../../utils/analytics';
+import {trackEventByType} from '../../utils/analytics';
 
 interface ItemProps {
   childAge: number;
@@ -96,7 +96,6 @@ const MonthCarousel: React.FC = withSuspense(
     const visible = useRef<{last?: number | null; first?: number | null} | undefined>(undefined);
     const {data: {childAge = 2, milestoneAge = 2} = {}} = useGetMilestone();
     const [setAge] = useSetMilestoneAge();
-
     const {data: child} = useGetCurrentChild();
 
     const currentAgeIndex = milestonesIds.findIndex((value) => value === milestoneAge);

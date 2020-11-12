@@ -476,12 +476,12 @@ function replaceFile(path = '') {
 const cacheDir = replaceFile(`${FileSystem.cacheDirectory ?? ''}ImagePicker/`);
 const docDir = replaceFile(`${FileSystem.documentDirectory ?? ''}`);
 
-export const pathToDB = async (path?: string) => {
+export const pathToDB = async (path?: string | null) => {
   const destenation = path && path.replace(cacheDir, docDir);
   path && path.startsWith(cacheDir) && destenation && (await FileSystem.moveAsync({from: path, to: destenation}));
   return destenation?.replace(docDir, '');
 };
-export const pathFromDB = (path?: string) => {
+export const pathFromDB = (path?: string | null) => {
   return path ? `${docDir ?? ''}${path}` : path;
 };
 

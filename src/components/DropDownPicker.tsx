@@ -32,6 +32,7 @@ interface Props {
    *  Default text to be shown to the user which must be used with defaultNull	string	'Select an item'	No
    */
   placeholder?: string;
+  placeholderColor?: string;
   /**
    *  The index of the default item.	number	0	No
    */
@@ -87,7 +88,7 @@ interface Props {
 
 interface Choice {
   label: string | null | undefined;
-  value: string | null | undefined;
+  value: string | null | undefined | number;
 }
 
 interface State {
@@ -103,6 +104,7 @@ const DropDownPicker: React.FC<Props> = ({
   zIndex = 5000,
   defaultNull = false,
   placeholder = 'Select an item',
+  placeholderColor,
   dropDownMaxHeight = 150,
   style = {},
   containerStyle = {},
@@ -193,7 +195,14 @@ const DropDownPicker: React.FC<Props> = ({
           onPress={toggle}>
           <View style={[styles.dropDown, {flexDirection: 'row', flex: 1}]}>
             <View style={[styles.dropDownDisplay]}>
-              <Text style={[labelStyle, {opacity}]}>{label}</Text>
+              <Text
+                style={[
+                  labelStyle,
+                  {opacity},
+                  Boolean(placeholder) && !state?.choice?.value && {color: placeholderColor},
+                ]}>
+                {label}
+              </Text>
             </View>
             {!!(customArrowDown || customArrowUp) && (
               <View style={[styles.arrow]}>
@@ -203,7 +212,6 @@ const DropDownPicker: React.FC<Props> = ({
           </View>
         </TouchableOpacity>
       </View>
-      {/*<Portal>*/}
       <View
         style={[
           styles.dropDown,

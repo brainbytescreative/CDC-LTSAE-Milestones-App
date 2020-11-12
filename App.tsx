@@ -16,7 +16,6 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {NavigationContainer} from '@react-navigation/native';
-import {differenceInWeeks, formatISO, parseISO} from 'date-fns';
 import * as Notifications from 'expo-notifications';
 import React, {useEffect} from 'react';
 import {YellowBox} from 'react-native';
@@ -25,7 +24,6 @@ import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper
 import {enableScreens} from 'react-native-screens';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
-import AppStateManager from './src/components/AppStateManager';
 import Navigator from './src/components/Navigator';
 import {colors} from './src/resources/constants';
 import {currentScreen, trackAction, trackSelectByType, trackStartAddChild} from './src/utils/analytics';
@@ -107,7 +105,6 @@ const App = () => {
 
   return (
     <>
-      <AppStateManager />
       <ActionSheetProvider>
         <ReactQueryConfigProvider config={queryConfig}>
           <PaperProvider theme={theme}>

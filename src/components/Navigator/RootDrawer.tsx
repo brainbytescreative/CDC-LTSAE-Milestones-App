@@ -126,6 +126,7 @@ const RootDrawer: React.FC = () => {
       drawerStyle={{width: '100%', backgroundColor: 'transparent'}}
       screenOptions={{
         unmountOnBlur: true,
+        headerShown: false,
       }}
       initialRouteName={'DashboardStack'}>
       <Drawer.Screen

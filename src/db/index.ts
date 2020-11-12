@@ -8,8 +8,8 @@ import SQLiteClient from './SQLiteClient';
 
 const DB_NAME = 'act-early-rn.sqlite';
 const DB_DEBUG = false;
-const DB_MIGRATIONS = [
-  async (dB: SQLiteDatabase): Promise<void> => {
+const DB_MIGRATIONS: ((db: SQLiteDatabase) => Promise<void>)[] = [
+  async (dB) => {
     // USE dB TO CREATE TABLES
     await dB.executeSql(`
         CREATE TABLE children
@@ -108,6 +108,15 @@ const DB_MIGRATIONS = [
             bodyLocalizedKey         text,
             titleLocalizedKey        text
         );
+    `);
+  },
+  async (db) => {
+    await db.executeSql(`
+        ALTER TABLE children ADD COLUMN isPremature boolean;
+
+    `);
+    await db.executeSql(`
+        ALTER TABLE children ADD COLUMN weeksPremature integer;
     `);
   },
 ];

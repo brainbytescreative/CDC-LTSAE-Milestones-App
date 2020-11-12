@@ -2,9 +2,10 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
+import {ChildResult} from '../hooks/types';
 import BabyPlaceholder from './Svg/BabyPlaceholder';
 
-const ChildPhoto: React.FC<{photo?: string; style?: StyleProp<ViewStyle>}> = ({photo, style}) => {
+const ChildPhoto: React.FC<{photo?: ChildResult['photo']; style?: StyleProp<ViewStyle>}> = ({photo, style}) => {
   const {t} = useTranslation();
   return (
     <View accessible={true} style={[{alignItems: 'center', marginTop: 16, marginBottom: 25}, style]}>

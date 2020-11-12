@@ -30,6 +30,7 @@ export type MilestoneQueryKey = [string, {childBirthday?: Date | string; singula
 
 export interface ChildResult extends Omit<ChildDbRecord, 'birthday'> {
   birthday: Date;
+  realBirthDay?: Date;
 }
 
 export interface AppointmentDb {

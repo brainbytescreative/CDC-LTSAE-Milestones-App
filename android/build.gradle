@@ -2,9 +2,9 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "28.0.3"
-        minSdkVersion = 24
-        compileSdkVersion = 28
+        buildToolsVersion = "29.0.2"
+        minSdkVersion = 16
+        compileSdkVersion = 29
         targetSdkVersion = 29
     }
     repositories {
@@ -15,7 +15,7 @@ buildscript {
             }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.5.2")
+        classpath('com.android.tools.build:gradle:4.0.0')
         classpath 'com.google.gms:google-services:4.3.3'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
 //         classpath 'io.fabric.tools:gradle:1.28.1'

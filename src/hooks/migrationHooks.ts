@@ -137,7 +137,9 @@ export function useTransferDataFromOldDb() {
             throw new Error('Child import failed');
           }
 
-          await setMilestoneNotifications({child: {...record, id: newChildId, birthday: parseISO(record.birthday)}});
+          await setMilestoneNotifications({
+            child: {...record, isPremature: false, id: newChildId, birthday: parseISO(record.birthday)},
+          });
 
           const [{rows: aptRows}] = await oldDbClient.executeSql(appointmentsQueryStatement, [record.id]);
 
