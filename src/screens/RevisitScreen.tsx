@@ -15,7 +15,6 @@ import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns, useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
-import {Answer} from '../hooks/types';
 import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackEventByType} from '../utils/analytics';
 import {formattedAgeSingular, tOpt} from '../utils/helpers';
@@ -83,11 +82,16 @@ const RevisitScreen: React.FC = () => {
           }}
           style={{marginHorizontal: 32, marginTop: 16}}
         />
+
         <Text style={[sharedStyle.screenTitle]}>{t('thankYouText', {childName: child?.name})}</Text>
+
         <View style={styles.logosRow}>
           <CDCLogo />
           <LTSAELogo />
         </View>
+        {Number(child?.weeksPremature) >= 4 && Number(milestoneAge) < 24 && (
+          <Text style={[sharedStyle.screenTitle, {fontSize: 17}]}>{t('prematureTip', {childName: child?.name})}</Text>
+        )}
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
           {t('description')}
         </Text>

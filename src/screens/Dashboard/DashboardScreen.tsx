@@ -301,8 +301,8 @@ const ChildName: React.FC = withSuspense(
   () => {
     const {t} = useTranslation('dashboard');
     // const currentDay = new Date().getDay();
-    const {data: {name: childName, birthday} = {}} = useGetCurrentChild();
-    const childAgeText = useMemo(() => formatAge(birthday), [birthday]);
+    const {data: {name: childName, birthday, realBirthDay} = {}} = useGetCurrentChild();
+    const childAgeText = useMemo(() => formatAge(realBirthDay ?? birthday), [birthday, realBirthDay]);
     const prefix = i18next.language === 'es' ? '¡' : '';
     return (
       <View style={{alignItems: 'center'}}>

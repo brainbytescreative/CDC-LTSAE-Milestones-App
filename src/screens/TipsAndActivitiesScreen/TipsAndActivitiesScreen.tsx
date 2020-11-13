@@ -11,11 +11,7 @@ import Chevron from '../../components/Svg/Chevron';
 import ShortHeaderArc from '../../components/Svg/ShortHeaderArc';
 import {useGetMilestone, useGetTips, useSetTip} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
-import {
-  useCancelNotificationById,
-  useCancelTipsNotificationById,
-  useSetTipsAndActivitiesNotification,
-} from '../../hooks/notificationsHooks';
+import {useCancelTipsNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
 import {PropType, colors, sharedStyle} from '../../resources/constants';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {formatAge} from '../../utils/helpers';
@@ -118,7 +114,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
         <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
         <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
           {t('subtitle', {
-            childAge: formatAge(child?.birthday, {singular: true}),
+            childAge: formatAge(child?.realBirthDay ?? child?.birthday, {singular: true}),
             babyOrChild: Number(milestoneId) > 12 ? t('common:child') : t('common:baby'),
           })}
         </Text>

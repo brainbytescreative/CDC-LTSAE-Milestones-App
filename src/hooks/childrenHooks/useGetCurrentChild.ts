@@ -24,7 +24,7 @@ export function useGetCurrentChild() {
       const yo = Number(child && differenceInYears(new Date(), child?.birthday) > 2);
       const weeksPremature = Number(child?.weeksPremature);
 
-      if (child && weeksPremature >= 4 && yo) {
+      if (child && weeksPremature >= 4 && yo < 2) {
         return {
           ...child,
           birthday: add(child.birthday, {weeks: weeksPremature}),

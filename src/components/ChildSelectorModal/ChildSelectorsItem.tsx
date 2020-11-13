@@ -15,7 +15,16 @@ interface ItemProps extends ChildResult {
   onDelete?: (id: ChildResult['id'], name: ChildResult['name']) => void;
 }
 
-const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onDelete, onEdit, onSelect}) => {
+const ChildSelectorsItem: React.FC<ItemProps> = ({
+  id,
+  name,
+  birthday,
+  photo,
+  onDelete,
+  onEdit,
+  onSelect,
+  realBirthDay,
+}) => {
   const {t} = useTranslation('childSelector');
   const {data: {id: currentId} = {}} = useGetCurrentChild();
   const selected = currentId === id;
@@ -59,7 +68,7 @@ const ChildSelectorsItem: React.FC<ItemProps> = ({id, name, birthday, photo, onD
           {name}
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 3}}>
-          <Text style={{fontSize: 12}}>{formatAge(birthday)}</Text>
+          <Text style={{fontSize: 12}}>{formatAge(realBirthDay ?? birthday)}</Text>
           <View style={{flexDirection: 'row', marginRight: 16}}>
             <TouchableOpacity
               accessibilityRole={'button'}

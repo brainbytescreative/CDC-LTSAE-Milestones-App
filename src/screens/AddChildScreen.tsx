@@ -7,7 +7,7 @@ import {ImagePickerOptions, ImagePickerResult, MediaTypeOptions} from 'expo-imag
 import {ImageInfo} from 'expo-image-picker/src/ImagePicker.types';
 import * as Permissions from 'expo-permissions';
 import {FastField, FastFieldProps, FieldArray, Formik, FormikProps} from 'formik';
-import i18next, {TFunction} from 'i18next';
+import {TFunction} from 'i18next';
 import _ from 'lodash';
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -303,12 +303,12 @@ const PrematureRadioField: React.FC<CommonFieldProps> = ({t, name}) => {
   );
 };
 
-const weeks: ComponentProps<typeof DropDownPicker>['items'] = Array.from(new Array(16)).map((value, index) => ({
-  label: i18next.t('common:week', {count: index + 1}),
-  value: index + 1,
-}));
-
 const PrematureWeeksField: React.FC<CommonFieldProps> = ({t, name}) => {
+  const weeks: ComponentProps<typeof DropDownPicker>['items'] = Array.from(new Array(16)).map((value, index) => ({
+    label: t('common:week', {count: index + 1}),
+    value: index + 1,
+  }));
+
   return (
     <FastField name={name}>
       {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
@@ -460,13 +460,13 @@ const AddChildScreen: React.FC = () => {
           if (childId) {
             const updateData = {...childInput, id: childId};
             updateChild(updateData).then(() => {
-              trackChildAge(values.firstChild.birthday);
+              trackChildAge(values.firstChild.realBirthDay ?? values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));
             });
           } else {
             addChild({data: childInput, isAnotherChild: false}).then(() => {
               trackCompleteAddChild();
-              trackChildAge(values.firstChild.birthday);
+              trackChildAge(values.firstChild.realBirthDay ?? values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));
             });
           }
@@ -481,7 +481,7 @@ const AddChildScreen: React.FC = () => {
             await addChild({data: otherInput, isAnotherChild: true})
               .then(() => {
                 trackCompleteAddChild();
-                trackChildAge(anotherChild.birthday);
+                trackChildAge(anotherChild.realBirthDay ?? anotherChild.birthday);
                 trackChildGender(Number(anotherChild.gender));
               })
               .catch(console.error);
