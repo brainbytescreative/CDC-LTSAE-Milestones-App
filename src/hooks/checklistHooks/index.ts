@@ -583,7 +583,7 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
   const {data: child} = useGetCurrentChild();
   const {data: concerns, status: concernsStatus} = useGetConcerns(childData?.id);
   const {data, status: questionsStatus} = useGetChecklistQuestions(childData?.id);
-  const {data: {milestoneAgeFormatted} = {}, status: milestoneStatus} = useGetMilestone(childData?.id);
+  const {data: {milestoneAgeFormatted, milestoneAge} = {}, status: milestoneStatus} = useGetMilestone(childData?.id);
   const {t} = useTranslation('childSummary');
 
   return {
@@ -596,9 +596,12 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
         notSureItems: data?.groupedByAnswer['1'],
         notYetItems: data?.groupedByAnswer['2'],
         formattedAge: milestoneAgeFormatted,
+        isPremature: Number(child?.weeksPremature) >= 4 && Number(milestoneAge) < 24,
         currentDayText: formatDate(new Date(), 'date'),
         ...tOpt({t, gender: childData?.gender || child?.gender}),
       });
+
+      console.log(body);
 
       return MailComposer.composeAsync({
         isHtml: true,

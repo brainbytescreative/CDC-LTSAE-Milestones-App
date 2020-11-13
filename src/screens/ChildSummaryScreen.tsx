@@ -235,18 +235,6 @@ const SummaryItems = withSuspense(
             messageTextStyle: {...sharedStyle.regularText},
           },
           (index) => {
-            // [0, 1].includes(index) &&
-            //   child?.id &&
-            //   milestoneAge &&
-            //   setConcern({
-            //     concernId: id,
-            //     answer: !index,
-            //     childId: child?.id,
-            //     note: note,
-            //     milestoneId: milestoneAge,
-            //   }).then(() => {
-            //     return refetchConcerns();
-            //   });
             if (index === 0 && child?.id && milestoneAge) {
               setConcern({
                 concernId: id,
