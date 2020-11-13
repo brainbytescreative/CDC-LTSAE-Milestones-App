@@ -601,7 +601,7 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
         ...tOpt({t, gender: childData?.gender || child?.gender}),
       });
 
-      console.log(body);
+      // console.log(body);
 
       return MailComposer.composeAsync({
         isHtml: true,
