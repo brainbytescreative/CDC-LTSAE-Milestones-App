@@ -10,7 +10,8 @@
     "pods": "npx pod-install",
     "lint": "tsc && eslint . --ext .ts,.tsx",
     "translateen": "curl 'https://localise.biz/api/export/locale/en.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg' --output ./src/resources/locales/en.json && curl 'https://localise.biz/api/export/locale/en.json?index=id&order=id&key=jShrt63tWG-vKZnFfrYDje0B_uGhs-5G' --output ./src/resources/milestones/en-texts.json",
-    "translatees": "curl 'https://localise.biz/api/export/locale/es.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg' --output ./src/resources/locales/es.json && curl 'https://localise.biz/api/export/locale/es.json?index=id&order=id&key=jShrt63tWG-vKZnFfrYDje0B_uGhs-5G&fallback=en' --output ./src/resources/milestones/es-texts.json"
+    "translatees": "curl 'https://localise.biz/api/export/locale/es.json?index=id&format=i18next3&fallback=en&order=id&key=fJZGm8wQxOD8GUd0vZgsCTmJT4uxwGyg' --output ./src/resources/locales/es.json && curl 'https://localise.biz/api/export/locale/es.json?index=id&order=id&key=jShrt63tWG-vKZnFfrYDje0B_uGhs-5G&fallback=en' --output ./src/resources/milestones/es-texts.json",
+    "translate": "yarn translatees && yarn translateen"
   },
   "dependencies": {
     "@adobe/react-native-acpanalytics": "^1.1.6",
