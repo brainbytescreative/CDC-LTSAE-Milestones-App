@@ -12,6 +12,7 @@ import AEYellowBox from '../../components/AEYellowBox';
 import ChildPhoto from '../../components/ChildPhoto';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
+import PrematureTip from '../../components/PrematureTip';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
@@ -148,9 +149,12 @@ const YellowBoxSuspended: React.FC = withSuspense(
     const ageInWeeks = child?.birthday && differenceInWeeks(new Date(), child?.birthday);
     const ageInDays = child?.birthday && differenceInDays(new Date(), child?.birthday);
     const ageLessTwoMonth = Number(ageInWeeks) < 6;
+    const ageInYears = Number(child?.realBirthDay && differenceInYears(new Date(), child?.realBirthDay));
+
     const {data: {betweenCheckList = false} = {}} = useGetMilestone();
     let showtip = betweenCheckList || ageLessTwoMonth;
     showtip = Number(ageInDays) >= 41 && Number(ageInDays) <= 56 ? false : showtip;
+    showtip = Number(child?.weeksPremature) >= 4 && ageInYears < 2 ? false : showtip;
 
     return showtip ? (
       <>
@@ -163,19 +167,6 @@ const YellowBoxSuspended: React.FC = withSuspense(
   suspenseEnabled,
   <View />,
 );
-
-const PrematureTip: React.FC = () => {
-  const {t} = useTranslation('dashboard');
-  const {data: child} = useGetCurrentChild();
-  const ageInYears = Number(child?.realBirthDay && differenceInYears(new Date(), child?.realBirthDay));
-  const prematureWeeks = t('common:week', {count: Number(child?.weeksPremature)});
-
-  return Number(child?.weeksPremature) >= 4 && ageInYears < 2 ? (
-    <AEYellowBox containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}]}>
-      {t('prematureTip', {weeks: prematureWeeks})}
-    </AEYellowBox>
-  ) : null;
-};
 
 const Buttons = () => {
   const {t} = useTranslation('dashboard');

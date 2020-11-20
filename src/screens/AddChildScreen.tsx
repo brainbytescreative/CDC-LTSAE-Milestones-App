@@ -291,7 +291,7 @@ const PrematureRadioField: React.FC<CommonFieldProps> = ({t, name}) => {
               />
               <AERadioButton
                 onChange={() => form.setFieldValue(field.name, false)}
-                value={!field.value}
+                value={!field.value && field.value !== undefined}
                 title={t('dialog:no')}
                 titleStyle={{marginRight: 0}}
               />
@@ -376,7 +376,7 @@ const AddChildScreen: React.FC = () => {
     gender: undefined,
     birthday: undefined,
     photo: undefined,
-    isPremature: false,
+    isPremature: undefined,
     ...route.params?.child,
   };
 
@@ -517,7 +517,7 @@ const AddChildScreen: React.FC = () => {
               <PrematureRadioField t={t} name={'firstChild.isPremature'} />
             </View>
             <View style={{backgroundColor: colors.white, paddingHorizontal: 32, paddingBottom: 32}}>
-              {formikProps.values.firstChild.isPremature && (
+              {Boolean(formikProps.values.firstChild.isPremature) && (
                 <PrematureWeeksField t={t} name={'firstChild.weeksPremature'} />
               )}
               <GenderField t={t} name={'firstChild.gender'} />

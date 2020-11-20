@@ -137,7 +137,7 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
             labelStyle={[sharedStyle.midTextBold, {flexGrow: 1, paddingHorizontal: 5}]}
             defaultIndex={0}
             // placeholder={t('all')}
-            items={tipFilters.map((value) => ({label: t(value), value}))}
+            items={tipFilters.map((value) => ({label: t(`label-${value}`), value}))}
             onChangeItem={(item) => {
               const value: TipType = item.value as TipType;
               switch (value) {

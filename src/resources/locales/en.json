@@ -135,7 +135,7 @@
         "milestoneCheckList": "Milestone Checklist",
         "milestoneSummary": "My Child's Summary",
         "milestonesAnswered": "{{progress}} Milestones Answered",
-        "prematureTip": "You said your child was born {{weeks}} premature, so the checklist below is the best one for your child’s corrected age.",
+        "prematureTip": "You said your child was born {{weeks}} premature, so the checklist below is the best one for your child’s <0>corrected age</0>.",
         "tipsAndActivities": "Tips & Activities",
         "title": "Home",
         "whenToActEarly": "When to Act Early",
@@ -191,7 +191,7 @@
     "milestoneChecklist": {
         "actEarlyMessage1": "If you select any of the items below, it’s important to act early by talking with your child’s doctor. Don’t wait. Acting early can make a real difference! For more information visit <0>www.cdc.gov/Concerned</0>",
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/actearly/concerned.html?s_cid=ncbddd_act_mt_app_ovrv",
-        "actEarlyWarning": "It may be time to act early, \ntalk with the doctor.",
+        "actEarlyWarning": "Because you selected ‘not yet’ for a milestone checklist item and/or selected an item on this page, it may be time to talk with the doctor about your child’s development",
         "addANote": "Add a note",
         "addANoteLong": "Notes will save automatically, \nenter them here.",
         "answer_no": "no",
@@ -352,8 +352,10 @@
         "other": "Other"
     },
     "tipsAndActivities": {
-        "all": "All",
         "drawerLabel": "Tips & Activities",
+        "label-all": "All",
+        "label-like": "Favorite",
+        "label-remindMe": "$t(tipsAndActivities:remindMe)",
         "like": "Like",
         "remindMe": "Remind Me",
         "subtitle": "You can help your {{babyOrChild}} learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old {{babyOrChild}} today.",

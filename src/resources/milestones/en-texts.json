@@ -403,7 +403,7 @@
     "milestone_24_skill_158": "Walks up and down stairs holding on.",
     "milestone_24_skill_159": "Throws ball overhand.",
     "milestone_24_skill_160": "Makes or copies straight lines and circles.",
-    "milestone_2_concern_1": "Is missing milestones for {{hisHersTag}} age.",
+    "milestone_2_concern_1": "Is missing milestones (automatically checked if you’ve selected ‘not yet’ for any milestone)",
     "milestone_2_concern_2": "Doesn't respond to loud sounds.",
     "milestone_2_concern_3": "Doesn't watch things as they move.",
     "milestone_2_concern_4": "Doesn't smile at people.",

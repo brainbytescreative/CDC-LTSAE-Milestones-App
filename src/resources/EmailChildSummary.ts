@@ -217,7 +217,7 @@ const es = `
     </p>
     {% if isPremature %}
     <p>
-      <strong>Usted completó esta lista de verificación para la edad corregida de su hijo.
+      <strong>USTED COMPLETÓ ESTA LISTA DE VERIFICACIÓN PARA LA EDAD CORREGIDA DE SU HIJO.
       </strong>
     </p>
     {% endif %}

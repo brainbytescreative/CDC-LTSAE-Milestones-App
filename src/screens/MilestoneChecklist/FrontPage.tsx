@@ -6,6 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import AEButtonMultiline from '../../components/AEButtonMultiline';
 import AEScrollView from '../../components/AEScrollView';
+import PrematureTip from '../../components/PrematureTip';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
 import {formattedAgeSingular} from '../../utils/helpers';
@@ -26,20 +27,23 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAge}) => {
           <Text style={[styles.header]}>{milestoneAgeFormatted}</Text>
           <Text style={[styles.header]}>{t('milestoneChecklist')}</Text>
         </View>
-        <View
-          style={[
-            {
-              backgroundColor: colors.yellow,
-              marginHorizontal: 32,
-              borderRadius: 10,
-              padding: 16,
-              marginBottom: 32,
-            },
-            sharedStyle.shadow,
-          ]}>
-          <Text style={[styles.text]}>{t('message1')}</Text>
-          <Text style={[styles.text, {marginTop: 15}]}>{t('message2')}</Text>
-        </View>
+
+        <PrematureTip style={{marginTop: 0}}>
+          <View
+            style={[
+              {
+                backgroundColor: colors.yellow,
+                marginHorizontal: 32,
+                borderRadius: 10,
+                padding: 16,
+                marginBottom: 32,
+              },
+              sharedStyle.shadow,
+            ]}>
+            <Text style={[styles.text]}>{t('message1')}</Text>
+            <Text style={[styles.text, {marginTop: 15}]}>{t('message2')}</Text>
+          </View>
+        </PrematureTip>
       </View>
 
       <View>

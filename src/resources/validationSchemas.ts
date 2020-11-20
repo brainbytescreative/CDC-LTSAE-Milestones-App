@@ -6,7 +6,7 @@ export const childSchema = yup
     gender: yup.number().required().min(0).max(1),
     birthday: yup.date<Date>().defined().required(),
     photo: yup.string().nullable(),
-    isPremature: yup.boolean().default(false).defined(),
+    isPremature: yup.boolean().required().defined(),
     weeksPremature: yup.number().nullable(),
   })
   .defined();

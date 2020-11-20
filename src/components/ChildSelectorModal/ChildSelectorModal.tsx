@@ -210,7 +210,7 @@ const ChildSelectorModal: React.FC<{visible?: boolean}> = ({visible}) => {
   return (
     <>
       <NotificationsBadge />
-      <Modal animated animationType={'fade'} transparent visible={childSelectorVisible}>
+      <Modal animated={false} transparent visible={childSelectorVisible}>
         <TouchableWithoutFeedback
           accessible={false}
           onPressIn={() => {

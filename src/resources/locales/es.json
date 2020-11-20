@@ -135,7 +135,7 @@
         "milestoneCheckList": "Lista de indicadores",
         "milestoneSummary": "El resumen de mi hijo",
         "milestonesAnswered": "{{progress}} Indicadores con respuesta",
-        "prematureTip": "Usted dijo que su hijo nació {{weeks}} prematuro, o sea que la lista de verificación a continuación es la mejor para su edad corregida.",
+        "prematureTip": "Usted dijo que su hijo nació {{weeks}} prematuro, o sea que la lista de verificación a continuación es la mejor para <0>su edad corregida</0>.",
         "tipsAndActivities": "Consejos y actividades",
         "title": "Inicio",
         "whenToActEarly": "Cuándo \nreaccionar pronto",
@@ -191,7 +191,7 @@
     "milestoneChecklist": {
         "actEarlyMessage1": "Si selecciona cualquiera de las opciones siguientes, es importante que reaccione pronto al hablar con el médico de su hijo y pedirle pruebas del desarrollo. No espere. ¡Reaccionar pronto puede tener un gran impacto! Para obtener más información, visite <0>www.cdc.gov/Concerned</0>",
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_sp_ovrv",
-        "actEarlyWarning": "Puede que sea el momento de reaccionar pronto, hable con el médico.",
+        "actEarlyWarning": "Debido a que seleccionó 'no todavía' en algún indicador del desarrollo o seleccionó algo en esta página, quizás sea el momento de hablar con el médico sobre el desarrollo de su hijo.",
         "addANote": "Agregar una\nnota",
         "addANoteLong": "Las notas se guardarán automáticamente; ingresarlas aquí",
         "answer_no": "no",
@@ -269,7 +269,7 @@
         "notSure": "Indicadores del desarrollo para {{milestoneAge}} de vida que marcó \"No estoy seguro\"",
         "notYet": "Indicadores del desarrollo para {{milestoneAge}} de vida que marcó \"Todavía no\"",
         "notYetText": "Pídale al médico una evaluación del desarrollo y pregúntele sobre los servicios que puedan ayudarlo. Recuerde que reaccionar rápido si tiene inquietudes o si {{name}} no alcanza los indicadores del desarrollo puede marcar una gran diferencia para {{name}}. No espere. Obtenga más información sobre cómo ayudar a {{name}} en {{breakStr}}<0>cdc.gov/Preocupado</0>",
-        "prematureTip": "You completed this checklist for your child’s corrected age.",
+        "prematureTip": "Usted completó esta lista de verificación para la edad corregida de su hijo.",
         "thankYouText": "Gracias por usar la aplicación Sigamos el Desarollo de los CDC para registrar los indicadores del desarrollo de {{childName}}",
         "thankYouText2": "Gracias apor usar la aplicación Sigamos el Desarrollo de los CDC.\n\nObtenga más información sobre los indicadores del desarrollo y sobre cómo reaccionar pronto si tiene inquietudes en {{breakStr}}<0>cdc.gov/Pronto.</0>",
         "timeToCelebrate": "Tómese un tiempo para CELEBRAR que {{name}} alcanzó estos indicadores del desarrollo importantes:",
@@ -352,8 +352,10 @@
         "other": "Otro"
     },
     "tipsAndActivities": {
-        "all": "Todos",
         "drawerLabel": "$t(tipsAndActivities:title)",
+        "label-all": "Todos",
+        "label-like": "Favorito",
+        "label-remindMe": "$t(tipsAndActivities:remindMe)",
         "like": "Me gusta",
         "remindMe": "Recordarme",
         "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} de {{childAge}} hoy.",
