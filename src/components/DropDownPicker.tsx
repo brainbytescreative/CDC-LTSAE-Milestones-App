@@ -196,10 +196,13 @@ const DropDownPicker: React.FC<Props> = ({
           <View style={[styles.dropDown, {flexDirection: 'row', flex: 1}]}>
             <View style={[styles.dropDownDisplay]}>
               <Text
+                key={`label-${!!state?.choice?.value}`}
                 style={[
                   labelStyle,
                   {opacity},
-                  Boolean(placeholder) && !state?.choice?.value && {color: placeholderColor},
+                  Boolean(placeholder) && !state?.choice?.value && !!placeholderColor
+                    ? {color: placeholderColor}
+                    : null,
                 ]}>
                 {label}
               </Text>

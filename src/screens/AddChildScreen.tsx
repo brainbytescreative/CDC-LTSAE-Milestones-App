@@ -435,7 +435,7 @@ const AddChildScreen: React.FC = () => {
 
   return (
     <KeyboardAwareScrollView
-      // key={__DEV__ ? Math.random() : undefined}
+      key={__DEV__ ? Math.random() : undefined}
       innerRef={(ref) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
