@@ -472,7 +472,8 @@ export function useSetTipsAndActivitiesNotification() {
       let trigger = tipsAndActivitiesTrigger();
 
       await Promise.all(
-        Array.from(new Array(20)).map(async (value, index) => {
+        // fixme become redundant
+        Array.from(new Array(1)).map(async (value, index) => {
           trigger = index === 0 ? trigger : tipsAndActivitiesTrigger(trigger);
           const isoTriger = formatISO(trigger);
           await sqLiteClient.dB

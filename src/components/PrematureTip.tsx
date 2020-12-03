@@ -4,6 +4,7 @@ import {Trans, useTranslation} from 'react-i18next';
 import {Linking, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
+import {useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {sharedStyle} from '../resources/constants';
 import AEYellowBox from './AEYellowBox';
@@ -13,8 +14,9 @@ const PrematureTip: React.FC<{style?: StyleProp<ViewStyle>; children?: React.Rea
   const {data: child} = useGetCurrentChild();
   const ageInYears = Number(child?.realBirthDay && differenceInYears(new Date(), child?.realBirthDay));
   const prematureWeeks = t('common:week', {count: Number(child?.weeksPremature)});
+  const {data: {childAge, milestoneAge} = {}} = useGetMilestone();
 
-  return Number(child?.weeksPremature) >= 4 && ageInYears < 2 ? (
+  return Number(child?.weeksPremature) >= 4 && ageInYears < 2 && childAge === milestoneAge ? (
     <AEYellowBox containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}, style]}>
       <Trans t={t} i18nKey={'prematureTip'} tOptions={{weeks: prematureWeeks}}>
         <Text
