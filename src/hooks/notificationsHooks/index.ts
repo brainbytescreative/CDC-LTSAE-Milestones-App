@@ -132,7 +132,7 @@ function completeMilestoneReminderTrigger() {
  */
 function tipsAndActivitiesTrigger(startDate?: Date) {
   const date = add(startDate ?? new Date(), __DEV__ ? {seconds: 10} : {weeks: 3});
-  return __DEV__ ? date : at8PM(date);
+  return __DEV__ ? date : at8AM(date);
 }
 
 /**
@@ -476,6 +476,7 @@ export function useSetTipsAndActivitiesNotification() {
         Array.from(new Array(1)).map(async (value, index) => {
           trigger = index === 0 ? trigger : tipsAndActivitiesTrigger(trigger);
           const isoTriger = formatISO(trigger);
+          console.log(isoTriger);
           await sqLiteClient.dB
             ?.executeSql(
               `
