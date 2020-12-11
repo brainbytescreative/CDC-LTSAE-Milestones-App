@@ -44,6 +44,7 @@ import {
   trackCompleteAddChild,
   trackEventByType,
   trackInteractionByType,
+  trackSelectWeeksPremature,
 } from '../utils/analytics';
 
 // const options: ImagePickerOptions = {
@@ -468,6 +469,13 @@ const AddChildScreen: React.FC = () => {
               trackCompleteAddChild();
               trackChildAge(values.firstChild.realBirthDay ?? values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));
+
+              if (childInput.isPremature && childInput.weeksPremature) {
+                trackEventByType('Select', 'Yes Premature');
+                trackSelectWeeksPremature(childInput.weeksPremature);
+              } else {
+                trackEventByType('Select', 'No Premature');
+              }
             });
           }
 
@@ -483,6 +491,13 @@ const AddChildScreen: React.FC = () => {
                 trackCompleteAddChild();
                 trackChildAge(anotherChild.realBirthDay ?? anotherChild.birthday);
                 trackChildGender(Number(anotherChild.gender));
+
+                if (anotherChild.isPremature && anotherChild.weeksPremature) {
+                  trackEventByType('Select', 'Yes Premature');
+                  trackSelectWeeksPremature(anotherChild.weeksPremature);
+                } else {
+                  trackEventByType('Select', 'No Premature');
+                }
               })
               .catch(console.error);
           }

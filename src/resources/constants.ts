@@ -172,7 +172,9 @@ export type SelectEventType =
   | 'Recommendation Notifications'
   | 'Tips Notifications'
   | 'Children and Add Child'
-  | 'Edit Answer';
+  | 'Edit Answer'
+  | 'Yes Premature'
+  | 'No Premature';
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
 export type SkillType = typeof skillTypes[number];

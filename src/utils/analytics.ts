@@ -425,7 +425,7 @@ export function trackNotificationSelect(name: string) {
 
 export function trackEventByType<T extends keyof EventTypes>(
   type: T,
-  name: EventTypes[T],
+  name: EventTypes[T] | string,
   options?: OptionsType & {eventSuffix?: string},
 ) {
   const suffix = options?.eventSuffix ? `: ${options?.eventSuffix}` : '';
@@ -465,6 +465,10 @@ export function trackChecklistUnanswered(options?: OptionsType) {
   if (data?.unansweredData?.length) {
     trackAction('Answer: Unanswered', options);
   }
+}
+
+export function trackSelectWeeksPremature(weeks: number, options?: OptionsType) {
+  trackEventByType('Select', `${weeks} wk Premature`, options);
 }
 
 export function trackSelectSummary(answer: Answer) {
