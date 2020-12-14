@@ -62,7 +62,7 @@ const AppStateManager: React.FC = () => {
 
   useLayoutEffect(() => {
     if (appState === undefined) {
-      setTimeout(showChildrenList);
+      setTimeout(showChildrenList, 500);
     }
   }, [appState]);
 
