@@ -2,7 +2,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Notifications from 'expo-notifications';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {I18nextProvider} from 'react-i18next';
 import {queryCache, useQuery} from 'react-query';
 
@@ -17,6 +17,7 @@ import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUs
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
 import {trackNotificationById} from '../../utils/analytics';
+import {slowdown} from '../../utils/helpers';
 import AppStateManager from '../AppStateManager';
 import ErrorBoundary from '../ErrorBoundary';
 import withSuspense from '../withSuspense';
@@ -88,7 +89,8 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
   }, []);
 
   React.useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      await slowdown(Promise.resolve(), 1000);
       navigateNotification(response.notification.request.identifier, false);
     });
     return () => subscription.remove();

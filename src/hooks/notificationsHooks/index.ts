@@ -131,8 +131,8 @@ function completeMilestoneReminderTrigger() {
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
 function tipsAndActivitiesTrigger(startDate?: Date) {
-  const date = add(startDate ?? new Date(), __DEV__ ? {seconds: 10} : {weeks: 3});
-  return __DEV__ ? date : at8AM(date);
+  const date = add(startDate ?? new Date(), false ? {seconds: 10} : {weeks: 3});
+  return false ? date : at8AM(date);
 }
 
 /**
