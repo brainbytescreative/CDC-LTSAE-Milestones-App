@@ -298,7 +298,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
             saveNote(e.nativeEvent.text);
           }}
           multiline
-          style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15, minHeight: 43, margin: 1}}
+          style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 14, minHeight: 43, margin: 1}}
           placeholder={t('milestoneChecklist:addANoteLong')}
         />
         <NoteIcon style={{marginLeft: 10}} />

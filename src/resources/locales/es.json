@@ -134,7 +134,7 @@
         "milestoneSummary": "El resumen de mi hijo",
         "milestonesAnswered": "{{progress}} Indicadores con respuesta",
         "prematureTip": "Usted dijo que su hijo nació {{weeks}} prematuro, o sea que esta lista es la mejor para <0>su edad corregida</0>.",
-        "prematureTip6Weeks": "You said your child was born prematurely, so based on your child’s corrected age it’s not time for a checklist yet. Take a look at the Milestone Overview for a peek ahead.",
+        "prematureTip6Weeks": "Usted dijo que su hijo nació prematuro, o sea que basado en su edad corregida no es tiempo para una lista de verificación. Haga clic en el botón Menú para ver la Vista rápida de los indicadores que le muestra un adelanto de lo que viene.",
         "tipsAndActivities": "Consejos y actividades",
         "title": "Inicio",
         "whenToActEarly": "Cuándo \nreaccionar pronto",
