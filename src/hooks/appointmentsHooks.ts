@@ -104,7 +104,6 @@ export function useGetAppointmentById(id?: Appointment['id']) {
         return;
       }
 
-      // language=SQLite
       const appointment = await getAppointmentById(variables.id);
 
       if (!appointment) {

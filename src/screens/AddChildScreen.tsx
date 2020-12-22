@@ -11,7 +11,7 @@ import {TFunction} from 'i18next';
 import _ from 'lodash';
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, Image, Linking, Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -270,7 +270,7 @@ const PrematureRadioField: React.FC<CommonFieldProps> = ({t, name}) => {
     <FastField name={name}>
       {({field, form, meta}: FastFieldProps<0 | 1 | undefined>) => (
         <View style={{marginTop: 20, marginBottom: 16, marginLeft: 8}}>
-          <Text>{t('prematureQuestion')}</Text>
+          <Text>{`${t('prematureQuestion')}*`} </Text>
           <View
             style={[
               {
@@ -370,7 +370,7 @@ const AddChildScreen: React.FC = () => {
   const title = t(`${prefix}title`);
 
   const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
-  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
+  // const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const firstChild: Partial<ChildResult> = {
     name: '',
@@ -437,12 +437,12 @@ const AddChildScreen: React.FC = () => {
   return (
     <KeyboardAwareScrollView
       key={__DEV__ ? Math.random() : undefined}
-      innerRef={(ref) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        scrollViewRef.current = ref;
-      }}
-      enableOnAndroid={Platform.OS === 'android'}
+      // innerRef={(ref) => {
+      //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //   // @ts-ignore
+      //   scrollViewRef.current = ref;
+      // }}
+      // enableOnAndroid={Platform.OS === 'android'}
       bounces={false}
       style={{flex: 1}}>
       <Formik
@@ -608,22 +608,6 @@ const AddChildScreen: React.FC = () => {
                         <AEButtonRounded disabled={isLoading} style={{marginBottom: 24}} onPress={onDone}>
                           {t('common:done')}
                         </AEButtonRounded>
-                      </View>
-                      <View
-                        style={[
-                          {backgroundColor: colors.yellow, marginHorizontal: 32, padding: 16, borderRadius: 10},
-                          sharedStyle.shadow,
-                        ]}>
-                        <Text style={{textAlign: 'center'}}>{t('note')}</Text>
-                        <Text
-                          accessibilityRole={'link'}
-                          onPress={() => {
-                            trackEventByType('Link', 'Corrected Age');
-                            return Linking.openURL(t('correctedAgeLink'));
-                          }}
-                          style={{textAlign: 'center', marginTop: 15, textDecorationLine: 'underline'}}>
-                          {t('noteClick')}
-                        </Text>
                       </View>
                     </View>
                   </View>

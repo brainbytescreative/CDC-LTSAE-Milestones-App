@@ -71,9 +71,9 @@ const AppStateManager: React.FC = () => {
       scheduleNotifications();
       queryCache.invalidateQueries('unreadNotifications', {refetchActive: true, refetchInactive: true});
       trackAppLaunch();
-      showChildrenList();
+      // showChildrenList();
     } else {
-      hideChildrenList();
+      // hideChildrenList();
     }
     setAppState(nextAppState);
   };

@@ -30,7 +30,7 @@
         "girl": "Niña",
         "note": "Si su hijo nació prematuramente, ingrese la fecha en que nació, pero use la lista de verificación con base en la edad corregida. Si la edad corregida se encuentra entre dos listas de verificación, use la de la edad menor.",
         "noteClick": "Haga clic aquí para obtener información sobre cómo calcular la edad corregida.",
-        "numberOfWeeksPremature": "Number of Weeks Premature",
+        "numberOfWeeksPremature": "Número de semanas prematuro",
         "prematureQuestion": "¿Nació prematuramente?",
         "selectOne": "Seleccionar una opción *",
         "title": "Agregar un niño"
@@ -133,7 +133,8 @@
         "milestoneCheckList": "Lista de indicadores",
         "milestoneSummary": "El resumen de mi hijo",
         "milestonesAnswered": "{{progress}} Indicadores con respuesta",
-        "prematureTip": "Usted dijo que su hijo nació {{weeks}} prematuro, o sea que la lista de verificación a continuación es la mejor para <0>su edad corregida</0>.",
+        "prematureTip": "Usted dijo que su hijo nació {{weeks}} prematuro, o sea que esta lista es la mejor para <0>su edad corregida</0>.",
+        "prematureTip6Weeks": "You said your child was born prematurely, so based on your child’s corrected age it’s not time for a checklist yet. Take a look at the Milestone Overview for a peek ahead.",
         "tipsAndActivities": "Consejos y actividades",
         "title": "Inicio",
         "whenToActEarly": "Cuándo \nreaccionar pronto",
@@ -191,7 +192,7 @@
         "actEarlyMessageLink": "https://www.cdc.gov/ncbddd/spanish/actearly/concerned.html?s_cid=ncbddd_act_mt_app_sp_ovrv",
         "actEarlyWarning": "Debido a que seleccionó 'no todavía' en algún indicador del desarrollo o seleccionó algo en esta página, quizás sea el momento de hablar con el médico sobre el desarrollo de su hijo.",
         "addANote": "Agregar una\nnota",
-        "addANoteLong": "Las notas se guardarán automáticamente; ingresarlas aquí",
+        "addANoteLong": "Las notas se guardarán automáticamente;\ningresarlas aquí",
         "answer_no": "no",
         "answer_not_yet": "Todavía no",
         "answer_unsure": "No estoy seguro",
@@ -222,7 +223,7 @@
         "appointmentNotificationTitle": "Notificaciones de citas",
         "milestoneCompleteReminder": "Algunos de los indicadores del desarrollo de los {{milestoneAgeFormatted}} de {{name}} están marcados como “Todavía no” o “No estoy seguro”. ¿Desea volver a revisar esos indicadores?",
         "milestoneNotificationTitle": "Notificaciones de indicadores del desarrollo",
-        "nextMilestoneBirthdayNotificationBody": "{{name}} tiene {{childAgeFormatted}} de edad🎂. Complete su lista de verificación de los indicadores del desarrollo de los {{milestoneAgeFormatted}}, ¡hoy mismo!",
+        "nextMilestoneBirthdayNotificationBody": "{{name}} tiene {{childAgeFormatted}} de edad🎂. Complete su lista de verificación de los indicadores del desarrollo, ¡hoy mismo!",
         "nextMilestoneNotificationBody": "$t(notifications:nextMilestoneBirthdayNotificationBody)",
         "recommendation1DayPassedBody": "Reaccionar pronto ante los indicadores del desarrollo no alcanzados u otras preocupaciones que tenga puede marcar una gran diferencia. Aunque el desarrollo de cada niño es diferente, algunas diferencias pueden ser causa de preocupación. Haga una cita con el médico de {{name}} para mostrarle su resumen y solicitar pruebas del desarrollo. No espere. 🗓\n",
         "recommendation1weekPassedBody": "Para algunos de los indicadores del desarrollo de {{name}} usted marcó “Todavía no” o indicó una posible preocupación. Reaccione pronto al hablar con su médico y solicitar pruebas del desarrollo. ⚕️️",
@@ -230,10 +231,10 @@
         "recommendationNotificationTitle": "Notificaciones de recomendaciones",
         "tipsAndActivitiesBody": "Solicitó que le recordáramos sobre los consejos y actividades que ayudan al desarrollo de su hijo. ¡Pruebe uno hoy!💡",
         "tipsAndActivitiesTitle": "Consejos y actividades",
-        "wellCheckUp5DaysAfterBirthday": "A {{name}} le tocará pronto el chequeo de rutina de los {{milestoneAgeFormattedDashed}} de edad. Complete hoy mismo su lista de verificación para compartirla con el médico. 🩺",
-        "wellCheckUpNoChecklist": "A {{name}} le tocará pronto el chequeo de rutina de los {{milestoneAgeFormattedDashed}} de edad. Programe esta cita, y anote cualquier preocupación o pregunta que tenga sobre su desarrollo para compartirlas con el médico 📝.",
-        "wellCheckUpSR1": "A {{name}} le tocará pronto el chequeo de rutina de los {{milestoneAgeFormattedDashed}} de edad. Lleve su lista de verificación a la cita y pregunte por las pruebas del desarrollo; se recomiendan para TODOS los niños a esta edad. ⚕️️",
-        "wellCheckUpSR2": "A {{name}} le tocará pronto el chequeo de rutina de los {{milestoneAgeFormattedDashed}} de edad. Lleve su lista de verificación a la cita y pregunte por las pruebas del desarrollo y de autismo; se recomiendan para TODOS los niños a esta edad. ⚕️"
+        "wellCheckUp5DaysAfterBirthday": "A {{name}} le tocará pronto el chequeo de rutina de edad. Complete hoy mismo su lista de verificación para compartirla con el médico. 🩺",
+        "wellCheckUpNoChecklist": "A {{name}} le tocará pronto el chequeo de rutina de edad. Programe esta cita, y anote cualquier preocupación o pregunta que tenga sobre su desarrollo para compartirlas con el médico 📝.",
+        "wellCheckUpSR1": "A {{name}} le tocará pronto el chequeo de rutina de edad. Lleve su lista de verificación a la cita y pregunte por las pruebas del desarrollo; se recomiendan para TODOS los niños a esta edad. ⚕️️",
+        "wellCheckUpSR2": "A {{name}} le tocará pronto el chequeo de rutina de edad. Lleve su lista de verificación a la cita y pregunte por las pruebas del desarrollo y de autismo; se recomiendan para TODOS los niños a esta edad. ⚕️"
     },
     "onboardingHowToUse": {
         "howToUseApp": "Cómo usar la aplicación"
@@ -354,7 +355,7 @@
         "label-all": "Todos",
         "label-like": "Favorito",
         "label-remindMe": "$t(tipsAndActivities:remindMe)",
-        "like": "Me gusta",
+        "like": "Favorito",
         "remindMe": "Recordarme",
         "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} de {{childAge}} hoy.",
         "title": "Consejos y actividades"

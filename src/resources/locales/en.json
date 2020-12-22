@@ -118,7 +118,7 @@
         "week": "{{count}} week",
         "week_plural": "{{count}} weeks",
         "year": "{{count}} year",
-        "yearDash": "{{count}}-Year-old",
+        "yearDash": "{{count}}-year-old",
         "yearShort": "{{count}} yr",
         "yearShort_plural": "{{count}} yrs",
         "yearSingular": "{{count}} year",
@@ -133,7 +133,8 @@
         "milestoneCheckList": "Milestone Checklist",
         "milestoneSummary": "My Child's Summary",
         "milestonesAnswered": "{{progress}} Milestones Answered",
-        "prematureTip": "You said your child was born {{weeks}} premature, so the checklist below is the best one for your child’s <0>corrected age</0>.",
+        "prematureTip": "You said your child was born {{weeks}} premature, so this checklist is the best one for your child's <0>corrected age</0>.",
+        "prematureTip6Weeks": "You said your child was born prematurely, so based on your child’s corrected age it’s not time for a checklist yet. Take a look at the Milestone Overview for a peek ahead.",
         "tipsAndActivities": "Tips & Activities",
         "title": "Home",
         "whenToActEarly": "When to Act Early",
@@ -222,7 +223,7 @@
         "appointmentNotificationTitle": "Appointments Notifications",
         "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked ‘Not Yet’ or ‘Not Sure.’ Would you like to recheck those milestones?",
         "milestoneNotificationTitle": "Milestone Notification",
-        "nextMilestoneBirthdayNotificationBody": "{{name}} is {{childAgeFormatted}} old 🎂! Complete {{hisHersTag}} {{milestoneAgeFormatted}} milestone checklist today!",
+        "nextMilestoneBirthdayNotificationBody": "{{name}} is {{childAgeFormatted}} old 🎂! Complete {{hisHersTag}} milestone checklist today!",
         "nextMilestoneNotificationBody": "$t(notifications:nextMilestoneBirthdayNotificationBody)",
         "recommendation1DayPassedBody": "Acting early on missed milestones or other concerns can make a big difference. While each child develops differently, some differences can be a cause for concern. Set a doctor’s appointment to share {{name}}’s summary and ask for developmental screening. Don’t wait. 🗓",
         "recommendation1weekPassedBody": "You marked some of {{name}}’s milestones as Not Yet or marked a possible concern. Act Early by talking to {{hisHersTag}} doctor and ask for developmental screening.⚕️️",
@@ -230,10 +231,10 @@
         "recommendationNotificationTitle": "Recommendation notification",
         "tipsAndActivitiesBody": "You asked to be reminded about tips and activities to help your child's development. Try one today! 💡",
         "tipsAndActivitiesTitle": "Tips & Activities",
-        "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}} well-child checkup soon. Complete {{hisHersTag}} checklist today to share with the doctor. 🩺",
-        "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} {{milestoneAgeFormattedDashed}} well-child checkup soon. Schedule this appointment and write down any developmental concerns or questions to share with the doctor 📝.",
-        "wellCheckUpSR1": "{{name}} is due for a {{milestoneAgeFormattedDashed}} well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for ALL children at this age.⚕️️",
-        "wellCheckUpSR2": "{{name}} is due for a {{milestoneAgeFormattedDashed}} well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
+        "wellCheckUp5DaysAfterBirthday": "{{name}} is due for {{hisHersTag}} well-child checkup soon. Complete {{hisHersTag}} checklist today to share with the doctor. 🩺",
+        "wellCheckUpNoChecklist": "{{name}} is due for {{hisHersTag}} well-child checkup soon. Schedule this appointment and write down any developmental concerns or questions to share with the doctor 📝.",
+        "wellCheckUpSR1": "{{name}} is due for a well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental screening—it’s recommended for ALL children at this age.⚕️️",
+        "wellCheckUpSR2": "{{name}} is due for a well-child checkup soon. Share {{hisHersTag}} checklist and ask about developmental and autism screening - recommended for ALL children this age. ⚕️"
     },
     "onboardingHowToUse": {
         "howToUseApp": "How to Use the App"

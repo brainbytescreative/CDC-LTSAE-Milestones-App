@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {differenceInDays, differenceInWeeks, differenceInYears, format} from 'date-fns';
+import {add, differenceInDays, differenceInWeeks, differenceInYears, format, sub} from 'date-fns';
 import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -234,7 +234,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
     <View>
       {childPhotoComponent}
       <ChildName />
-      <PrematureTip />
+      <PrematureTip sixWeeks />
       <MonthCarousel />
       <YellowBoxSuspended />
       {/*<AEYellowBox containerStyle={styles.yellowTipContainer}>*/}

@@ -151,7 +151,9 @@ const RevisitScreen: React.FC = () => {
             </Text>
           </View>
           {Boolean(data?.groupedByAnswer['1']?.length) && (
-            <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32}]}>{t('unsureTip')}</Text>
+            <Text style={[sharedStyle.regularText, sharedStyle.boldText, {marginTop: 32, marginHorizontal: 16}]}>
+              {t('unsureTip')}
+            </Text>
           )}
           {data?.groupedByAnswer['1']?.map((item, index) => (
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />

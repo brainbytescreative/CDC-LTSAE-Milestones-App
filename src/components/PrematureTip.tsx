@@ -1,4 +1,4 @@
-import {differenceInYears} from 'date-fns';
+import {differenceInWeeks, differenceInYears} from 'date-fns';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking, StyleProp, StyleSheet, ViewStyle} from 'react-native';
@@ -9,16 +9,21 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {sharedStyle} from '../resources/constants';
 import AEYellowBox from './AEYellowBox';
 
-const PrematureTip: React.FC<{style?: StyleProp<ViewStyle>; children?: React.ReactElement}> = ({style, children}) => {
+type Props = {style?: StyleProp<ViewStyle>; children?: React.ReactElement; sixWeeks?: boolean};
+
+const PrematureTip: React.FC<Props> = ({style, children, sixWeeks}) => {
   const {t} = useTranslation('dashboard');
   const {data: child} = useGetCurrentChild();
   const ageInYears = Number(child?.realBirthDay && differenceInYears(new Date(), child?.realBirthDay));
   const prematureWeeks = t('common:week', {count: Number(child?.weeksPremature)});
   const {data: {childAge, milestoneAge} = {}} = useGetMilestone();
+  const birthday = child?.birthday ?? new Date();
+  const calcAgeInWeeks = differenceInWeeks(new Date(), birthday);
+  const textKey = sixWeeks && calcAgeInWeeks < 6 ? 'prematureTip6Weeks' : 'prematureTip';
 
   return Number(child?.weeksPremature) >= 4 && ageInYears < 2 && childAge === milestoneAge ? (
     <AEYellowBox containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}, style]}>
-      <Trans t={t} i18nKey={'prematureTip'} tOptions={{weeks: prematureWeeks}}>
+      <Trans t={t} i18nKey={textKey} tOptions={{weeks: prematureWeeks}}>
         <Text
           numberOfLines={1}
           accessibilityRole={'link'}

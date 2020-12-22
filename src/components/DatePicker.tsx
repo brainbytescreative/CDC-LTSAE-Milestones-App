@@ -1,10 +1,12 @@
 import i18next from 'i18next';
+import placeholder from 'lodash/fp/placeholder';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleProp, ViewStyle} from 'react-native';
+import {Modal, StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
+import {Text} from 'react-native-paper';
 
-import {sharedStyle} from '../resources/constants';
+import {colors, sharedStyle} from '../resources/constants';
 import {formatDate} from '../utils/helpers';
 import AETextInput from './AETextInput';
 
@@ -35,21 +37,37 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
   };
 
   const handleConfirm = (dateVal: Date) => {
-    hideDatePicker();
     setDate(dateVal);
     onChange && onChange(dateVal);
+    hideDatePicker();
   };
 
   return (
     <>
-      <AETextInput
-        style={[style, error === true && sharedStyle.errorOutline]}
-        onPress={showDatePicker}
-        editable={false}
-        autoCorrect={false}
-        placeholder={label}
-        value={formatDate(date, mode)}
-      />
+      <TouchableOpacity onPress={showDatePicker}>
+        {/*<AETextInput*/}
+        {/*  style={[style, error === true && sharedStyle.errorOutline]}*/}
+        {/*  onPress={showDatePicker}*/}
+        {/*  editable={false}*/}
+        {/*  autoCorrect={false}*/}
+        {/*  placeholder={label}*/}
+        {/*  value={formatDate(date, mode)}*/}
+        {/*/>*/}
+        <View
+          style={[
+            {
+              backgroundColor: colors.white,
+              borderWidth: 1,
+              borderColor: colors.gray,
+              borderRadius: 5,
+              paddingHorizontal: 15,
+              paddingVertical: 15,
+            },
+            sharedStyle.shadow,
+          ]}>
+          <Text style={{color: value ? colors.black : colors.gray}}>{value ? formatDate(date, mode) : label}</Text>
+        </View>
+      </TouchableOpacity>
       <DateTimePickerModal
         locale={i18next.language === 'en' ? 'en_US' : 'es'}
         isVisible={modalVisible}
