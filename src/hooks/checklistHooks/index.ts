@@ -94,9 +94,9 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
 async function getAnswers(milestoneId: number, childId: number): Promise<MilestoneAnswer[]> {
   const result = await sqLiteClient.dB?.executeSql(
     `SELECT *
-       FROM milestones_answers
-       WHERE childId = ?1
-         AND milestoneId = ?2`,
+     FROM milestones_answers
+     WHERE childId = ?1
+       AND milestoneId = ?2`,
     [childId, milestoneId],
   );
 
@@ -386,15 +386,17 @@ export function useSetConcern() {
     async ({answer, childId, concernId, milestoneId, note}) => {
       const result = await sqLiteClient.dB?.executeSql(
         `
-                  INSERT OR
-                  REPLACE
-                  INTO concern_answers (concernId, answer, childId, milestoneId, note)
-                  VALUES (?1, coalesce(?2, coalesce((SELECT answer FROM concern_answers WHERE concernId=?1 AND childId=?3), 0)), ?3, ?4,
-                          ${
-                            note === undefined
-                              ? 'COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3))'
-                              : '?5'
-                          })
+            INSERT OR
+            REPLACE
+            INTO concern_answers (concernId, answer, childId, milestoneId, note)
+            VALUES (?1, coalesce(?2,
+                                 coalesce((SELECT answer FROM concern_answers WHERE concernId = ?1 AND childId = ?3),
+                                          0)), ?3, ?4,
+                    ${
+                      note === undefined
+                        ? 'COALESCE(?5, (SELECT note FROM concern_answers WHERE concernId = ?1 AND childId = ?3))'
+                        : '?5'
+                    })
         `,
         [concernId, answer, childId, milestoneId, note],
       );
@@ -451,7 +453,10 @@ export function useGetTips() {
 
       const tipsIds = tips?.map((value) => value.id) || [0].join(',');
       const result = await sqLiteClient.dB?.executeSql(
-        `select * from tips_status where childId=? and hintId in (${tipsIds})`,
+        `select *
+         from tips_status
+         where childId = ?
+           and hintId in (${tipsIds})`,
         [variables.childId],
       );
 
@@ -634,24 +639,28 @@ export function useCheckMissingMilestones() {
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
-                    INSERT OR
-                    REPLACE
-                    INTO concern_answers (answer, concernId, milestoneId, childId, note)
-                    VALUES (1, ?1, ?2, ?3, (SELECT note
-                                            FROM concern_answers
-                                            WHERE concernId = ?1 AND childId = ?3 AND milestoneId = ?2))
+              INSERT OR
+              REPLACE
+              INTO concern_answers (answer, concernId, milestoneId, childId, note)
+              VALUES (1, ?1, ?2, ?3, (SELECT note
+                                      FROM concern_answers
+                                      WHERE concernId = ?1
+                                        AND childId = ?3
+                                        AND milestoneId = ?2))
           `,
           [concernId, milestoneId, childId],
         );
       } else if (concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
-                    INSERT OR
-                    REPLACE
-                    INTO concern_answers (answer, concernId, milestoneId, childId, note)
-                    VALUES (0, ?1, ?2, ?3, (SELECT note
-                                            FROM concern_answers
-                                            WHERE concernId = ?1 AND childId = ?3 AND milestoneId = ?2))
+              INSERT OR
+              REPLACE
+              INTO concern_answers (answer, concernId, milestoneId, childId, note)
+              VALUES (0, ?1, ?2, ?3, (SELECT note
+                                      FROM concern_answers
+                                      WHERE concernId = ?1
+                                        AND childId = ?3
+                                        AND milestoneId = ?2))
           `,
           [concernId, milestoneId, childId],
         );

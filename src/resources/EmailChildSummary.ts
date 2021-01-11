@@ -126,7 +126,7 @@ const en = `
       {% endfor %}
     </ol>
     {% endif %}
-    {% if skippedItems.length+notSureItems.length %}
+    {% if skippedItems.length %}
     <div style="padding-top: 20px;">
       <p>
         <b>Return to the Milestone Tracker app to REVISIT these milestones:
@@ -353,7 +353,7 @@ const es = `
       {% endfor %}
     </ol>
     {% endif %}
-    {% if skippedItems.length+notSureItems.length %}
+    {% if skippedItems.length %}
     <div style="padding-top: 20px;">
       <p>
         {# 

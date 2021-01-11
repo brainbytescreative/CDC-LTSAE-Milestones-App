@@ -102,16 +102,16 @@ export function calcChildAge(birthDay: Date | undefined) {
        * no message will be displayed.
        */
       const nextMilestoneDate = add(birthDay, {months: nextMilestoneId});
-      const inWeeks = differenceInDays(nextMilestoneDate, baseDate);
+      const inDays = differenceInDays(nextMilestoneDate, baseDate);
 
-      betweenCheckList = inWeeks > 13;
+      betweenCheckList = inDays > 13;
 
       /**
        * Ensure checklist functionality is as follows:
        *    Within two weeks of child's next birthday,
        *    they should be served the next age checklist.
        */
-      if (inWeeks < 14) {
+      if (inDays < 14) {
         milestoneAge = nextMilestoneId;
       }
       // // less than 1 month minus 1 day before next milestone

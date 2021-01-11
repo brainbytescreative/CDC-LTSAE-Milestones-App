@@ -1,4 +1,4 @@
-import {add, differenceInYears, sub} from 'date-fns';
+import {add, differenceInYears} from 'date-fns';
 import {useQuery} from 'react-query';
 
 import {getChildById, getSelectedChildIdFallback} from '../../db/childQueries';
@@ -26,9 +26,10 @@ export function useGetCurrentChild() {
       const weeksPremature = Number(child?.weeksPremature);
 
       if (child && child.isPremature && weeksPremature >= 4 && yo < 2) {
+        const correctedAgeDate = add(child.birthday, {weeks: weeksPremature});
         return {
           ...child,
-          birthday: add(child.birthday, {weeks: weeksPremature}),
+          birthday: correctedAgeDate,
           realBirthDay: child.birthday,
         };
       }
