@@ -49,14 +49,15 @@ interface ConcernAnswer {
   note?: string | undefined | null;
 }
 
-export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
+export function useGetMilestone(childId?: ChildResult['id']) {
   const {data: currentChild} = useGetCurrentChild();
   const {data: child} = useGetChild({id: childId});
   const {t} = useTranslation('common');
-  const childBirthday = child?.birthday || currentChild?.birthday;
 
+  const selectedChild = child ?? currentChild;
+  console.log(selectedChild?.id, childId, 'useGetMilestone');
   return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
-    ['milestone', {childBirthday}],
+    ['milestone', {childBirthday: selectedChild?.birthday, childId: selectedChild?.id}],
     async (key, variables) => {
       if (!variables.childBirthday) {
         return;
@@ -86,7 +87,7 @@ export function useGetMilestone(childId?: PropType<ChildResult, 'id'>) {
       };
     },
     {
-      enabled: Boolean(childBirthday),
+      enabled: Boolean(selectedChild),
     },
   );
 }
@@ -193,10 +194,9 @@ export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
 
   return useQuery(
     ['answers', {milestoneId, childId}],
-    async (key, variables) => {
-      const answers =
-        (variables.childId && variables.milestoneId && (await getAnswers(variables.milestoneId, variables.childId))) ||
-        undefined;
+    async () => {
+      const answers = await getAnswers(milestoneId!, childId!);
+      console.log({milestoneId, childId}, '<<<<useGetCheckListAnswers');
 
       const questions = checklistMap.get(Number(milestoneId))?.milestones ?? [];
       const questionsIds = questions.map((value) => value.id);
@@ -216,9 +216,8 @@ export function useGetCheckListAnswers(milestoneId?: number, childId?: number) {
 // todo: It could be improved
 export function useGetSectionsProgress(childId: PropType<ChildResult, 'id'> | undefined) {
   const {data: {questionsGrouped} = {}} = useGetChecklistQuestions();
-  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone(childId);
+  const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {answers, complete} = {}} = useGetCheckListAnswers(milestoneId, childId);
-
   const hasNotYet = !!answers && !!answers.length && answers?.filter((val) => val.answer === Answer.NOT_YET).length > 0;
 
   const progress: Map<Section, {total: number; answered: number}> | undefined = useMemo(() => {
@@ -265,11 +264,15 @@ export function useSetQuestionAnswer() {
         checkMissing({childId, milestoneId});
         // queryCache.invalidateQueries(['question', {childId, questionId, milestoneId}]).then();
         // todo optimistic
-        await queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true});
+        await queryCache.invalidateQueries('answers', {exact: false, refetchInactive: true, refetchActive: true});
         if (milestoneAge) {
-          await queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}]);
+          await queryCache.invalidateQueries(['monthProgress', {childId, milestone: milestoneAge}], {
+            refetchActive: true,
+          });
         } else {
-          await queryCache.invalidateQueries('monthProgress');
+          await queryCache.invalidateQueries('monthProgress', {
+            refetchActive: true,
+          });
         }
         // const prevAnswer = await getAnswerValue({childId, milestoneId, questionId});
         // if (prevAnswer !== answer) {

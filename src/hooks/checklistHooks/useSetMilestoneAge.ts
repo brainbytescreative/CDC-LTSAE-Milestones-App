@@ -21,7 +21,7 @@ function useSetMilestoneAge() {
         betweenCheckList: age === childAge ? betweenCheckList : false,
       };
 
-      const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday}];
+      const key: MilestoneQueryKey = ['milestone', {childBirthday: child?.birthday, childId: child?.id}];
       queryCache.setQueryData(key, data);
     },
   ];
