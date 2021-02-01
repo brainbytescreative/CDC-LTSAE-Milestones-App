@@ -27,6 +27,10 @@ const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => 
       )}
       <View style={[styles.buttonsContainer, sharedStyle.shadow]}>
         <TouchableOpacity
+          accessibilityRole={'button'}
+          accessibilityState={{
+            selected: lngCode === 'en',
+          }}
           style={[
             styles.switchContainer,
             lngCode === 'en' && [styles.switchContainerSel, styles.switchContainerSelLeft],
@@ -38,6 +42,10 @@ const LanguageSelector: React.FC<Props> = ({style, title, onLanguageChange}) => 
           <Text style={styles.btnText}>{t('common:english')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityState={{
+            selected: lngCode === 'es',
+          }}
+          accessibilityRole={'button'}
           style={[
             styles.switchContainer,
             lngCode === 'es' && [styles.switchContainerSel, styles.switchContainerSelRight],

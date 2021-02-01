@@ -87,20 +87,6 @@ const TipsAndActivitiesItem: React.FC<ItemProps> = ({
           sharedStyle.shadow,
           sharedStyle.border,
         ]}>
-        {/*<Animated.View*/}
-        {/*  style={[*/}
-        {/*    {*/}
-        {/*      // opacity: runOpacityTimer(clock, isHighlighted),*/}
-        {/*    },*/}
-        {/*    sharedStyle.border,*/}
-        {/*    {*/}
-        {/*      width: '100%',*/}
-        {/*      height: '100%',*/}
-        {/*      position: 'absolute',*/}
-        {/*      // backgroundColor: colors.yellow,*/}
-        {/*    },*/}
-        {/*  ]}*/}
-        {/*/>*/}
         <View
           style={{
             padding: 20,
@@ -124,7 +110,13 @@ const TipsAndActivitiesItem: React.FC<ItemProps> = ({
             sharedStyle.shadow,
             !!like && {backgroundColor: colors.purple},
           ]}>
-          <TouchableOpacity style={itemStyle.buttonTouchable} onPress={() => onLikePress?.(itemId, !like)}>
+          <TouchableOpacity
+            accessibilityState={{
+              selected: Boolean(like),
+            }}
+            accessibilityRole={'button'}
+            style={itemStyle.buttonTouchable}
+            onPress={() => onLikePress?.(itemId, !like)}>
             <LikeHeart selected={!!like} style={{marginRight: 5}} />
             <Text>{t('like')}</Text>
           </TouchableOpacity>
@@ -137,6 +129,10 @@ const TipsAndActivitiesItem: React.FC<ItemProps> = ({
             !!remindMe && {backgroundColor: colors.lightGreen},
           ]}>
           <TouchableOpacity
+            accessibilityState={{
+              selected: Boolean(remindMe),
+            }}
+            accessibilityRole={'button'}
             style={itemStyle.buttonTouchable}
             onPress={() => {
               onRemindMePress?.(itemId, !remindMe);

@@ -7,7 +7,7 @@ type Props = Pick<TouchableOpacityProps, 'onPress' | 'disabled'> & {style?: View
 
 const AEButtonMultiline: React.FC<Props> = ({children, onPress, style}) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity accessibilityRole={'button'} onPress={onPress}>
       <View
         style={[
           {

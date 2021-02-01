@@ -1,18 +1,30 @@
 import React from 'react';
-import {StyleProp, TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
+import {StyleProp, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 import Svg, {G, Rect} from 'react-native-svg';
 
-interface Props {
+type Props = {
   value?: boolean;
   onValueChange?: (value: boolean) => void;
   style?: StyleProp<ViewStyle>;
   onText?: string;
   offText?: string;
-}
+} & Pick<TouchableWithoutFeedbackProps, 'accessibilityState' | 'accessibilityLabel' | 'accessibilityRole'>;
 
-const AESwitch: React.FC<Props> = ({value, onValueChange, style, onText, offText}) => (
+const AESwitch: React.FC<Props> = ({
+  accessibilityLabel,
+  accessibilityState,
+  accessibilityRole,
+  value,
+  onValueChange,
+  style,
+  onText,
+  offText,
+}) => (
   <TouchableWithoutFeedback
+    accessibilityState={accessibilityState}
+    accessibilityLabel={accessibilityLabel}
+    accessibilityRole={accessibilityRole}
     onPress={() => {
       onValueChange && onValueChange(!value);
     }}>

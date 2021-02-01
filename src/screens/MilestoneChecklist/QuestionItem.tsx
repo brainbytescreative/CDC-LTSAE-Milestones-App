@@ -253,6 +253,10 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
       </View>
       <View style={[styles.buttonsContainer]}>
         <TouchableOpacity
+          accessibilityState={{
+            selected: answer === Answer.YES,
+          }}
+          accessibilityRole={'button'}
           onPress={doAnswer(Answer.YES)}
           style={[
             styles.answerButton,
@@ -262,6 +266,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           <Text numberOfLines={1}>{t('milestoneChecklist:answer_yes')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityState={{
+            selected: answer === Answer.UNSURE,
+          }}
           onPress={doAnswer(Answer.UNSURE)}
           style={[
             styles.answerButton,
@@ -278,6 +285,9 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           )}
         </TouchableOpacity>
         <TouchableOpacity
+          accessibilityState={{
+            selected: answer === Answer.NOT_YET,
+          }}
           onPress={doAnswer(Answer.NOT_YET)}
           style={[
             styles.answerButton,

@@ -110,7 +110,10 @@ const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React
         <View style={[itemStyles.buttonsContainer]}>
           <TouchableOpacity
             accessible={!isMissingAnswerConcern}
-            accessibilityRole={'button'}
+            accessibilityRole={'checkbox'}
+            accessibilityState={{
+              checked: Boolean(concern?.answer),
+            }}
             accessibilityLabel={t('accessibility:concernToggleButton')}
             disabled={isMissingAnswerConcern}
             onPress={onPress}
@@ -234,17 +237,19 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
           {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
           {/*</Text>*/}
           <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
-          <Text style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
+          <Text accessible style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
             <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
               <Text
+                accessible
                 accessibilityRole={'link'}
+                accessibilityLabel={t('actEarlyMessageLink')}
                 onPress={() => {
                   Linking.openURL(t('actEarlyMessageLink'));
                   trackEventByType('Link', 'Concerned', {page: 'When to Act Early'});
                 }}
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
-              <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+              <Text accessible style={[sharedStyle.boldText, {textAlign: 'center'}]} />
             </Trans>
           </Text>
           {(isMissingConcern || isNotYet) && (

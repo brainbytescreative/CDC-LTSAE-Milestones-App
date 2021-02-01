@@ -23,6 +23,11 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
   return (
     <TouchableOpacity
       disabled={!onSectionSet}
+      accessibilityRole={'button'}
+      accessibilityLabel={t(`section-${section}`)}
+      accessibilityState={{
+        selected: section === selectedSection,
+      }}
       onPress={() => {
         onSectionSet?.(section);
         trackChecklistSectionSelect(section);
@@ -46,6 +51,7 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
           sharedStyle.shadow,
         ]}>
         <Text
+          accessible={false}
           style={{
             color: 'black',
             textAlign: 'center',

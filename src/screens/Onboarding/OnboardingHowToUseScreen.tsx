@@ -48,12 +48,42 @@ const eventNames = {
 
 const images = {
   en: {
-    new: newUserEnImages,
-    current: [require('./../../resources/images/howto/how_to_current_en_1.png'), ...newUserEnImages],
+    new: {
+      images: newUserEnImages,
+      alts: [
+        'Screengrab showing how to navigate the app',
+        'Screengrab showing how to keep track of milestones',
+        'Screengrab showing the Act Early page',
+        'Screengrab showing how to email and sharea summary',
+        'Screengrab demonstrating tips and activities feature',
+      ],
+    },
+    current: {
+      images: [require('./../../resources/images/howto/how_to_current_en_1.png'), ...newUserEnImages],
+      alts: [
+        'Screengrab showing how to add a photo',
+        'Captura de pantalla mostrando como navegar la aplicación',
+        'Captura de pantalla mostrando como seguir los indicadores a los que ha respondido',
+        'Captura de pantalla mostrando la página de Reaccione Pronto',
+        'Captura de pantalla mostrando como enviar un correo electrónico y compartir un resumen',
+        'Captura de pantalla demostrando la opción de consejos y actividades',
+      ],
+    },
   },
   es: {
-    new: newUserEsImages,
-    current: [require('./../../resources/images/howto/how_to_current_es_1.png'), ...newUserEsImages],
+    new: {
+      images: newUserEsImages,
+      alts: [
+        'Captura de pantalla mostrando como navegar la aplicación',
+        'Captura de pantalla mostrando como seguir los indicadores a los que ha respondido',
+        'Captura de pantalla mostrando la página de Reaccione Pronto',
+        'Captura de pantalla mostrando como enviar un correo electrónico y compartir un resumen',
+        'Captura de pantalla demostrando la opción de consejos y actividades',
+      ],
+    },
+    current: {
+      images: [require('./../../resources/images/howto/how_to_current_es_1.png'), ...newUserEsImages],
+    },
   },
 };
 
@@ -63,7 +93,7 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
   const {top, bottom} = useSafeAreaInsets();
   const [position, setPosition] = useState<number | undefined>(undefined);
 
-  const userType = route?.params?.isOldUser ? 'current' : 'new';
+  const userType = 'new'; //route?.params?.isOldUser ? 'current' : 'new';
   const stubArray = images[i18next.language as 'en' | 'es'][userType];
 
   return (
@@ -101,8 +131,17 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
           style={styles.viewPager}
           initialPage={0}>
           {
-            stubArray.map((value, index) => (
-              <Image key={`how-to-image-${index}`} resizeMode={'contain'} source={value} />
+            stubArray.images.map((value, index) => (
+              <View accessibilityRole={'image'} style={{overflow: 'hidden'}}>
+                <Image
+                  accessible
+                  key={`how-to-image-${index}`}
+                  accessibilityLabel={stubArray.alts[index]}
+                  resizeMode={'contain'}
+                  source={value}
+                  style={{width: '100%', height: '100%'}}
+                />
+              </View>
             )) as any
           }
         </ViewPager>
@@ -112,7 +151,7 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
         <PurpleArc width={'100%'} />
         <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom}}>
           <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 16, marginTop: 12}}>
-            {stubArray.map((value, index) => (
+            {stubArray.images.map((value, index) => (
               <View
                 style={[
                   {

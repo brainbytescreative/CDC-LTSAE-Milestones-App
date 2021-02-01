@@ -44,7 +44,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
 
   return (
     <>
-      <TouchableOpacity onPress={showDatePicker}>
+      <TouchableOpacity accessibilityRole={'button'} onPress={showDatePicker}>
         {/*<AETextInput*/}
         {/*  style={[style, error === true && sharedStyle.errorOutline]}*/}
         {/*  onPress={showDatePicker}*/}

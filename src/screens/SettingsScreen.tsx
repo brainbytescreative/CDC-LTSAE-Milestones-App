@@ -60,6 +60,11 @@ const NotificationSetting: React.FC<Props> = ({name, onLayout, textStyle}) => {
         {t(name)}
       </Text>
       <AESwitch
+        accessibilityLabel={t(name)}
+        accessibilityState={{
+          checked: field.value,
+        }}
+        accessibilityRole={'switch'}
         style={{marginLeft: 8}}
         value={field.value}
         onValueChange={(value) => {
