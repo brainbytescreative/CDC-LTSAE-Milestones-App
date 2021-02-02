@@ -129,7 +129,12 @@ const RevisitScreen: React.FC = () => {
             <Item key={`answer-${item.id}`} index={index + 1} value={item.value} note={item.note} id={item.id} />
           ))}
           {data?.groupedByAnswer['2']?.length && (
-            <Text style={{fontSize: 15, lineHeight: 18, marginTop: 20, marginHorizontal: 16}}>
+            // <Text style={{fontSize: 15, lineHeight: 18}}>
+            <View
+              style={{
+                marginTop: 20,
+                marginHorizontal: 16,
+              }}>
               <Trans t={t} i18nKey={'notYetText'} tOptions={{name: child?.name, breakStr, breakStrBig}}>
                 <Text
                   accessibilityRole={'link'}
@@ -137,10 +142,12 @@ const RevisitScreen: React.FC = () => {
                     trackEventByType('Link', 'Concerned', {page: 'Show doctor'});
                     return Linking.openURL(t('concernedLink'));
                   }}
-                  style={{textDecorationLine: 'underline'}}
+                  style={{textDecorationLine: 'underline', fontSize: 15, lineHeight: 18}}
                 />
+                <Text style={{fontSize: 15, lineHeight: 18}} />
               </Trans>
-            </Text>
+            </View>
+            // </Text>
           )}
 
           <View style={[styles.blockContainer, {backgroundColor: colors.yellow}]}>
@@ -202,14 +209,11 @@ const RevisitScreen: React.FC = () => {
           ))}
           {/* end unanswered section*/}
 
-          <Text
+          <View
             style={{
               marginTop: 40,
               marginBottom: 50,
               marginHorizontal: 16,
-              textAlign: 'center',
-              lineHeight: 18,
-              fontSize: 15,
             }}>
             <Trans t={t} i18nKey={'thankYouText2'} tOptions={{breakStr}}>
               <Text
@@ -218,10 +222,16 @@ const RevisitScreen: React.FC = () => {
                   trackEventByType('Link', 'Act Early', {page: 'Show doctor'});
                   return Linking.openURL(t('actEarlyLink'));
                 }}
-                style={{textDecorationLine: 'underline', textAlign: 'center'}}
+                style={{
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                  lineHeight: 18,
+                  fontSize: 15,
+                }}
               />
+              <Text style={{textAlign: 'center', lineHeight: 18, fontSize: 15}} />
             </Trans>
-          </Text>
+          </View>
         </View>
       </AEScrollView>
     </View>

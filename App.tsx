@@ -24,7 +24,6 @@ import {DefaultTheme, Provider as PaperProvider, Theme} from 'react-native-paper
 import {enableScreens} from 'react-native-screens';
 import {ReactQueryConfigProvider, ReactQueryProviderConfig} from 'react-query';
 
-import AppStateManager from './src/components/AppStateManager';
 import Navigator from './src/components/Navigator';
 import {colors} from './src/resources/constants';
 import {currentScreen, trackAction, trackSelectByType, trackStartAddChild} from './src/utils/analytics';

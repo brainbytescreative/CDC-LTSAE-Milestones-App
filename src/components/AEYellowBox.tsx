@@ -7,9 +7,10 @@ import {colors, sharedStyle} from '../resources/constants';
 type Props = {
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
+  wrapper?: 'text' | 'none';
 } & Pick<ViewProps, 'onLayout'>;
 
-const AEYellowBox: React.FC<Props> = ({children, containerStyle, labelStyle, onLayout}) => {
+const AEYellowBox: React.FC<Props> = ({wrapper = 'text', children, containerStyle, labelStyle, onLayout}) => {
   return (
     <View
       onLayout={onLayout}
@@ -26,16 +27,20 @@ const AEYellowBox: React.FC<Props> = ({children, containerStyle, labelStyle, onL
         sharedStyle.shadow,
         containerStyle,
       ]}>
-      <Text
-        style={[
-          {
-            textAlign: 'center',
-            fontSize: 15,
-          },
-          labelStyle,
-        ]}>
-        {children}
-      </Text>
+      {wrapper === 'text' ? (
+        <Text
+          style={[
+            {
+              textAlign: 'center',
+              fontSize: 15,
+            },
+            labelStyle,
+          ]}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
     </View>
   );
 };

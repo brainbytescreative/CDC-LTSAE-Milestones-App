@@ -8143,6 +8143,11 @@ react-native-vector-icons@^7.0.0:
     prop-types "^15.7.2"
     yargs "^15.0.2"
 
+react-native-webview-autoheight@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-webview-autoheight/-/react-native-webview-autoheight-1.0.6.tgz#08d6ece62877f5ef33ef857102193760085afc3a"
+  integrity sha512-M8t2Ccbfr49i3ow6aQq0ou1Hnbq5KGd5Uj0c6sj4iZHYzLYte6o3gjVUMYvQdZ8hQ/ejCtWud6hk5C7CGC5LaQ==
+
 react-native-webview@10.3.2:
   version "10.3.2"
   resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-10.3.2.tgz#c634946152099c95d521a3abc71065d1d642e192"

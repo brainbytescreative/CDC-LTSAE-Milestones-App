@@ -30,7 +30,8 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
       <NotificationsBadge />
       <AEScrollView>
         <Text style={[sharedStyle.screenTitle]}>{t('aboutThisApp')}</Text>
-        <Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>
+        {/*<Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>*/}
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 32, marginTop: 21}}>
           <Trans t={t} i18nKey={'aboutThisAppText'} tOptions={{breakStr, breakStrLarge}}>
             <Text
               accessibilityRole={'link'}
@@ -38,19 +39,24 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
                 trackEventByType('Link', 'Act Early', {page: 'App Info & Privacy Policy'});
                 return Linking.openURL(t('actEarlyLink'));
               }}
-              style={{textDecorationLine: 'underline'}}
+              style={[{textDecorationLine: 'underline'}, {fontSize: 15, lineHeight: 25}]}
             />
-            <Text style={sharedStyle.boldText} />
+            <Text style={[sharedStyle.boldText, {fontSize: 15, lineHeight: 25}]} />
             <Text
               accessibilityRole={'link'}
               onPress={() => {
                 trackEventByType('Link', 'Act Early', {page: 'App Info & Privacy Policy'});
                 return Linking.openURL(t('actEarlyLink2'));
               }}
-              style={{textDecorationLine: 'underline'}}
+              style={[{textDecorationLine: 'underline'}, {fontSize: 15, lineHeight: 25}]}
             />
+            <Text style={{fontSize: 15, lineHeight: 25}}>
+              <Text style={[sharedStyle.boldText, {fontSize: 15, lineHeight: 25}]} />
+              <Text style={[sharedStyle.boldText, {fontSize: 15, lineHeight: 25}]} />
+            </Text>
           </Trans>
-        </Text>
+        </View>
+        {/*</Text>*/}
         <View style={styles.logosRow}>
           <CDCLogo />
           <LTSAELogo />

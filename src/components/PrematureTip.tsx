@@ -1,7 +1,7 @@
 import {differenceInWeeks, differenceInYears} from 'date-fns';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Linking, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {Linking, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-paper';
 
 import {useGetMilestone} from '../hooks/checklistHooks';
@@ -22,17 +22,20 @@ const PrematureTip: React.FC<Props> = ({style, children, sixWeeks}) => {
   const textKey = sixWeeks && calcAgeInWeeks < 6 ? 'prematureTip6Weeks' : 'prematureTip';
 
   return Number(child?.weeksPremature) >= 4 && ageInYears < 2 && childAge === milestoneAge ? (
-    <AEYellowBox containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}, style]}>
-      <Trans t={t} i18nKey={textKey} tOptions={{weeks: prematureWeeks}}>
-        <Text
-          numberOfLines={1}
-          accessibilityRole={'link'}
-          onPress={() => {
-            return Linking.openURL('http://bit.ly/2RUpEu1');
-          }}
-          style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
-        />
-      </Trans>
+    <AEYellowBox wrapper={'none'} containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}, style]}>
+      <View style={{alignItems: 'center'}}>
+        <Trans t={t} i18nKey={textKey} tOptions={{weeks: prematureWeeks}}>
+          <Text
+            numberOfLines={1}
+            accessibilityRole={'link'}
+            onPress={() => {
+              return Linking.openURL('http://bit.ly/2RUpEu1');
+            }}
+            style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+          />
+          <Text style={{textAlign: 'center'}} />
+        </Trans>
+      </View>
     </AEYellowBox>
   ) : (
     children ?? null

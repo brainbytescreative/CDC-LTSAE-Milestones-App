@@ -237,12 +237,18 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
           {/*  {totalProgressValue === 1 ? t('complete') : t('incomplete')}*/}
           {/*</Text>*/}
           <Text style={[styles.header, {marginTop: 16}]}>{t('whenToActEarly')}</Text>
-          <Text accessible style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>
+          {/*<Text accessible style={[{textAlign: 'center', marginTop: 10, marginHorizontal: 48}]}>*/}
+          <View
+            style={{
+              marginHorizontal: 48,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}>
             <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
               <Text
                 accessible
                 accessibilityRole={'link'}
-                accessibilityLabel={t('actEarlyMessageLink')}
                 onPress={() => {
                   Linking.openURL(t('actEarlyMessageLink'));
                   trackEventByType('Link', 'Concerned', {page: 'When to Act Early'});
@@ -250,8 +256,10 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text accessible style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+              <Text style={{textAlign: 'center'}} />
             </Trans>
-          </Text>
+          </View>
+          {/*</Text>*/}
           {(isMissingConcern || isNotYet) && (
             <AEYellowBox
               // onLayout={() => {

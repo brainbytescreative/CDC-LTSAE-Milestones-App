@@ -62,7 +62,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                 : t('quickViewMessage', {milestone: milestoneAgeFormatted, section})}
             </Text>
           ) : (
-            <Text style={[styles.text, {textAlign: 'center', marginHorizontal: 56, marginTop: 15}]}>
+            <View style={[{marginHorizontal: 56, marginTop: 15}]}>
               <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
                 <Text
                   accessibilityRole={'link'}
@@ -70,11 +70,12 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                     trackEventByType('Link', 'Act Early');
                     Linking.openURL(t('actEarlyMessageLink'));
                   }}
-                  style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+                  style={[styles.text, {textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
                 />
-                <Text style={[sharedStyle.boldText, {textAlign: 'center'}]} />
+                <Text style={[styles.text, sharedStyle.boldText, {textAlign: 'center'}]} />
+                <Text style={[styles.text]} />
               </Trans>
-            </Text>
+            </View>
           )}
 
           {questionsGrouped?.get(section)?.map((item, index) => (

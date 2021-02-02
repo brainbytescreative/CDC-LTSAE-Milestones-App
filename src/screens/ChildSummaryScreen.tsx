@@ -478,7 +478,8 @@ const ChildSummaryScreen: React.FC = () => {
           {`${t('childSummary:title', {name: _.upperFirst(child?.name) ?? '', age: milestoneAgeFormatted ?? ''})}`}
         </Text>
         <View style={{paddingHorizontal: 32}}>
-          <Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>
+          {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
+          <View style={{marginTop: 15, alignItems: 'center'}}>
             <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
               <Text
                 numberOfLines={1}
@@ -499,8 +500,10 @@ const ChildSummaryScreen: React.FC = () => {
                 style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
               />
               <Text style={[sharedStyle.boldText]} />
+              <Text style={{textAlign: 'center'}} />
             </Trans>
-          </Text>
+          </View>
+          {/*</Text>*/}
           {/*<Text>Show your doctor or email summary</Text>*/}
         </View>
         <View style={{marginTop: 35}}>
