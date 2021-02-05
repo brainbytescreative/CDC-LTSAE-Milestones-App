@@ -55,7 +55,6 @@ export function useGetMilestone(childId?: ChildResult['id']) {
   const {t} = useTranslation('common');
 
   const selectedChild = child ?? currentChild;
-  console.log(selectedChild?.id, childId, 'useGetMilestone');
   return useQuery<MilestoneQueryResult, MilestoneQueryKey>(
     ['milestone', {childBirthday: selectedChild?.birthday, childId: selectedChild?.id}],
     async (key, variables) => {

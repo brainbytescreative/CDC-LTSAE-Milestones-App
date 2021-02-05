@@ -2,9 +2,9 @@ import ViewPager from '@react-native-community/viewpager';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import i18next from 'i18next';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -91,7 +91,8 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();
-  const [position, setPosition] = useState<number | undefined>(undefined);
+  const [position, setPosition] = useState<number>(0);
+  const pagerRef = useRef<ViewPager>(null);
 
   const userType = 'new'; //route?.params?.isOldUser ? 'current' : 'new';
   const stubArray = images[i18next.language as 'en' | 'es'][userType];
@@ -123,6 +124,7 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
           {t('howToUseApp')}
         </Text>
         <ViewPager
+          ref={pagerRef}
           onPageSelected={({nativeEvent: {position: p}}) => {
             p !== position &&
               trackAction(`Select: How to Use App: ${eventNames[userType][p]}`, {page: 'How to Use App'});
@@ -150,8 +152,16 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
       <View style={{backgroundColor: 'white'}}>
         <PurpleArc width={'100%'} />
         <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom}}>
-          <View
+          <TouchableOpacity
             accessible
+            onPress={() => {
+              if (position + 1 === stubArray.images.length) {
+                pagerRef.current?.setPage(0);
+              } else {
+                pagerRef.current?.setPage(position + 1);
+              }
+            }}
+            accessibilityRole={'button'}
             accessibilityLabel={t('common:pagination', {
               position: Number(position) + 1,
               count: stubArray.images.length,
@@ -178,7 +188,7 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
                 ]}
               />
             ))}
-          </View>
+          </TouchableOpacity>
           <AEButtonMultiline
             onPress={() => {
               navigation.navigate('Dashboard');
