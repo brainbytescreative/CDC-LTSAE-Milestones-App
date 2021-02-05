@@ -87,7 +87,7 @@ const images = {
   },
 };
 
-const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 'OnboardingHowToUse'>}> = ({route}) => {
+const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 'OnboardingHowToUse'>}> = () => {
   const {t} = useTranslation('onboardingHowToUse');
   const navigation = useNavigation<HowToUseScreenNavigationProp>();
   const {top, bottom} = useSafeAreaInsets();
@@ -150,9 +150,22 @@ const OnboardingHowToUseScreen: React.FC<{route?: RouteProp<RootStackParamList, 
       <View style={{backgroundColor: 'white'}}>
         <PurpleArc width={'100%'} />
         <View style={{backgroundColor: colors.purple, flexGrow: 1, paddingBottom: bottom}}>
-          <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 16, marginTop: 12}}>
+          <View
+            accessible
+            accessibilityLabel={t('common:pagination', {
+              position: Number(position) + 1,
+              count: stubArray.images.length,
+            })}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginBottom: 4,
+              // marginTop: 12,
+              padding: 12,
+            }}>
             {stubArray.images.map((value, index) => (
               <View
+                accessible
                 style={[
                   {
                     width: 10,

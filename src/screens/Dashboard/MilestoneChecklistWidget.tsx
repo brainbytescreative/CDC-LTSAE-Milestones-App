@@ -31,6 +31,7 @@ const MilestoneChecklistWidget: React.FC = withSuspense(
 
     return (
       <TouchableOpacity
+        accessibilityRole={'button'}
         accessibilityLabel={`${t('milestoneCheckList')}.${t('milestonesAnswered', {
           progress: totalProgress?.replace('/', ' of '),
         })}`}

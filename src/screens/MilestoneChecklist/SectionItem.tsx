@@ -24,7 +24,7 @@ const SectionItem: React.FC<ItemProps> = ({section, onSectionSet, selectedSectio
     <TouchableOpacity
       disabled={!onSectionSet}
       accessibilityRole={'button'}
-      accessibilityLabel={t(`section-${section}`)}
+      accessibilityLabel={`${t(`section-${section}`)}, ${t('togo', {count: toGo})}`}
       accessibilityState={{
         selected: section === selectedSection,
       }}

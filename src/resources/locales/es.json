@@ -110,6 +110,7 @@
         "month_plural": "{{count}} meses",
         "next": "Siguiente",
         "notifications": "Notificaciones",
+        "pagination": "Página número {{position}} de {{count}}",
         "required": "* Requerido",
         "selectAPhoto": "Seleccionar una foto",
         "takePhoto": "Tomar una foto",

@@ -58,7 +58,7 @@ const NotificationsListItem: React.FC<{
 
         <TouchableOpacity
           accessibilityRole={'button'}
-          accessibilityLabel={t('accessibility:close')}
+          accessibilityLabel={t('common:delete')}
           onPress={() => {
             onCrossPress(item.notificationId);
           }}>

@@ -269,6 +269,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           accessibilityState={{
             selected: answer === Answer.UNSURE,
           }}
+          accessibilityRole={'button'}
           onPress={doAnswer(Answer.UNSURE)}
           style={[
             styles.answerButton,
@@ -288,6 +289,7 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
           accessibilityState={{
             selected: answer === Answer.NOT_YET,
           }}
+          accessibilityRole={'button'}
           onPress={doAnswer(Answer.NOT_YET)}
           style={[
             styles.answerButton,

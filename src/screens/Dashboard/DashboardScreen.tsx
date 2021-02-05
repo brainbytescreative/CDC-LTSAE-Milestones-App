@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {add, differenceInDays, differenceInWeeks, differenceInYears, format, sub} from 'date-fns';
+import {differenceInDays, differenceInWeeks, differenceInYears, format} from 'date-fns';
 import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -176,6 +176,7 @@ const Buttons = () => {
   return (
     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
       <TouchableOpacity
+        accessibilityRole={'button'}
         onPress={() => {
           trackSelectByType('When to Act Early');
           navigation.navigate('WhenActEarly');
@@ -188,6 +189,7 @@ const Buttons = () => {
       </TouchableOpacity>
       <View style={[styles.actionItem, {marginHorizontal: 10}]}>
         <TouchableOpacity
+          accessibilityRole={'button'}
           style={[{alignItems: 'center'}]}
           onPress={() => {
             trackSelectByType('My Child Summary');
@@ -201,6 +203,7 @@ const Buttons = () => {
       </View>
       <View style={styles.actionItem}>
         <TouchableOpacity
+          accessibilityRole={'button'}
           onPress={() => {
             trackSelectByType('Tips');
             navigation.navigate('TipsAndActivities');

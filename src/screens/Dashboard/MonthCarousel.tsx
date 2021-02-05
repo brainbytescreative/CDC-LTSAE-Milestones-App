@@ -48,6 +48,7 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
 
   return (
     <TouchableOpacity
+      accessibilityRole={'button'}
       onPress={() => {
         // childAge < month
         //   ? trackSelectByType('Previous Milestone Checklist Age')
