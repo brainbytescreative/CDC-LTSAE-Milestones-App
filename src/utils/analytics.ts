@@ -198,7 +198,8 @@ function getMilestoneData() {
   const child: ChildResult | undefined = queryCache.getQueryData(['selectedChild', {id: selectedChildId}]);
   const childBirthday = child?.birthday;
   const milestoneId = Number(
-    queryCache.getQueryData<MilestoneQueryResult>(['milestone', {childBirthday}])?.milestoneAge,
+    queryCache.getQueryData<MilestoneQueryResult>(['milestone', {childBirthday, childId: selectedChildId}])
+      ?.milestoneAge,
   );
   return {milestoneId, selectedChildId};
 }
@@ -207,6 +208,7 @@ type AdditionalChecklistParams = Omit<NonNullable<OptionsType>, 'page' | 'eventn
 
 function trackChecklistPage(key: string, data: {pageName?: PageType | string} & AdditionalChecklistParams) {
   let suffix = '';
+  console.log(data);
   switch (data.pageName) {
     case 'When to Act Early': {
       if (data.concernData) {
