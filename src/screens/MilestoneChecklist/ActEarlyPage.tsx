@@ -202,9 +202,14 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
   useEffect(() => {
     trackInteractionByType('Started When to Act Early', {page: 'When to Act Early'});
     return () => {
+      // console.log({isMissingConcern});
+      trackInteractionByType('Checked Act Early Item', {
+        page: 'When to Act Early',
+        concernData: {milestoneId: Number(milestoneId)},
+      });
       trackInteractionByType('Completed When to Act Early', {page: 'When to Act Early'});
     };
-  }, []);
+  }, [milestoneId]);
 
   const onItemPres = () => {
     if (!isMissingConcern && !isNotYet) {

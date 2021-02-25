@@ -33,7 +33,7 @@ export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = '
   }
 };
 
-export const formatAge = (childBirth: Date | undefined, options?: {singular?: boolean}): string => {
+export const formatAge = (childBirth: Date | undefined, options?: {singular?: boolean; lng?: string}): string => {
   const birthDay = childBirth ?? new Date();
   const days = (birthDay && differenceInDays(new Date(), birthDay)) || 0;
   const months = (birthDay && differenceInMonths(new Date(), birthDay)) || 0;
@@ -42,21 +42,21 @@ export const formatAge = (childBirth: Date | undefined, options?: {singular?: bo
 
   if (days < 7) {
     value = days > 0 ? days : 0;
-    ageText = i18next.t('common:day', {count: options?.singular ? 1 : value});
+    ageText = i18next.t('common:day', {count: options?.singular ? 1 : value, lng: options?.lng});
   } else if (months < 2) {
     const weeks = (birthDay && differenceInWeeks(new Date(), birthDay)) || 0;
     value = weeks;
-    ageText = i18next.t('common:week', {count: options?.singular ? 1 : weeks});
+    ageText = i18next.t('common:week', {count: options?.singular ? 1 : weeks, lng: options?.lng});
   } else if (months === 12) {
     value = 1;
-    ageText = i18next.t('common:year', {count: 1});
+    ageText = i18next.t('common:year', {count: 1, lng: options?.lng});
   } else if (months < 24) {
     value = months;
-    ageText = i18next.t('common:month', {count: options?.singular ? 1 : months});
+    ageText = i18next.t('common:month', {count: options?.singular ? 1 : months, lng: options?.lng});
   } else {
     const years = (birthDay && differenceInYears(new Date(), birthDay)) || 0;
     value = years;
-    ageText = i18next.t('common:year', {count: options?.singular ? 1 : years});
+    ageText = i18next.t('common:year', {count: options?.singular ? 1 : years, lng: options?.lng});
   }
 
   ageText = options?.singular ? ageText.replace('1', String(value)) : ageText;

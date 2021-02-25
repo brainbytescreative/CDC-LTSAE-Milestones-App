@@ -36,7 +36,7 @@ const ParentProfileSelector: React.FC = () => {
             zIndex={1100}
             style={[sharedStyle.shadow]}
             onChangeItem={(item) => {
-              trackSelectProfile(String(item.label));
+              trackSelectProfile(t(`guardianTypes:${item.value}`, {lng: 'en'}));
               // onChange({guardian: item.value, territory: value?.territory});
               form.setFieldValue(field.name, item.value);
             }}

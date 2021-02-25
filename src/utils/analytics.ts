@@ -172,7 +172,7 @@ type TipAnalyticsData = {
 } & BaseAnalyticsData;
 
 type ConcernAnalyticsData = {
-  concernId: number;
+  concernId?: number;
 } & BaseAnalyticsData;
 
 export function trackAction(
@@ -216,7 +216,10 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
           checklistMap
             .get(data.concernData.milestoneId)
             ?.concerns.filter((value) => value.id === data.concernData?.concernId) ?? [];
-        const concernText = i18next.t(`milestones:${concern.value}`, {lng: 'en'});
+        const concernText =
+          data.concernData?.concernId === undefined
+            ? 'Is missing milestones'
+            : i18next.t(`milestones:${concern.value}`, {lng: 'en'});
         suffix = `: ${_.trim(concernText, '.')}`;
       } else {
         suffix = ': Act Early';
@@ -366,7 +369,7 @@ export function trackChildCompletedChildDateOfBirth(options?: OptionsType) {
   trackAction('Interaction: Completed Child Date of Birth', options);
 }
 export function trackChildAge(birthDay: Parameters<typeof formatAge>[0]) {
-  const age = formatAge(birthDay);
+  const age = formatAge(birthDay, {lng: 'en'});
   trackAction(`Child: Age ${age}`);
 }
 
