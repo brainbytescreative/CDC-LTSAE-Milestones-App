@@ -220,7 +220,7 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
           data.concernData?.concernId === undefined
             ? 'Is missing milestones'
             : i18next.t(`milestones:${concern.value}`, {lng: 'en'});
-        suffix = `: ${_.trim(concernText, '.')}`;
+        suffix = `: Act Early: ${_.trim(concernText, '.')}`;
       } else {
         suffix = ': Act Early';
       }
