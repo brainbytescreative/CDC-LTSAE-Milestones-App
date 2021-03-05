@@ -3694,7 +3694,7 @@ const mapDelete = function (key: unknown) {
 };
 
 const mapClear = function () {
-  throw 'Can\'t clear map, map is frozen';
+  throw "Can't clear map, map is frozen";
 };
 
 function freezeMap<T extends Map<K, V>, K, V>(myMap: T) {

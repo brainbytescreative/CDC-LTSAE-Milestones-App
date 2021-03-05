@@ -70,6 +70,8 @@ type InteractionType =
   | 'Email Summary'
   | 'Show Doctor'
   | 'Add a Photo'
+  | 'Start Checklist'
+  | 'Completed Checklist'
   | 'Add Another Child'
   | 'Add Photo from Library'
   | 'Take Photo'
@@ -185,6 +187,7 @@ export function trackAction(
     questionData?: QuestionAnalyticsData;
     tipData?: TipAnalyticsData;
     concernData?: ConcernAnalyticsData;
+    disable?: boolean;
   },
 ) {
   const screenName =
@@ -233,7 +236,9 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
     }
     case 'Milestone Checklist': {
       let section: string | undefined = queryCache.getQueryData('section');
-      if (data.questionData) {
+      if (data.disable) {
+        return;
+      } else if (data.questionData) {
         const [question] =
           checklistMap
             .get(data.questionData.milestoneId)
@@ -246,10 +251,10 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
       }
       break;
     }
-    case 'Milestone Overview': {
-      suffix = ': Quickview';
-      break;
-    }
+    // case 'Milestone Overview': {
+    //   suffix = ': Milestone Overview';
+    //   break;
+    // }
     case 'Tips & Activities': {
       if (data.tipData) {
         const [tip] =

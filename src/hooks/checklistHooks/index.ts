@@ -20,6 +20,7 @@ import {
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
 import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
+import {trackInteractionByType} from '../../utils/analytics';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';
 // noinspection ES6PreferShortImport
@@ -253,9 +254,21 @@ export function useSetQuestionAnswer() {
 
   return useMutation<void, MilestoneAnswer>(
     async (variables) => {
+      const prevAnswers = await getAnswers(variables.milestoneId, variables.childId);
+      if (!prevAnswers.length) {
+        trackInteractionByType('Start Checklist', {page: 'Milestone Checklist', disable: true});
+      }
       const {answer, childId, note, questionId, milestoneId} = variables;
       queryCache.setQueryData(['question', {childId, questionId, milestoneId}], variables);
       await setAnswer({childId, questionId, answer, milestoneId, note});
+
+      const answers = await getAnswers(variables.milestoneId, variables.childId);
+      if (
+        prevAnswers.length !== answers.length &&
+        answers.length === checklistMap.get(variables.milestoneId)?.milestones.length
+      ) {
+        trackInteractionByType('Completed Checklist', {page: 'Milestone Checklist', disable: true});
+      }
     },
     {
       throwOnError: false,
