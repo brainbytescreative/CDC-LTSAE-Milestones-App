@@ -10,6 +10,7 @@ import {queryCache} from 'react-query';
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 import {Answer, ChildResult, MilestoneQueryResult} from '../hooks/types';
 import {Section, SelectEventType, drawerMenuToEvent, sectionToEvent} from '../resources/constants';
+import {deviceLocale} from '../resources/l18n';
 import {Quetion, checklistMap} from '../resources/milestoneChecklist';
 import {formatAge, getActiveRouteName} from './helpers';
 
@@ -147,7 +148,7 @@ function trackActionInternal(pageName: undefined | string, key: string, options?
   pageName &&
     ACPCore.trackState(pageName, {
       'gov.cdc.appname': 'LTSAE Milestone Tracker',
-      'gov.cdc.language': i18next.language, // t5 (Language)
+      'gov.cdc.language': i18next.language ?? deviceLocale, // t5 (Language)
       'gov.cdc.appversion': getReadableVersion(), //t51 (Mobile Framework)
       'gov.cdc.osname': Platform.OS, //t54 (OS Name)
       'gov.cdc.osversion': `${Platform.Version}`, // t55 (OS Version)

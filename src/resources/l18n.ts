@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import {useCallback} from 'react';
 import {initReactI18next} from 'react-i18next';
+import {NativeModules, Platform} from 'react-native';
 import {queryCache} from 'react-query';
 
 import Storage from '../utils/Storage';
@@ -10,6 +11,12 @@ import milestonesTextsEN from './milestones/en-texts.json';
 import milestonesEN from './milestones/en.json';
 import milestonesTextsES from './milestones/es-texts.json';
 import milestonesES from './milestones/es.json';
+
+export const deviceLocale =
+  (Platform.select({
+    ios: NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
+    android: NativeModules.I18nManager.localeIdentifier,
+  }) as string | undefined | null)?.slice(0, 2) || 'en';
 
 export function useChangeLanguage() {
   return useCallback((lang) => {
@@ -31,7 +38,7 @@ const languageDetector = {
   async: true,
   detect: (callback: (language: string) => void) => {
     return Storage.getItemTyped('language').then((language) => {
-      callback(language || 'en');
+      callback(language || deviceLocale);
     });
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function

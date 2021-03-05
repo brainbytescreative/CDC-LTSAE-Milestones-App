@@ -119,7 +119,10 @@ const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({i
         <View>
           <WebView
             onMessage={(event) => {
-              event.nativeEvent.data === 'PLAYING' && trackInteractionByType('Play Video');
+              event.nativeEvent.data === 'PLAYING' &&
+                trackInteractionByType('Play Video', {
+                  questionData: {milestoneId: Number(milestoneId), questionId: id},
+                });
             }}
             originWhitelist={['*']}
             allowsInlineMediaPlayback={true}
