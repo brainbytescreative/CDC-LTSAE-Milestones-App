@@ -70,6 +70,7 @@ type InteractionType =
   | 'Email Summary'
   | 'Show Doctor'
   | 'Add a Photo'
+  | 'Unanswered Act Early Item'
   | 'Start Checklist'
   | 'Completed Checklist'
   | 'Add Another Child'

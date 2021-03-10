@@ -137,6 +137,8 @@ export type SelectEventType =
   | 'Like'
   | 'Child Name Drop-down'
   | 'Notifications'
+  | 'Audience Type: Skip'
+  | 'Audience Type: Done'
   | 'Social'
   | 'Language'
   | 'Cognitive'

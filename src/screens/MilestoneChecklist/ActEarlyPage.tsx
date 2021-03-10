@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import {Text} from 'react-native-paper';
+import {queryCache} from 'react-query';
 
 import AEYellowBox from '../../components/AEYellowBox';
 import CheckMark from '../../components/Svg/CheckMark';
@@ -22,6 +23,7 @@ import NoteIcon from '../../components/Svg/NoteIcon';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
 import {
+  ConcernAnswer,
   useGetConcern,
   useGetConcerns,
   useGetIsMissingMilestone,
@@ -288,8 +290,16 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
             <TouchableWithoutFeedback
               accessibilityRole={'button'}
               onPress={() => {
-                onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
-                trackInteractionByType('My Child Summary');
+                const allChecked = concerns?.every((concern) => {
+                  const concernData = queryCache.getQueryData<ConcernAnswer>([
+                    'concern',
+                    {childId, concernId: concern.id, milestoneId},
+                  ]);
+                  return Boolean(concernData?.answer);
+                });
+                if (!allChecked) {
+                  trackEventByType('Interaction', 'Unanswered Act Early Item');
+                }
               }}>
               <View
                 style={[

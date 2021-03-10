@@ -42,7 +42,7 @@ import useSetMilestoneAge from './useSetMilestoneAge';
 
 // type ChecklistData = SkillSection & {section: keyof Milestones};
 
-interface ConcernAnswer {
+export interface ConcernAnswer {
   concernId: number;
   milestoneId: number;
   childId: number;

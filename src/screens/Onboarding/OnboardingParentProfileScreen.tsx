@@ -21,7 +21,7 @@ import {getChildrenCount} from '../../db/childQueries';
 import {useSetParentProfile} from '../../hooks/parentProfileHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {editProfileSchema} from '../../resources/validationSchemas';
-import {trackNext, trackSelectLanguage} from '../../utils/analytics';
+import {trackEventByType, trackNext, trackSelectLanguage} from '../../utils/analytics';
 
 type ParentProfileNavigationProp = StackNavigationProp<RootStackParamList, 'OnboardingParentProfile'>;
 
@@ -54,6 +54,11 @@ const OnboardingParentProfileScreen: React.FC = () => {
         }}
         onSubmit={async (values) => {
           await saveProfile(values);
+          if (!values.guardian) {
+            trackEventByType('Select', 'Audience Type: Skip');
+          } else {
+            trackEventByType('Select', 'Audience Type: Done');
+          }
           trackNext();
           navigation.navigate(nextScreen, {
             onboarding: true,
