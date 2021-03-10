@@ -2,7 +2,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {NavigationContainerRef} from '@react-navigation/core';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Notifications from 'expo-notifications';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {I18nextProvider} from 'react-i18next';
 import {queryCache, useQuery} from 'react-query';
 
@@ -16,7 +16,6 @@ import AddChildScreen from '../../screens/AddChildScreen';
 import OnboardingHowToUseScreen from '../../screens/Onboarding/OnboardingHowToUseScreen';
 import OnboardingInfoScreen from '../../screens/Onboarding/OnboardingInfoScreen';
 import OnboardingParentProfileScreen from '../../screens/Onboarding/OnboardingParentProfileScreen';
-import {trackNotificationById} from '../../utils/analytics';
 import {slowdown} from '../../utils/helpers';
 import AppStateManager from '../AppStateManager';
 import ErrorBoundary from '../ErrorBoundary';
@@ -80,7 +79,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
 
   React.useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener((data) => {
-      trackNotificationById(data.request.identifier);
+      // trackNotificationById(data.request.identifier);
       setTimeout(() => {
         queryCache.invalidateQueries('unreadNotifications');
       }, 2000);

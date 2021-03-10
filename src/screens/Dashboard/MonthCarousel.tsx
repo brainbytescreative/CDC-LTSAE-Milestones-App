@@ -42,7 +42,9 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
   // const suffix = isCurrentMilestone ? '' : 'Short';
   const unit = month % 12 === 0 ? t('common:year', {count: month / 12}) : t('common:month', {count: month});
   const unitEn =
-    month % 12 === 0 ? t('common:year', {count: month / 12, lng: 'en'}) : t('common:month', {count: month, lng: 'en'});
+    month % 12 === 0
+      ? t('common:yearShort', {count: month / 12, lng: 'en'})
+      : t('common:monthShort', {count: month, lng: 'en'});
   const unitShort =
     month % 12 === 0 ? t('common:yearShort', {count: month / 12}) : t('common:monthShort', {count: month});
 
@@ -55,7 +57,7 @@ const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, mileston
         // childAge < month
         //   ? trackSelectByType('Previous Milestone Checklist Age')
         //   : trackSelectByType('Future Milestone Checklist Age');
-        trackEventByType('Select', 'Milestone Checklist', {eventSuffix: unitEn});
+        trackEventByType('Select', 'Milestone Checklist', {eventSuffix: unitEn.slice(0, 4)});
         onSelect && onSelect(month);
       }}>
       <View style={{padding: 5, height: 100, justifyContent: 'center'}}>

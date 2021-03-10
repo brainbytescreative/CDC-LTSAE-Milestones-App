@@ -59,9 +59,12 @@ const ParentProfileSelector: React.FC = () => {
               dropDownMaxHeight={140}
               value={field.value}
               zIndex={1000}
-              onChangeItem={(item) => {
+              onChangeItem={(item, index) => {
                 trackSelectByType('Territory');
-                trackSelectTerritory(String(item.label));
+                const countryName = statesOptions[i18next.language]?.[index]?.label;
+                if (countryName) {
+                  trackSelectTerritory(countryName);
+                }
                 // onChange({guardian: value?.guardian, territory: item.value});
                 form.setFieldValue(field.name, item.value);
               }}

@@ -261,7 +261,7 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
           checklistMap
             .get(data.tipData.milestoneId)
             ?.helpful_hints.filter((value) => value.id === data.tipData?.hintId) ?? [];
-        suffix = `: Tip: ${i18next.t(`milestones:${tip.value}`)}`;
+        suffix = `: Tip: ${i18next.t(`milestones:${tip.value}`, {lng: 'en'})}`;
       } else {
         suffix = ': Tips';
       }

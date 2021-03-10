@@ -13,7 +13,7 @@ import {sqLiteClient} from '../../db';
 import {getAppointmentById} from '../../db/appoinmetQueries';
 import {deleteNotificationsByAppointmentId, getNotificationById} from '../../db/notificationQueries';
 import {PropType, WellChildCheckUpAppointmentAgesEnum, milestonesIds} from '../../resources/constants';
-import {currentScreen} from '../../utils/analytics';
+import {currentScreen, trackEventByType, trackNotificationById} from '../../utils/analytics';
 import {
   checkMissingMilestones,
   formattedAge,
@@ -131,8 +131,11 @@ function completeMilestoneReminderTrigger() {
  * №10. Fires off a week after any “Remind Me” is selected on Tips page
  */
 function tipsAndActivitiesTrigger(startDate?: Date) {
-  const date = add(startDate ?? new Date(), false ? {seconds: 10} : {weeks: 3});
-  return false ? date : at8AM(date);
+  // const date = add(startDate ?? new Date(), false ? {seconds: 10} : {weeks: 3});
+  // return false ? date : at8AM(date);
+
+  const date = add(startDate ?? new Date(), {weeks: 3});
+  return at8AM(date);
 }
 
 /**
@@ -939,6 +942,7 @@ export function useNavigateNotification() {
           break;
         }
       }
+      trackNotificationById(notificationId);
 
       return markAsRead && setNotificationRead({notificationId});
     },

@@ -152,7 +152,7 @@ export type SelectEventType =
   | 'Appointments'
   | 'Add Appointment'
   | 'Milestone Checklist'
-  | 'Milestone Quickview'
+  | 'Milestone Overview'
   | 'Notifications and Settings '
   | 'App Info & Privacy Policy'
   | 'Tips'
@@ -193,7 +193,7 @@ export const drawerMenuToEvent: Record<keyof DashboardDrawerParamsList, SelectEv
   ChildSummaryStack: 'My Child Summary',
   DashboardStack: 'Dashboard',
   InfoStack: 'App Info & Privacy Policy',
-  MilestoneQuickViewStack: 'Milestone Quickview',
+  MilestoneQuickViewStack: 'Milestone Overview',
   SettingsStack: 'Notifications and Settings ',
   TipsAndActivitiesStack: 'Tips',
   WhenToActEarly: 'When to Act Early',
