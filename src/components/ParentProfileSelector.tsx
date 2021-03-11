@@ -1,11 +1,11 @@
 import {FastField, FastFieldProps} from 'formik';
 import i18next from 'i18next';
-import React from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 
 import {ParentProfileSelectorValues, guardianTypes, sharedStyle, statesOptions} from '../resources/constants';
-import {trackSelectByType, trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
+import {trackEventByType, trackSelectByType, trackSelectProfile, trackSelectTerritory} from '../utils/analytics';
 import DropDownPicker from './DropDownPicker';
 import Chevron from './Svg/Chevron';
 
@@ -59,13 +59,16 @@ const ParentProfileSelector: React.FC = () => {
               dropDownMaxHeight={140}
               value={field.value}
               zIndex={1000}
-              onChangeItem={(item, index) => {
+              onChangeItem={(item) => {
                 trackSelectByType('Territory');
-                const countryName = statesOptions[i18next.language]?.[index]?.label;
+                const countryName = t(`states:${item.value}`, {lng: 'en'});
+                console.log({item});
                 if (countryName) {
                   trackSelectTerritory(countryName);
                 }
-                // onChange({guardian: value?.guardian, territory: item.value});
+                if (!['NonUs', 'other'].includes(String(item.value))) {
+                  trackEventByType('Select', 'US State');
+                }
                 form.setFieldValue(field.name, item.value);
               }}
             />

@@ -300,6 +300,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                 if (!allChecked) {
                   trackEventByType('Interaction', 'Unanswered Act Early Item');
                 }
+                onChildSummaryPress ? onChildSummaryPress() : navigation.navigate('ChildSummary');
               }}>
               <View
                 style={[
