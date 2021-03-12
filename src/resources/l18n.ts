@@ -14,9 +14,10 @@ import milestonesES from './milestones/es.json';
 
 export const deviceLocale =
   (Platform.select({
-    ios: NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
-    android: NativeModules.I18nManager.localeIdentifier,
-  }) as string | undefined | null)?.slice(0, 2) || 'en';
+    ios: () =>
+      NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0],
+    android: () => NativeModules.I18nManager.localeIdentifier,
+  }) as () => string | undefined)?.()?.slice(0, 2) || 'en';
 
 export function useChangeLanguage() {
   return useCallback((lang) => {
@@ -38,7 +39,11 @@ const languageDetector = {
   async: true,
   detect: (callback: (language: string) => void) => {
     return Storage.getItemTyped('language').then((language) => {
-      callback(language || deviceLocale);
+      if (!language && ['en', 'es'].includes(deviceLocale)) {
+        callback(deviceLocale);
+      } else {
+        callback(language ?? 'en');
+      }
     });
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
