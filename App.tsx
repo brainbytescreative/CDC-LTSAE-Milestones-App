@@ -11,6 +11,8 @@
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 
+import './src/resources/milestoneChecklist';
+
 import {ACPAnalytics} from '@adobe/react-native-acpanalytics';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import crashlytics from '@react-native-firebase/crashlytics';

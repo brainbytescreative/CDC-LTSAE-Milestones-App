@@ -182,6 +182,7 @@ export function useTransferDataFromOldDb() {
       await queryCache.invalidateQueries(['appointment']);
       await Storage.setItemTyped('migrationStatus', 'done');
     } catch (e) {
+      crashlytics().log(JSON.stringify(questionIdToMilestoneIdMap));
       crashlytics().recordError(e);
       await Storage.setItemTyped('migrationStatus', 'error');
     }
