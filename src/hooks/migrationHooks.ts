@@ -2,9 +2,9 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {formatISO, fromUnixTime, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {useCallback} from 'react';
-import {Platform} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import RNFS from 'react-native-fs';
-import {queryCache} from 'react-query';
+import {queryCache, useMutation} from 'react-query';
 
 import {sqLiteClient} from '../db';
 import SQLiteClient from '../db/SQLiteClient';
@@ -35,22 +35,27 @@ type MilestoneAnswerOld = {
   note: string | null;
 };
 
+export const dbName = Platform.select({
+  ios: 'act_early',
+  android: 'com.brainbytescreative.actearly.database',
+});
+
+export const dbPath = Platform.select({
+  ios: dbName,
+  android: ['..', 'databases', dbName].join('/'),
+});
+
 export function useTransferDataFromOldDb() {
   const [setMilestoneNotifications] = useSetMilestoneNotifications();
   const [setAppointmentNotifications] = useSetAppointmentNotifications();
 
-  const func = useCallback(async () => {
-    try {
+  return useMutation(
+    async (variables: {force?: boolean} | undefined) => {
       const migrated = await Storage.getItemTyped('migrationStatus');
 
-      if (migrated) {
+      if (!variables?.force && migrated && migrated !== 'error') {
         return;
       }
-
-      const dbName = Platform.select({
-        ios: 'act_early',
-        android: 'com.brainbytescreative.actearly.database',
-      });
 
       const childrenQueryStatement = Platform.select({
         ios: `
@@ -100,11 +105,6 @@ export function useTransferDataFromOldDb() {
             FROM achievements
             WHERE child_id = ?
         `,
-      });
-
-      const dbPath = Platform.select({
-        ios: dbName,
-        android: ['..', 'databases', dbName].join('/'),
       });
 
       if (!dbName || !childrenQueryStatement || !milestonesQueryStatement || !appointmentsQueryStatement || !dbPath) {
@@ -181,12 +181,14 @@ export function useTransferDataFromOldDb() {
 
       await queryCache.invalidateQueries(['appointment']);
       await Storage.setItemTyped('migrationStatus', 'done');
-    } catch (e) {
-      crashlytics().log(JSON.stringify(questionIdToMilestoneIdMap));
-      crashlytics().recordError(e);
-      await Storage.setItemTyped('migrationStatus', 'error');
-    }
-  }, [setAppointmentNotifications, setMilestoneNotifications]);
-
-  return [func];
+    },
+    {
+      onError: async (error) => {
+        crashlytics().log(JSON.stringify(questionIdToMilestoneIdMap));
+        crashlytics().recordError(error);
+        Alert.alert('error', error.message);
+        await Storage.setItemTyped('migrationStatus', 'error');
+      },
+    },
+  );
 }

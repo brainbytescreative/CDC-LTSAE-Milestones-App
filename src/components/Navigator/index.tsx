@@ -36,7 +36,7 @@ const Navigator: React.FC<{navigation: NavigationContainerRef | null}> = ({navig
     async () => {
       await initialize()
         .then(() => {
-          return transferDataFromOldDb();
+          return transferDataFromOldDb({force: false});
         })
         .catch((err) => {
           // todo implement error handling

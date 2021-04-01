@@ -39,7 +39,7 @@ import {
   trackSelectLanguage,
   trackSelectSummary,
 } from '../utils/analytics';
-import {formattedAgeSingular} from '../utils/helpers';
+import {formattedAge, formattedAgeSingular} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -431,7 +431,7 @@ const ChildSummaryScreen: React.FC = () => {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
-  const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+  const {milestoneAgeFormatted} = formattedAge(Number(milestoneAge), t);
 
   useFocusEffect(
     React.useCallback(() => {

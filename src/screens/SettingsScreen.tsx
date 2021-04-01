@@ -2,18 +2,24 @@ import {Formik, useField} from 'formik';
 import {FormikProps} from 'formik/dist/types';
 import i18next from 'i18next';
 import _ from 'lodash';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
+import RNFS from 'react-native-fs';
 import {Text} from 'react-native-paper';
+import {queryCache, useQuery} from 'react-query';
 
+import AEButtonMultiline from '../components/AEButtonMultiline';
+import AEButtonRounded from '../components/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import AESwitch from '../components/AESwitch';
+import AEYellowBox from '../components/AEYellowBox';
 import LanguageSelector from '../components/LanguageSelector';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import PurpleArc from '../components/Svg/PurpleArc';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
+import {dbPath, useTransferDataFromOldDb} from '../hooks/migrationHooks';
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
 import {
@@ -25,6 +31,7 @@ import {
 import {colors, sharedStyle} from '../resources/constants';
 import {editProfileSchema} from '../resources/validationSchemas';
 import {trackNotificationSelect, trackSelectByType, trackSelectLanguage} from '../utils/analytics';
+import Storage from '../utils/Storage';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -94,12 +101,22 @@ const SettingsScreen: React.FC = () => {
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
   const [scheduleNotifications] = useScheduleNotifications();
+  // const [oldDbExists, setOldDbExists] = useState<boolean>();
+  // const [transferDataFromOldDb] = useTransferDataFromOldDb();
+  // const {data: migrationStatus} = useQuery('migrationStatus', () => {
+  //   return Promise.resolve('error');
+  //   // return Storage.getItemTyped('migrationStatus');
+  // });
 
   useEffect(() => {
     if (settings) {
       formikRef.current?.setValues(settings);
     }
   }, [settings]);
+
+  // useEffect(() => {
+  //   RNFS.exists([RNFS.DocumentDirectoryPath, dbPath].join('/')).then(setOldDbExists);
+  // }, []);
 
   const rescheduleNotifications = useRef(_.debounce(scheduleNotifications, 3000));
 
@@ -142,6 +159,34 @@ const SettingsScreen: React.FC = () => {
                 );
               }}
             </Formik>
+            {/*{oldDbExists && (*/}
+            {/*  <AEYellowBox wrapper={'none'} containerStyle={{marginBottom: 0, marginTop: 42, flexDirection: 'column'}}>*/}
+            {/*    <View>*/}
+            {/*      <Text style={[sharedStyle.boldText, {textAlign: 'center', fontSize: 13}]}>*/}
+            {/*        If your data was lost during the app update, select the button below to recover your data.*/}
+            {/*      </Text>*/}
+            {/*      <Text style={{textAlign: 'center', fontSize: 13}}>*/}
+            {/*        Note: You must be using same device. If you deleted the app, you will not be able to recover your*/}
+            {/*        data. Data will not transfer from phone-to-phone. If you added new child, that data will not be*/}
+            {/*        overwritten*/}
+            {/*      </Text>*/}
+            {/*    </View>*/}
+            {/*    <AEButtonMultiline*/}
+            {/*      style={{marginBottom: 10, marginHorizontal: 16}}*/}
+            {/*      onPress={() => {*/}
+            {/*        transferDataFromOldDb(*/}
+            {/*          {force: true},*/}
+            {/*          {*/}
+            {/*            onSuccess: () => {*/}
+            {/*              queryCache.clear();*/}
+            {/*            },*/}
+            {/*          },*/}
+            {/*        );*/}
+            {/*      }}>*/}
+            {/*      Recover My Data*/}
+            {/*    </AEButtonMultiline>*/}
+            {/*  </AEYellowBox>*/}
+            {/*)}*/}
           </View>
           <View style={{marginTop: 47}}>
             <PurpleArc width={'100%'} />

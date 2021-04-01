@@ -4,9 +4,9 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {NotificationSettings} from '../hooks/settingsHooks';
 import {ParentProfileSelectorValues} from '../resources/constants';
 
-type Key = keyof ParsedValue;
+type Key = keyof StorageParsedValue;
 
-type ParsedValue = {
+export type StorageParsedValue = {
   migrationStatus: 'done' | 'error' | 'notRequired';
   selectedChild: number;
   notificationSettings: NotificationSettings;
@@ -31,7 +31,7 @@ export default class Storage {
   static getItemTyped<T extends Key>(
     key: T,
     callback?: (error?: Error, result?: string) => void,
-  ): Promise<ParsedValue[T] | null> {
+  ): Promise<StorageParsedValue[T] | null> {
     return AsyncStorage.getItem(key, callback)
       .then((value) => value && JSON.parse(value))
       .catch((e) => {
@@ -49,7 +49,7 @@ export default class Storage {
 
   static async setItemTyped<T extends Key>(
     key: T,
-    value: ParsedValue[T],
+    value: StorageParsedValue[T],
     callback?: (error?: Error) => void,
   ): Promise<void> {
     try {
