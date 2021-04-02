@@ -3,7 +3,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {ActivityIndicator, Alert, Linking, Platform, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -39,7 +39,7 @@ import {
   trackSelectLanguage,
   trackSelectSummary,
 } from '../utils/analytics';
-import {formattedAge, formattedAgeSingular} from '../utils/helpers';
+import {formattedAge} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -424,14 +424,16 @@ const ComposeEmailButton = withSuspense(
 );
 
 const ChildSummaryScreen: React.FC = () => {
-  const {t} = useTranslation('childSummary');
+  const {t, i18n} = useTranslation('childSummary');
   const navigation = useNavigation<ChildSummaryStackNavigationProp>();
 
   const {data: child} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
-  const {milestoneAgeFormatted} = formattedAge(Number(milestoneAge), t);
+  const milestoneAgeFormatted = useMemo(() => {
+    return formattedAge(Number(milestoneAge), t, i18n.language === 'en').milestoneAgeFormatted;
+  }, [i18n.language, milestoneAge, t]);
 
   useFocusEffect(
     React.useCallback(() => {

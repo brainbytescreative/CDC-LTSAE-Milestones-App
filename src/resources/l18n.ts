@@ -25,7 +25,7 @@ export function useChangeLanguage() {
     queryCache.invalidateQueries(
       (query) => {
         const [key] = query.queryKey;
-        return ['questions', 'concerns', 'tips', 'milestone'].includes(String(key));
+        return ['questions', 'concerns', 'tips'].includes(String(key));
       },
       {refetchActive: true},
     );
