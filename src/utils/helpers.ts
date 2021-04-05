@@ -153,7 +153,7 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
   return {isMissingConcern, isNotYet, isNotSure};
 }
 
-type TableNames = 'children' | 'appointments' | 'milestones_answers';
+type TableNames = 'children' | 'appointments' | 'milestones_answers' | 'concern_answers';
 type QueryType = 'insert' | 'updateById';
 
 export interface UpdateTableTypes {

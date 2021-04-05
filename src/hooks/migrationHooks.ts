@@ -1,14 +1,13 @@
 import crashlytics from '@react-native-firebase/crashlytics';
 import {formatISO, fromUnixTime, parseISO} from 'date-fns';
 import _ from 'lodash';
-import {useCallback} from 'react';
 import {Alert, Platform} from 'react-native';
 import RNFS from 'react-native-fs';
 import {queryCache, useMutation} from 'react-query';
 
 import {sqLiteClient} from '../db';
 import SQLiteClient from '../db/SQLiteClient';
-import {questionIdToMilestoneIdMap} from '../resources/milestoneChecklist';
+import {concernIdToMilestoneIdMap, questionIdToMilestoneIdMap} from '../resources/milestoneChecklist';
 import {objectToQuery} from '../utils/helpers';
 import Storage from '../utils/Storage';
 import {useSetAppointmentNotifications, useSetMilestoneNotifications} from './notificationsHooks';
@@ -33,6 +32,13 @@ type MilestoneAnswerOld = {
   answer: number;
   questionId: number;
   note: string | null;
+};
+
+type ConcernAnswerOld = {
+  childId: number;
+  concernId: number;
+  note: string;
+  answer: number;
 };
 
 export const dbName = Platform.select({
@@ -107,7 +113,28 @@ export function useTransferDataFromOldDb() {
         `,
       });
 
-      if (!dbName || !childrenQueryStatement || !milestonesQueryStatement || !appointmentsQueryStatement || !dbPath) {
+      const concernsQueryStatement = Platform.select({
+        ios: `
+            SELECT c.concernId, c.concernAnswer answer, N.noteContent note, c.childId
+            FROM ConcernAnswers c
+                     LEFT JOIN Notes N ON N.id = c.noteId
+            WHERE childId = ?
+        `,
+        android: `
+            SELECT child_id childId, concern_id concernId, note, is_selected answer
+            FROM child_concern
+            WHERE child_id = ?
+        `,
+      });
+
+      if (
+        !dbName ||
+        !childrenQueryStatement ||
+        !milestonesQueryStatement ||
+        !appointmentsQueryStatement ||
+        !dbPath ||
+        !concernsQueryStatement
+      ) {
         throw new Error('Platform is not supported');
       }
 
@@ -173,7 +200,23 @@ export function useTransferDataFromOldDb() {
               const object = {...value, childId: newChildId, milestoneId: milestoneId};
               const [milestonesQuery, params] = objectToQuery(object, 'milestones_answers');
 
-              await sqLiteClient.dB?.executeSql(milestonesQuery, params);
+              await sqLiteClient.db.executeSql(milestonesQuery, params);
+            }),
+          );
+
+          const [{rows: concernsAnswerOldRes}] = await oldDbClient.executeSql(concernsQueryStatement, [record.id]);
+          const concernsAnswerOldRecords: ConcernAnswerOld[] = concernsAnswerOldRes.raw();
+
+          await Promise.all(
+            concernsAnswerOldRecords.map(async (value) => {
+              const milestoneId = concernIdToMilestoneIdMap.get(value.concernId);
+              if (!milestoneId) {
+                return;
+              }
+              const object = {...value, childId: newChildId, milestoneId: milestoneId};
+              const [milestonesQuery, params] = objectToQuery(object, 'concern_answers');
+
+              await sqLiteClient.db.executeSql(milestonesQuery, params);
             }),
           );
         }),

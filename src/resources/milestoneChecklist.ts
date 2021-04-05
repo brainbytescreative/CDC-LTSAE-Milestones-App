@@ -3738,6 +3738,17 @@ export const questionIdToMilestoneIdMap = freezeMap(
   ),
 );
 
+export const concernIdToMilestoneIdMap = freezeMap(
+  new Map(
+    Array.from(checklistMap.values())
+      .map((value) => {
+        return value?.concerns.map((c) => ({...c, milestoneId: value.id})) ?? [];
+      })
+      .flat()
+      .map((value) => [value.id, value.milestoneId]),
+  ),
+);
+
 // export const milestoneQuestions = Object.freeze(
 //   Array.from(checklistMap.values())
 //     .map((value) => value?.milestones ?? [])
