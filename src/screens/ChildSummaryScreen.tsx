@@ -481,7 +481,7 @@ const ChildSummaryScreen: React.FC = () => {
         </Text>
         <View style={{paddingHorizontal: 32}}>
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
-          <View style={{marginTop: 15, alignItems: 'center'}}>
+          <View style={{marginTop: 15, alignItems: 'flex-start'}}>
             <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
               <Text
                 numberOfLines={1}
@@ -490,7 +490,7 @@ const ChildSummaryScreen: React.FC = () => {
                   trackEventByType('Link', 'Find EI', {page: "My Child's Summary"});
                   return Linking.openURL(t('findElLink'));
                 }}
-                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+                style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
               />
               <Text
                 numberOfLines={1}
@@ -499,10 +499,10 @@ const ChildSummaryScreen: React.FC = () => {
                   trackEventByType('Link', 'Concerned', {page: "My Child's Summary"});
                   return Linking.openURL(t('concernedLink'));
                 }}
-                style={[{textDecorationLine: 'underline', textAlign: 'center'}, sharedStyle.boldText]}
+                style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
               />
               <Text style={[sharedStyle.boldText]} />
-              <Text style={{textAlign: 'center'}} />
+              <Text style={{textAlign: 'left'}} />
             </Trans>
           </View>
           {/*</Text>*/}

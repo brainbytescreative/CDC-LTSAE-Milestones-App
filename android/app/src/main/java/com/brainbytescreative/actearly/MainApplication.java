@@ -60,7 +60,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
 
       MobileCore.setApplication(this);
-      MobileCore.configureWithAppID("b36c1852e229/039962c157f4/launch-b9889b425fcc-development");
+      MobileCore.configureWithAppID("b36c1852e229/039962c157f4/launch-3884e4d70fae");
       MobileCore.setWrapperType(WrapperType.REACT_NATIVE);
 
       try {
