@@ -31,7 +31,7 @@ import {colors} from './src/resources/constants';
 import {currentScreen, trackAction, trackSelectByType, trackStartAddChild} from './src/utils/analytics';
 import {getActiveRouteName} from './src/utils/helpers';
 
-enableScreens();
+// enableScreens();
 
 // First, set the handler that will cause the notification
 // to show the alert
