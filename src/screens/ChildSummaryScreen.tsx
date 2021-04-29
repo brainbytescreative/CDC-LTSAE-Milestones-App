@@ -482,28 +482,30 @@ const ChildSummaryScreen: React.FC = () => {
         <View style={{paddingHorizontal: 32}}>
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
-            <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
-              <Text
-                numberOfLines={1}
-                accessibilityRole={'link'}
-                onPress={() => {
-                  trackEventByType('Link', 'Find EI', {page: "My Child's Summary"});
-                  return Linking.openURL(t('findElLink'));
-                }}
-                style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
-              />
-              <Text
-                numberOfLines={1}
-                accessibilityRole={'link'}
-                onPress={() => {
-                  trackEventByType('Link', 'Concerned', {page: "My Child's Summary"});
-                  return Linking.openURL(t('concernedLink'));
-                }}
-                style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
-              />
-              <Text style={[sharedStyle.boldText]} />
-              <Text style={{textAlign: 'left'}} />
-            </Trans>
+            <Text>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
+                <Text
+                  numberOfLines={1}
+                  accessibilityRole={'link'}
+                  onPress={() => {
+                    trackEventByType('Link', 'Find EI', {page: "My Child's Summary"});
+                    return Linking.openURL(t('findElLink'));
+                  }}
+                  style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
+                />
+                <Text
+                  numberOfLines={1}
+                  accessibilityRole={'link'}
+                  onPress={() => {
+                    trackEventByType('Link', 'Concerned', {page: "My Child's Summary"});
+                    return Linking.openURL(t('concernedLink'));
+                  }}
+                  style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
+                />
+                <Text style={[sharedStyle.boldText]} />
+                <Text style={{textAlign: 'left'}} />
+              </Trans>
+            </Text>
           </View>
           {/*</Text>*/}
           {/*<Text>Show your doctor or email summary</Text>*/}
