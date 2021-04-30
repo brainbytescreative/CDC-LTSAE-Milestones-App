@@ -31,7 +31,15 @@ import {
 } from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer, MilestoneAnswer} from '../hooks/types';
-import {PropType, colors, missingConcerns, sharedStyle, suspenseEnabled} from '../resources/constants';
+import {
+  PropType,
+  breakStr,
+  breakStrLarge,
+  colors,
+  missingConcerns,
+  sharedStyle,
+  suspenseEnabled,
+} from '../resources/constants';
 import {
   trackEventByType,
   trackInteractionByType,
@@ -483,7 +491,7 @@ const ChildSummaryScreen: React.FC = () => {
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
             <Text>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? ''}}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', breakStr, breakStrLarge}}>
                 <Text
                   numberOfLines={1}
                   accessibilityRole={'link'}
