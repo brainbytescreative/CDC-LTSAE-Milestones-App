@@ -7,7 +7,7 @@ import {queryCache, useMutation} from 'react-query';
 
 import {sqLiteClient} from '../db';
 import SQLiteClient from '../db/SQLiteClient';
-import {concernIdToMilestoneIdMap, questionIdToMilestoneIdMap} from '../resources/milestoneChecklist';
+import {concernIdToMilestoneIdMap, questionIdToMilestoneIdMap} from '../resources/milestoneChecklistV2';
 import {objectToQuery} from '../utils/helpers';
 import Storage from '../utils/Storage';
 import {useSetAppointmentNotifications, useSetMilestoneNotifications} from './notificationsHooks';

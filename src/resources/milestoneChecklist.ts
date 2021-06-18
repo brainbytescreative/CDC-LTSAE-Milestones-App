@@ -1,36 +1,4 @@
-import {MilestoneIdType} from './constants';
-
-export interface Concern {
-  id: number;
-  value: string;
-}
-
-export interface Milestones {
-  social: SkillSection[];
-  language: SkillSection[];
-  cognitive: SkillSection[];
-  movement: SkillSection[];
-}
-
-export interface SkillSection {
-  id: number;
-  value: string;
-  photos: SkillMedia[];
-  videos: SkillMedia[];
-}
-
-export interface SkillMedia {
-  name: string;
-  alt: string;
-}
-
-export interface MilestoneChecklist {
-  concerns: Concern[];
-  helpful_hints: Concern[];
-  id: MilestoneIdType;
-  milestones: Record<keyof Milestones | string, SkillSection[] | undefined>;
-  title?: string;
-}
+import {MilestoneChecklist, MilestoneData, Quetion} from './checklist-types';
 
 const checklist: MilestoneChecklist[] = [
   {
@@ -3683,8 +3651,6 @@ const checklist: MilestoneChecklist[] = [
   },
 ];
 
-export type Quetion = SkillSection & {skillType: keyof Milestones; milestoneId: number};
-
 const mapSet = function (key: unknown) {
   throw "Can't add property " + key + ', map is not extensible';
 };
@@ -3707,7 +3673,6 @@ function freezeMap<T extends Map<K, V>, K, V>(myMap: T) {
   return myMap;
 }
 
-type MilestoneData = Pick<MilestoneChecklist, 'id' | 'concerns' | 'helpful_hints'> & {milestones: Quetion[]};
 export const checklistMap = freezeMap(
   new Map<number, MilestoneData>(
     checklist.map((value) => {

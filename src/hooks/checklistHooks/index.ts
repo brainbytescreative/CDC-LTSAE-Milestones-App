@@ -9,6 +9,7 @@ import {queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
 import {getChecklistAnswer, setAnswer} from '../../db/checklistQueries';
+import {Concern, SkillSection} from '../../resources/checklist-types';
 import {
   MilestoneIdType,
   PropType,
@@ -19,7 +20,7 @@ import {
   skillTypes,
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
-import {Concern, SkillSection, checklistMap} from '../../resources/milestoneChecklist';
+import {checklistMap} from '../../resources/milestoneChecklistV2';
 import {trackInteractionByType} from '../../utils/analytics';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
 import {useGetCurrentChild} from '../childrenHooks';

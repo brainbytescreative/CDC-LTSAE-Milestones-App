@@ -31,8 +31,8 @@ import {
   useSetConcern,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {Concern} from '../../resources/checklist-types';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
-import {Concern} from '../../resources/milestoneChecklist';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 

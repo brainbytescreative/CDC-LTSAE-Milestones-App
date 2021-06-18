@@ -475,6 +475,7 @@ const text = `2 Month: Social: Calms down when spoken to or picked up
 60 Month: Tip: Help your child be ready for new places and meeting new people. For example, you can read stories or role play (pretend play) to help him/her get ready for Kindergarten.`;
 
 const milestones = {};
+const translations = {};
 
 let ids = {
   concern: 0,
@@ -488,80 +489,101 @@ text.split('\n').forEach((value) => {
   if (!milestones[mId]) {
     milestones[mId] = {};
   }
+  match[3] = match[3].replace(/his\/her/g, '{{common:himHerTag}}');
+  match[3] = match[3].replace(/he\/she/g, '{{common:heSheTag}}');
+  match[3] = match[3].replace(/him\/her/g, '{{common:himHerTag}}');
+  match[3] = match[3].replace(/himself\/herself/, '{{common:himselfHerselfTag}}');
+  match[3] = match[3].replace(/He\/(She|she)/g, '{{common:common:heSheUpperTag}}');
+
   if (match[2] === 'Act Early') {
     const concerns = milestones[mId].concerns || [];
     ids.concern++;
+    const key = `milestone_${mId}_concern_${ids.concern}_v2`;
     milestones[mId].concerns = [
       ...concerns,
       {
         id: ids.concern,
-        value: `milestone_${mId}_concern_${ids.concern}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
 
   if (match[2] === 'Tip') {
     const helpful_hints = milestones[mId].helpful_hints || [];
     ids.hint++;
+    const key = `milestone_${mId}_hint_${ids.hint}_v2`;
     milestones[mId].helpful_hints = [
       ...helpful_hints,
       {
         id: ids.hint,
-        value: `milestone_${mId}_hint_${ids.hint}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
 
   if (!milestones[mId].milestones) {
+    milestones[mId].id = Number(mId);
     milestones[mId].milestones = {};
   }
 
   if (match[2] === 'Social') {
     const temp = milestones[mId].milestones.social || [];
     ids.skill++;
+    const key = `milestone_${mId}_skill_${ids.skill}_v2`;
     milestones[mId].milestones.social = [
       ...temp,
       {
         id: ids.skill,
-        value: `milestone_${mId}_skill_${ids.skill}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
 
   if (match[2] === 'Language') {
     const temp = milestones[mId].milestones.language || [];
     ids.skill++;
+    const key = `milestone_${mId}_skill_${ids.skill}_v2`;
     milestones[mId].milestones.language = [
       ...temp,
       {
         id: ids.skill,
-        value: `milestone_${mId}_skill_${ids.skill}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
 
   if (match[2] === 'Cognitive') {
     const temp = milestones[mId].milestones.cognitive || [];
     ids.skill++;
+    const key = `milestone_${mId}_skill_${ids.skill}_v2`;
     milestones[mId].milestones.cognitive = [
       ...temp,
       {
         id: ids.skill,
-        value: `milestone_${mId}_skill_${ids.skill}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
 
   if (match[2] === 'Movement') {
     const temp = milestones[mId].milestones.movement || [];
     ids.skill++;
+    const key = `milestone_${mId}_skill_${ids.skill}_v2`;
     milestones[mId].milestones.movement = [
       ...temp,
       {
         id: ids.skill,
-        value: `milestone_${mId}_skill_${ids.skill}`,
+        value: key,
       },
     ];
+    translations[key] = match[3];
   }
-  console.log(JSON.stringify(milestones, null, 2), ids.skill + ids.hint + ids.concern);
 });
+
+// console.log(JSON.stringify(Object.values(translations), null, 2), ids.skill + ids.hint + ids.concern);
+console.log(JSON.stringify(translations, null, 2), ids.skill + ids.hint + ids.concern);

@@ -9,9 +9,10 @@ import {queryCache} from 'react-query';
 
 import {DashboardDrawerParamsList} from '../components/Navigator/types';
 import {Answer, ChildResult, MilestoneQueryResult} from '../hooks/types';
+import {Quetion} from '../resources/checklist-types';
 import {Section, SelectEventType, drawerMenuToEvent, sectionToEvent} from '../resources/constants';
 import {deviceLocale} from '../resources/l18n';
-import {Quetion, checklistMap} from '../resources/milestoneChecklist';
+import {checklistMap} from '../resources/milestoneChecklistV2';
 import {formatAge, getActiveRouteName} from './helpers';
 
 export type PageType =

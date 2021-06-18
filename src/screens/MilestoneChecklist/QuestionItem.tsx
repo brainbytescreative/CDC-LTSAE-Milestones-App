@@ -9,8 +9,8 @@ import NoteIcon from '../../components/Svg/NoteIcon';
 import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetQuestionAnswer, useSetQuestionAnswer} from '../../hooks/checklistHooks';
 import {Answer} from '../../hooks/types';
+import {SkillSection} from '../../resources/checklist-types';
 import {colors, sharedStyle} from '../../resources/constants';
-import {SkillSection} from '../../resources/milestoneChecklist';
 import {trackChecklistAnswer, trackInteractionByType} from '../../utils/analytics';
 
 const QuestionItem: React.FC<SkillSection & {childId: number | undefined}> = ({id, value, childId}) => {
