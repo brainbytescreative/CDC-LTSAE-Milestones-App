@@ -201,7 +201,7 @@
         "complete": "Completa",
         "drawerLabel": "Lista de indicadores",
         "incomplete": "incompleta",
-        "message1": "La app Sigamos el Desarrollo tiene listas de verificación para las edades de 2, 4, 6, 9, 12 y 18 meses, y de los 2 a los 5 años.",
+        "message1": "La app Sigamos el Desarrollo tiene listas de verificación para las edades de 2, 4, 6, 9, 12, 15, 18, 24 y 30 meses, y de los 3 a los 5 años.",
         "message2": "Si la edad de su hijo está entre dos listas de verificación, complete la lista de la edad menor.",
         "milestoneChecklist": "Lista de indicadores",
         "milestoneQuickView": "Vista rápida",
@@ -357,6 +357,8 @@
         "label-like": "Favorito",
         "label-remindMe": "$t(tipsAndActivities:remindMe)",
         "like": "Favorito",
+        "subtitle_under_15": "Como primer maestro de su bebé, usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su bebé si tiene preguntas o si desea obtener más ideas acerca de cómo ayudarlo en su desarrollo.",
+        "subtitle_above_15": "Como primer maestro de su [hijo/hija], usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su [niño/niña] si tiene preguntas o si desea obtener más ideas acerca de cómo ayudarlo en su desarrollo.",
         "remindMe": "Recordarme",
         "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} de {{childAge}} hoy.",
         "title": "Consejos y actividades"
