@@ -2,24 +2,18 @@ import {Formik, useField} from 'formik';
 import {FormikProps} from 'formik/dist/types';
 import i18next from 'i18next';
 import _ from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {LayoutChangeEvent, StyleProp, TextStyle, View} from 'react-native';
-import RNFS from 'react-native-fs';
 import {Text} from 'react-native-paper';
-import {queryCache, useQuery} from 'react-query';
 
-import AEButtonMultiline from '../components/AEButtonMultiline';
-import AEButtonRounded from '../components/AEButtonRounded';
 import AEScrollView from '../components/AEScrollView';
 import AESwitch from '../components/AESwitch';
-import AEYellowBox from '../components/AEYellowBox';
 import LanguageSelector from '../components/LanguageSelector';
 import NotificationsBadge from '../components/NotificationsBadge/NotificationsBadge';
 import ParentProfileSelector from '../components/ParentProfileSelector';
 import PurpleArc from '../components/Svg/PurpleArc';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
-import {dbPath, useTransferDataFromOldDb} from '../hooks/migrationHooks';
 import {useScheduleNotifications} from '../hooks/notificationsHooks';
 import {useGetParentProfile, useSetParentProfile} from '../hooks/parentProfileHooks';
 import {
@@ -31,7 +25,6 @@ import {
 import {colors, sharedStyle} from '../resources/constants';
 import {editProfileSchema} from '../resources/validationSchemas';
 import {trackNotificationSelect, trackSelectByType, trackSelectLanguage} from '../utils/analytics';
-import Storage from '../utils/Storage';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 

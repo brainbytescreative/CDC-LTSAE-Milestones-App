@@ -239,6 +239,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				C56037C6C7C431A0A0EE9E38 /* [CP] Copy Pods Resources */,
+				0ED766D41804AFA04ACC4767 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -264,6 +265,7 @@
 				4C618D4D2C787FABF59DE57E /* [CP-User] [RNFB] Core Configuration */,
 				B1F616B41FA52F621C37E362 /* [CP-User] [RNFB] Crashlytics Configuration */,
 				344C8BB6248110CB00CC73F6 /* ShellScript */,
+				8A8A68ABA41BAEBF41350E80 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -418,6 +420,24 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		0ED766D41804AFA04ACC4767 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-brainbytescreativeactearly-brainbytescreativeactearlyTests/Pods-brainbytescreativeactearly-brainbytescreativeactearlyTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-brainbytescreativeactearly-brainbytescreativeactearlyTests/Pods-brainbytescreativeactearly-brainbytescreativeactearlyTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -529,6 +549,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-brainbytescreativeactearly/Pods-brainbytescreativeactearly-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8A8A68ABA41BAEBF41350E80 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-brainbytescreativeactearly/Pods-brainbytescreativeactearly-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-brainbytescreativeactearly/Pods-brainbytescreativeactearly-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B1F616B41FA52F621C37E362 /* [CP-User] [RNFB] Crashlytics Configuration */ = {
