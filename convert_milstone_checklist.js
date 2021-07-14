@@ -597,5 +597,5 @@ text.split('\n').forEach((value) => {
   }
 });
 
-// console.log(JSON.stringify(Object.values(translations), null, 2), ids.skill + ids.hint + ids.concern);
-console.log(JSON.stringify(translationsEn, null, 2), ids.skill + ids.hint + ids.concern);
+// console.log(JSON.stringify(Object.values(milestones), null, 2), ids.skill + ids.hint + ids.concern);
+console.log(JSON.stringify(translationsEs, null, 2), ids.skill + ids.hint + ids.concern);

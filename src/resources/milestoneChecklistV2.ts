@@ -57,28 +57,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 1,
-        value: 'milestone_2_concern_1_v2',
-      },
-      {
-        id: 2,
-        value: 'milestone_2_concern_2_v2',
-      },
-      {
-        id: 3,
-        value: 'milestone_2_concern_3_v2',
-      },
-      {
-        id: 4,
-        value: 'milestone_2_concern_4_v2',
-      },
-      {
-        id: 5,
-        value: 'milestone_2_concern_5_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 1,
@@ -161,6 +139,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_2_hint_20_v2',
       },
     ],
+    concerns: [
+      {
+        id: 1,
+        value: 'milestone_2_concern_1_v2',
+      },
+      {
+        id: 2,
+        value: 'milestone_2_concern_2_v2',
+      },
+      {
+        id: 3,
+        value: 'milestone_2_concern_3_v2',
+      },
+      {
+        id: 4,
+        value: 'milestone_2_concern_4_v2',
+      },
+      {
+        id: 5,
+        value: 'milestone_2_concern_5_v2',
+      },
+    ],
   },
   {
     id: 4,
@@ -226,28 +226,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 6,
-        value: 'milestone_4_concern_6_v2',
-      },
-      {
-        id: 7,
-        value: 'milestone_4_concern_7_v2',
-      },
-      {
-        id: 8,
-        value: 'milestone_4_concern_8_v2',
-      },
-      {
-        id: 9,
-        value: 'milestone_4_concern_9_v2',
-      },
-      {
-        id: 10,
-        value: 'milestone_4_concern_10_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 21,
@@ -326,6 +304,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_4_hint_39_v2',
       },
     ],
+    concerns: [
+      {
+        id: 6,
+        value: 'milestone_4_concern_6_v2',
+      },
+      {
+        id: 7,
+        value: 'milestone_4_concern_7_v2',
+      },
+      {
+        id: 8,
+        value: 'milestone_4_concern_8_v2',
+      },
+      {
+        id: 9,
+        value: 'milestone_4_concern_9_v2',
+      },
+      {
+        id: 10,
+        value: 'milestone_4_concern_10_v2',
+      },
+    ],
   },
   {
     id: 6,
@@ -387,28 +387,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 11,
-        value: 'milestone_6_concern_11_v2',
-      },
-      {
-        id: 12,
-        value: 'milestone_6_concern_12_v2',
-      },
-      {
-        id: 13,
-        value: 'milestone_6_concern_13_v2',
-      },
-      {
-        id: 14,
-        value: 'milestone_6_concern_14_v2',
-      },
-      {
-        id: 15,
-        value: 'milestone_6_concern_15_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 40,
@@ -473,6 +451,28 @@ const checklist: MilestoneChecklist[] = [
       {
         id: 55,
         value: 'milestone_6_hint_55_v2',
+      },
+    ],
+    concerns: [
+      {
+        id: 11,
+        value: 'milestone_6_concern_11_v2',
+      },
+      {
+        id: 12,
+        value: 'milestone_6_concern_12_v2',
+      },
+      {
+        id: 13,
+        value: 'milestone_6_concern_13_v2',
+      },
+      {
+        id: 14,
+        value: 'milestone_6_concern_14_v2',
+      },
+      {
+        id: 15,
+        value: 'milestone_6_concern_15_v2',
       },
     ],
   },
@@ -540,28 +540,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 16,
-        value: 'milestone_9_concern_16_v2',
-      },
-      {
-        id: 17,
-        value: 'milestone_9_concern_17_v2',
-      },
-      {
-        id: 18,
-        value: 'milestone_9_concern_18_v2',
-      },
-      {
-        id: 19,
-        value: 'milestone_9_concern_19_v2',
-      },
-      {
-        id: 20,
-        value: 'milestone_9_concern_20_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 56,
@@ -660,6 +638,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_9_hint_79_v2',
       },
     ],
+    concerns: [
+      {
+        id: 16,
+        value: 'milestone_9_concern_16_v2',
+      },
+      {
+        id: 17,
+        value: 'milestone_9_concern_17_v2',
+      },
+      {
+        id: 18,
+        value: 'milestone_9_concern_18_v2',
+      },
+      {
+        id: 19,
+        value: 'milestone_9_concern_19_v2',
+      },
+      {
+        id: 20,
+        value: 'milestone_9_concern_20_v2',
+      },
+    ],
   },
   {
     id: 12,
@@ -713,28 +713,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 21,
-        value: 'milestone_12_concern_21_v2',
-      },
-      {
-        id: 22,
-        value: 'milestone_12_concern_22_v2',
-      },
-      {
-        id: 23,
-        value: 'milestone_12_concern_23_v2',
-      },
-      {
-        id: 24,
-        value: 'milestone_12_concern_24_v2',
-      },
-      {
-        id: 25,
-        value: 'milestone_12_concern_25_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 80,
@@ -813,6 +791,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_12_hint_98_v2',
       },
     ],
+    concerns: [
+      {
+        id: 21,
+        value: 'milestone_12_concern_21_v2',
+      },
+      {
+        id: 22,
+        value: 'milestone_12_concern_22_v2',
+      },
+      {
+        id: 23,
+        value: 'milestone_12_concern_23_v2',
+      },
+      {
+        id: 24,
+        value: 'milestone_12_concern_24_v2',
+      },
+      {
+        id: 25,
+        value: 'milestone_12_concern_25_v2',
+      },
+    ],
   },
   {
     id: 15,
@@ -878,28 +878,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 26,
-        value: 'milestone_15_concern_26_v2',
-      },
-      {
-        id: 27,
-        value: 'milestone_15_concern_27_v2',
-      },
-      {
-        id: 28,
-        value: 'milestone_15_concern_28_v2',
-      },
-      {
-        id: 29,
-        value: 'milestone_15_concern_29_v2',
-      },
-      {
-        id: 30,
-        value: 'milestone_15_concern_30_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 99,
@@ -994,6 +972,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_15_hint_121_v2',
       },
     ],
+    concerns: [
+      {
+        id: 26,
+        value: 'milestone_15_concern_26_v2',
+      },
+      {
+        id: 27,
+        value: 'milestone_15_concern_27_v2',
+      },
+      {
+        id: 28,
+        value: 'milestone_15_concern_28_v2',
+      },
+      {
+        id: 29,
+        value: 'milestone_15_concern_29_v2',
+      },
+      {
+        id: 30,
+        value: 'milestone_15_concern_30_v2',
+      },
+    ],
   },
   {
     id: 18,
@@ -1067,28 +1067,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 31,
-        value: 'milestone_18_concern_31_v2',
-      },
-      {
-        id: 32,
-        value: 'milestone_18_concern_32_v2',
-      },
-      {
-        id: 33,
-        value: 'milestone_18_concern_33_v2',
-      },
-      {
-        id: 34,
-        value: 'milestone_18_concern_34_v2',
-      },
-      {
-        id: 35,
-        value: 'milestone_18_concern_35_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 122,
@@ -1171,6 +1149,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_18_hint_141_v2',
       },
     ],
+    concerns: [
+      {
+        id: 31,
+        value: 'milestone_18_concern_31_v2',
+      },
+      {
+        id: 32,
+        value: 'milestone_18_concern_32_v2',
+      },
+      {
+        id: 33,
+        value: 'milestone_18_concern_33_v2',
+      },
+      {
+        id: 34,
+        value: 'milestone_18_concern_34_v2',
+      },
+      {
+        id: 35,
+        value: 'milestone_18_concern_35_v2',
+      },
+    ],
   },
   {
     id: 24,
@@ -1236,28 +1236,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 36,
-        value: 'milestone_24_concern_36_v2',
-      },
-      {
-        id: 37,
-        value: 'milestone_24_concern_37_v2',
-      },
-      {
-        id: 38,
-        value: 'milestone_24_concern_38_v2',
-      },
-      {
-        id: 39,
-        value: 'milestone_24_concern_39_v2',
-      },
-      {
-        id: 40,
-        value: 'milestone_24_concern_40_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 142,
@@ -1340,6 +1318,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_24_hint_161_v2',
       },
     ],
+    concerns: [
+      {
+        id: 36,
+        value: 'milestone_24_concern_36_v2',
+      },
+      {
+        id: 37,
+        value: 'milestone_24_concern_37_v2',
+      },
+      {
+        id: 38,
+        value: 'milestone_24_concern_38_v2',
+      },
+      {
+        id: 39,
+        value: 'milestone_24_concern_39_v2',
+      },
+      {
+        id: 40,
+        value: 'milestone_24_concern_40_v2',
+      },
+    ],
   },
   {
     id: 30,
@@ -1413,28 +1413,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 41,
-        value: 'milestone_30_concern_41_v2',
-      },
-      {
-        id: 42,
-        value: 'milestone_30_concern_42_v2',
-      },
-      {
-        id: 43,
-        value: 'milestone_30_concern_43_v2',
-      },
-      {
-        id: 44,
-        value: 'milestone_30_concern_44_v2',
-      },
-      {
-        id: 45,
-        value: 'milestone_30_concern_45_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 162,
@@ -1529,6 +1507,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_30_hint_184_v2',
       },
     ],
+    concerns: [
+      {
+        id: 41,
+        value: 'milestone_30_concern_41_v2',
+      },
+      {
+        id: 42,
+        value: 'milestone_30_concern_42_v2',
+      },
+      {
+        id: 43,
+        value: 'milestone_30_concern_43_v2',
+      },
+      {
+        id: 44,
+        value: 'milestone_30_concern_44_v2',
+      },
+      {
+        id: 45,
+        value: 'milestone_30_concern_45_v2',
+      },
+    ],
   },
   {
     id: 36,
@@ -1590,28 +1590,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 46,
-        value: 'milestone_36_concern_46_v2',
-      },
-      {
-        id: 47,
-        value: 'milestone_36_concern_47_v2',
-      },
-      {
-        id: 48,
-        value: 'milestone_36_concern_48_v2',
-      },
-      {
-        id: 49,
-        value: 'milestone_36_concern_49_v2',
-      },
-      {
-        id: 50,
-        value: 'milestone_36_concern_50_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 185,
@@ -1688,6 +1666,28 @@ const checklist: MilestoneChecklist[] = [
       {
         id: 203,
         value: 'milestone_36_hint_203_v2',
+      },
+    ],
+    concerns: [
+      {
+        id: 46,
+        value: 'milestone_36_concern_46_v2',
+      },
+      {
+        id: 47,
+        value: 'milestone_36_concern_47_v2',
+      },
+      {
+        id: 48,
+        value: 'milestone_36_concern_48_v2',
+      },
+      {
+        id: 49,
+        value: 'milestone_36_concern_49_v2',
+      },
+      {
+        id: 50,
+        value: 'milestone_36_concern_50_v2',
       },
     ],
   },
@@ -1771,28 +1771,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 51,
-        value: 'milestone_48_concern_51_v2',
-      },
-      {
-        id: 52,
-        value: 'milestone_48_concern_52_v2',
-      },
-      {
-        id: 53,
-        value: 'milestone_48_concern_53_v2',
-      },
-      {
-        id: 54,
-        value: 'milestone_48_concern_54_v2',
-      },
-      {
-        id: 55,
-        value: 'milestone_48_concern_55_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 204,
@@ -1907,6 +1885,28 @@ const checklist: MilestoneChecklist[] = [
         value: 'milestone_48_hint_231_v2',
       },
     ],
+    concerns: [
+      {
+        id: 51,
+        value: 'milestone_48_concern_51_v2',
+      },
+      {
+        id: 52,
+        value: 'milestone_48_concern_52_v2',
+      },
+      {
+        id: 53,
+        value: 'milestone_48_concern_53_v2',
+      },
+      {
+        id: 54,
+        value: 'milestone_48_concern_54_v2',
+      },
+      {
+        id: 55,
+        value: 'milestone_48_concern_55_v2',
+      },
+    ],
   },
   {
     id: 60,
@@ -1980,28 +1980,6 @@ const checklist: MilestoneChecklist[] = [
         },
       ],
     },
-    concerns: [
-      {
-        id: 56,
-        value: 'milestone_60_concern_56_v2',
-      },
-      {
-        id: 57,
-        value: 'milestone_60_concern_57_v2',
-      },
-      {
-        id: 58,
-        value: 'milestone_60_concern_58_v2',
-      },
-      {
-        id: 59,
-        value: 'milestone_60_concern_59_v2',
-      },
-      {
-        id: 60,
-        value: 'milestone_60_concern_60_v2',
-      },
-    ],
     helpful_hints: [
       {
         id: 232,
@@ -2102,6 +2080,28 @@ const checklist: MilestoneChecklist[] = [
       {
         id: 256,
         value: 'milestone_60_hint_256_v2',
+      },
+    ],
+    concerns: [
+      {
+        id: 56,
+        value: 'milestone_60_concern_56_v2',
+      },
+      {
+        id: 57,
+        value: 'milestone_60_concern_57_v2',
+      },
+      {
+        id: 58,
+        value: 'milestone_60_concern_58_v2',
+      },
+      {
+        id: 59,
+        value: 'milestone_60_concern_59_v2',
+      },
+      {
+        id: 60,
+        value: 'milestone_60_concern_60_v2',
       },
     ],
   },
