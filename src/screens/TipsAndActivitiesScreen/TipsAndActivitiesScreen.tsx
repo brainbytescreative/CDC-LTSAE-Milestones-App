@@ -14,7 +14,7 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useCancelTipsNotificationById, useSetTipsAndActivitiesNotification} from '../../hooks/notificationsHooks';
 import {PropType, colors, sharedStyle} from '../../resources/constants';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
-import {formatAge} from '../../utils/helpers';
+import {formatAge, tOpt} from '../../utils/helpers';
 import TipsAndActivitiesItem, {ItemProps} from './TipsAndActivitiesItem';
 
 const tipFilters = ['all', 'like', 'remindMe'] as const;
@@ -113,7 +113,9 @@ const TipsAndActivitiesScreen: React.FC<{route?: {params?: {notificationId?: str
         <ChildPhoto photo={child?.photo} />
         <Text style={[{textAlign: 'center'}, sharedStyle.largeBoldText]}>{t('title')}</Text>
         <Text style={[{textAlign: 'center', marginTop: 20, marginHorizontal: 50}, sharedStyle.regularText]}>
-          {Number(milestoneId) < 15 ? t('subtitle_under_15') : t('subtitle_above_15')}
+          {Number(milestoneId) < 15
+            ? t('subtitle_under_15', tOpt({t, gender: child?.gender}))
+            : t('subtitle_above_15', tOpt({t, gender: child?.gender}))}
         </Text>
 
         <View

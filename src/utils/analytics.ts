@@ -226,9 +226,9 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
           data.concernData?.concernId === undefined
             ? 'Is missing milestones'
             : i18next.t(`milestones:${concern.value}`, {lng: 'en'});
-        suffix = `: Act Early: ${_.trim(concernText, '.')}`;
+        suffix = `: Act Early V2: ${_.trim(concernText, '.')}`;
       } else {
-        suffix = ': Act Early';
+        suffix = ': Act Early V2';
       }
       break;
     }
@@ -247,9 +247,9 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
             ?.milestones.filter((value) => value.id === data.questionData?.questionId) ?? [];
         section = section ?? question.skillType;
         const questionText = i18next.t(`milestones:${question.value}`, {lng: 'en'});
-        suffix = `: ${section}: ${_.trim(questionText, '.')}`;
+        suffix = `: ${section} V2: ${_.trim(questionText, '.')}`;
       } else if (section) {
-        suffix = `: ${_.startCase(section)}`;
+        suffix = `: ${_.startCase(section)} V2`;
       }
       break;
     }
@@ -263,9 +263,9 @@ function trackChecklistPage(key: string, data: {pageName?: PageType | string} & 
           checklistMap
             .get(data.tipData.milestoneId)
             ?.helpful_hints.filter((value) => value.id === data.tipData?.hintId) ?? [];
-        suffix = `: Tip: ${i18next.t(`milestones:${tip.value}`, {lng: 'en'})}`;
+        suffix = `: Tip V2: ${i18next.t(`milestones:${tip.value}`, {lng: 'en'})}`;
       } else {
-        suffix = ': Tips';
+        suffix = ': Tips V2';
       }
 
       break;

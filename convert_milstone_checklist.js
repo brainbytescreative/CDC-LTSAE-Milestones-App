@@ -490,16 +490,17 @@ text.split('\n').forEach((value) => {
   if (!milestones[mId]) {
     milestones[mId] = {};
   }
-  match[3] = match[3].replace(/\[his\/her]/g, '{{common:himHerTag}}');
-  match[3] = match[3].replace(/\[he\/she]/g, '{{common:heSheTag}}');
-  match[3] = match[3].replace(/\[him\/her/g, '{{common:himHerTag}}');
-  match[3] = match[3].replace(/\[himself\/herself]/g, '{{common:himselfHerselfTag}}');
-  match[3] = match[3].replace(/\[He\/(She|she)]/g, '{{common:common:heSheUpperTag}}');
-  match[3] = match[3].replace(/his\/her/g, '{{common:himHerTag}}');
-  match[3] = match[3].replace(/he\/she/g, '{{common:heSheTag}}');
-  match[3] = match[3].replace(/him\/her/g, '{{common:himHerTag}}');
-  match[3] = match[3].replace(/himself\/herself/, '{{common:himselfHerselfTag}}');
-  match[3] = match[3].replace(/He\/(She|she)/g, '{{common:common:heSheUpperTag}}');
+  // Do not leave your baby alone. If [he/she] seems sleepy, place [him/her] on
+  match[3] = match[3].replace(/\[his\/her]/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/\[he\/she]/g, '{{heSheTag}}');
+  match[3] = match[3].replace(/\[him\/her]/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/\[himself\/herself]/g, '{{himselfHerselfTag}}');
+  match[3] = match[3].replace(/\[He\/(She|she)]/g, '{{heSheUpperTag}}');
+  match[3] = match[3].replace(/his\/her/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/he\/she/g, '{{heSheTag}}');
+  match[3] = match[3].replace(/him\/her/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/himself\/herself/, '{{himselfHerselfTag}}');
+  match[3] = match[3].replace(/He\/(She|she)/g, '{{heSheUpperTag}}');
 
   if (match[2] === 'Act Early') {
     const concerns = milestones[mId].concerns || [];
@@ -598,4 +599,4 @@ text.split('\n').forEach((value) => {
 });
 
 // console.log(JSON.stringify(Object.values(milestones), null, 2), ids.skill + ids.hint + ids.concern);
-console.log(JSON.stringify(translationsEs, null, 2), ids.skill + ids.hint + ids.concern);
+console.log(JSON.stringify(translationsEn, null, 2), ids.skill + ids.hint + ids.concern);
