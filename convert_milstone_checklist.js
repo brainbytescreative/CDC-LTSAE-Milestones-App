@@ -160,7 +160,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 2 Months\tTip\tHave routines for sleeping and feeding. This will help your baby begin to learn what to expect.\tTenga rutinas para dormir y alimentar al bebé. Esto ayudará a que su bebé empiece a aprender qué debe esperar.
 2 Months\tTip\tLearn to notice and respond to your baby’s signals to know what [he/she]’s feeling and needs. You will feel good and your baby will feel safe and loved. For example, is [he/she] trying to “play” with you by making sounds and looking at you, or is [he/she] turning [his/her] head away, yawning, or becoming fussy because [he/she] needs a break?  \tAprenda a notar y responder a las señales de su bebé para saber lo que siente y necesita. Usted se sentirá bien y su bebé se sentirá seguro y amado. Por ejemplo, ¿está tratando de "jugar" con usted haciendo sonidos y mirándolo, o está girando la cabeza hacia el otro lado, bostezando o poniéndose irritable porque necesita un descanso?  
 2 Months\tTip\tRespond positively to your baby. Act excited, smile, and talk to [him/her] when he makes sounds. This teaches [him/her] to take turns “talking” back and forth in conversation. \tRespóndale positivamente a su bebé. Muéstrese entusiasmado, sonríale y háblele cuando él produzca sonidos. Esto le enseña a turnarse para "hablar" en una conversación. 
-2 Months\tTip\tTalk, read, and sing to your baby to help [his/her] develop and understand language.\tHáblele, léale y cántele a su bebé para ayudarlo a desarrollar y comprender el lenguaje.
+2 Months\tTip\tTalk, read, and sing to your baby to help [him/her] develop and understand language.\tHáblele, léale y cántele a su bebé para ayudarlo a desarrollar y comprender el lenguaje.
 2 Months\tTip\tLay your baby on his tummy when he is awake and put toys at eye level in front of [him/her]. This will help [him/her] practice lifting his head up. Do not leave your baby alone. If [he/she] seems sleepy, place [him/her] on his back in a safe sleep area (firm mattress with no blankets, pillows, bumper pads, or toys).\tAcueste al bebé boca abajo cuando esté despierto y coloque juguetes frente a él, a nivel de sus ojos. Esto lo ayudará a practicar cómo levantar la cabeza. No deje al bebé solo. Si parece que tiene sueño, colóquelo boca arriba en un lugar seguro para dormir (colchón firme sin mantas, almohadas, protectores acolchados ni juguetes).
 2 Months\tTip\tHold a rattle off to one side of your baby's head, shake it, and see if your baby looks for the noise.\tSostenga un sonajero a un lado de la cabeza de su bebé, sacúdalo y vea si su bebé busca el ruido.
 2 Months\tTip\tTake care of yourself. Parenting can be hard work! It’s easier to enjoy your new baby when you feel good yourself.\tCuídese. ¡La crianza de los hijos puede ser un trabajo duro! Es más fácil disfrutar a su bebé cuando usted se siente bien.
@@ -492,13 +492,13 @@ text.split('\n').forEach((value) => {
   }
   // Do not leave your baby alone. If [he/she] seems sleepy, place [him/her] on
   match[3] = match[3].replace(/\[his\/hers]/g, '{{hisHersTag}}');
-  match[3] = match[3].replace(/\[his\/her]/g, '{{hisHersTag}}');
+  match[3] = match[3].replace(/\[his\/her]/g, '{{hisHerTag}}');
   match[3] = match[3].replace(/\[he\/she]/g, '{{heSheTag}}');
   match[3] = match[3].replace(/\[him\/her]/g, '{{himHerTag}}');
   match[3] = match[3].replace(/\[himself\/herself]/g, '{{himselfHerselfTag}}');
   match[3] = match[3].replace(/\[He\/(She|she)]/g, '{{heSheUpperTag}}');
   match[3] = match[3].replace(/his\/hers/g, '{{hisHersTag}}');
-  match[3] = match[3].replace(/his\/her/g, '{{hisHersTag}}');
+  match[3] = match[3].replace(/his\/her/g, '{{hisHerTag}}');
   match[3] = match[3].replace(/he\/she/g, '{{heSheTag}}');
   match[3] = match[3].replace(/him\/her/g, '{{himHerTag}}');
   match[3] = match[3].replace(/himself\/herself/, '{{himselfHerselfTag}}');

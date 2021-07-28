@@ -231,6 +231,7 @@ export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
 };
 
 export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
+  hisHerTag: t('common:hisHerTag', {context: `${gender}`}),
   hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
   heSheTag: t('common:heSheTag', {context: `${gender}`}),
   himHerTag: t('common:himHerTag', {context: `${gender}`}),
