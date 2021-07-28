@@ -59,6 +59,8 @@ const QuestionsList: React.FC<{
         data={questionsGrouped?.get(section) || []}
         renderItem={({item}) => <QuestionItem {...item} childId={childId} />}
         keyExtractor={(item, index) => `question-item-${item.id}-${index}`}
+        contentContainerStyle={{flexGrow: 1}}
+        ListFooterComponentStyle={{flex: 1, justifyContent: 'flex-end'}}
         ListHeaderComponent={() => (
           <>
             <Text style={[{textAlign: 'center', marginTop: 38}, sharedStyle.largeBoldText]}>

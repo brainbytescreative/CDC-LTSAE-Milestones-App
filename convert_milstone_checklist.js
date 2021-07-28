@@ -28,7 +28,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 6 Months\tLanguage\tTakes turns making sounds with you \tSe turna con usted para hacer sonidos 
 6 Months\tLanguage\tBlows "raspberries" (sticks tongue out and blows)\tHace burbujas y sonidos con la boquita (saca la lengua y sopla)
 6 Months\tLanguage\tMakes squealing noises \tHace sonidos de placer (grititos de alegría)
-6 Months\tCognitive\tPuts things in [his/her] mouth to explore them '\tSe pone cosas en la boca para explorarlas 
+6 Months\tCognitive\tPuts things in [his/her] mouth to explore them \tSe pone cosas en la boca para explorarlas 
 6 Months\tCognitive\tReaches to grab a toy [he/she] wants \tEstira el brazo para agarrar el juguete que quiere 
 6 Months\tCognitive\tCloses lips to show [he/she] doesn't want more food \tCierra los labios para mostrar que no quiere más comida
 6 Months\tMovement\tRolls from tummy to back \tCuando está boca abajo, puede voltearse y quedar boca arriba 
@@ -82,7 +82,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 18 Months\tMovement\tWalks without holding on to anyone or anything \tCamina sin agarrarse de alguien o a algo 
 18 Months\tMovement\tScribbles \tHace garabatos
 18 Months\tMovement\tDrinks from a cup without a lid and may spill sometimes \tBebe de una taza sin tapa y a veces puede derramar la bebida
-18 Months\tMovement\tFeeds [himself/herself] with her fingers \tSe alimenta usando los dedos
+18 Months\tMovement\tFeeds [himself/herself] with [his/her] fingers \tSe alimenta usando los dedos
 18 Months\tMovement\tTries to use a spoon \tIntenta usar la cuchara
 18 Months\tMovement\tClimbs on and off a couch or chair without help\tSe sube y baja de un sofá o silla sin ayuda
 24 Months\tSocial\tNotices when others are hurt or upset, like pausing or looking sad when someone is crying \tSe da cuenta cuando otra persona está lastimada o triste; por ejemplo, se detiene o pone cara triste cuando alguien está llorando 
@@ -96,7 +96,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 24 Months\tCognitive\tPlays with more than one toy at the same time, like putting toy food on a toy plate\tJuega con más de un juguete a la vez; por ejemplo, pone comida de juguete en un plato de juguete
 24 Months\tMovement\tKicks a ball \tPatea una pelota 
 24 Months\tMovement\tRuns \tCorre 
-24 Months\tMovement\tWalks (not climbs) up a few stairs with our without help\tSube varios escalones caminando (sin gatear) con o sin ayuda
+24 Months\tMovement\tWalks (not climbs) up a few stairs with or without help\tSube varios escalones caminando (sin gatear) con o sin ayuda
 24 Months\tMovement\tEats with a spoon \tCome con cuchara
 30 Months\tSocial\tPlays next to other children and sometimes plays with them \tJuega al lado de otros niños y a veces con ellos 
 30 Months\tSocial\tShows you what [he/she] can do by saying "Look at me!"\tLe muestra lo que puede hacer diciendo “¡mírame!”
@@ -222,7 +222,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 9 Months\tTip\tTeach your baby to wave “bye-bye” or shake [his/her] head “no.” For example, wave and say “bye-bye” when you are leaving. You can also teach simple baby sign language to help your baby tell you what [he/she] wants before [he/she] can use words.  \tEnséñele a su bebé a decir "adiós" con la manito o a negar con la cabeza para decir "no". Por ejemplo, salude con la mano y diga "adiós" cuando se vaya. También puede enseñarle un lenguaje de señas sencillo para bebés para ayudarlo a decirle lo que quiere antes de que pueda usar palabras.  
 9 Months\tTip\tSay a quick and cheerful goodbye instead of sneaking away so your baby knows you are leaving, even if [he/she] cries. [He/She] will learn to calm [him/her]self and what to expect. Let [him/her] know when you return by saying “Daddy’s back!”\tDiga adiós rápido y de un modo alegre, en lugar de irse a escondidas, para que su bebé sepa que se está yendo, aunque llore. Él aprenderá a calmarse y a saber qué esperar. Hágale saber que ya regresó diciéndole "¡papá ha vuelto!"
 9 Months\tTip\tFind out about choking risks and safe foods to feed your baby. Let [him/her] practice feeding [him/her]self with [his/her] fingers and using a cup with a small amount of water. Sit next to your baby and enjoy mealtime together. Expect spills. Learning is messy and fun!\tAverigüe sobre los riesgos de asfixia y los alimentos seguros para alimentar a su bebé. Deje que practique cómo comer solo, usando sus dedos, y cómo usar una taza con una pequeña cantidad de agua. Siéntese cerca de su bebé y disfruten juntos la hora de la comida. No tenga dudas de que habrá derrames. ¡Aprender es un lío, pero es divertido!
-9 Months\tTip\tBe aware of what is around your baby. [He/She] is moving around more and able to reach for things that could be dangerous. If [heshe] does, distract [him/her] with toys and move [him/her] to a safe area quickly and consistently. \tEsté atento a lo que esté cerca de su bebé. Se está moviendo más rápido y puede alcanzar cosas que podrían ser peligrosas. Si lo hace, distráigalo con juguetes y llévelo a un área segura de forma rápida y coherente. 
+9 Months\tTip\tBe aware of what is around your baby. [He/She] is moving around more and able to reach for things that could be dangerous. If [he/she] does, distract [him/her] with toys and move [him/her] to a safe area quickly and consistently. \tEsté atento a lo que esté cerca de su bebé. Se está moviendo más rápido y puede alcanzar cosas que podrían ser peligrosas. Si lo hace, distráigalo con juguetes y llévelo a un área segura de forma rápida y coherente. 
 9 Months\tTip\tMake sure your baby gets enough sleep: 4- to 12-month-olds need 12 to 16 hours of sleep a day (including naps). Consistent sleep times make it easier!\tAsegúrese de que su bebé esté durmiendo lo suficiente: los bebés de 4 a 12 meses necesitan de 12 a 16 horas de sueño por día (incluidas las siestas). ¡Mantener los horarios constantes hace que sea más fácil!
 9 Months\tTip\tHelp your baby get used to foods with different tastes and textures. Foods can be smooth, mashed, or finely chopped. Your baby might not like every food on the first try. Give [him/her] a chance to try foods again and again.\tAyude a su bebé a acostumbrarse a los alimentos con diferentes sabores y texturas. Los alimentos pueden estar licuados, en puré o picados finamente. Es posible que a su bebé no le gusten todos los alimentos la primera vez que los pruebe. Dele la oportunidad de probar los alimentos una y otra vez.
 9 Months\tTip\tAsk for behaviors that you want. For example, instead of saying “don’t stand,” say “time to sit.”\tDígale lo que desea que haga. Por ejemplo, en lugar de decir "no te pares", diga "es hora de sentarse".
@@ -243,7 +243,7 @@ const text = `2 Months\tSocial\tCalms down when spoken to or picked up \tSe calm
 12 Months\tTip\tGive your baby safe places to explore. Baby-proof your home. For example, move sharp or breakable things out of reach. Lock away medicines, chemicals, and cleaning products. Save the Poison Help Line number, 800-222-1222, in all phones.\tPermita que su bebé tenga lugares seguros para explorar. Tome precauciones en su hogar para proteger a su bebé. Por ejemplo, coloque las cosas filosas o rompibles fuera del alcance del bebé. Guarde bajo llave los medicamentos, las sustancias químicas y los productos de limpieza. Guarde en todos sus teléfonos el número de la línea de ayuda para intoxicaciones y envenenamientos, 1-800-222-1222.
 12 Months\tTip\tMake sure your baby gets enough sleep: 4- to 12-month-olds need 12 to 16 hours of sleep a day (including naps). Consistent sleep times make it easier!\tAsegúrese de que su bebé esté durmiendo lo suficiente: los bebés de 4 a 12 meses necesitan de 12 a 16 horas de sueño por día (incluidas las siestas). ¡Mantener los horarios constantes hace que sea más fácil!
 12 Months\tTip\tPoint to interesting things you see, such as a truck, bus, or animals. This will help your baby pay attention to what others are “showing” [him/her] through pointing.\tSeñale cosas interesantes que vea, como un camión, un autobús o animales. Esto ayudará al bebé a prestar atención a lo que las personas le están "mostrando" cuando señalan algo.
-12 Months\tTip\tRespond with words when your baby points. Babies point to ask for things. For example, say “You want the cup? Here is the cup. It’s your cup.” If [heshe] tries to say “cup,” celebrate [his/her] attempt.\tResponda con palabras cuando el bebé señale algo. Los bebés señalan para pedir las cosas. Por ejemplo, diga "¿quieres la taza? Aquí está la taza. Es tu taza". Si intenta decir "taza", celébrelo.
+12 Months\tTip\tRespond with words when your baby points. Babies point to ask for things. For example, say “You want the cup? Here is the cup. It’s your cup.” If [he/she] tries to say “cup,” celebrate [his/her] attempt.\tResponda con palabras cuando el bebé señale algo. Los bebés señalan para pedir las cosas. Por ejemplo, diga "¿quieres la taza? Aquí está la taza. Es tu taza". Si intenta decir "taza", celébrelo.
 12 Months\tTip\tFind out about foods that are choking risks. Let your baby practice feeding [him/her]self safe foods with [his/her] fingers and using a cup with a small amount of water. Sit next to your baby and enjoy mealtime together. Expect spills. Learning is messy and fun!\tAverigüe sobre los alimentos que tengan riesgo de asfixia. Deje que su bebé practique cómo comer alimentos seguros solo, usando sus dedos, y cómo usar una taza con una pequeña cantidad de agua. Siéntese cerca de su bebé y disfruten juntos la hora de la comida. No tenga dudas de que habrá derrames. ¡Aprender es un lío, pero es divertido!
 12 Months\tTip\tLimit screen time (TV, tablets, phones, etc.) to video calling with loved ones. Screen time is not recommended for children younger than 2 years of age. Babies learn by talking, playing, and interacting with others.\tLimite el tiempo que pase frente a una pantalla (televisión, tableta, teléfono, etc.) a las videollamadas con los seres queridos. No se recomienda que los niños menores de 2 años pasen tiempo frente a una pantalla. Los bebés aprenden hablando, jugando e interactuando con otras personas.
 12 Months\tTip\tHelp your baby get used to foods with different tastes and textures. Foods can be smooth, mashed, or finely chopped. Your baby might not like every food on the first try. Give your baby a chance to try foods again and again.\tAyude a su bebé a acostumbrarse a los alimentos con diferentes sabores y texturas. Los alimentos pueden estar licuados, en puré o picados finamente. Es posible que a su bebé no le gusten todos los alimentos la primera vez que los pruebe. Dele la oportunidad de probarlos una y otra vez.
@@ -491,12 +491,14 @@ text.split('\n').forEach((value) => {
     milestones[mId] = {};
   }
   // Do not leave your baby alone. If [he/she] seems sleepy, place [him/her] on
-  match[3] = match[3].replace(/\[his\/her]/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/\[his\/hers]/g, '{{hisHersTag}}');
+  match[3] = match[3].replace(/\[his\/her]/g, '{{hisHersTag}}');
   match[3] = match[3].replace(/\[he\/she]/g, '{{heSheTag}}');
   match[3] = match[3].replace(/\[him\/her]/g, '{{himHerTag}}');
   match[3] = match[3].replace(/\[himself\/herself]/g, '{{himselfHerselfTag}}');
   match[3] = match[3].replace(/\[He\/(She|she)]/g, '{{heSheUpperTag}}');
-  match[3] = match[3].replace(/his\/her/g, '{{himHerTag}}');
+  match[3] = match[3].replace(/his\/hers/g, '{{hisHersTag}}');
+  match[3] = match[3].replace(/his\/her/g, '{{hisHersTag}}');
   match[3] = match[3].replace(/he\/she/g, '{{heSheTag}}');
   match[3] = match[3].replace(/him\/her/g, '{{himHerTag}}');
   match[3] = match[3].replace(/himself\/herself/, '{{himselfHerselfTag}}');
