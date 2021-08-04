@@ -214,7 +214,7 @@ type AdditionalChecklistParams = Omit<NonNullable<OptionsType>, 'page' | 'eventn
 
 function trackChecklistPage(key: string, data: {pageName?: PageType | string} & AdditionalChecklistParams) {
   let suffix = '';
-  console.log(data);
+  // console.log(data);
   switch (data.pageName) {
     case 'When to Act Early': {
       if (data.concernData) {

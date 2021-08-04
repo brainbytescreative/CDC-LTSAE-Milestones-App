@@ -91,7 +91,10 @@ const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React
     const saveNote = useRef(
       _.debounce((text: string) => {
         id && childId && milestoneId && setConcern({concernId: id, childId, note: text, milestoneId});
-        trackInteractionByType('Add Act Early Note', {page: 'When to Act Early'});
+        trackInteractionByType('Add Act Early Note', {
+          page: 'When to Act Early',
+          concernData: {concernId: Number(id), milestoneId: Number(milestoneId)},
+        });
       }, 500),
     );
 
