@@ -135,8 +135,8 @@ android {
         applicationId "com.brainbytescreative.actearly"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 100
-        versionName "1.5.0"
+        versionCode 103
+        versionName "2.1.0"
         // Enabling multidex support.
         multiDexEnabled true
     }

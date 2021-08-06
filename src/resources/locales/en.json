@@ -361,7 +361,7 @@
         "like": "Favorite",
         "remindMe": "Remind Me",
         "subtitle_under_15": "As your baby’s first teacher, you can help {{hisHerTag}} learning and brain development. Try these simple tips and activities in a safe way. Talk with your baby’s doctor and teachers if you have questions or for more ideas on how to help your baby’s development.",
-        "subtitle_above_15": "As your child’s first teacher, you can help {{hisHersTag}} learning and brain development. Try these simple tips and activities in a safe way. Talk with your child’s doctor and teachers if you have questions or for more ideas on how to help your child’s development.",
+        "subtitle_above_15": "As your child’s first teacher, you can help {{hisHerTag}} learning and brain development. Try these simple tips and activities in a safe way. Talk with your child’s doctor and teachers if you have questions or for more ideas on how to help your child’s development.",
         "subtitle_old": "You can help your {{babyOrChild}} learn and grow. Talk, read, sing, and play together every day. Below are some activities to enjoy with your {{childAge}} old {{babyOrChild}} today.",
         "title": "Tips and Activities"
     }
