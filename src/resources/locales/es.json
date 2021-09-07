@@ -357,8 +357,8 @@
         "label-like": "Favorito",
         "label-remindMe": "$t(tipsAndActivities:remindMe)",
         "like": "Favorito",
-        "subtitle_under_15": "Como primer maestro de su bebé, usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su bebé si tiene preguntas o si desea obtener más ideas acerca de cómo ayudarlo en su desarrollo.",
-        "subtitle_above_15": "Como primer maestro de su [hijo/hija], usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su [niño/niña] si tiene preguntas o si desea obtener más ideas acerca de cómo ayudarlo en su desarrollo.",
+        "subtitle_under_15": "Como primer maestro de su bebé, usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su bebé si tiene preguntas o si desea obtener más ideas acerca de cómo ayudar en el desarrollo del bebé.",
+        "subtitle_above_15": "Como primer maestro de su [hijo/hija], usted puede ayudarlo a aprender y a desarrollar su cerebro. Pruebe estos sencillos consejos y actividades de una manera segura. Hable con el médico y los maestros de su [hijo/hija] si tiene preguntas o si desea obtener más ideas acerca de cómo ayudarlo en su desarrollo.",
         "remindMe": "Recordarme",
         "subtitle": "Puede ayudar a que su {{babyOrChild}} aprenda y crezca. Hablen, lean, canten y jueguen juntos todos los días. A continuación se presentan algunas actividades para disfrutar con su {{babyOrChild}} de {{childAge}} hoy.",
         "title": "Consejos y actividades"

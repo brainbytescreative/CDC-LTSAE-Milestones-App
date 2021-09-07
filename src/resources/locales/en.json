@@ -222,7 +222,7 @@
         "whenToActEarly": "When to Act Early"
     },
     "notifications": {
-        "appointment1DayBeforeBody": "{{name}} has a doctor’s appointment tomorrow. Write down any concerns or questions you have and share them with the doctor. If this is a well-child checkup, also share {{hisHersTag}} milestone checklist. 📝",
+        "appointment1DayBeforeBody": "{{name}} has a doctor’s appointment tomorrow. Write down any concerns or questions you have and share them with the doctor. If this is a well-child checkup, also share {{hisHerTag}} milestone checklist. 📝",
         "appointmentNotificationTitle": "Appointments Notifications",
         "milestoneCompleteReminder": "Some of {{name}}’s {{milestoneAgeFormatted}} milestones were marked ‘Not Yet’ or ‘Not Sure.’ Would you like to recheck those milestones?",
         "milestoneNotificationTitle": "Milestone Notification",
