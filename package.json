@@ -14,9 +14,9 @@
     "translate": "yarn translatees && yarn translateen"
   },
   "dependencies": {
-    "@adobe/react-native-acpanalytics": "^1.1.6",
-    "@adobe/react-native-acpcore": "^1.2.4",
-    "@adobe/react-native-acpuserprofile": "^1.1.0",
+    "@adobe/react-native-acpanalytics": "^2.0.0",
+    "@adobe/react-native-acpcore": "^2.0.0",
+    "@adobe/react-native-acpuserprofile": "^2.0.0",
     "@expo/react-native-action-sheet": "^3.7.0",
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/datetimepicker": "2.5.0",

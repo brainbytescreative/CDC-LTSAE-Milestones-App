@@ -1,4 +1,17 @@
 PODS:
+  - ACPAnalytics (2.5.1):
+    - ACPAnalytics/xcframeworks (= 2.5.1)
+    - ACPCore (>= 2.9.0)
+  - ACPAnalytics/xcframeworks (2.5.1):
+    - ACPCore (>= 2.9.0)
+  - ACPCore (2.9.4):
+    - ACPCore/main (= 2.9.4)
+  - ACPCore/main (2.9.4)
+  - ACPUserProfile (2.2.0):
+    - ACPCore (>= 2.9.0)
+    - ACPUserProfile/xcframeworks (= 2.2.0)
+  - ACPUserProfile/xcframeworks (2.2.0):
+    - ACPCore (>= 2.9.0)
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -179,11 +192,14 @@ PODS:
   - nanopb/encode (2.30906.0)
   - OpenSSL-Universal (1.1.1100)
   - PromisesObjC (1.2.12)
-  - RCTACPAnalytics (1.3.0):
+  - RCTACPAnalytics (2.0.0):
+    - ACPAnalytics
     - React
-  - RCTACPCore (1.5.1):
+  - RCTACPCore (2.0.0):
+    - ACPCore
     - React
-  - RCTACPUserProfile (1.2.0):
+  - RCTACPUserProfile (2.0.0):
+    - ACPUserProfile
     - React
   - RCTRequired (0.63.3)
   - RCTTypeSafety (0.63.3):
@@ -572,6 +588,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - ACPAnalytics
+    - ACPCore
+    - ACPUserProfile
     - boost-for-react-native
     - CocoaAsyncSocket
     - Firebase
@@ -741,6 +760,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  ACPAnalytics: 65bc33a03d31dc3e60f061766b629aac988d1e29
+  ACPCore: 7d09a5b7233d72fa7cb4369c99a8250fd7240305
+  ACPUserProfile: 34bd51d00a2ae1add3d04eab0a313b73cb01b904
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cde416483dac037923206447da6e1454df403714
@@ -778,9 +800,9 @@ SPEC CHECKSUMS:
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  RCTACPAnalytics: 10368cf7f65a443fa449dff18b7d469e4a38cd4a
-  RCTACPCore: dfbf4ecdb6b05a19e6af64ed9498dc6b702c38ce
-  RCTACPUserProfile: c77a8a7575288a4a06550a83f29de0ff2a502feb
+  RCTACPAnalytics: 2c1282a0b701938f69895c6268582ab2125a33a5
+  RCTACPCore: b2954e0c71617c7d6306f62e347bd543f8a46723
+  RCTACPUserProfile: 58f32a9f406dbb1681db0a531728d8cb6d48be5c
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
   React: f36e90f3ceb976546e97df3403e37d226f79d0e3
