@@ -197,7 +197,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation 'com.adobe.marketing.mobile:analytics:1.2.8'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -223,6 +223,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'com.android.support:multidex:1.0.3'  //with support libraries
+
 
     apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
     addUnimodulesDependencies([exclude: ['expo-face-detector', 'expo-in-app-purchases', 'expo-web-browser', 'expo-updates', 'expo-constants', 'expo-image-loader', 'unimodules-barcode-scanner-interface', 'unimodules-camera-interface', 'unimodules-constants-interface', ' unimodules-face-detector-interface', 'unimodules-image-loader-interface', 'unimodules-sensors-interface', 'unimodules-task-manager-interface']])
