@@ -50,7 +50,7 @@ export const formatAge = (childBirth: Date | undefined, options?: {singular?: bo
   } else if (months === 12) {
     value = 1;
     ageText = i18next.t('common:year', {count: 1, lng: options?.lng});
-  } else if (months < 24) {
+  } else if (months < 24 || (months > 29 && months < 36)) {
     value = months;
     ageText = i18next.t('common:month', {count: options?.singular ? 1 : months, lng: options?.lng});
   } else {
@@ -237,6 +237,7 @@ export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
   himHerTag: t('common:himHerTag', {context: `${gender}`}),
   himselfHerselfTag: t('common:himselfHerselfTag', {context: `${gender}`}),
   heSheUpperTag: t('common:heSheUpperTag', {context: `${gender}`}),
+  hijoHijaTag: t('common:hijoHijaTag', {context: `${gender}`}),
 });
 
 export function slowdown<T>(promise: Promise<T> | T, timeOut = 300): Promise<T> {

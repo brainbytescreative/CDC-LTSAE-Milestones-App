@@ -101,6 +101,8 @@
         "himselfHerselfTag_1": " ",
         "hisHersTag_0": " ",
         "hisHersTag_1": " ",
+        "hijoHijaTag_0": "hijo",
+        "hijoHijaTag_1": "hija",
         "menu": "Menu",
         "month": "{{count}} mes",
         "monthDash": "{{count}}-mes de vida",

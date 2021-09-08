@@ -103,6 +103,8 @@
         "hisHersTag_1": "hers",
         "hisHerTag_0": "his",
         "hisHerTag_1": "her",
+        "hijoHijaTag_0": " ",
+        "hijoHijaTag_1": " ",
         "menu": "Menu",
         "month": "{{count}} month",
         "monthDash": "{{count}}-month-old",

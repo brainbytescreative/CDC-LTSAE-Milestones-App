@@ -45,7 +45,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-ACPAnalytics.registerExtension();
+//ACPAnalytics.registerExtension();
 
 console.disableYellowBox = true;
 YellowBox.ignoreWarnings(['Setting a timer']);
