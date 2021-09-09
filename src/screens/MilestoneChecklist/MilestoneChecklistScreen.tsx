@@ -24,7 +24,7 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
-import {formattedAgeSingular} from '../../utils/helpers';
+import {formattedAge} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
@@ -43,7 +43,7 @@ const QuestionsList: React.FC<{
     const {t} = useTranslation('milestoneChecklist');
     const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
     const milestoneAge = useGetMilestone().data?.milestoneAge;
-    const milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+    const milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
     const childId = useGetCurrentChild().data?.id;
 
     return (

@@ -212,9 +212,9 @@ export function objectToQuery<T extends Record<string, any>>(
   }
 }
 
-export function formattedAge(milestoneAge: number, t: TFunction, singular = false) {
+export function formattedAge(milestoneAge: number, t: TFunction, singular = false, englishFromCapitalLetter = false) {
   const singularSuffix = singular ? 'Singular' : '';
-  const milestoneAgeFormatted =
+  let milestoneAgeFormatted =
     milestoneAge % 12 === 0
       ? t(`common:year${singularSuffix}`, {count: milestoneAge / 12})
       : t(`common:month${singularSuffix}`, {count: milestoneAge});
@@ -222,6 +222,7 @@ export function formattedAge(milestoneAge: number, t: TFunction, singular = fals
     milestoneAge % 12 === 0
       ? t('common:yearDash', {count: milestoneAge / 12})
       : t('common:monthDash', {count: milestoneAge});
+  milestoneAgeFormatted = i18next.language === 'en' && englishFromCapitalLetter ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
   return {milestoneAgeFormatted, milestoneAgeFormattedDashes};
 }
 
