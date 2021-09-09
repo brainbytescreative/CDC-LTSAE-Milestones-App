@@ -24,10 +24,11 @@ import {
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
-import {formattedAge} from '../../utils/helpers';
+import {formattedAgeSingular, formattedAge} from '../../utils/helpers';
 import ActEarlyPage from './ActEarlyPage';
 import QuestionItem from './QuestionItem';
 import SectionItem from './SectionItem';
+import i18next from '../../resources/l18n';
 
 type NavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DashboardDrawerParamsList, 'MilestoneChecklistStack'>,
@@ -43,7 +44,12 @@ const QuestionsList: React.FC<{
     const {t} = useTranslation('milestoneChecklist');
     const questionsGrouped = useGetChecklistQuestions().data!.questionsGrouped ?? new Map();
     const milestoneAge = useGetMilestone().data?.milestoneAge;
-    const milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
+    let milestoneAgeFormatted = '';
+    if (i18next.language === 'en') {
+      milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+    } else {
+      milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
+    }
     const childId = useGetCurrentChild().data?.id;
 
     return (

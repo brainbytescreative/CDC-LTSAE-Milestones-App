@@ -9,7 +9,8 @@ import AEScrollView from '../../components/AEScrollView';
 import PrematureTip from '../../components/PrematureTip';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
-import {formattedAge} from '../../utils/helpers';
+import {formattedAgeSingular, formattedAge} from '../../utils/helpers';
+import i18next from '../../resources/l18n';
 
 interface Props {
   onGetStarted: () => void;
@@ -19,7 +20,12 @@ interface Props {
 const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAge}) => {
   const {t} = useTranslation('milestoneChecklist');
   const {bottom} = useSafeAreaInsets();
-  const milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
+  let milestoneAgeFormatted = '';
+  if (i18next.language === 'en') {
+    milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
+  } else {
+    milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
+  }
   return (
     <AEScrollView>
       <View style={{flexGrow: 1}}>
