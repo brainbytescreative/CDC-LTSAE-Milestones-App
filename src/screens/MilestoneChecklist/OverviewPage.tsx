@@ -12,7 +12,8 @@ import withSuspense from '../../components/withSuspense';
 import {useGetChecklistQuestions, useGetConcerns} from '../../hooks/checklistHooks';
 import {Section, colors, sharedStyle, skillTypes} from '../../resources/constants';
 import {trackEventByType} from '../../utils/analytics';
-import {formattedAgeSingular} from '../../utils/helpers';
+import {formattedAgeSingular, tOpt} from '../../utils/helpers';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 interface Props {
   onNext: () => void;
@@ -30,6 +31,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
   const {bottom} = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
   const concerns = useGetConcerns().data!.concerns! as OverviewItems;
+  const {data: child} = useGetCurrentChild();
 
   useEffect(() => {
     questionsGrouped.set('actEarly', concerns);
@@ -63,7 +65,7 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
             </Text>
           ) : (
             <View style={[{marginHorizontal: 56, marginTop: 15}]}>
-              <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+              <Trans t={t} i18nKey={'quickViewMessageActEarly'} tOptions={tOpt({t, gender: child?.gender})}>
                 <Text
                   accessibilityRole={'link'}
                   onPress={() => {

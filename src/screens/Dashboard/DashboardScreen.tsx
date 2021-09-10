@@ -28,7 +28,7 @@ import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
 import i18next from '../../resources/l18n';
 import {trackSelectByType} from '../../utils/analytics';
-import {formatAge, formatDate} from '../../utils/helpers';
+import {formatAge, formatDate, tOpt} from '../../utils/helpers';
 import MilestoneChecklistWidget from './MilestoneChecklistWidget';
 import MonthCarousel from './MonthCarousel';
 
@@ -172,6 +172,7 @@ const Buttons = () => {
   const {t} = useTranslation('dashboard');
   const navigation = useNavigation<Props['navigation']>();
   const fontSize = Math.ceil((Dimensions.get('screen').width * 11) / 320);
+  const {data: child} = useGetCurrentChild();
 
   return (
     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -197,7 +198,7 @@ const Buttons = () => {
           }}>
           <MilestoneSummarySign />
           <Text numberOfLines={3} style={[styles.actionItemText, {fontSize}]}>
-            {t('milestoneSummary')}
+            {t('milestoneSummary', tOpt({t, gender: child?.gender}))}
           </Text>
         </TouchableOpacity>
       </View>

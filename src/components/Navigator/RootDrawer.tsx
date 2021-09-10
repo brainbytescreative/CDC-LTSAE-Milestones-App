@@ -16,6 +16,8 @@ import SettingsStack from './SettingsStack';
 import TipsAndActivitiesStack from './TipsAndActivitiesStack';
 import {DashboardDrawerParamsList} from './types';
 import WhenActEarlyStack from './WhenActEarlyStack';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {tOpt} from '../../utils/helpers';
 
 const Drawer = createDrawerNavigator<DashboardDrawerParamsList>();
 
@@ -119,6 +121,7 @@ const Stub: React.FC = () => {
 
 const RootDrawer: React.FC = () => {
   const {t} = useTranslation();
+  const {data: child} = useGetCurrentChild();
   return (
     <Drawer.Navigator
       drawerContent={(contentProps) => <DefaultDrawer {...contentProps} />}
@@ -173,7 +176,7 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'ChildSummaryStack'}
         options={{
-          drawerLabel: t('childSummary:drawerLabel'),
+          drawerLabel: t('childSummary:drawerLabel', tOpt({t, gender: child?.gender})),
         }}
         component={ChildSummaryStack}
       />

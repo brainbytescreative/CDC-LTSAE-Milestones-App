@@ -35,6 +35,7 @@ import {Concern} from '../../resources/checklist-types';
 import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
+import {tOpt} from '../../utils/helpers';
 
 const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React.memo(
   ({id, value, childId, onPress: onItemPress}) => {
@@ -196,7 +197,7 @@ const itemStyles = StyleSheet.create({
 });
 
 const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSummaryPress}) => {
-  const {data: {id: childId} = {}} = useGetCurrentChild();
+  const {data: {id: childId, gender: gender} = {}} = useGetCurrentChild();
   const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
   const {data: {concerns} = {}} = useGetConcerns();
   const navigation = useNavigation<DashboardStackNavigationProp>();
@@ -255,7 +256,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
               flexWrap: 'wrap',
               justifyContent: 'center',
             }}>
-            <Trans t={t} i18nKey={'quickViewMessageActEarly'}>
+            <Trans t={t} i18nKey={'quickViewMessageActEarly'} tOptions={tOpt({t, gender: gender})}>
               <Text
                 accessible
                 accessibilityRole={'link'}
@@ -319,7 +320,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
                   sharedStyle.shadow,
                 ]}>
                 <Text style={{flexGrow: 1, textAlign: 'center', fontFamily: 'Montserrat-Bold', fontSize: 18}}>
-                  {t('myChildSummary')}
+                  {t('myChildSummary', tOpt({t, gender: gender}))}
                 </Text>
                 <ChevronRightBig width={10} height={20} />
               </View>
