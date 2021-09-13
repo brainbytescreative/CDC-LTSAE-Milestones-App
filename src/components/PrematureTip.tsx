@@ -8,6 +8,7 @@ import {useGetMilestone} from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {sharedStyle} from '../resources/constants';
 import AEYellowBox from './AEYellowBox';
+import {tOpt} from '../utils/helpers';
 
 type Props = {style?: StyleProp<ViewStyle>; children?: React.ReactElement; sixWeeks?: boolean};
 
@@ -20,12 +21,13 @@ const PrematureTip: React.FC<Props> = ({style, children, sixWeeks}) => {
   const birthday = child?.birthday ?? new Date();
   const calcAgeInWeeks = differenceInWeeks(new Date(), birthday);
   const textKey = sixWeeks && calcAgeInWeeks < 6 ? 'prematureTip6Weeks' : 'prematureTip';
+  const tOptData = tOpt({t, gender: child?.gender});
 
   return Number(child?.weeksPremature) >= 4 && ageInYears < 2 && childAge === milestoneAge ? (
     <AEYellowBox wrapper={'none'} containerStyle={[styles.yellowTipContainer, {marginBottom: 0, marginTop: 50}, style]}>
       <View style={{alignItems: 'center'}}>
         <Text>
-          <Trans t={t} i18nKey={textKey} tOptions={{weeks: prematureWeeks}}>
+          <Trans t={t} i18nKey={textKey} tOptions={{weeks: prematureWeeks, ...tOptData}}>
             <Text
               numberOfLines={1}
               accessibilityRole={'link'}

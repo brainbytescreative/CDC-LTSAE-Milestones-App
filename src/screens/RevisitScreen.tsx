@@ -90,10 +90,11 @@ const RevisitScreen: React.FC = () => {
           <LTSAELogo />
         </View>
         {Number(child?.weeksPremature) >= 4 && Number(milestoneAge) < 24 && (
-          <Text style={[sharedStyle.screenTitle, {fontSize: 17}]}>{t('prematureTip', {childName: child?.name})}</Text>
+          <Text style={[sharedStyle.screenTitle, {fontSize: 17}]}>{t('prematureTip', {childName: child?.name,
+            ...tOpt({t, gender: child?.gender}),})}</Text>
         )}
         <Text style={{fontSize: 15, marginHorizontal: 32, marginTop: 30, lineHeight: 18, textAlign: 'center'}}>
-          {t('description')}
+          {t('description', tOpt({t, gender: child?.gender}))}
         </Text>
         <View style={[styles.yellowTipContainer, {marginTop: 30, marginHorizontal: 32}]}>
           <Text style={styles.yellowTipText}>

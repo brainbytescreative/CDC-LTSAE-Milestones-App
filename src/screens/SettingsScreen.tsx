@@ -25,6 +25,8 @@ import {
 import {colors, sharedStyle} from '../resources/constants';
 import {editProfileSchema} from '../resources/validationSchemas';
 import {trackNotificationSelect, trackSelectByType, trackSelectLanguage} from '../utils/analytics';
+import {useGetCurrentChild} from '../hooks/childrenHooks';
+import {tOpt} from '../utils/helpers';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -94,6 +96,7 @@ const SettingsScreen: React.FC = () => {
   const {data: profile} = useGetParentProfile();
   const [setProfile] = useSetParentProfile();
   const [scheduleNotifications] = useScheduleNotifications();
+  const {data: child} = useGetCurrentChild();
   // const [oldDbExists, setOldDbExists] = useState<boolean>();
   // const [transferDataFromOldDb] = useTransferDataFromOldDb();
   // const {data: migrationStatus} = useQuery('migrationStatus', () => {
@@ -185,7 +188,7 @@ const SettingsScreen: React.FC = () => {
             <PurpleArc width={'100%'} />
             <View style={{backgroundColor: colors.purple, paddingTop: 30, paddingHorizontal: 32}}>
               <Text style={[sharedStyle.largeBoldText]}>{t('userProfile')}</Text>
-              <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage')}</Text>
+              <Text style={{fontSize: 15, marginVertical: 26}}>{t('statePrivacyLanguage', tOpt({t, gender: child?.gender}))}</Text>
 
               {profile && (
                 <Formik

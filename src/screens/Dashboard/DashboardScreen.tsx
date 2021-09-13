@@ -159,7 +159,7 @@ const YellowBoxSuspended: React.FC = withSuspense(
     return showtip ? (
       <>
         <AEYellowBox containerStyle={styles.yellowTipContainer}>
-          {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip')}
+          {ageLessTwoMonth ? t('yellowTipLessTwoMonth') : t('yellowTip', tOpt({t, gender: child?.gender}))}
         </AEYellowBox>
       </>
     ) : null;

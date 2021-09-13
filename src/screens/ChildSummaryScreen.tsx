@@ -47,7 +47,7 @@ import {
   trackSelectLanguage,
   trackSelectSummary,
 } from '../utils/analytics';
-import {formattedAge} from '../utils/helpers';
+import {formattedAge, tOpt} from '../utils/helpers';
 
 type IdType = PropType<MilestoneAnswer, 'questionId'>;
 type NoteType = PropType<MilestoneAnswer, 'note'>;
@@ -453,6 +453,8 @@ const ChildSummaryScreen: React.FC = () => {
     }, []),
   );
 
+  const tOptData = tOpt({t, gender: child?.gender});
+
   return (
     <View style={{backgroundColor: colors.white}}>
       <View
@@ -491,7 +493,7 @@ const ChildSummaryScreen: React.FC = () => {
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
             <Text>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', breakStr, breakStrLarge}}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', breakStr, breakStrLarge, ...tOptData}}>
                 <Text
                   numberOfLines={1}
                   accessibilityRole={'link'}

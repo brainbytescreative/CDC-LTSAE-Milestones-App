@@ -9,8 +9,9 @@ import AEScrollView from '../../components/AEScrollView';
 import PrematureTip from '../../components/PrematureTip';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {colors, sharedStyle} from '../../resources/constants';
-import {formattedAgeSingular, formattedAge} from '../../utils/helpers';
+import {formattedAgeSingular, formattedAge, tOpt} from '../../utils/helpers';
 import i18next from '../../resources/l18n';
+import {useGetCurrentChild} from '../../hooks/childrenHooks';
 
 interface Props {
   onGetStarted: () => void;
@@ -26,6 +27,8 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAge}) => {
   } else {
     milestoneAgeFormatted = formattedAge(milestoneAge ?? 0, t, false, true).milestoneAgeFormatted;
   }
+  const {data: child} = useGetCurrentChild();
+
   return (
     <AEScrollView>
       <View style={{flexGrow: 1}}>
@@ -47,7 +50,7 @@ const FrontPage: React.FC<Props> = ({onGetStarted, milestoneAge}) => {
               sharedStyle.shadow,
             ]}>
             <Text style={[styles.text]}>{t('message1')}</Text>
-            <Text style={[styles.text, {marginTop: 15}]}>{t('message2')}</Text>
+            <Text style={[styles.text, {marginTop: 15}]}>{t('message2', tOpt({t, gender: child?.gender}))}</Text>
           </View>
         </PrematureTip>
       </View>

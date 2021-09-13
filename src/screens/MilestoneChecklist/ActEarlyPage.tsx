@@ -279,7 +279,7 @@ const ActEarlyPage: React.FC<{onChildSummaryPress?: () => void}> = ({onChildSumm
               //   }
               // }}
               containerStyle={{marginBottom: 0}}>
-              {t('actEarlyWarning')}
+              {t('actEarlyWarning', tOpt({t, gender: gender}))}
             </AEYellowBox>
           )}
         </View>
