@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useLayoutEffect, useMemo, useRef, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -109,10 +109,23 @@ const MonthCarousel: React.FC = withSuspense(
       setTimeout(() => {
         flatListRef.current?.scrollToIndex({
           index: currentAgeIndex,
+          viewOffset: Platform.select({default: 0, android: -25}),
           viewPosition: 0.5,
         });
       }, Platform.select({default: 0, android: 500}));
     }, [currentAgeIndex]);
+
+    if (Platform.OS === 'android') {
+      useEffect(() => {
+        setTimeout(() => {
+          flatListRef.current?.scrollToIndex({
+            index: currentAgeIndex,
+            viewOffset: -25,
+            viewPosition: 0.5,
+          });
+        }, 2500);
+      }, []);
+    }
 
     const onViewableItemsChanged = useCallback<onViewableItemsChanged>((info) => {
       const first = _.first(info.viewableItems)?.index;
@@ -147,6 +160,7 @@ const MonthCarousel: React.FC = withSuspense(
           <ChevronLeft />
         </TouchableOpacity>
         <FlatList
+          getItemLayout={Platform.OS === 'android' ? (_, index) => ({length: 65, offset: 65 * index, index}) : undefined}
           key={flatListKey}
           ref={flatListRef}
           style={{
