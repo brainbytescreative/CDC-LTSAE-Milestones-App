@@ -232,13 +232,20 @@ export const formattedAgeSingular = (t: TFunction, milestoneAge?: number) => {
 };
 
 export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
-  hisHerTag: t('common:hisHerTag', {context: `${gender}`}),
-  hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
   heSheTag: t('common:heSheTag', {context: `${gender}`}),
+  heSheUpperTag: t('common:heSheUpperTag', {context: `${gender}`}),
   himHerTag: t('common:himHerTag', {context: `${gender}`}),
   himselfHerselfTag: t('common:himselfHerselfTag', {context: `${gender}`}),
-  heSheUpperTag: t('common:heSheUpperTag', {context: `${gender}`}),
+  hisHersTag: t('common:hisHersTag', {context: `${gender}`}),
+  hisHerTag: t('common:hisHerTag', {context: `${gender}`}),
   hijoHijaTag: t('common:hijoHijaTag', {context: `${gender}`}),
+  ninoNinaTag: t('common:ninoNinaTag', {context: `${gender}`}),
+  oaSpanishEndingTag: t('common:oaSpanishEndingTag', {context: `${gender}`}),
+  aSpanishEndingTag: t('common:aSpanishEndingTag', {context: `${gender}`}),
+  elEllaTag: t('common:elEllaTag', {context: `${gender}`}),
+  elEllaCapitalTag: t('common:elEllaCapitalTag', {context: `${gender}`}),
+  alAlaTag: t('common:alAlaTag', {context: `${gender}`}),
+  delDelaTag: t('common:delDelaTag', {context: `${gender}`}),
 });
 
 export function slowdown<T>(promise: Promise<T> | T, timeOut = 300): Promise<T> {
