@@ -158,6 +158,7 @@ const AddAppointmentScreen: React.FC = () => {
               style={{marginTop: 11}}
               value={formik.values.time}
               label={`${t('fields:timePlaceholder')} *`}
+              spanish12HoursClockFormat
               onChange={(date) => {
                 trackSelectByType('Time');
                 formik.setFieldValue('time', date);

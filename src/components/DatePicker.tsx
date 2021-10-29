@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import placeholder from 'lodash/fp/placeholder';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Modal, StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {Modal, StyleProp, TouchableOpacity, View, ViewStyle, Platform} from 'react-native';
 import DateTimePickerModal, {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 import {Text} from 'react-native-paper';
 
@@ -16,11 +16,12 @@ interface PageProps {
   label?: string;
   value?: Date;
   mode?: DateTimePickerProps['mode'];
+  spanish12HoursClockFormat?: boolean;
   style?: StyleProp<ViewStyle>;
   error?: boolean;
 }
 
-const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', style, onPress, error}) => {
+const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date', spanish12HoursClockFormat = false, style, onPress, error}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
   const {t} = useTranslation();
@@ -41,6 +42,11 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
     onChange && onChange(dateVal);
     hideDatePicker();
   };
+
+  let dateTimePickerLocale = i18next.language === 'en' ? 'en_US' : 'es';
+  if (Platform.OS === 'ios' && i18next.language === 'es' && spanish12HoursClockFormat) {
+    dateTimePickerLocale = 'en_US';
+  }
 
   return (
     <>
@@ -69,7 +75,7 @@ const DatePicker: React.FC<PageProps> = ({onChange, label, value, mode = 'date',
         </View>
       </TouchableOpacity>
       <DateTimePickerModal
-        locale={i18next.language === 'en' ? 'en_US' : 'es'}
+        locale={dateTimePickerLocale}
         isVisible={modalVisible}
         date={date ?? new Date()}
         mode={mode}
