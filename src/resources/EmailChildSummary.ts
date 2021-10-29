@@ -210,7 +210,7 @@ const es = `
       you ever become concerned about {{ childName }}’s development, talk with the doctor
       and ask for developmental screening and services that can help make a big
       difference. Don’t wait. #}
-      Comparta esta información con el médico y otros proveedores de atención médica de su. 
+      Comparta esta información con el médico y otros proveedores de atención médica de su {{hijoHijaTag}}. 
       Recuerde que, si en algún momento le preocupa el desarrollo de {{ childName }}, 
       debe hablar con el médico, pedirle una evaluación del desarrollo 
       y preguntarle sobre los servicios que pueden ayudar a marcar una gran diferencia. No espere.
