@@ -216,6 +216,8 @@
         "answer_not_yet": "Todavía no",
         "answer_unsure": "No estoy seguro",
         "answer_yes": "Sí",
+        "comingSoonHeader": " ",
+        "comingSoonDescription": " ",
         "complete": "Completa",
         "drawerLabel": "Lista de indicadores",
         "incomplete": "incompleta",

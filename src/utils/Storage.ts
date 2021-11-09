@@ -13,6 +13,7 @@ export type StorageParsedValue = {
   onboarding: boolean;
   parentProfile: ParentProfileSelectorValues;
   language: string;
+  comingSoonPopUpSeen: boolean;
 };
 
 export default class Storage {

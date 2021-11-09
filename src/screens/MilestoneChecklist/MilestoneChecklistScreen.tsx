@@ -14,6 +14,7 @@ import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
+import ModalPopUpWithText from '../../components/ModalPopUpWithText';
 import {
   useGetCheckListAnswers,
   useGetChecklistQuestions,
@@ -22,6 +23,7 @@ import {
   useGetSectionsProgress,
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
+import {useGetComingSoonPopUpSeen, useSetComingSoonPopUpSeen} from '../../hooks/modalPopUpsHooks';
 import {Section, checklistSections, colors, sharedStyle} from '../../resources/constants';
 import {PageType, trackChecklistUnanswered, trackInteractionByType} from '../../utils/analytics';
 import {formattedAgeSingular, formattedAge} from '../../utils/helpers';
@@ -125,6 +127,8 @@ const MilestoneChecklistScreen: React.FC<{
   const {data: gotStarted, status: gotStartedStatus} = useGetMilestoneGotStarted({childId, milestoneId: milestoneAge});
   const {refetch: refetchAnswers} = useGetCheckListAnswers(milestoneAge, childId);
   const prevSection = useRef<{name: Section}>({name: 'social'}).current;
+  const {data: comingSoonPopUpSeen} = useGetComingSoonPopUpSeen();
+  const [setComingSoonPopUpSeen] = useSetComingSoonPopUpSeen();
 
   useEffect(() => {
     if (gotStartedStatus === 'success' && !gotStarted) {
@@ -223,6 +227,14 @@ const MilestoneChecklistScreen: React.FC<{
         <QuestionsList flatListRef={flatListRef} onPressNextSection={onPressNextSection} section={section} />
       )}
       {section === 'actEarly' && <ActEarlyPage />}
+      <ModalPopUpWithText 
+        title={'milestoneChecklist:comingSoonHeader'}
+        message={'milestoneChecklist:comingSoonDescription'}
+        visible={!comingSoonPopUpSeen}
+        onDismissCallback={() => {
+          setComingSoonPopUpSeen(true);
+        }}
+      />
     </View>
   );
 };

@@ -216,6 +216,8 @@
         "answer_not_yet": "Not Yet",
         "answer_unsure": "Not Sure",
         "answer_yes": "Yes",
+        "comingSoonHeader": "New Photos and Videos Coming Soon",
+        "comingSoonDescription": "Due to COVID-19, photos and videos to support the new and updated milestones have been delayed but will be added in a future update.",
         "complete": "Complete",
         "drawerLabel": "Milestone Checklist",
         "incomplete": "Incomplete",
