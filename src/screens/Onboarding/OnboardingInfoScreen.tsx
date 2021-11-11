@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modal, Portal, Text} from 'react-native-paper';
@@ -13,6 +13,7 @@ import {OnboardingNavigationProp} from '../../components/Navigator/types';
 import CDCLogo from '../../components/Svg/CDCLogo';
 import IceColdArc from '../../components/Svg/IceColdArc';
 import PurpleArc from '../../components/Svg/PurpleArc';
+import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {trackSelectLanguage, trackStartTracking} from '../../utils/analytics';
 
@@ -21,6 +22,14 @@ const OnboardingInfoScreen: React.FC = () => {
   const {t} = useTranslation('onboardingInfo');
   const navigation = useNavigation<OnboardingNavigationProp>();
   const {bottom, top} = useSafeAreaInsets();
+  const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
+  const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
+
+  useEffect(() => {
+    if (!whatHasChangedPopUpSeen) {
+      setWhatHasChangedPopUpSeen(true);
+    }
+  }, []);
 
   return (
     <AEScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>

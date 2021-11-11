@@ -13,6 +13,7 @@ import ChildPhoto from '../../components/ChildPhoto';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList, DashboardStackParamList} from '../../components/Navigator/types';
 import PrematureTip from '../../components/PrematureTip';
+import ModalPopUpWithText from '../../components/ModalPopUpWithText';
 import ActEarlySign from '../../components/Svg/ActEarlySign';
 import MilestoneSummarySign from '../../components/Svg/MilestoneSummarySign';
 import NavBarBackground from '../../components/Svg/NavBarBackground';
@@ -23,6 +24,7 @@ import {useGetChildAppointments} from '../../hooks/appointmentsHooks';
 import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
+import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
 import {Appointment} from '../../hooks/types';
 import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
@@ -362,16 +364,28 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
 
   const addChildParam = route.params?.addChild;
   const scrollViewRef = useRef<ScrollView>(null);
+  const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
+  const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
+  
+  const isToShowHasChangedPopUp = whatHasChangedPopUpSeen === undefined ? true : whatHasChangedPopUpSeen;
 
   useEffect(() => {
-    if (addChildParam) {
+    if (addChildParam && Boolean(isToShowHasChangedPopUp)) {
       navigation.setParams({addChild: undefined});
     }
   }, [addChildParam, navigation]);
 
   return (
     <>
-      <ChildSelectorModal visible={addChildParam} />
+      <ChildSelectorModal visible={addChildParam && Boolean(isToShowHasChangedPopUp)} />
+      <ModalPopUpWithText 
+        title={'dashboard:whatHasChangedHeader'}
+        message={'dashboard:whatHasChangedDescription'}
+        visible={!isToShowHasChangedPopUp}
+        onDismissCallback={() => {
+          setWhatHasChangedPopUpSeen(true);
+        }}
+      />
       <ScrollView
         ref={scrollViewRef}
         scrollIndicatorInsets={{right: 0.1}}

@@ -14,6 +14,7 @@ export type StorageParsedValue = {
   parentProfile: ParentProfileSelectorValues;
   language: string;
   comingSoonPopUpSeen: boolean;
+  whatHasChangedPopUpSeen: boolean;
 };
 
 export default class Storage {
