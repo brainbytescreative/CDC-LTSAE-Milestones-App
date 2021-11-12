@@ -35,6 +35,19 @@ const en = `
       </strong>
     </p>
     {% endif %}
+    <div style="padding-top: 10px; padding-left: 25px;">
+      <ins> 
+        <b>Other important things to share with the doctor
+        </b>
+      </ins>
+    </div>
+    <ul style="margin: 0 0; padding-left: 45px;">
+      {% for questionItem in openendedQuestionsData %}
+      <li style="padding-left: 5px;">{{questionItem.question}}</br>
+      {{questionItem.answer}}
+      </li>
+      {% endfor %}
+    </ul>
     {% if concerns.length %}
     <b>ACT EARLY by talking with {{ childName }}’s doctor right away about:
     </b>

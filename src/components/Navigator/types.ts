@@ -3,6 +3,7 @@ import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {ChildResult} from '../../hooks/types';
+import {OpenEndedQuestion} from '../../screens/ChildSummaryScreen';
 
 export type AddChildScreenParams =
   | {
@@ -22,7 +23,7 @@ export type DashboardStackParamList = {
   MilestoneChecklist: undefined;
   ChildSummary: undefined;
   TipsAndActivities: undefined;
-  Revisit: undefined;
+  Revisit: {openendedQuestionsData: Array<OpenEndedQuestion>} | undefined;
   WhenActEarly: undefined;
 };
 
@@ -33,7 +34,7 @@ export type SettingsStackParamList = {
 };
 export type ChildSummaryParamList = {
   ChildSummary: undefined;
-  Revisit: undefined;
+  Revisit: {openendedQuestionsData: Array<OpenEndedQuestion>} | undefined;
 };
 export type TipsAndActivitiesParamList = {
   TipsAndActivities: undefined;
@@ -48,7 +49,7 @@ export type MilestoneCheckListParamList = {
   MilestoneChecklistQuickView: {quickView?: boolean} | undefined;
   MilestoneChecklistWhenToActEarly: undefined;
   ChildSummary: undefined;
-  Revisit: undefined;
+  Revisit: {openendedQuestionsData: Array<OpenEndedQuestion>} | undefined;
 };
 
 export type RootStackParamList = {

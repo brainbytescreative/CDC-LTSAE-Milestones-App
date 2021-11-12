@@ -3,7 +3,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import _ from 'lodash';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState, useRef, useEffect} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {ActivityIndicator, Alert, Linking, Platform, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -178,8 +178,12 @@ export type ChildSummaryStackNavigationProp = CompositeNavigationProp<
   StackNavigationProp<ChildSummaryParamList>
 >;
 
-const SummaryItems = withSuspense(
-  () => {
+interface SummaryItemsProps {
+  summaryItemsUnansweredYCoordinateCallback: (yCoord: number) => void;
+}
+
+const SummaryItems: React.FC<SummaryItemsProps> = withSuspense(
+  ({summaryItemsUnansweredYCoordinateCallback}) => {
     const {t} = useTranslation('childSummary');
     const {data: child} = useGetCurrentChild();
     const {data: {milestoneAge} = {}} = useGetMilestone();
@@ -187,6 +191,8 @@ const SummaryItems = withSuspense(
     const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
     const [answerQuestion] = useSetQuestionAnswer();
     const [setConcern] = useSetConcern();
+    const [mainViewYCoordinate, setMainViewYCoordinate] = useState(0);
+    const [unansweredYCoordinate, setUnansweredYCoordinate] = useState(0);
 
     const {showActionSheetWithOptions} = useActionSheet();
 
@@ -316,14 +322,28 @@ const SummaryItems = withSuspense(
       [child?.id, milestoneAge, setConcern, refetchConcerns],
     );
 
+    useEffect(() => {
+      summaryItemsUnansweredYCoordinateCallback(mainViewYCoordinate + unansweredYCoordinate);
+    });
+
     const unanswered = data?.groupedByAnswer['undefined'] || [];
     const unsure = data?.groupedByAnswer[Answer.UNSURE] || [];
     const yes = data?.groupedByAnswer[Answer.YES] || [];
     const notYet = data?.groupedByAnswer[Answer.NOT_YET] || [];
 
     return (
-      <View style={{marginHorizontal: 32}}>
-        <View style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}>
+      <View
+        style={{marginHorizontal: 32}}
+        onLayout={(event) => {
+          setMainViewYCoordinate(event.nativeEvent.layout.y);
+        }}
+      >
+        <View
+          style={[styles.blockContainer, {backgroundColor: colors.iceCold}]}
+          onLayout={(event) => {
+            setUnansweredYCoordinate(event.nativeEvent.layout.y);
+          }}
+        >
           <Text style={styles.blockText}>{t('unanswered')}</Text>
         </View>
         {unanswered.map((item) => (
@@ -410,9 +430,18 @@ const DisabledSummary = () => {
   );
 };
 
-const ComposeEmailButton = withSuspense(
-  () => {
-    const {compose: composeMail} = useGetComposeSummaryMail();
+export type OpenEndedQuestion = {
+  question: string;
+  answer: string;
+};
+
+interface ComposeEmailButtonProps {
+  openendedQuestionsData: Array<OpenEndedQuestion>;
+}
+
+const ComposeEmailButton: React.FC<ComposeEmailButtonProps> = withSuspense(
+  ({openendedQuestionsData}) => {
+    const {compose: composeMail} = useGetComposeSummaryMail(undefined, openendedQuestionsData);
     const {t} = useTranslation('childSummary');
     return (
       <AEButtonMultiline
@@ -438,6 +467,23 @@ const ChildSummaryScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
+  const {data, refetch} = useGetChecklistQuestions();
+  const [summaryItemsUnansweredYCoordinate, setSummaryItemsUnansweredYCoordinate] = useState(0);
+  const scrollViewRef = useRef<KeyboardAwareScrollView | null>();
+  const [openendedQuestion1Answer, setOpenendedQuestion1Answer] = useState('');
+  const [openendedQuestion2Answer, setOpenendedQuestion2Answer] = useState('');
+  const openendedQuestionsDataRef = useRef<Array<OpenEndedQuestion>>([
+    {
+      question: '',
+      answer: 'unanswered'
+    },
+    {
+      question: '',
+      answer: 'unanswered'
+    }
+  ]);
+
+  const unanswered = data?.groupedByAnswer['undefined'] || [];
 
   const milestoneAgeFormatted = useMemo(() => {
     return formattedAge(Number(milestoneAge), t, i18n.language === 'en').milestoneAgeFormatted;
@@ -454,6 +500,31 @@ const ChildSummaryScreen: React.FC = () => {
   );
 
   const tOptData = tOpt({t, gender: child?.gender});
+  
+  const receiveSummaryItemsUnansweredYCoordinate = (newYCoordinate: number) => {
+    setSummaryItemsUnansweredYCoordinate((oldYCoordinate) => {
+      if (oldYCoordinate !== newYCoordinate) {
+        return newYCoordinate;
+      }
+      return oldYCoordinate;
+    });
+  };
+
+  let numberMilestoneAge = milestoneAge === undefined ? 0 : milestoneAge;
+  openendedQuestionsDataRef.current[0].question = 'openendedQuestion1_under_15';
+  openendedQuestionsDataRef.current[1].question = 'openendedQuestion2_under_15';
+
+  if (numberMilestoneAge > 12) {
+    openendedQuestionsDataRef.current[0].question = 'openendedQuestion1_above_15';
+    openendedQuestionsDataRef.current[1].question = 'openendedQuestion2_above_15';
+  }
+
+  let openendedQuestionsDataForEMail = openendedQuestionsDataRef.current.map<OpenEndedQuestion>((item) => {
+    return {
+      question: t(item.question),
+      answer: item.answer
+    };
+  });
 
   return (
     <View style={{backgroundColor: colors.white}}>
@@ -466,6 +537,9 @@ const ChildSummaryScreen: React.FC = () => {
         <ShortHeaderArc width={'100%'} />
       </View>
       <KeyboardAwareScrollView
+        ref={(thisScrollViewRef) => {
+          scrollViewRef.current = thisScrollViewRef;
+        }}
         enableOnAndroid={Platform.OS === 'android'}
         bounces={false}
         contentContainerStyle={
@@ -493,7 +567,7 @@ const ChildSummaryScreen: React.FC = () => {
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
             <Text>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', breakStr, breakStrLarge, ...tOptData}}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', unansweredQuestionsQuantity: unanswered.length, breakStr, breakStrLarge, ...tOptData}}>
                 <Text
                   numberOfLines={1}
                   accessibilityRole={'link'}
@@ -514,6 +588,14 @@ const ChildSummaryScreen: React.FC = () => {
                 />
                 <Text style={[sharedStyle.boldText]} />
                 <Text style={{textAlign: 'left'}} />
+                <Text
+                  numberOfLines={1}
+                  accessibilityRole={'link'}
+                  onPress={() => {
+                    scrollViewRef.current?.scrollToPosition(0, summaryItemsUnansweredYCoordinate, true);
+                  }}
+                  style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
+                />
               </Trans>
             </Text>
           </View>
@@ -523,11 +605,13 @@ const ChildSummaryScreen: React.FC = () => {
         <View style={{marginTop: 35}}>
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingTop: 26, paddingBottom: 44}}>
-            <ComposeEmailButton />
+            <ComposeEmailButton
+              openendedQuestionsData={openendedQuestionsDataForEMail}
+            />
             <AEButtonMultiline
               onPress={() => {
                 trackInteractionByType('Show Doctor');
-                navigation.navigate('Revisit');
+                navigation.navigate('Revisit', { openendedQuestionsData: openendedQuestionsDataRef.current });
               }}
               style={{marginTop: 10, marginBottom: 30}}>
               {t('showDoctor')}
@@ -541,7 +625,44 @@ const ChildSummaryScreen: React.FC = () => {
             />
           </View>
         </View>
-        <SummaryItems />
+        <View style={{marginHorizontal: 30, marginTop: 15}}>
+          <View style={[styles.blockContainer, {marginBottom: 30, backgroundColor: colors.purple}]}>
+            <Text style={styles.blockText}>{t('openendedQuestionsHeader')}</Text>
+          </View>
+          <View style={{marginHorizontal: 15}}>
+            <Text style={{fontSize: 17}}>{t(openendedQuestionsDataRef.current[0].question)}</Text>
+            <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
+              <TextInput
+                value={openendedQuestion1Answer}
+                onChange={(e) => {
+                  setOpenendedQuestion1Answer(e.nativeEvent.text);
+                  openendedQuestionsDataRef.current[0].answer = e.nativeEvent.text === '' ? 'unanswered' : e.nativeEvent.text;
+                }}
+                multiline
+                style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
+                placeholder={t('openendedQuestionPlaceholder')}
+              />
+            </View>
+          </View>
+          <View style={{marginHorizontal: 15}}>
+            <Text style={{fontSize: 17}}>{t(openendedQuestionsDataRef.current[1].question)}</Text>
+            <View style={[itemStyles.addNoteContainer, sharedStyle.shadow]}>
+              <TextInput
+                value={openendedQuestion2Answer}
+                onChange={(e) => {
+                  setOpenendedQuestion2Answer(e.nativeEvent.text);
+                  openendedQuestionsDataRef.current[1].answer = e.nativeEvent.text === '' ? 'unanswered' : e.nativeEvent.text;
+                }}
+                multiline
+                style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
+                placeholder={t('openendedQuestionPlaceholder')}
+              />
+            </View>
+          </View>
+        </View>
+        <SummaryItems
+          summaryItemsUnansweredYCoordinateCallback={receiveSummaryItemsUnansweredYCoordinate}
+        />
         <View style={{marginTop: 30}}>
           <PurpleArc width={'100%'} />
           <View style={{backgroundColor: colors.purple, paddingBottom: bottom ? bottom + 32 : 32, paddingTop: 16}}>

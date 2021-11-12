@@ -9,6 +9,7 @@ import {queryCache, useMutation, useQuery} from 'react-query';
 
 import {sqLiteClient} from '../../db';
 import {getChecklistAnswer, setAnswer} from '../../db/checklistQueries';
+import {OpenEndedQuestion} from '../../screens/ChildSummaryScreen';
 import {Concern, SkillSection} from '../../resources/checklist-types';
 import {
   MilestoneIdType,
@@ -600,7 +601,7 @@ export function useSetMilestoneGotStarted() {
   });
 }
 
-export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, 'id' | 'name' | 'gender'>>) {
+export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, 'id' | 'name' | 'gender'>>, openendedQuestions? : Array<OpenEndedQuestion>) {
   const {data: child} = useGetCurrentChild();
   const {data: concerns, status: concernsStatus} = useGetConcerns(childData?.id);
   const {data, status: questionsStatus} = useGetChecklistQuestions(childData?.id);
@@ -620,6 +621,7 @@ export function useGetComposeSummaryMail(childData?: Partial<Pick<ChildResult, '
         formattedAge: milestoneAgeFormatted,
         isPremature: Number(child?.weeksPremature) >= 4 && Number(milestoneAge) < 24,
         currentDayText: formatDate(new Date(), 'date'),
+        openendedQuestionsData: openendedQuestions ?? [],
         ...tOpt({t, gender: childData?.gender || child?.gender}),
       });
 

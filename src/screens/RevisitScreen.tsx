@@ -1,4 +1,4 @@
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, RouteProp, useRoute} from '@react-navigation/native';
 import i18next from 'i18next';
 import _ from 'lodash';
 import React from 'react';
@@ -6,10 +6,12 @@ import {Trans, useTranslation} from 'react-i18next';
 import {Linking, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
+import {OpenEndedQuestion} from './ChildSummaryScreen';
 import AEScrollView from '../components/AEScrollView';
 import ChildSelectorModal from '../components/ChildSelectorModal';
 import LanguageSelector from '../components/LanguageSelector';
 import LTSAELogo from '../components/LTSAELogo';
+import {DashboardStackParamList} from '../components/Navigator/types';
 import CDCLogo from '../components/Svg/CDCLogo';
 import ShortHeaderArc from '../components/Svg/ShortHeaderArc';
 import withSuspense from '../components/withSuspense';
@@ -18,6 +20,8 @@ import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {breakStr, breakStrBig, colors, sharedStyle, suspenseEnabled} from '../resources/constants';
 import {trackEventByType} from '../utils/analytics';
 import {formattedAgeSingular, tOpt} from '../utils/helpers';
+
+type RevisitScreenRouteProp = RouteProp<DashboardStackParamList, 'Revisit'>;
 
 interface ItemProps {
   value?: string;
@@ -47,11 +51,35 @@ const Item: React.FC<ItemProps> = ({value, note, index}) => {
   );
 };
 
+interface OpenEndedQuestionItemProps {
+  item: OpenEndedQuestion;
+}
+
+const OpenEndedQuestionItem: React.FC<OpenEndedQuestionItemProps> = ({item}) => {
+  const {t} = useTranslation('childSummary');
+  return (
+    <View style={{marginTop: 32, marginHorizontal: 16}}>
+      <View style={{marginBottom: 15}}>
+        <Text style={{fontSize: 16}}>
+          {t(item.question)}
+        </Text>
+      </View>
+      <View>
+        <Text style={{fontSize: 15}}>
+          {item.answer}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const RevisitScreen: React.FC = () => {
   const {data, refetch} = useGetChecklistQuestions();
   const {data: child} = useGetCurrentChild();
   const {t} = useTranslation('revisit');
+  const {t: tSummary} = useTranslation('childSummary');
   const {data: concerns, refetch: refetchConcerns} = useGetConcerns();
+  const route = useRoute<RevisitScreenRouteProp>();
   const milestoneAge = useGetMilestone().data?.milestoneAge;
   let milestoneAgeFormatted = formattedAgeSingular(t, milestoneAge);
   milestoneAgeFormatted = i18next.language === 'en' ? _.startCase(milestoneAgeFormatted) : milestoneAgeFormatted;
@@ -62,6 +90,8 @@ const RevisitScreen: React.FC = () => {
       refetchConcerns();
     }, [refetch, refetchConcerns]),
   );
+
+  const openendedQuestions = route.params?.openendedQuestionsData ?? [];
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
@@ -113,6 +143,12 @@ const RevisitScreen: React.FC = () => {
         </Text>
 
         <View style={{marginHorizontal: 32}}>
+          <View style={[styles.blockContainer, {backgroundColor: colors.purple}]}>
+            <Text style={styles.blockText}>{tSummary('openendedQuestionsHeader')}</Text>
+          </View>
+          {openendedQuestions.map((questionItem) => (
+            <OpenEndedQuestionItem item={questionItem} />
+          ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>
           </View>
