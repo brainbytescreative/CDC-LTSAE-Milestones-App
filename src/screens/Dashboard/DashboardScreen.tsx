@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {queryCache} from 'react-query';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import AEYellowBox from '../../components/AEYellowBox';
 import ChildPhoto from '../../components/ChildPhoto';
@@ -25,6 +26,7 @@ import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistH
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
+import {useGetHideDataArchiveButton} from '../../hooks/dashboardHooks';
 import {Appointment} from '../../hooks/types';
 import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
@@ -227,6 +229,8 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
   const route = useRoute<Props['route']>();
   const appointmentsParam = route.params?.appointments;
   const [appointmentsPosition, setAppointmentsPosition] = useState(0);
+  const {data: hideDataArchiveButton} = useGetHideDataArchiveButton();
+  const dataArchiveButtonDescriptionFontSize = Math.ceil((Dimensions.get('screen').width * 11) / 320);
 
   useLayoutEffect(() => {
     if (appointmentsParam && appointmentsPosition) {
@@ -264,6 +268,35 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
           {/*  })}*/}
           {/*</Text>*/}
           <Buttons />
+          {!hideDataArchiveButton &&
+            <TouchableOpacity
+              accessibilityRole={'button'}
+              accessibilityLabel={`${t('dataArchiveButtonTitle')}.${t('dataArchiveButtonDecription')}`}
+              onPress={() => {
+                navigation.navigate('MilestoneChecklistStack');
+              }}
+              style={[{backgroundColor: 'white', marginTop: 20, padding: 20, borderRadius: 15, overflow: 'visible'}, sharedStyle.shadow]}>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <View>
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    style={{
+                      fontSize: 20,
+                      fontFamily: 'Montserrat-Bold',
+                    }}>
+                    {t('dataArchiveButtonTitle')}
+                  </Text>
+                  <View style={{marginTop: 8}}>
+                    <Text style={{fontSize: dataArchiveButtonDescriptionFontSize+1}} >
+                      {t('dataArchiveButtonDecription')}
+                    </Text>
+                  </View>
+                </View>
+                <Entypo name={'chevron-thin-right'} size={25} style={{marginRight: -10}}/>
+              </View>
+            </TouchableOpacity>
+          }
         </View>
         <View
           onLayout={(event) => {

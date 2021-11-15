@@ -15,6 +15,7 @@ export type StorageParsedValue = {
   language: string;
   comingSoonPopUpSeen: boolean;
   whatHasChangedPopUpSeen: boolean;
+  hideDataArchiveButton: boolean;
 };
 
 export default class Storage {

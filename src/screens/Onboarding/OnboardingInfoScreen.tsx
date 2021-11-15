@@ -14,6 +14,7 @@ import CDCLogo from '../../components/Svg/CDCLogo';
 import IceColdArc from '../../components/Svg/IceColdArc';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
+import {useGetHideDataArchiveButton, useSetHideDataArchiveButton} from '../../hooks/dashboardHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {trackSelectLanguage, trackStartTracking} from '../../utils/analytics';
 
@@ -24,10 +25,15 @@ const OnboardingInfoScreen: React.FC = () => {
   const {bottom, top} = useSafeAreaInsets();
   const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
   const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
+  const {data: hideDataArchiveButton} = useGetHideDataArchiveButton();
+  const [setHideDataArchiveButton] = useSetHideDataArchiveButton();
 
   useEffect(() => {
     if (!whatHasChangedPopUpSeen) {
       setWhatHasChangedPopUpSeen(true);
+    }
+    if (!hideDataArchiveButton) {
+      setHideDataArchiveButton(true);
     }
   }, []);
 

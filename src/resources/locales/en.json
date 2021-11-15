@@ -154,6 +154,8 @@
         "addApt": "+ Add Appointment",
         "appointments": "Appointments",
         "childAge": "is {{value}} old!",
+        "dataArchiveButtonTitle": "View Checklist History",
+        "dataArchiveButtonDecription": "Old app version checklists here",
         "drawerLabel": "$t(dashboard:title)",
         "milestoneCheckList": "Milestone Checklist",
         "milestoneSummary": "My Child's Summary",
