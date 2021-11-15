@@ -7,6 +7,7 @@ import {FlatList, View} from 'react-native';
 import {queryCache} from 'react-query';
 
 import ChildSelectorModal from '../../components/ChildSelectorModal';
+import ChecklistMonthCarousel from './ChecklistMonthCarousel';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
 import {useGetMilestone} from '../../hooks/checklistHooks';
 import {Section, checklistSections, colors, skillTypes} from '../../resources/constants';
@@ -37,6 +38,7 @@ const MilestoneChecklistQuickViewScreen: React.FC<{
 
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
+      <ChecklistMonthCarousel />
       <ChildSelectorModal />
       <View style={{flex: 0}}>
         <FlatList

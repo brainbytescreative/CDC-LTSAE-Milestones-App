@@ -12,7 +12,6 @@ import {queryCache} from 'react-query';
 import ButtonWithChevron from '../../components/ButtonWithChevron';
 import ChildSelectorModal from '../../components/ChildSelectorModal';
 import {DashboardDrawerParamsList, MilestoneCheckListParamList} from '../../components/Navigator/types';
-import ChecklistMonthCarousel from './ChecklistMonthCarousel';
 import ModalPopUpWithText from '../../components/ModalPopUpWithText';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import withSuspense from '../../components/withSuspense';
@@ -221,7 +220,6 @@ const MilestoneChecklistScreen: React.FC<{
   return (
     <View style={{backgroundColor: colors.white, flex: 1}}>
       <ChildSelectorModal />
-      <ChecklistMonthCarousel />
       <View style={{flex: 0, overflow: 'visible'}}>
         <Tabs section={section} onSectionSet={onSectionSet} />
       </View>
