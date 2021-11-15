@@ -12,7 +12,7 @@ const NotificationsBadgeCounter: React.FC<Pick<TouchableOpacityProps, 'onPress'>
   const count = notifications?.length || 0;
   return (
     <TouchableOpacity
-      hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+      hitSlop={{top: 30, bottom: 0, left: 30, right: 30}}
       accessibilityRole={'button'}
       accessibilityLabel={t('accessibility:unreadNotifications', {count})}
       onPress={onPress}
