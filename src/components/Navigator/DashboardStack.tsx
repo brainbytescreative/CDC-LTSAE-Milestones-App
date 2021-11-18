@@ -11,6 +11,7 @@ import DashboardScreen from '../../screens/Dashboard/DashboardScreen';
 import WhenActEarlyScreen from '../../screens/Dashboard/WhenActEarlyScreen';
 import RevisitScreen from '../../screens/RevisitScreen';
 import TipsAndActivitiesScreen from '../../screens/TipsAndActivitiesScreen/TipsAndActivitiesScreen';
+import DataArchiveScreen from '../../screens/DataArchiveScreen';
 import {trackSelectByType} from '../../utils/analytics';
 import BurgerButton from '../BurgerButton';
 import {DashboardStackParamList} from './types';
@@ -102,6 +103,16 @@ const DashboardStack: FC = () => {
       <Stack.Screen
         name={'ChildSummary'}
         component={ChildSummaryScreen}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: colors.iceCold,
+          },
+          headerBackTitle: ' ',
+        })}
+      />
+      <Stack.Screen
+        name={'DataArchive'}
+        component={DataArchiveScreen}
         options={() => ({
           headerStyle: {
             backgroundColor: colors.iceCold,

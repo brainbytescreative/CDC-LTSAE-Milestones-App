@@ -21,6 +21,7 @@ import {
   skillTypes,
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
+import {checklistMapV1} from '../../resources/milestoneChecklist';
 import {checklistMap} from '../../resources/milestoneChecklistV2';
 import {trackInteractionByType} from '../../utils/analytics';
 import {calcChildAge, checkMissingMilestones, formatDate, formattedAge, tOpt} from '../../utils/helpers';
@@ -106,7 +107,7 @@ async function getAnswers(milestoneId: number, childId: number): Promise<Milesto
   return (result && result[0].rows.raw()) ?? [];
 }
 
-export function useGetChecklistQuestions(childId?: ChildResult['id']) {
+export function useGetChecklistQuestions(childId?: ChildResult['id'], isForArchive: boolean = false) {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {data: currentChild} = useGetCurrentChild();
   const {data: anotherChild} = useGetChild({id: childId});
@@ -124,8 +125,10 @@ export function useGetChecklistQuestions(childId?: ChildResult['id']) {
       const data = await getAnswers(variables.milestoneAge, variables.childId);
       const answersIds = data.map((value) => value.questionId);
 
+      let neededChecklistMap = isForArchive ? checklistMapV1 : checklistMap;
+
       const questionsData =
-        checklistMap
+        neededChecklistMap
           .get(variables.milestoneAge)
           ?.milestones?.map((item) => {
             // const value =
@@ -299,7 +302,7 @@ export function useSetQuestionAnswer() {
 
 type Concerned = Concern & Pick<ConcernAnswer, 'note'>;
 
-export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
+export function useGetConcerns(childId?: PropType<ChildResult, 'id'>, isForArchive: boolean = false) {
   const {data: {id: currentChildId, gender} = {}} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone(childId);
   const {t} = useTranslation('milestones');
@@ -329,8 +332,10 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
         );
       });
 
+      let neededChecklistMap = isForArchive ? checklistMapV1 : checklistMap;
+
       const concernsData: Concern[] =
-        checklistMap.get(Number(milestoneAge))?.concerns?.map((item) => {
+        neededChecklistMap.get(Number(milestoneAge))?.concerns?.map((item) => {
           return {
             ...item,
             value: item.value && _.trim(t(item.value, tOpt({t, gender: variables.gender})), '.'),

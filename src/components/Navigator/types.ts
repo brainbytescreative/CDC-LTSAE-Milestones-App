@@ -25,6 +25,7 @@ export type DashboardStackParamList = {
   TipsAndActivities: undefined;
   Revisit: {openendedQuestionsData: Array<OpenEndedQuestion>} | undefined;
   WhenActEarly: undefined;
+  DataArchive: undefined;
 };
 
 export type OnboardingNavigationProp = StackNavigationProp<RootStackParamList>;

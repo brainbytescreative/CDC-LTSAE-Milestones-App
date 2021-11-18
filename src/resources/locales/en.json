@@ -170,6 +170,10 @@
         "yellowTip": "If your child is between the checklist ages above, you will receive the checklist for the younger age.",
         "yellowTipLessTwoMonth": "The first checklist is for age 2 months. Click the menu button to take a look at the Milestone Overview for a peek ahead!"
     },
+    "dataArchive": {
+        "title": "{{age}}\n Checklist History",
+        "description": "<1>The app now has NEW and improved milestones, tips, and 15- and 30-month-old checklists. All of your completed checklists from the old version of the app are stored here.</1> <0>You can not edit these responses.</0> <1>To complete a new checklist for your child, go back to the</1> <2>home page</2> <1>and click “milestone checklist”.</1>"
+    },
     "dialog": {
         "deleteMessage": "Are you sure you want to delete{{subject}}?",
         "no": "No",

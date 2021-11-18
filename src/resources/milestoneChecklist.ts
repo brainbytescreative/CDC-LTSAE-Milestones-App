@@ -3673,7 +3673,7 @@ function freezeMap<T extends Map<K, V>, K, V>(myMap: T) {
   return myMap;
 }
 
-export const checklistMap = freezeMap(
+export const checklistMapV1 = freezeMap(
   new Map<number, MilestoneData>(
     checklist.map((value) => {
       const milestones = Object.keys(value.milestones ?? {}).reduce((previousValue, currentValue) => {
@@ -3696,7 +3696,7 @@ export const checklistMap = freezeMap(
 
 export const questionIdToMilestoneIdMap = freezeMap(
   new Map(
-    Array.from(checklistMap.values())
+    Array.from(checklistMapV1.values())
       .map((value) => value?.milestones ?? [])
       .flat()
       .map((value) => [value.id, value.milestoneId]),
@@ -3705,7 +3705,7 @@ export const questionIdToMilestoneIdMap = freezeMap(
 
 export const concernIdToMilestoneIdMap = freezeMap(
   new Map(
-    Array.from(checklistMap.values())
+    Array.from(checklistMapV1.values())
       .map((value) => {
         return value?.concerns.map((c) => ({...c, milestoneId: value.id})) ?? [];
       })
