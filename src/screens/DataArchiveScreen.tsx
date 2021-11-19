@@ -15,8 +15,8 @@ import ChecklistMonthCarousel from './MilestoneChecklist/ChecklistMonthCarousel'
 import {DashboardStackParamList, DashboardDrawerParamsList} from '../components/Navigator/types';
 import withSuspense from '../components/withSuspense';
 import {
-  useGetChecklistQuestions,
-  useGetConcerns,
+  useGetChecklistQuestionsArchive,
+  useGetConcernsArchive,
   useGetMilestone,
 } from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
@@ -47,8 +47,8 @@ export type DataArchiveNavigationProp = CompositeNavigationProp<
 
 const DataArchiveItems: React.FC = withSuspense(() => {
     const {t} = useTranslation('childSummary');
-    const {data} = useGetChecklistQuestions(undefined, true);
-    const {data: concerns} = useGetConcerns(undefined, true);
+    const {data} = useGetChecklistQuestionsArchive();
+    const {data: concerns} = useGetConcernsArchive();
 
     const unanswered = data?.groupedByAnswer['undefined'] || [];
     const unsure = data?.groupedByAnswer[Answer.UNSURE] || [];
