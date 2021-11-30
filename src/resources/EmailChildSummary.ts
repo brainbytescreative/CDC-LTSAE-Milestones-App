@@ -234,6 +234,19 @@ const es = `
       </strong>
     </p>
     {% endif %}
+    <div style="padding-top: 10px; padding-left: 25px;">
+      <ins> 
+        <b>Cosas importantes para decirle al médico
+        </b>
+      </ins>
+    </div>
+    <ul style="margin: 0 0; padding-left: 45px;">
+      {% for questionItem in openendedQuestionsData %}
+      <li style="padding-left: 5px;">{{questionItem.question}}</br>
+      {{questionItem.answer}}
+      </li>
+      {% endfor %}
+    </ul>
     {% if concerns.length %}
     {# ACT EARLY by talking with {{ childName }}’s doctor right away about: #}
     <b>REACCIONE PRONTO y hable con el médico de {{ childName }} de inmediato sobre:

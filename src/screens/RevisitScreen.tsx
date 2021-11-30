@@ -146,8 +146,8 @@ const RevisitScreen: React.FC = () => {
           <View style={[styles.blockContainer, {backgroundColor: colors.purple}]}>
             <Text style={styles.blockText}>{tSummary('openendedQuestionsHeader')}</Text>
           </View>
-          {openendedQuestions.map((questionItem) => (
-            <OpenEndedQuestionItem item={questionItem} />
+          {openendedQuestions.map((questionItem, index) => (
+            <OpenEndedQuestionItem key={index} item={questionItem} />
           ))}
           <View style={[styles.blockContainer, {backgroundColor: colors.azalea}]}>
             <Text style={styles.blockText}>{t('concerns')}</Text>

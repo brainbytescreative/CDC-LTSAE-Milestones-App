@@ -641,6 +641,11 @@ const ChildSummaryScreen: React.FC = () => {
                 multiline
                 style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
                 placeholder={t('openendedQuestionPlaceholder')}
+                onEndEditing={() => {
+                  if (openendedQuestion1Answer !== '') {
+                    trackInteractionByType('Add OE Answer 1', { page: "My Child's Summary" });
+                  }
+                }}
               />
             </View>
           </View>
@@ -656,6 +661,11 @@ const ChildSummaryScreen: React.FC = () => {
                 multiline
                 style={{flexGrow: 1, fontFamily: 'Montserrat-Regular', fontSize: 15}}
                 placeholder={t('openendedQuestionPlaceholder')}
+                onEndEditing={() => {
+                  if (openendedQuestion2Answer !== '') {
+                    trackInteractionByType('Add OE Answer 2', { page: "My Child's Summary" });
+                  }
+                }}
               />
             </View>
           </View>

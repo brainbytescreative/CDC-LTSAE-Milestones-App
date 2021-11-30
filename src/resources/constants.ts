@@ -176,7 +176,8 @@ export type SelectEventType =
   | 'Children and Add Child'
   | 'Edit Answer'
   | 'Yes Premature'
-  | 'No Premature';
+  | 'No Premature'
+  | 'View Checklist History';
 
 export const skillTypes = ['social', 'language', 'cognitive', 'movement'] as const;
 export type SkillType = typeof skillTypes[number];

@@ -117,9 +117,23 @@ const DataArchiveScreen: React.FC = () => {
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
 
+  let milestoneAgeForArchive: number | undefined = 0;
+
+  switch (milestoneAge) {
+    case 15:
+      milestoneAgeForArchive = 12;
+      break;
+    case 30:
+      milestoneAgeForArchive = 24;
+      break;
+    default:
+      milestoneAgeForArchive = milestoneAge;
+      break;
+  }
+
   const milestoneAgeFormatted = useMemo(() => {
-    return formattedAge(Number(milestoneAge), t, i18n.language === 'en').milestoneAgeFormatted;
-  }, [i18n.language, milestoneAge, t]);
+    return formattedAge(Number(milestoneAgeForArchive), t, i18n.language === 'en').milestoneAgeFormatted;
+  }, [i18n.language, milestoneAgeForArchive, t]);
 
   useFocusEffect(
     React.useCallback(() => {

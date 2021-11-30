@@ -273,6 +273,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
               accessibilityRole={'button'}
               accessibilityLabel={`${t('dataArchiveButtonTitle')}.${t('dataArchiveButtonDecription')}`}
               onPress={() => {
+                trackSelectByType('View Checklist History');
                 navigation.navigate('DataArchive');
               }}
               style={[{backgroundColor: 'white', marginTop: 20, padding: 20, borderRadius: 15, overflow: 'visible'}, sharedStyle.shadow]}>

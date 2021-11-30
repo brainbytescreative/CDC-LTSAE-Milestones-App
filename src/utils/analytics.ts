@@ -36,7 +36,8 @@ export type PageType =
   | 'Language Pop-Up'
   | 'Notification & User Settings '
   | 'Show doctor'
-  | 'Add a Child (Child Profile)';
+  | 'Add a Child (Child Profile)'
+  | 'View Checklist History';
 
 type InteractionType =
   | 'Done'
@@ -81,7 +82,9 @@ type InteractionType =
   | 'Completed Add Photo: Library'
   | 'Completed Add Photo: Take'
   | 'Completed Add Child'
-  | 'Completed When to Act Early';
+  | 'Completed When to Act Early'
+  | 'Add OE Answer 1'
+  | 'Add OE Answer 2';
 
 type LinkType = 'Concerned' | 'Find EI' | 'Act Early' | 'Corrected Age';
 
@@ -141,6 +144,8 @@ const screeNameToPageName = (name: string): PageType | string => {
       break;
     case 'MilestoneChecklistWhenToActEarly':
       pageName = 'When to Act Early';
+    case 'DataArchive':
+      pageName = 'View Checklist History';
       break;
   }
 

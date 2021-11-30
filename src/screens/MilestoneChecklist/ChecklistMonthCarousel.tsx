@@ -101,6 +101,8 @@ const ChecklistMonthCarousel: React.FC<ChecklistMonthCarouselProps> = withSuspen
 
     const currentAgeIndex = milestonesIds.findIndex((value) => value === milestoneAge);
 
+    let dataArchiveMilestonesIds = milestonesIds.filter((milestoneId) => milestoneId !== 15 && milestoneId !== 30);
+
     useLayoutEffect(() => {
       setTimeout(() => {
         flatListRef.current?.scrollToIndex({
@@ -176,7 +178,7 @@ const ChecklistMonthCarousel: React.FC<ChecklistMonthCarouselProps> = withSuspen
             }, 1000);
           }}
           onViewableItemsChanged={onViewableItemsChanged}
-          data={milestonesIds}
+          data={isForDataArchiveDesign ? dataArchiveMilestonesIds : milestonesIds}
           extraData={{childId: child?.id, milstone: childAge}}
           horizontal
           renderItem={({item}) => (
@@ -198,7 +200,7 @@ const ChecklistMonthCarousel: React.FC<ChecklistMonthCarouselProps> = withSuspen
           accessibilityLabel={t('accessibility:nextButton')}
           hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
           onPress={() => {
-            const last = visible.current?.last || milestonesIds.length - 1;
+            const last = visible.current?.last || isForDataArchiveDesign ? dataArchiveMilestonesIds.length - 1 : milestonesIds.length - 1;
             flatListRef.current?.scrollToIndex({
               index: last,
               viewPosition: 0.5,
