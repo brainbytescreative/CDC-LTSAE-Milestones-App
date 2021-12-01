@@ -469,6 +469,7 @@ const ChildSummaryScreen: React.FC = () => {
   const {bottom} = useSafeAreaInsets();
   const {data, refetch} = useGetChecklistQuestions();
   const [summaryItemsUnansweredYCoordinate, setSummaryItemsUnansweredYCoordinate] = useState(0);
+  const [openEndedQuestionsYCoordinate, setOpenEndedQuestionsYCoordinate] = useState(0);
   const scrollViewRef = useRef<KeyboardAwareScrollView | null>();
   const [openendedQuestion1Answer, setOpenendedQuestion1Answer] = useState('');
   const [openendedQuestion2Answer, setOpenendedQuestion2Answer] = useState('');
@@ -592,7 +593,7 @@ const ChildSummaryScreen: React.FC = () => {
                   numberOfLines={1}
                   accessibilityRole={'link'}
                   onPress={() => {
-                    scrollViewRef.current?.scrollToPosition(0, summaryItemsUnansweredYCoordinate, true);
+                    scrollViewRef.current?.scrollToPosition(0, openEndedQuestionsYCoordinate, true);
                   }}
                   style={[{textDecorationLine: 'underline', textAlign: 'left'}, sharedStyle.boldText]}
                 />
@@ -625,7 +626,12 @@ const ChildSummaryScreen: React.FC = () => {
             />
           </View>
         </View>
-        <View style={{marginHorizontal: 30, marginTop: 15}}>
+        <View
+          style={{marginHorizontal: 30, marginTop: 15}}
+          onLayout={(event) => {
+            setOpenEndedQuestionsYCoordinate(event.nativeEvent.layout.y);
+          }}
+          >
           <View style={[styles.blockContainer, {marginBottom: 30, backgroundColor: colors.purple}]}>
             <Text style={styles.blockText}>{t('openendedQuestionsHeader')}</Text>
           </View>
