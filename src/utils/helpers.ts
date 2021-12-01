@@ -242,6 +242,7 @@ export const tOpt = ({t, gender}: {t: TFunction; gender?: number}) => ({
   ninoNinaTag: t('common:ninoNinaTag', {context: `${gender}`}),
   oaSpanishEndingTag: t('common:oaSpanishEndingTag', {context: `${gender}`}),
   aSpanishEndingTag: t('common:aSpanishEndingTag', {context: `${gender}`}),
+  elLaTag: t('common:elLaTag', {context: `${gender}`}),
   elEllaTag: t('common:elEllaTag', {context: `${gender}`}),
   elEllaCapitalTag: t('common:elEllaCapitalTag', {context: `${gender}`}),
   alAlaTag: t('common:alAlaTag', {context: `${gender}`}),
