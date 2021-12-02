@@ -568,7 +568,7 @@ const ChildSummaryScreen: React.FC = () => {
           {/*<Text style={{marginTop: 15, textAlign: 'center', fontSize: 15, flex: 1}}>*/}
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
             <Text>
-              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', unansweredQuestionsQuantity: unanswered.length, breakStr, breakStrLarge, ...tOptData}}>
+              <Trans t={t} i18nKey={'message1'} tOptions={{name: child?.name ?? '', unansweredQuestionsQuantity: 2 /*unanswered.length*/, breakStr, breakStrLarge, ...tOptData}}>
                 <Text
                   numberOfLines={1}
                   accessibilityRole={'link'}
