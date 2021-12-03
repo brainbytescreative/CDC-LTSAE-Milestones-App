@@ -99,9 +99,25 @@ const ChecklistMonthCarousel: React.FC<ChecklistMonthCarouselProps> = withSuspen
     const [setAge] = useSetMilestoneAge();
     const {data: child} = useGetCurrentChild();
 
-    const currentAgeIndex = milestonesIds.findIndex((value) => value === milestoneAge);
+    let milestoneAgeWithDataArchiveTakenIntoAccount = milestoneAge;
+    if (isForDataArchiveDesign) {
+      switch (milestoneAgeWithDataArchiveTakenIntoAccount) {
+        case 15:
+          milestoneAgeWithDataArchiveTakenIntoAccount = 12;
+          break;
+        case 30:
+          milestoneAgeWithDataArchiveTakenIntoAccount = 24;
+          break;
+        default:
+          break;
+      }
+    }
 
     let dataArchiveMilestonesIds = milestonesIds.filter((milestoneId) => milestoneId !== 15 && milestoneId !== 30);
+    
+    const currentAgeIndex = isForDataArchiveDesign ?
+                            dataArchiveMilestonesIds.findIndex((value) => value === milestoneAgeWithDataArchiveTakenIntoAccount) :
+                            milestonesIds.findIndex((value) => value === milestoneAgeWithDataArchiveTakenIntoAccount);
 
     useLayoutEffect(() => {
       setTimeout(() => {
@@ -189,7 +205,7 @@ const ChecklistMonthCarousel: React.FC<ChecklistMonthCarouselProps> = withSuspen
               month={item}
               childId={child?.id}
               childAge={childAge}
-              milestone={milestoneAge}
+              milestone={milestoneAgeWithDataArchiveTakenIntoAccount}
               isForDataArchive={isForDataArchiveDesign}
             />
           )}
