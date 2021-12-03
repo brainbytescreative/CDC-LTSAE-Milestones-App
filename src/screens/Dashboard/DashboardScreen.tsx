@@ -26,7 +26,7 @@ import {useGetMilestone, useGetMilestoneGotStarted} from '../../hooks/checklistH
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
-import {useGetHideDataArchiveButton} from '../../hooks/dashboardHooks';
+import {useGetHideDataArchiveButton, useGetHideDataArchiveButtonForCurrentChild} from '../../hooks/dashboardHooks';
 import {Appointment} from '../../hooks/types';
 import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
@@ -230,6 +230,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
   const appointmentsParam = route.params?.appointments;
   const [appointmentsPosition, setAppointmentsPosition] = useState(0);
   const {data: hideDataArchiveButton} = useGetHideDataArchiveButton();
+  const {data: hideDataArchiveButtonForCurrentChild} = useGetHideDataArchiveButtonForCurrentChild();
   const dataArchiveButtonDescriptionFontSize = Math.ceil((Dimensions.get('screen').width * 11) / 320);
 
   useLayoutEffect(() => {
@@ -268,7 +269,7 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
           {/*  })}*/}
           {/*</Text>*/}
           <Buttons />
-          {!hideDataArchiveButton &&
+          {!hideDataArchiveButton && !hideDataArchiveButtonForCurrentChild &&
             <TouchableOpacity
               accessibilityRole={'button'}
               accessibilityLabel={`${t('dataArchiveButtonTitle')}.${t('dataArchiveButtonDecription')}`}

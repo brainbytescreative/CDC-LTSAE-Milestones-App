@@ -28,6 +28,7 @@ import NavBarBackground from '../components/Svg/NavBarBackground';
 import PlusIcon from '../components/Svg/PlusIcon';
 import PurpleArc from '../components/Svg/PurpleArc';
 import {useAddChild, useGetChild, useUpdateChild} from '../hooks/childrenHooks';
+import {useGetHideDataArchiveButton, useSetHideDataArchiveButtonForNewChild} from '../hooks/dashboardHooks';
 import {ChildResult} from '../hooks/types';
 import {colors, sharedStyle} from '../resources/constants';
 import {addEditChildSchema} from '../resources/validationSchemas';
@@ -369,6 +370,9 @@ const AddChildScreen: React.FC = () => {
   const [updateChild, {status: updateStatus}] = useUpdateChild();
   const title = t(`${prefix}title`);
 
+  const {data: hideDataArchiveButton} = useGetHideDataArchiveButton();
+  const [setHideDataArchiveButtonForNewChild] = useSetHideDataArchiveButtonForNewChild();
+
   const formikRef = useRef<FormikProps<typeof initialValues> | null>(null);
   // const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
@@ -465,7 +469,10 @@ const AddChildScreen: React.FC = () => {
               trackChildGender(Number(values.firstChild.gender));
             });
           } else {
-            addChild({data: childInput, isAnotherChild: false}).then(() => {
+            addChild({data: childInput, isAnotherChild: false}).then((addChildRes) => {
+              if (addChildRes && !hideDataArchiveButton) {
+                setHideDataArchiveButtonForNewChild(addChildRes);
+              }
               trackCompleteAddChild();
               trackChildAge(values.firstChild.realBirthDay ?? values.firstChild.birthday);
               trackChildGender(Number(values.firstChild.gender));
@@ -487,7 +494,10 @@ const AddChildScreen: React.FC = () => {
               gender: anotherChild.gender!,
             } as ChildResult;
             await addChild({data: otherInput, isAnotherChild: true})
-              .then(() => {
+              .then((addChildRes) => {
+                if (addChildRes && !hideDataArchiveButton) {
+                  setHideDataArchiveButtonForNewChild(addChildRes);
+                }
                 trackCompleteAddChild();
                 trackChildAge(anotherChild.realBirthDay ?? anotherChild.birthday);
                 trackChildGender(Number(anotherChild.gender));
