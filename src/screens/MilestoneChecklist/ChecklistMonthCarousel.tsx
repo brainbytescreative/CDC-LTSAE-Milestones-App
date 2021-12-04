@@ -19,6 +19,8 @@ import withSuspense from '../../components/withSuspense';
 import {useGetMilestone, useGetMonthProgress, useSetMilestoneAge} from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {PropType, colors, milestonesIds} from '../../resources/constants';
+import {trackEventByType} from '../../utils/analytics';
+import {formattedAgeSingular} from '../../utils/helpers';
 
 interface ItemProps {
   childAge: number;
@@ -38,15 +40,21 @@ const styles = StyleSheet.create({
 
 const Item: React.FC<ItemProps> = ({month, childAge, childId, onSelect, milestone, isForDataArchive}) => {
   const {t} = useTranslation('dashboard');
+  const {t: tChecklist} = useTranslation('milestoneChecklist');
   const isCurrentMilestone = milestone === month;
   const unit = month % 12 === 0 ? t('common:year', {count: month / 12}) : t('common:month', {count: month});
   const unitShort =
     month % 12 === 0 ? t('common:yearShort', {count: month / 12}) : t('common:monthShort', {count: month});
-
+  
+  const headerAgeText = formattedAgeSingular(tChecklist, month);
+  
   return (
     <TouchableOpacity
       accessibilityRole={'button'}
       onPress={() => {
+        if (!isForDataArchive) {
+          trackEventByType('Select', `${headerAgeText} Checklist`);
+        }
         onSelect && onSelect(month);
       }}>
       <View style={{paddingVertical: 5, paddingHorizontal: isForDataArchive ? 2 : 5, marginHorizontal: isForDataArchive ? 0 : 4, height: isForDataArchive ? 55 : 60, justifyContent: 'center'}}>
