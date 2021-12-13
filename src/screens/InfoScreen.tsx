@@ -33,7 +33,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
         {/*<Text style={{marginHorizontal: 32, marginTop: 21, fontSize: 15, lineHeight: 25}}>*/}
         <View style={{flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: 32, marginTop: 21}}>
           <Text>
-            <Trans t={t} i18nKey={'aboutThisAppText'} tOptions={{breakStr, breakStrLarge}}>
+            <Trans t={t} i18nKey={'aboutThisAppTextCovid'} tOptions={{breakStr, breakStrLarge}}>
               <Text
                 accessibilityRole={'link'}
                 onPress={() => {
