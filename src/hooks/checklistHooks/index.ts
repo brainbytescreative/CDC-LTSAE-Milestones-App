@@ -17,6 +17,7 @@ import {
   Section,
   SkillType,
   milestonesIds,
+  milestonesIdsArchive,
   missingConcerns,
   skillTypes,
 } from '../../resources/constants';
@@ -105,6 +106,39 @@ async function getAnswers(milestoneId: number, childId: number): Promise<Milesto
   );
 
   return (result && result[0].rows.raw()) ?? [];
+}
+
+export function useGetCompletedMilestonesArchive(childId?: ChildResult['id']) {
+
+  return useQuery(
+    ['completedMilestonesArchive', {childId: childId}],
+    async (key, variables) => {
+      if (!variables.childId) {
+        return;
+      }
+
+      let completedMilestonesIds: number[] = [];
+
+      for (let milestoneId of milestonesIdsArchive) {
+        const questionsIds = checklistMapV1.get(milestoneId)?.milestones?.map((item) => item.id);
+
+        const data = (await getAnswers(milestoneId, variables.childId)).filter((item) => questionsIds?.includes(item.questionId));
+        if (data.length > 0) {
+          const answeredQuestion = data.find((item) => item.answer !== undefined);
+          if (answeredQuestion) {
+            completedMilestonesIds.push(milestoneId);
+          }
+        } 
+      }
+
+      return {
+        completedMilestonesIds,
+      };
+    },
+    {
+      enabled: true,
+    },
+  );
 }
 
 export function useGetChecklistQuestionsArchive(childId?: ChildResult['id']) {

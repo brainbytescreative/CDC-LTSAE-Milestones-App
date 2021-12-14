@@ -18,6 +18,7 @@ import {
   useGetChecklistQuestionsArchive,
   useGetConcernsArchive,
   useGetMilestone,
+  useGetCompletedMilestonesArchive
 } from '../hooks/checklistHooks';
 import {useGetCurrentChild} from '../hooks/childrenHooks';
 import {Answer} from '../hooks/types';
@@ -116,6 +117,7 @@ const DataArchiveScreen: React.FC = () => {
   const {data: child} = useGetCurrentChild();
   const {data: {milestoneAge} = {}} = useGetMilestone();
   const {bottom} = useSafeAreaInsets();
+  const {data: completedMilestoneIdsArchive} = useGetCompletedMilestonesArchive(child?.id);
 
   let milestoneAgeForArchive: number | undefined = 0;
 
@@ -147,8 +149,13 @@ const DataArchiveScreen: React.FC = () => {
 
   const tOptData = tOpt({t, gender: child?.gender});
 
+  const completedArchiveMilestonesQuantity = completedMilestoneIdsArchive?.completedMilestonesIds.length ?? 0;
+
+  const milestoneAgeFormattedForTitle = completedArchiveMilestonesQuantity === 0
+                                        ? '' : milestoneAgeFormatted ?? '';
+
   return (
-    <View style={{backgroundColor: colors.white}}>
+    <View style={{backgroundColor: colors.white, height: '100%'}}>
       <View style={{marginTop: 1}} >
         <ChecklistMonthCarousel
           isForDataArchiveDesign
@@ -175,7 +182,7 @@ const DataArchiveScreen: React.FC = () => {
             },
             sharedStyle.largeBoldText,
           ]}>
-          {`${t('title', {age: milestoneAgeFormatted ?? ''})}`}
+          {`${t('title', {age: milestoneAgeFormattedForTitle})}`}
         </Text>
         <View style={{paddingHorizontal: 32, marginBottom: 10}}>
           <View style={{marginTop: 15, alignItems: 'flex-start'}}>
@@ -195,7 +202,7 @@ const DataArchiveScreen: React.FC = () => {
             </Text>
           </View>
         </View>
-        <DataArchiveItems />
+        {completedArchiveMilestonesQuantity !== 0 && <DataArchiveItems />}
       </KeyboardAwareScrollView>
     </View>
   );
