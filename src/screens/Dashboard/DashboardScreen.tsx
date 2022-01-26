@@ -27,6 +27,9 @@ import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {useSetOnboarding} from '../../hooks/onboardingHooks';
 import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
 import {useGetHideDataArchiveButton, useGetHideDataArchiveButtonForCurrentChild} from '../../hooks/dashboardHooks';
+import {useGetOldNotificationsWasCleared,
+        useSetOldNotificationsWasCleared,
+        useSetAllNotificationsRead} from '../../hooks/notificationsHooks';
 import {Appointment} from '../../hooks/types';
 import {colors, sharedStyle, suspenseEnabled} from '../../resources/constants';
 import {dateFnsLocales} from '../../resources/dateFnsLocales';
@@ -404,6 +407,10 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
   const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
   const {t} = useTranslation('dashboard');
+
+  const {status: oldNotificationsWasClearedStatus, data: oldNotificationsWasCleared} = useGetOldNotificationsWasCleared();
+  const [setOldNotificationsWasCleared] = useSetOldNotificationsWasCleared();
+  const [setAllNotificationsRead] = useSetAllNotificationsRead();
   
   const isToShowHasChangedPopUp = whatHasChangedPopUpSeen === undefined ? true : whatHasChangedPopUpSeen;
 
@@ -424,6 +431,13 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
       <Text style={{fontFamily: 'Montserrat-Italic'}} />
     </Trans>
   );
+
+  useEffect(() => {
+    if (oldNotificationsWasClearedStatus === 'success' && oldNotificationsWasCleared !== true) {
+      setAllNotificationsRead();
+      setOldNotificationsWasCleared(true);
+    }
+  }, []);
 
   return (
     <>

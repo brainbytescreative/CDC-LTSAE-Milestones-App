@@ -15,6 +15,7 @@ import IceColdArc from '../../components/Svg/IceColdArc';
 import PurpleArc from '../../components/Svg/PurpleArc';
 import {useGetWhatHasChangedPopUpSeen, useSetWhatHasChangedPopUpSeen} from '../../hooks/modalPopUpsHooks';
 import {useGetHideDataArchiveButton, useSetHideDataArchiveButton} from '../../hooks/dashboardHooks';
+import {useGetOldNotificationsWasCleared, useSetOldNotificationsWasCleared} from '../../hooks/notificationsHooks';
 import {colors, sharedStyle} from '../../resources/constants';
 import {trackSelectLanguage, trackStartTracking} from '../../utils/analytics';
 
@@ -28,12 +29,19 @@ const OnboardingInfoScreen: React.FC = () => {
   const {data: hideDataArchiveButton} = useGetHideDataArchiveButton();
   const [setHideDataArchiveButton] = useSetHideDataArchiveButton();
 
+  const {data: oldNotificationsWasCleared} = useGetOldNotificationsWasCleared();
+  const [setOldNotificationsWasCleared] = useSetOldNotificationsWasCleared();
+
   useEffect(() => {
     if (!whatHasChangedPopUpSeen) {
       setWhatHasChangedPopUpSeen(true);
     }
     if (!hideDataArchiveButton) {
       setHideDataArchiveButton(true);
+    }
+
+    if (!oldNotificationsWasCleared) {
+      setOldNotificationsWasCleared(true);
     }
   }, []);
 

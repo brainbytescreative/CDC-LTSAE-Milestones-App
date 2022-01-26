@@ -21,6 +21,7 @@ import {
   navStateForAppointmentsList,
   tOpt,
 } from '../../utils/helpers';
+import Storage from '../../utils/Storage';
 import useSetMilestoneAge from '../checklistHooks/useSetMilestoneAge';
 import {ChildDbRecord} from '../childrenHooks';
 // noinspection ES6PreferShortImport
@@ -77,6 +78,8 @@ interface WellCheckUpNotificationsPayload {
 interface RecommendationNotificationsDeletePayload extends Omit<RecommendationNotificationsPayload, 'child'> {
   childId: PropType<ChildDbRecord, 'id'>;
 }
+
+type QueryKeyOldNotificationsWasCleared = 'oldNotificationsWasCleared';
 
 export enum NotificationCategory {
   Recommendation = 0,
@@ -564,6 +567,19 @@ export function useSetNotificationRead() {
   );
 }
 
+export function useSetAllNotificationsRead() {
+  return useMutation<void, void>(
+    async () => {
+      await sqLiteClient.dB?.executeSql('update notifications set notificationRead = 1 where notificationRead <> 1');
+    },
+    {
+      onSuccess: () => {
+        queryCache.invalidateQueries('unreadNotifications');
+      },
+    },
+  );
+}
+
 export function useRemoveNotificationsByChildId() {
   const [reschedule] = useScheduleNotifications();
   return useMutation<void, {childId: number}>(
@@ -950,4 +966,25 @@ export function useNavigateNotification() {
   );
 
   return [navigateNotification];
+}
+
+export function useSetOldNotificationsWasCleared() {
+  return useMutation<void, boolean | undefined>(
+    async (variables) => {
+      if (variables) {
+        await Storage.setItemTyped('oldNotificationsWasCleared', variables);
+      }
+    },
+    {
+      onSuccess: (data, variables) => {
+        queryCache.setQueryData('oldNotificationsWasCleared', variables);
+      },
+    },
+  );
+}
+
+export function useGetOldNotificationsWasCleared() {
+  return useQuery<boolean | null, QueryKeyOldNotificationsWasCleared>('oldNotificationsWasCleared', async () => {
+    return await Storage.getItemTyped('oldNotificationsWasCleared');
+  });
 }
