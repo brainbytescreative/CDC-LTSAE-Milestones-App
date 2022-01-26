@@ -36,7 +36,7 @@ import {
   breakStr,
   breakStrLarge,
   colors,
-  missingConcerns,
+  missingConcerns_V2,
   sharedStyle,
   suspenseEnabled,
 } from '../resources/constants';
@@ -366,7 +366,7 @@ const SummaryItems: React.FC<SummaryItemsProps> = withSuspense(
             key={`concern-${item.id}`}
             onEditAnswerPress={onEditConcernPress}
             onEditNotePress={onSaveConcernNotePress}
-            hideControls={!!item.id && missingConcerns.includes(item.id)}
+            hideControls={!!item.id && missingConcerns_V2.includes(item.id)}
             value={item.value}
             note={item.note}
             id={item.id}

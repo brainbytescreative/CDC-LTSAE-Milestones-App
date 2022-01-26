@@ -27,7 +27,7 @@ import {
   sharedStyle,
   suspenseEnabled,
 } from '../resources/constants';
-import {formattedAge, tOpt} from '../utils/helpers';
+import {formattedAgeSingular, tOpt} from '../utils/helpers';
 
 interface ItemProps {
   value?: string;
@@ -134,8 +134,8 @@ const DataArchiveScreen: React.FC = () => {
   }
 
   const milestoneAgeFormatted = useMemo(() => {
-    return formattedAge(Number(milestoneAgeForArchive), t, i18n.language === 'en').milestoneAgeFormatted;
-  }, [i18n.language, milestoneAgeForArchive, t]);
+    return formattedAgeSingular(t, Number(milestoneAgeForArchive));
+  }, [milestoneAgeForArchive, t]);
 
   useFocusEffect(
     React.useCallback(() => {

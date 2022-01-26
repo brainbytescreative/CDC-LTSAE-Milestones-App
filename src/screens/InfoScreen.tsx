@@ -55,6 +55,7 @@ const InfoScreen: React.FC<{navigation: NavigationProp<InfoStackParamList>}> = (
                 <Text style={[sharedStyle.boldText, {fontSize: 15, lineHeight: 25}]} />
                 <Text style={[sharedStyle.boldText, {fontSize: 15, lineHeight: 25}]} />
               </Text>
+              <Text style={{fontFamily: 'Montserrat-Italic'}} />
             </Trans>
           </Text>
         </View>

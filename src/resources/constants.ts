@@ -312,6 +312,7 @@ export const milestonesIds = [2, 4, 6, 9, 12, 15, 18, 24, 30, 36, 48, 60] as con
 export const milestonesIdsArchive = [2, 4, 6, 9, 12, 18, 24, 36, 48, 60] as const;
 // export const missingConcerns = [1, 7, 15, 25, 34, 42, 51, 58, 68, 80];
 export const missingConcerns = [1, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56];
+export const missingConcerns_V2 = [2001, 2006, 2011, 2016, 2021, 2026, 2031, 2036, 2041, 2046, 2051, 2056];
 export const tooYongAgeDays = 42;
 export type LanguageType = 'en' | 'es';
 

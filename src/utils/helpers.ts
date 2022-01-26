@@ -6,7 +6,7 @@ import {DateTimePickerProps} from 'react-native-modal-datetime-picker';
 
 import {sqLiteClient} from '../db';
 import {Answer, Appointment, AppointmentDb} from '../hooks/types';
-import {NoExtraProperties, PropType, milestonesIds, missingConcerns} from '../resources/constants';
+import {NoExtraProperties, PropType, milestonesIds, missingConcerns_V2} from '../resources/constants';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import i18next from '../resources/l18n';
 
@@ -141,7 +141,7 @@ export async function checkMissingMilestones(milestoneId: number, childId: numbe
   );
 
   const concernsRes = await sqLiteClient.dB?.executeSql(
-    `SELECT concernId FROM concern_answers WHERE concernId NOT IN (${missingConcerns.join(
+    `SELECT concernId FROM concern_answers WHERE concernId NOT IN (${missingConcerns_V2.join(
       ',',
     )}) AND milestoneId=? AND childId=? AND answer=? LIMIT 1`,
     [milestoneId, childId, 1],

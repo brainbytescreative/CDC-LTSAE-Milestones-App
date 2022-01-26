@@ -1,7 +1,7 @@
 import {DrawerContentComponentProps, DrawerContentScrollView, createDrawerNavigator} from '@react-navigation/drawer';
 import i18next from 'i18next';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {SafeAreaView, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
@@ -103,7 +103,11 @@ const DefaultDrawer: React.FC<DrawerContentComponentProps> = (props) => {
                       },
                       index === props.state.index && {color: colors.purple},
                     ]}>
-                    {props.descriptors[key].options.drawerLabel}
+                    {
+                      typeof props.descriptors[key].options.drawerLabel === 'function'
+                        ? props.descriptors[key].options.drawerLabel({focused: index === props.state.index})
+                        : props.descriptors[key].options.drawerLabel
+                    }
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -224,7 +228,14 @@ const RootDrawer: React.FC = () => {
       <Drawer.Screen
         name={'InfoStack'}
         options={{
-          drawerLabel: t('info:drawerLabel'),
+          drawerLabel: ({focused}) => (
+            <Trans t={t} i18nKey={'info:drawerLabel'}>
+              <Text style={[
+                {fontFamily: 'Montserrat-Italic'},
+                focused && {color: colors.purple}
+              ]} />
+            </Trans>
+          ),
         }}
         component={InfoStack}
       />

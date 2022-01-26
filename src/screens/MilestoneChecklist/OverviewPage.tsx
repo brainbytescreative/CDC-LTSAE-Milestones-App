@@ -95,7 +95,13 @@ const OverviewPage: React.FC<Props> = ({onNext, milestoneAgeFormatted, section =
                   flex: 1,
                   width: 0,
                 }}>
-                <Text style={{fontSize: 15}}>{item.value}</Text>
+                <Text style={{fontSize: 15}}>
+                  {
+                    index === 0 && section === 'actEarly'
+                      ? t('quickviewSectionActEarlyConcern1')
+                      : item.value
+                  }
+                </Text>
               </View>
             </View>
           ))}

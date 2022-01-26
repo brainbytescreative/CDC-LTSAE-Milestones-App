@@ -32,7 +32,7 @@ import {
 } from '../../hooks/checklistHooks';
 import {useGetCurrentChild} from '../../hooks/childrenHooks';
 import {Concern} from '../../resources/checklist-types';
-import {colors, missingConcerns, sharedStyle} from '../../resources/constants';
+import {colors, missingConcerns_V2, sharedStyle} from '../../resources/constants';
 import {trackEventByType, trackInteractionByType} from '../../utils/analytics';
 import {DashboardStackNavigationProp} from '../Dashboard/DashboardScreen';
 import {tOpt} from '../../utils/helpers';
@@ -45,7 +45,7 @@ const Item: React.FC<Concern & {childId?: number; onPress?: () => void}> = React
     const {data: {milestoneAge: milestoneId} = {}} = useGetMilestone();
     const {data: concern, isFetching} = useGetConcern({concernId: id, childId, milestoneId});
 
-    const isMissingAnswerConcern = missingConcerns.includes(id || 0);
+    const isMissingAnswerConcern = missingConcerns_V2.includes(id || 0);
     const onPress = isMissingAnswerConcern
       ? undefined
       : () => {

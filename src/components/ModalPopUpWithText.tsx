@@ -1,18 +1,23 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Modal, Portal, Text} from 'react-native-paper';
 
 import {colors, sharedStyle} from '../resources/constants';
+import PurpleArc from '../components/Svg/PurpleArc';
+import AEButtonRounded from '../components/AEButtonRounded';
 
 type Props = {
-  title: string;
-  message: string;
+  title?: string | undefined;
+  message?: string| undefined;
+  titleComponent?: JSX.Element | undefined;
+  messageComponent?: JSX.Element | undefined;
+  useComponents?: boolean | undefined;
   visible: boolean;
   onDismissCallback: () => void;
 };
 
-const ModalPopUpWithText: React.FC<Props> = ({title, message, visible, onDismissCallback}) => {
+const ModalPopUpWithText: React.FC<Props> = ({title, message, titleComponent, messageComponent, useComponents, visible, onDismissCallback}) => {
   const {t} = useTranslation();
   return (
     <Portal>
@@ -22,15 +27,24 @@ const ModalPopUpWithText: React.FC<Props> = ({title, message, visible, onDismiss
           onDismissCallback();
         }}
         visible={visible}>
-        <Text style={styles.titleText}>{t(title)}</Text>
-        <Text style={styles.messageText}>{t(message)}</Text>
-        <TouchableOpacity
-          accessibilityRole={'button'}
-          onPress={() => {
-            onDismissCallback();
-          }}>
-          <Text style={[styles.buttonText, sharedStyle.largeBoldText]}>{t('common:done')}</Text>
-        </TouchableOpacity>
+        <View style={styles.textView}>
+          <Text style={styles.titleText}>
+            {useComponents ? titleComponent : t(title ?? '')}
+          </Text>
+          <Text style={styles.messageText}>
+            {useComponents ? messageComponent : t(message ?? '')}
+          </Text>
+        </View>
+        <PurpleArc width={'100%'} />
+        <View style={styles.buttonView}>
+          <AEButtonRounded
+            onPress={() => {
+              onDismissCallback();
+            }}
+          >
+            <Text style={[styles.buttonText, sharedStyle.largeBoldText]}>{t('common:done')}</Text>
+          </AEButtonRounded>
+        </View>
       </Modal>
     </Portal>
   );
@@ -40,11 +54,13 @@ const styles = StyleSheet.create({
   modalContentContainer: {
     backgroundColor: '#fff',
     margin: 32,
-    paddingHorizontal: 16,
-    paddingVertical: 22,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.darkGray,
+  },
+  textView: {
+    paddingHorizontal: 16,
+    paddingVertical: 22
   },
   titleText: {
     marginBottom: 20,
@@ -56,6 +72,12 @@ const styles = StyleSheet.create({
     margin: 10,
     textAlign: 'center',
     fontSize: 15,
+  },
+  buttonView: {
+    backgroundColor: colors.purple,
+    paddingVertical: 10,
+    borderBottomLeftRadius: 9,
+    borderBottomRightRadius: 9
   },
   buttonText: {
     textAlign: 'center',

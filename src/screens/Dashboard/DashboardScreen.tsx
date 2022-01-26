@@ -3,7 +3,7 @@ import {CompositeNavigationProp, RouteProp, useFocusEffect, useNavigation, useRo
 import {StackNavigationProp} from '@react-navigation/stack';
 import {differenceInDays, differenceInWeeks, differenceInYears, format} from 'date-fns';
 import React, {RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {queryCache} from 'react-query';
@@ -291,7 +291,9 @@ const DashboardSkeleton: React.FC<SkeletonProps> = ({childPhotoComponent, scroll
                   </Text>
                   <View style={{marginTop: 8}}>
                     <Text style={{fontSize: dataArchiveButtonDescriptionFontSize+1}} >
-                      {t('dataArchiveButtonDecription')}
+                      <Trans t={t} i18nKey={'dataArchiveButtonDecription'}>
+                        <Text style={{fontFamily: 'Montserrat-Italic'}} />
+                      </Trans>
                     </Text>
                   </View>
                 </View>
@@ -401,6 +403,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
   const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
+  const {t} = useTranslation('dashboard');
   
   const isToShowHasChangedPopUp = whatHasChangedPopUpSeen === undefined ? true : whatHasChangedPopUpSeen;
 
@@ -410,12 +413,25 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
     }
   }, [addChildParam, navigation]);
 
+  let spanishPopupTitleComponent = (
+    <Trans t={t} i18nKey={'whatHasChangedHeader'}>
+      <Text style={{fontFamily: 'Montserrat-BoldItalic'}} />
+    </Trans>
+  );
+
+  let spanishPopupMessageComponent = (
+    <Trans t={t} i18nKey={'whatHasChangedDescription'}>
+      <Text style={{fontFamily: 'Montserrat-Italic'}} />
+    </Trans>
+  );
+
   return (
     <>
       <ChildSelectorModal visible={addChildParam && Boolean(isToShowHasChangedPopUp)} />
       <ModalPopUpWithText 
-        title={'dashboard:whatHasChangedHeader'}
-        message={'dashboard:whatHasChangedDescription'}
+        titleComponent={spanishPopupTitleComponent}
+        messageComponent={spanishPopupMessageComponent}
+        useComponents
         visible={!isToShowHasChangedPopUp}
         onDismissCallback={() => {
           setWhatHasChangedPopUpSeen(true);

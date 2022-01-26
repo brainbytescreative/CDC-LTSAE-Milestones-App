@@ -28,6 +28,8 @@
 		C5F16772532A4F27B75E918B /* Avenir-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 880370EDF3034C9E866D4EA6 /* Avenir-Light.ttf */; };
 		EE7B57864BB5F16F2A54FF4E /* libPods-brainbytescreativeactearly-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692120C70F992B9A2F3B32EC /* libPods-brainbytescreativeactearly-tvOSTests.a */; };
 		F5948894FF514B529A851B6D /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87595BF9507B4492BCFEEBFB /* Montserrat-Regular.ttf */; };
+		FA4A06B4279B32F300E45776 /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA4A06B3279B32F300E45776 /* Montserrat-BoldItalic.ttf */; };
+		FA4A06BA279B330D00E45776 /* Montserrat-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA4A06B9279B330D00E45776 /* Montserrat-Italic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +84,8 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EF5494C1A2FE9464CD355083 /* Pods-brainbytescreativeactearly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly.debug.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly/Pods-brainbytescreativeactearly.debug.xcconfig"; sourceTree = "<group>"; };
 		F73F46C002BD8A951E8A0A64 /* Pods-brainbytescreativeactearly-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brainbytescreativeactearly-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-brainbytescreativeactearly-tvOSTests/Pods-brainbytescreativeactearly-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		FA4A06B3279B32F300E45776 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
+		FA4A06B9279B330D00E45776 /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Italic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +165,8 @@
 				880370EDF3034C9E866D4EA6 /* Avenir-Light.ttf */,
 				9FCE1229C70149C2B94EA697 /* Montserrat-Bold.ttf */,
 				87595BF9507B4492BCFEEBFB /* Montserrat-Regular.ttf */,
+				FA4A06B3279B32F300E45776 /* Montserrat-BoldItalic.ttf */,
+				FA4A06B9279B330D00E45776 /* Montserrat-Italic.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -377,12 +383,14 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				34D2BA04244F24D20016333D /* bootstrap.min.css in Resources */,
+				FA4A06BA279B330D00E45776 /* Montserrat-Italic.ttf in Resources */,
 				34C163582518B7DB00CFF2CA /* GoogleService-Info.plist in Resources */,
 				348422F924E2B25500D0C171 /* LaunchScreen.storyboard in Resources */,
 				406FD4A1713B40A1BDAEB487 /* Avenir-Heavy.ttf in Resources */,
 				C5F16772532A4F27B75E918B /* Avenir-Light.ttf in Resources */,
 				4FDE57FF0F5140AB89C0103F /* Montserrat-Bold.ttf in Resources */,
 				348422F524E2B13900D0C171 /* InfoPlist.strings in Resources */,
+				FA4A06B4279B32F300E45776 /* Montserrat-BoldItalic.ttf in Resources */,
 				F5948894FF514B529A851B6D /* Montserrat-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

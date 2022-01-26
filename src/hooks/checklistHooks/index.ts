@@ -18,7 +18,7 @@ import {
   SkillType,
   milestonesIds,
   milestonesIdsArchive,
-  missingConcerns,
+  missingConcerns_V2,
   skillTypes,
 } from '../../resources/constants';
 import emailSummaryContent from '../../resources/EmailChildSummary';
@@ -531,7 +531,7 @@ export function useGetConcerns(childId?: PropType<ChildResult, 'id'>) {
           );
         });
 
-      const missingId = _.intersection(missingConcerns, concernsData?.map((value) => value.id || 0) || [])[0];
+      const missingId = _.intersection(missingConcerns_V2, concernsData?.map((value) => value.id || 0) || [])[0];
       return {concerns: concernsData, concerned, missingId, answers};
     },
     {
@@ -821,7 +821,7 @@ export function useCheckMissingMilestones() {
   return useMutation(
     async ({childId, milestoneId}: {childId: number; milestoneId: number}) => {
       const {isMissingConcern, isNotYet, isNotSure} = await checkMissingMilestones(milestoneId, childId);
-      const concernId = missingConcerns[milestonesIds.indexOf(milestoneId as MilestoneIdType)];
+      const concernId = missingConcerns_V2[milestonesIds.indexOf(milestoneId as MilestoneIdType)];
       if ((isMissingConcern || isNotYet) && concernId !== undefined) {
         await sqLiteClient.dB?.executeSql(
           `
@@ -857,7 +857,7 @@ export function useCheckMissingMilestones() {
     {
       onSuccess: async (data, {milestoneId, childId}) => {
         await Promise.all(
-          missingConcerns.map((concernId) => {
+          missingConcerns_V2.map((concernId) => {
             return queryCache.invalidateQueries(['concern', {childId, concernId, milestoneId}]);
           }),
         );
