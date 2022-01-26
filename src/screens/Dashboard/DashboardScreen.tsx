@@ -406,7 +406,7 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const {data: whatHasChangedPopUpSeen} = useGetWhatHasChangedPopUpSeen();
   const [setWhatHasChangedPopUpSeen] = useSetWhatHasChangedPopUpSeen();
-  const {t} = useTranslation('dashboard');
+  const {t, i18n} = useTranslation('dashboard');
 
   const {status: oldNotificationsWasClearedStatus, data: oldNotificationsWasCleared} = useGetOldNotificationsWasCleared();
   const [setOldNotificationsWasCleared] = useSetOldNotificationsWasCleared();
@@ -426,9 +426,20 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
     </Trans>
   );
 
-  let spanishPopupMessageComponent = (
+  let popupMessageComponent = (
     <Trans t={t} i18nKey={'whatHasChangedDescription'}>
       <Text style={{fontFamily: 'Montserrat-Italic'}} />
+      <Text
+        numberOfLines={1}
+        accessibilityRole={'link'}
+        onPress={() => {
+          setWhatHasChangedPopUpSeen(true);
+          trackSelectByType('View Checklist History');
+          navigation.navigate('DataArchive');
+        }}
+        style={[{textDecorationLine: 'underline', textAlign: 'left'},
+                i18n.language === 'es' ? {fontFamily: 'Montserrat-Italic'} : {}]}
+      />
     </Trans>
   );
 
@@ -441,10 +452,10 @@ const DashboardScreen: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <>
-      <ChildSelectorModal visible={addChildParam && Boolean(isToShowHasChangedPopUp)} />
+      <ChildSelectorModal visible={addChildParam && Boolean(isToShowHasChangedPopUp) && navigation.isFocused()} />
       <ModalPopUpWithText 
         titleComponent={spanishPopupTitleComponent}
-        messageComponent={spanishPopupMessageComponent}
+        messageComponent={popupMessageComponent}
         useComponents
         visible={!isToShowHasChangedPopUp}
         onDismissCallback={() => {
