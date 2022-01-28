@@ -198,6 +198,7 @@ const DataArchiveScreen: React.FC = () => {
                   }}
                   style={{fontSize: 15, textDecorationLine: 'underline', textAlign: 'left'}}
                 />
+                <Text style={{fontFamily: 'Montserrat-Italic'}} />
               </Trans>
             </Text>
           </View>
