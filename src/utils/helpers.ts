@@ -9,6 +9,7 @@ import {Answer, Appointment, AppointmentDb} from '../hooks/types';
 import {NoExtraProperties, PropType, milestonesIds, missingConcerns_V2} from '../resources/constants';
 import {dateFnsLocales} from '../resources/dateFnsLocales';
 import i18next from '../resources/l18n';
+import {checklistMap} from '../resources/milestoneChecklistV2';
 
 export const formatDate = (dateVal?: Date, mode: DateTimePickerProps['mode'] = 'date') => {
   switch (mode) {
@@ -131,25 +132,37 @@ export function calcChildAge(birthDay: Date | undefined) {
 }
 
 export async function checkMissingMilestones(milestoneId: number, childId: number) {
+  const questionsIds = checklistMap.get(milestoneId)?.milestones?.map((item) => item.id);
+  let concernsIds = checklistMap.get(milestoneId)?.concerns?.map((item) => item.id);
+  concernsIds?.shift();
+
   const notYetRes = await sqLiteClient.dB?.executeSql(
-    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
+    `SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? AND questionId IN (${questionsIds?.join(
+      ',',
+    )}) LIMIT 1`,
     [milestoneId, childId, Answer.NOT_YET],
   );
+
   const unsureRes = await sqLiteClient.dB?.executeSql(
-    'SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? LIMIT 1',
+    `SELECT questionId FROM milestones_answers WHERE milestoneId=? AND childId=? AND answer=? AND questionId IN (${questionsIds?.join(
+      ',',
+    )}) LIMIT 1`,
     [milestoneId, childId, Answer.UNSURE],
   );
 
   const concernsRes = await sqLiteClient.dB?.executeSql(
     `SELECT concernId FROM concern_answers WHERE concernId NOT IN (${missingConcerns_V2.join(
       ',',
-    )}) AND milestoneId=? AND childId=? AND answer=? LIMIT 1`,
+    )}) AND milestoneId=? AND childId=? AND answer=? AND concernId IN (${concernsIds?.join(
+      ',',
+    )}) LIMIT 1`,
     [milestoneId, childId, 1],
   );
 
   const isMissingConcern = (concernsRes && concernsRes[0].rows.length > 0) || false;
   const isNotYet = (notYetRes && notYetRes[0].rows.length > 0) || false;
   const isNotSure = (unsureRes && unsureRes[0].rows.length > 0) || false;
+
   return {isMissingConcern, isNotYet, isNotSure};
 }
 
